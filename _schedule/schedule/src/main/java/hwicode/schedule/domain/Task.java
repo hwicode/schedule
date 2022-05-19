@@ -33,6 +33,42 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<DetailTask> detailTasks = new ArrayList<>();
 
+    protected Task() {
+
+    }
+
+    //==연관관계 메서드==//
+    public void setSchedule(Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public void addDetailTask(DetailTask detailTask) {
+        detailTasks.add(detailTask);
+        detailTask.setTask(this);
+    }
+
+    //==생성 메서드==//
+    public static Task createTask(Schedule schedule, String name, int priority, int point) {
+        Task task = new Task();
+        task.setSchedule(schedule);
+        task.setName(name);
+        task.setPriority(priority);
+        task.setTaskPoint(point);
+        return task;
+    }
+
+    private void setName(String name) {
+        this.name = name;
+    }
+
+    private void setPriority(int priority) {
+        this.priority = priority;
+    }
+
+    private void setTaskPoint(int point) {
+        this.taskPoint = point;
+    }
+
     public Long getId() {
         return id;
     }
@@ -45,7 +81,7 @@ public class Task {
         return priority;
     }
 
-    public Schedule getDaySchedule() {
+    public Schedule getSchedule() {
         return schedule;
     }
 

@@ -33,6 +33,32 @@ public class Schedule {
     @OneToMany(mappedBy = "schedule", cascade = CascadeType.ALL)
     private List<Task> tasks = new ArrayList<>();
 
+    protected Schedule() {
+
+    }
+
+    //==연관관계 메서드==//
+    private void setUser(User user) {
+        this.user = user;
+    }
+
+    public void addTask(Task task) {
+        tasks.add(task);
+        task.setSchedule(this);
+    }
+
+    //==생성 메서드==//
+    public static Schedule createSchedule(User user) {
+        Schedule schedule = new Schedule();
+        schedule.setUser(user);
+        schedule.setScheduleDateTime(LocalDateTime.now());
+        return schedule;
+    }
+
+    private void setScheduleDateTime(LocalDateTime localDateTime) {
+        this.scheduleDateTime = localDateTime;
+    }
+
     public LocalDateTime getScheduleDateTime() {
         return scheduleDateTime;
     }
