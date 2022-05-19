@@ -1,9 +1,10 @@
 package hwicode.schedule.domain;
 
+import hwicode.schedule.repository.ScheduleRepository;
+import hwicode.schedule.service.response.ScheduleResponse;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class Schedule {
     @Column(columnDefinition = "TEXT")
     private String dayFeedback;
 
-    private LocalDateTime scheduleDateTime;
+    private String scheduleDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "login_id")
@@ -44,23 +45,52 @@ public class Schedule {
 
     public void addTask(Task task) {
         tasks.add(task);
-        task.setSchedule(this);
+        checkPoint();
+        checkPercentage();
     }
 
     //==생성 메서드==//
-    public static Schedule createSchedule(User user) {
+    public static Schedule createSchedule(User user, String date) {
         Schedule schedule = new Schedule();
-        schedule.setUser(user);
-        schedule.setScheduleDateTime(LocalDateTime.now());
+//        schedule.setUser(user);
+        schedule.setScheduleDateTime(date);
+
         return schedule;
     }
 
-    private void setScheduleDateTime(LocalDateTime localDateTime) {
-        this.scheduleDateTime = localDateTime;
+    private void setScheduleDateTime(String localDate) {
+        this.scheduleDate = localDate;
     }
 
-    public LocalDateTime getScheduleDateTime() {
-        return scheduleDateTime;
+    //==비즈니스 메서드==//
+    public void checkPoint() {
+        int totalPoint = 0;
+        for (Task task : tasks) {
+            totalPoint += task.getTaskPoint();
+        }
+        this.dayPoint = totalPoint;
+    }
+
+    //size = 0이면 큰일남
+    public void checkPercentage() {
+        int size = tasks.size();
+        int completeNumber = 0;
+
+        for (Task task : tasks) {
+            if (task.isTaskComplete()) {
+                completeNumber++;
+            }
+        }
+
+        this.dayPercentage = (completeNumber / size) * 100;
+    }
+
+    public void setDayFeedback(String feedback) {
+        this.dayFeedback = feedback;
+    }
+
+    public String getScheduleDateTime() {
+        return scheduleDate;
     }
 
     public User getUser() {
@@ -85,5 +115,13 @@ public class Schedule {
 
     public List<Task> getTasks() {
         return tasks;
+    }
+
+    public String getScheduleDate() {
+        return scheduleDate;
+    }
+
+    public ScheduleResponse toDto() {
+        return new ScheduleResponse(dayPoint, dayPercentage, dayFeedback, scheduleDate, tasks);
     }
 }
