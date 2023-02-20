@@ -8,14 +8,17 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TaskProgressTest {
 
-    public static final String NAME = "name";
+    String NAME = "name";
+    String NAME2 = "name2";
     Task task;
     SubTask subTask;
+    SubTask subTask2;
 
     @BeforeEach
     public void beforeEach() {
         task = new Task();
         subTask = new SubTask(NAME);
+        subTask2 = new SubTask(NAME2);
     }
 
     @Test
@@ -76,10 +79,27 @@ public class TaskProgressTest {
     public void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이_아니면_에러가_발생한다() {
         //given
         task.addSubTask(subTask);
+        task.addSubTask(subTask2);
+        task.changeSubTaskStatus(NAME, Status.DONE);
 
         //when then
         assertThatThrownBy(task::changeToDone)
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이면_과제는_DONE으로_변한다() {
+        //given
+        task.addSubTask(subTask);
+        task.addSubTask(subTask2);
+        task.changeSubTaskStatus(NAME, Status.DONE);
+        task.changeSubTaskStatus(NAME2, Status.DONE);
+
+        // when
+        task.changeToDone();
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.DONE);
     }
 
     @Test
@@ -131,11 +151,25 @@ public class TaskProgressTest {
     public void 과제가_TODO로_변할_때_서브_과제가_모두_TODO가_아니면_에러가_발생한다() {
         //given
         task.addSubTask(subTask);
+        task.addSubTask(subTask2);
         task.changeSubTaskStatus(NAME, Status.DONE);
 
         //when then
         assertThatThrownBy(task::changeToTodo)
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    @Test
+    public void 과제가_TODO로_변할_때_서브_과제가_모두_TODO면_과제는_TODO_로_변한다() {
+        //given
+        task.addSubTask(subTask);
+        task.addSubTask(subTask2);
+
+        //when
+        task.changeToTodo();
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.TODO);
     }
 
     @Test
