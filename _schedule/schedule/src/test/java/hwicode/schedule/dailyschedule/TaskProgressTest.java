@@ -86,6 +86,62 @@ public class TaskProgressTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    public void 과제의_상태가_TODO_일_때_서브_과제_추가시_TODO_상태가_유지된다() {
+        // when
+        task.addSubTask(subTask);
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+    }
+
+    @Test
+    public void 과제의_상태가_TODO_일_때_서브_과제_삭제시_TODO_상태가_유지된다() {
+        // given
+        task.addSubTask(subTask);
+
+        // when
+        task.deleteSubTask(NAME);
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+    }
+
+    @Test
+    public void 과제의_상태가_TODO_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
+        // given
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.PROGRESS);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_TODO_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS가_된다() {
+        // given
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.DONE);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제가_TODO로_변할_때_서브_과제가_모두_TODO가_아니면_에러가_발생한다() {
+        //given
+        task.addSubTask(subTask);
+        task.changeSubTaskStatus(NAME, Status.DONE);
+
+        //when then
+        assertThatThrownBy(task::changeToTodo)
+                .isInstanceOf(IllegalStateException.class);
+    }
+
 }
 
 class Task {
@@ -109,6 +165,10 @@ class Task {
         findSubTaskBy(name).changeStatus(status);
 
         if (this.status == Status.DONE) {
+            this.status = Status.PROGRESS;
+        }
+
+        if (this.status == Status.TODO && status != Status.TODO) {
             this.status = Status.PROGRESS;
         }
     }
@@ -139,6 +199,21 @@ class Task {
         return count == 0;
     }
 
+    public void changeToTodo() {
+        if (!isAllTodo()) {
+            throw new IllegalStateException();
+        }
+        this.status = Status.TODO;
+    }
+
+    private boolean isAllTodo() {
+        int count = (int) subTasks.stream()
+                .filter(SubTask::isNotTodo)
+                .count();
+
+        return count == 0;
+    }
+
     public Status getStatus() {
         return this.status;
     }
@@ -156,6 +231,10 @@ class SubTask {
 
     public boolean isNotDone() {
         return status != Status.DONE;
+    }
+
+    public boolean isNotTodo() {
+        return status != Status.TODO;
     }
 
     public boolean isSame(String name) {
