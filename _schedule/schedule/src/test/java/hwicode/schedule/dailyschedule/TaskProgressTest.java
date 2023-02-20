@@ -168,7 +168,7 @@ class Task {
             this.status = Status.PROGRESS;
         }
 
-        if (this.status == Status.TODO && status != Status.TODO) {
+        else if (this.status == Status.TODO && status != Status.TODO) {
             this.status = Status.PROGRESS;
         }
     }
@@ -193,10 +193,10 @@ class Task {
 
     private boolean isAllDone() {
         int count = (int) subTasks.stream()
-                .filter(SubTask::isNotDone)
+                .filter(SubTask::isDone)
                 .count();
 
-        return count == 0;
+        return count == subTasks.size();
     }
 
     public void changeToTodo() {
@@ -208,10 +208,10 @@ class Task {
 
     private boolean isAllTodo() {
         int count = (int) subTasks.stream()
-                .filter(SubTask::isNotTodo)
+                .filter(SubTask::isTodo)
                 .count();
 
-        return count == 0;
+        return count == subTasks.size();
     }
 
     public Status getStatus() {
@@ -229,12 +229,12 @@ class SubTask {
         this.name = name;
     }
 
-    public boolean isNotDone() {
-        return status != Status.DONE;
+    public boolean isDone() {
+        return status == Status.DONE;
     }
 
-    public boolean isNotTodo() {
-        return status != Status.TODO;
+    public boolean isTodo() {
+        return status == Status.TODO;
     }
 
     public boolean isSame(String name) {
