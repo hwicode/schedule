@@ -142,6 +142,70 @@ public class TaskProgressTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    public void 과제의_상태가_PROGRESS_일_때_서브_과제_추가시_PROGRESS_상태가_유지된다() {
+        // given
+        task.changeToProgress();
+
+        // when
+        task.addSubTask(subTask);
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_PROGRESS_일_때_서브_과제_삭제시_PROGRESS_상태가_유지된다() {
+        // given
+        task.changeToProgress();
+        task.addSubTask(subTask);
+
+        // when
+        task.deleteSubTask(NAME);
+
+        // then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_PROGRESS_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS_상태가_유지된다() {
+        // given
+        task.changeToProgress();
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.TODO);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_PROGRESS_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS_상태가_유지된다() {
+        // given
+        task.changeToProgress();
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.PROGRESS);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_PROGRESS_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS_상태가_유지된다() {
+        // given
+        task.changeToProgress();
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.DONE);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
 }
 
 class Task {
@@ -212,6 +276,10 @@ class Task {
                 .count();
 
         return count == subTasks.size();
+    }
+
+    public void changeToProgress() {
+        this.status = Status.PROGRESS;
     }
 
     public Status getStatus() {
