@@ -5,13 +5,24 @@ import java.util.List;
 
 public class Task {
 
+    private String name;
     private Status status;
+    private Difficulty difficulty;
     private final List<SubTask> subTasks = new ArrayList<>();
 
-    public Task() {
+    public Task(String name) {
+        this.name = name;
+        this.difficulty = Difficulty.NORMAL;
         this.status = Status.TODO;
     }
 
+    public Task(String name, Difficulty difficulty) {
+        this.name = name;
+        this.difficulty = difficulty;
+        this.status = Status.TODO;
+    }
+
+    //todo: subtask name 중복 validation 추가해야 함
     public void addSubTask(SubTask subTask) {
         subTasks.add(subTask);
 
@@ -80,7 +91,19 @@ public class Task {
         this.status = Status.PROGRESS;
     }
 
+    public void changeDifficulty(Difficulty difficulty) {
+        this.difficulty = difficulty;
+    }
+
+    public boolean isSame(String name) {
+        return this.name.equals(name);
+    }
+
     public Status getStatus() {
         return this.status;
+    }
+
+    public int getDifficultyScore() {
+        return difficulty.getValue();
     }
 }

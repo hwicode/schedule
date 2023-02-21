@@ -16,7 +16,7 @@ public class TaskProgressTest {
 
     @BeforeEach
     public void beforeEach() {
-        task = new Task();
+        task = new Task(NAME);
         subTask = new SubTask(NAME);
         subTask2 = new SubTask(NAME2);
     }
