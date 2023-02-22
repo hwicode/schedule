@@ -36,16 +36,17 @@ public class Schedule {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void changeTaskStatusToTodo(String name) {
-        findTaskBy(name).changeToTodo();
-    }
-
-    public void changeTaskStatusToProgress(String name) {
-        findTaskBy(name).changeToProgress();
-    }
-
-    public void changeTaskStatusToDone(String name) {
-        findTaskBy(name).changeToDone();
+    public void changeTaskStatus(String name, Status status) {
+        switch (status) {
+            case TODO:
+                findTaskBy(name).changeToTodo();
+                break;
+            case PROGRESS:
+                findTaskBy(name).changeToProgress();
+                break;
+            case DONE:
+                findTaskBy(name).changeToDone();
+        }
     }
 
     public int getTodayDonePercent() {

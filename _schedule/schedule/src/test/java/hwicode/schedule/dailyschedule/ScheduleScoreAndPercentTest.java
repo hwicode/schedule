@@ -181,8 +181,8 @@ public class ScheduleScoreAndPercentTest {
         schedule.addTask(tasks.get(2));
 
         //when
-        schedule.changeTaskStatusToDone(NAME);
-        schedule.changeTaskStatusToDone(NAME3);
+        schedule.changeTaskStatus(NAME, Status.DONE);
+        schedule.changeTaskStatus(NAME3, Status.DONE);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -199,8 +199,8 @@ public class ScheduleScoreAndPercentTest {
         schedule.addTask(tasks.get(2));
 
         //when
-        schedule.changeTaskStatusToDone(NAME);
-        schedule.changeTaskStatusToProgress(NAME3);
+        schedule.changeTaskStatus(NAME, Status.DONE);
+        schedule.changeTaskStatus(NAME3, Status.PROGRESS);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore();
@@ -217,7 +217,7 @@ public class ScheduleScoreAndPercentTest {
         schedule.addTask(tasks.get(2));
 
         //when
-        schedule.changeTaskStatusToProgress(NAME2);
+        schedule.changeTaskStatus(NAME2, Status.TODO);
 
         // then
         int donePercent = 0;
@@ -232,9 +232,9 @@ public class ScheduleScoreAndPercentTest {
         schedule.addTask(tasks.get(1));
         schedule.addTask(tasks.get(2));
 
-        schedule.changeTaskStatusToDone(NAME);
-        schedule.changeTaskStatusToDone(NAME2);
-        schedule.changeTaskStatusToTodo(NAME3);
+        schedule.changeTaskStatus(NAME, Status.DONE);
+        schedule.changeTaskStatus(NAME2, Status.DONE);
+        schedule.changeTaskStatus(NAME3, Status.PROGRESS);
 
         //when
         schedule.deleteTask(NAME2);
