@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ScheduleDifficultyScoreTest {
+public class ScheduleScoreAndPercentTest {
 
     Schedule schedule;
 
@@ -139,6 +139,58 @@ public class ScheduleDifficultyScoreTest {
 
         //then
         assertThat(schedule.getTotalDifficultyScore()).isEqualTo(5);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTasksAndTotalScore")
+    public void 계획표에_3개의_과제_중_2개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
+        // given
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        //when
+        schedule.changeTaskStatusToDone(NAME);
+        schedule.changeTaskStatusToDone(NAME3);
+
+        // then
+        int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
+        int donePercent = (int) (doneScore / (double) totalScore * 100);
+        assertThat(schedule.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTasksAndTotalScore")
+    public void 계획표에_3개의_과제_중_1개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
+        // given
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        //when
+        schedule.changeTaskStatusToDone(NAME);
+        schedule.changeTaskStatusToProgress(NAME3);
+
+        // then
+        int doneScore = tasks.get(0).getDifficultyScore();
+        int donePercent = (int) (doneScore / (double) totalScore * 100);
+        assertThat(schedule.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideTasksAndTotalScore")
+    public void 계획표에_3개의_과제_중_0개를_완료하면_성취도는_0이_된다(List<Task> tasks, int totalScore) {
+        // given
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        //when
+        schedule.changeTaskStatusToProgress(NAME2);
+
+        // then
+        int donePercent = 0;
+        assertThat(schedule.getTodayDonePercent()).isEqualTo(donePercent);
     }
 
 }

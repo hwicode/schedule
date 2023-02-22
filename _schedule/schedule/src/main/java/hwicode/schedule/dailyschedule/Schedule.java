@@ -22,20 +22,27 @@ public class Schedule {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void changeToTodo(String name) {
+    public void changeTaskStatusToTodo(String name) {
         findTaskBy(name).changeToTodo();
     }
 
-    public void changeToProgress(String name) {
+    public void changeTaskStatusToProgress(String name) {
         findTaskBy(name).changeToProgress();
     }
 
-    public void changeToDone(String name) {
+    public void changeTaskStatusToDone(String name) {
         findTaskBy(name).changeToDone();
     }
 
     public int getTodayDonePercent() {
-        return 0;
+        return (int) (getDoneTaskScore() / getTotalDifficultyScore() * 100);
+    }
+
+    private double getDoneTaskScore() {
+        return tasks.stream()
+                .filter(Task::isDone)
+                .mapToInt(Task::getDifficultyScore)
+                .sum();
     }
 
     public int getTotalDifficultyScore() {

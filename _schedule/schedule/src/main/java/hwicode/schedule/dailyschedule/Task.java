@@ -99,6 +99,10 @@ public class Task {
         return this.name.equals(name);
     }
 
+    public boolean isDone() {
+        return this.status == Status.DONE;
+    }
+
     public Status getStatus() {
         return this.status;
     }
