@@ -18,11 +18,11 @@ public class SubTask {
         this.status = status;
     }
 
-    public boolean isSameStatus(Status status) {
+    boolean isSameStatus(Status status) {
         return this.status == status;
     }
 
-    public String getName() {
+    String getName() {
         return this.name;
     }
 }
