@@ -37,7 +37,7 @@ public class Task {
     }
 
     private void checkTaskStatusConditions(Status subTaskStatus) {
-        if (this.status.isDone()) {
+        if (this.status.isDone() && !subTaskStatus.isDone()) {
             changeToProgress();
         }
 

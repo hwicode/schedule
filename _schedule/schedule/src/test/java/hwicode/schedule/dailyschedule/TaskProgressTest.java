@@ -76,6 +76,20 @@ public class TaskProgressTest {
     }
 
     @Test
+    public void 과제의_상태가_DONE_일_때_서브_과제가_DONE으로_변하면_과제는_DONE을_유지한다() {
+        // given
+        task.addSubTask(subTask);
+        task.changeSubTaskStatus(NAME, Status.DONE);
+        task.changeToDone();
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.DONE);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.DONE);
+    }
+
+    @Test
     public void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이_아니면_에러가_발생한다() {
         //given
         task.addSubTask(subTask);
@@ -145,6 +159,18 @@ public class TaskProgressTest {
 
         //then
         assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+    }
+
+    @Test
+    public void 과제의_상태가_TODO_일_때_서브_과제가_TODO로_변하면_과제는_TODO상태가_유지된다() {
+        // given
+        task.addSubTask(subTask);
+
+        // when
+        task.changeSubTaskStatus(NAME, Status.TODO);
+
+        //then
+        assertThat(task.getStatus()).isEqualTo(Status.TODO);
     }
 
     @Test
