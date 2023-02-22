@@ -22,7 +22,7 @@ public class Task {
         this.status = Status.TODO;
     }
 
-    public Status addSubTask(SubTask subTask) {
+    Status addSubTask(SubTask subTask) {
         validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
 
@@ -41,7 +41,7 @@ public class Task {
         }
     }
 
-    public Status changeSubTaskStatus(String name, Status subTaskStatus) {
+    Status changeSubTaskStatus(String name, Status subTaskStatus) {
         findSubTaskBy(name).changeStatus(subTaskStatus);
         checkTaskStatusConditions(subTaskStatus);
 
@@ -58,7 +58,7 @@ public class Task {
         }
     }
 
-    public Status deleteSubTask(String name) {
+    Status deleteSubTask(String name) {
         subTasks.remove(findSubTaskBy(name));
         return this.status;
     }
@@ -70,7 +70,7 @@ public class Task {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public Status changeToDone() {
+    Status changeToDone() {
         boolean isAllDone = isAllSameStatus(Status.DONE);
         if (!isAllDone) {
             throw new IllegalStateException();
@@ -80,7 +80,7 @@ public class Task {
         return this.status;
     }
 
-    public Status changeToTodo() {
+    Status changeToTodo() {
         boolean isAllTodo = isAllSameStatus(Status.TODO);
         if (!isAllTodo) {
             throw new IllegalStateException();
@@ -98,28 +98,28 @@ public class Task {
         return count == subTasks.size();
     }
 
-    public Status changeToProgress() {
+    Status changeToProgress() {
         this.status = Status.PROGRESS;
         return this.status;
     }
 
-    public void changeDifficulty(Difficulty difficulty) {
+    void changeDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
     }
 
-    public boolean isSame(String name) {
+    boolean isSame(String name) {
         return this.name.equals(name);
     }
 
-    public boolean isSameStatus(Status status) {
+    boolean isSameStatus(Status status) {
         return this.status == status;
     }
 
-    public int getDifficultyScore() {
+    int getDifficultyScore() {
         return difficulty.getValue();
     }
 
-    public String getName() {
+    String getName() {
         return this.name;
     }
 }
