@@ -8,7 +8,17 @@ public class Schedule {
     private final List<Task> tasks = new ArrayList<>();
 
     public void addTask(Task task) {
+        validateTaskDuplication(task.getName());
         tasks.add(task);
+    }
+
+    private void validateTaskDuplication(String name) {
+        boolean duplication = tasks.stream()
+                .anyMatch(task -> task.isSame(name));
+
+        if (duplication) {
+            throw new IllegalStateException();
+        }
     }
 
     public void changeTaskDifficulty(String name, Difficulty difficulty) {

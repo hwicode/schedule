@@ -22,12 +22,21 @@ public class Task {
         this.status = Status.TODO;
     }
 
-    //todo: subtask name 중복 validation 추가해야 함
     public void addSubTask(SubTask subTask) {
+        validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
 
         if (this.status == Status.DONE) {
             this.status = Status.PROGRESS;
+        }
+    }
+
+    private void validateSubTaskDuplication(String name) {
+        boolean duplication = subTasks.stream()
+                .anyMatch(subTask -> subTask.isSame(name));
+
+        if (duplication) {
+            throw new IllegalStateException();
         }
     }
 
@@ -109,5 +118,9 @@ public class Task {
 
     public int getDifficultyScore() {
         return difficulty.getValue();
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

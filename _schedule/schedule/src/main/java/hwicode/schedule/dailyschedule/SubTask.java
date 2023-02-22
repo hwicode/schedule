@@ -25,4 +25,8 @@ public class SubTask {
     void changeStatus(Status status) {
         this.status = status;
     }
+
+    public String getName() {
+        return this.name;
+    }
 }
