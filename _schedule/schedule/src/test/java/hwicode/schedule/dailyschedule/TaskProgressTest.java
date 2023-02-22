@@ -27,10 +27,10 @@ public class TaskProgressTest {
         task.changeToDone();
 
         // when
-        task.addSubTask(subTask);
+        Status taskStatus = task.addSubTask(subTask);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -41,10 +41,10 @@ public class TaskProgressTest {
         task.changeToDone();
 
         // when
-        task.deleteSubTask(NAME);
+        Status taskStatus = task.deleteSubTask(NAME);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.DONE);
+        assertThat(taskStatus).isEqualTo(Status.DONE);
     }
 
     @Test
@@ -55,10 +55,10 @@ public class TaskProgressTest {
         task.changeToDone();
 
         // when
-        task.changeSubTaskStatus(NAME, Status.PROGRESS);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.PROGRESS);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -69,10 +69,10 @@ public class TaskProgressTest {
         task.changeToDone();
 
         // when
-        task.changeSubTaskStatus(NAME, Status.TODO);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.TODO);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -83,10 +83,10 @@ public class TaskProgressTest {
         task.changeToDone();
 
         // when
-        task.changeSubTaskStatus(NAME, Status.DONE);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.DONE);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.DONE);
+        assertThat(taskStatus).isEqualTo(Status.DONE);
     }
 
     @Test
@@ -110,19 +110,19 @@ public class TaskProgressTest {
         task.changeSubTaskStatus(NAME2, Status.DONE);
 
         // when
-        task.changeToDone();
+        Status taskStatus = task.changeToDone();
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.DONE);
+        assertThat(taskStatus).isEqualTo(Status.DONE);
     }
 
     @Test
     public void 과제의_상태가_TODO_일_때_서브_과제_추가시_TODO_상태가_유지된다() {
         // when
-        task.addSubTask(subTask);
+        Status taskStatus = task.addSubTask(subTask);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+        assertThat(taskStatus).isEqualTo(Status.TODO);
     }
 
     @Test
@@ -131,10 +131,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.deleteSubTask(NAME);
+        Status taskStatus = task.deleteSubTask(NAME);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+        assertThat(taskStatus).isEqualTo(Status.TODO);
     }
 
     @Test
@@ -143,10 +143,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.PROGRESS);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.PROGRESS);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -155,10 +155,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.DONE);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.DONE);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -167,10 +167,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.TODO);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.TODO);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+        assertThat(taskStatus).isEqualTo(Status.TODO);
     }
 
     @Test
@@ -192,10 +192,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask2);
 
         //when
-        task.changeToTodo();
+        Status taskStatus = task.changeToTodo();
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.TODO);
+        assertThat(taskStatus).isEqualTo(Status.TODO);
     }
 
     @Test
@@ -204,10 +204,10 @@ public class TaskProgressTest {
         task.changeToProgress();
 
         // when
-        task.addSubTask(subTask);
+        Status taskStatus = task.addSubTask(subTask);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -217,10 +217,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.deleteSubTask(NAME);
+        Status taskStatus = task.deleteSubTask(NAME);
 
         // then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -230,10 +230,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.TODO);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.TODO);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -243,10 +243,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.PROGRESS);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.PROGRESS);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
     @Test
@@ -256,10 +256,10 @@ public class TaskProgressTest {
         task.addSubTask(subTask);
 
         // when
-        task.changeSubTaskStatus(NAME, Status.DONE);
+        Status taskStatus = task.changeSubTaskStatus(NAME, Status.DONE);
 
         //then
-        assertThat(task.getStatus()).isEqualTo(Status.PROGRESS);
+        assertThat(taskStatus).isEqualTo(Status.PROGRESS);
     }
 
 }

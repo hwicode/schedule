@@ -23,17 +23,20 @@ public class Task {
     }
 
     //todo: subtask name 중복 validation 추가해야 함
-    public void addSubTask(SubTask subTask) {
+    public Status addSubTask(SubTask subTask) {
         subTasks.add(subTask);
 
         if (this.status.isDone()) {
             changeToProgress();
         }
+        return this.status;
     }
 
-    public void changeSubTaskStatus(String name, Status subTaskStatus) {
+    public Status changeSubTaskStatus(String name, Status subTaskStatus) {
         findSubTaskBy(name).changeStatus(subTaskStatus);
         checkTaskStatusConditions(subTaskStatus);
+
+        return this.status;
     }
 
     private void checkTaskStatusConditions(Status subTaskStatus) {
@@ -46,8 +49,9 @@ public class Task {
         }
     }
 
-    public void deleteSubTask(String name) {
+    public Status deleteSubTask(String name) {
         subTasks.remove(findSubTaskBy(name));
+        return this.status;
     }
 
     private SubTask findSubTaskBy(String name) {
@@ -57,20 +61,24 @@ public class Task {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void changeToDone() {
+    public Status changeToDone() {
         boolean isAllDone = isAllSameStatus(Status.DONE);
         if (!isAllDone) {
             throw new IllegalStateException();
         }
+
         this.status = Status.DONE;
+        return this.status;
     }
 
-    public void changeToTodo() {
+    public Status changeToTodo() {
         boolean isAllTodo = isAllSameStatus(Status.TODO);
         if (!isAllTodo) {
             throw new IllegalStateException();
         }
+
         this.status = Status.TODO;
+        return this.status;
     }
 
     private boolean isAllSameStatus(Status status) {
@@ -81,8 +89,9 @@ public class Task {
         return count == subTasks.size();
     }
 
-    public void changeToProgress() {
+    public Status changeToProgress() {
         this.status = Status.PROGRESS;
+        return this.status;
     }
 
     public void changeDifficulty(Difficulty difficulty) {
@@ -95,10 +104,6 @@ public class Task {
 
     public boolean isSameStatus(Status status) {
         return this.status == status;
-    }
-
-    public Status getStatus() {
-        return this.status;
     }
 
     public int getDifficultyScore() {
