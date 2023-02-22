@@ -22,13 +22,14 @@ public class Task {
         this.status = Status.TODO;
     }
 
-    public void addSubTask(SubTask subTask) {
+    public Status addSubTask(SubTask subTask) {
         validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
 
-        if (this.status == Status.DONE) {
-            this.status = Status.PROGRESS;
+        if (this.status.isDone()) {
+            changeToProgress();
         }
+        return this.status;
     }
 
     private void validateSubTaskDuplication(String name) {
@@ -40,23 +41,26 @@ public class Task {
         }
     }
 
-    public void changeSubTaskStatus(String name, Status subTaskStatus) {
+    public Status changeSubTaskStatus(String name, Status subTaskStatus) {
         findSubTaskBy(name).changeStatus(subTaskStatus);
         checkTaskStatusConditions(subTaskStatus);
+
+        return this.status;
     }
 
     private void checkTaskStatusConditions(Status subTaskStatus) {
-        if (this.status == Status.DONE) {
-            this.status = Status.PROGRESS;
+        if (this.status.isDone() && !subTaskStatus.isDone()) {
+            changeToProgress();
         }
 
-        else if (this.status == Status.TODO && subTaskStatus != Status.TODO) {
-            this.status = Status.PROGRESS;
+        else if (this.status.isTodo() && !subTaskStatus.isTodo()) {
+            changeToProgress();
         }
     }
 
-    public void deleteSubTask(String name) {
+    public Status deleteSubTask(String name) {
         subTasks.remove(findSubTaskBy(name));
+        return this.status;
     }
 
     private SubTask findSubTaskBy(String name) {
@@ -66,38 +70,37 @@ public class Task {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    public void changeToDone() {
-        if (!isAllDone()) {
+    public Status changeToDone() {
+        boolean isAllDone = isAllSameStatus(Status.DONE);
+        if (!isAllDone) {
             throw new IllegalStateException();
         }
+
         this.status = Status.DONE;
+        return this.status;
     }
 
-    private boolean isAllDone() {
-        int count = (int) subTasks.stream()
-                .filter(SubTask::isDone)
-                .count();
-
-        return count == subTasks.size();
-    }
-
-    public void changeToTodo() {
-        if (!isAllTodo()) {
+    public Status changeToTodo() {
+        boolean isAllTodo = isAllSameStatus(Status.TODO);
+        if (!isAllTodo) {
             throw new IllegalStateException();
         }
+
         this.status = Status.TODO;
+        return this.status;
     }
 
-    private boolean isAllTodo() {
+    private boolean isAllSameStatus(Status status) {
         int count = (int) subTasks.stream()
-                .filter(SubTask::isTodo)
+                .filter(subTask -> subTask.isSameStatus(status))
                 .count();
 
         return count == subTasks.size();
     }
 
-    public void changeToProgress() {
+    public Status changeToProgress() {
         this.status = Status.PROGRESS;
+        return this.status;
     }
 
     public void changeDifficulty(Difficulty difficulty) {
@@ -108,12 +111,8 @@ public class Task {
         return this.name.equals(name);
     }
 
-    public boolean isDone() {
-        return this.status == Status.DONE;
-    }
-
-    public Status getStatus() {
-        return this.status;
+    public boolean isSameStatus(Status status) {
+        return this.status == status;
     }
 
     public int getDifficultyScore() {

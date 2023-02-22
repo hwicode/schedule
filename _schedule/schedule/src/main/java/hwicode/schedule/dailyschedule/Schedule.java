@@ -49,12 +49,12 @@ public class Schedule {
     }
 
     public int getTodayDonePercent() {
-        return (int) (getDoneTaskScore() / getTotalDifficultyScore() * 100);
+        return (int) (getDoneTasksScore() / getTotalDifficultyScore() * 100);
     }
 
-    private double getDoneTaskScore() {
+    private double getDoneTasksScore() {
         return tasks.stream()
-                .filter(Task::isDone)
+                .filter(task -> task.isSameStatus(Status.DONE))
                 .mapToInt(Task::getDifficultyScore)
                 .sum();
     }
