@@ -10,19 +10,15 @@ public class SubTask {
         this.name = name;
     }
 
-    boolean isDone() {
-        return status == Status.DONE;
-    }
-
-    boolean isTodo() {
-        return status == Status.TODO;
-    }
-
     boolean isSame(String name) {
         return this.name.equals(name);
     }
 
     void changeStatus(Status status) {
         this.status = status;
+    }
+
+    public boolean isSameStatus(Status status) {
+        return this.status == status;
     }
 }

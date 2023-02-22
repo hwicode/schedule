@@ -26,8 +26,8 @@ public class Task {
     public void addSubTask(SubTask subTask) {
         subTasks.add(subTask);
 
-        if (this.status == Status.DONE) {
-            this.status = Status.PROGRESS;
+        if (this.status.isDone()) {
+            changeToProgress();
         }
     }
 
@@ -37,12 +37,12 @@ public class Task {
     }
 
     private void checkTaskStatusConditions(Status subTaskStatus) {
-        if (this.status == Status.DONE) {
-            this.status = Status.PROGRESS;
+        if (this.status.isDone()) {
+            changeToProgress();
         }
 
-        else if (this.status == Status.TODO && subTaskStatus != Status.TODO) {
-            this.status = Status.PROGRESS;
+        else if (this.status.isTodo() && !subTaskStatus.isTodo()) {
+            changeToProgress();
         }
     }
 
@@ -58,30 +58,24 @@ public class Task {
     }
 
     public void changeToDone() {
-        if (!isAllDone()) {
+        boolean isAllDone = isAllSameStatus(Status.DONE);
+        if (!isAllDone) {
             throw new IllegalStateException();
         }
         this.status = Status.DONE;
     }
 
-    private boolean isAllDone() {
-        int count = (int) subTasks.stream()
-                .filter(SubTask::isDone)
-                .count();
-
-        return count == subTasks.size();
-    }
-
     public void changeToTodo() {
-        if (!isAllTodo()) {
+        boolean isAllTodo = isAllSameStatus(Status.TODO);
+        if (!isAllTodo) {
             throw new IllegalStateException();
         }
         this.status = Status.TODO;
     }
 
-    private boolean isAllTodo() {
+    private boolean isAllSameStatus(Status status) {
         int count = (int) subTasks.stream()
-                .filter(SubTask::isTodo)
+                .filter(subTask -> subTask.isSameStatus(status))
                 .count();
 
         return count == subTasks.size();
@@ -99,8 +93,8 @@ public class Task {
         return this.name.equals(name);
     }
 
-    public boolean isDone() {
-        return this.status == Status.DONE;
+    public boolean isSameStatus(Status status) {
+        return this.status == status;
     }
 
     public Status getStatus() {
