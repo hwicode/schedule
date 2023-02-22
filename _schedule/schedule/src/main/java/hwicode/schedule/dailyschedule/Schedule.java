@@ -25,6 +25,10 @@ public class Schedule {
         findTaskBy(name).changeDifficulty(difficulty);
     }
 
+    public void deleteTask(String name) {
+        tasks.remove(findTaskBy(name));
+    }
+
     private Task findTaskBy(String name) {
         return tasks.stream()
                 .filter(s -> s.isSame(name))
@@ -60,4 +64,5 @@ public class Schedule {
                 .mapToInt(Task::getDifficultyScore)
                 .sum();
     }
+
 }

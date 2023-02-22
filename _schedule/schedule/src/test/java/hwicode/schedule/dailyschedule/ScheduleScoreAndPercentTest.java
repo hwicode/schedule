@@ -141,6 +141,37 @@ public class ScheduleScoreAndPercentTest {
         assertThat(schedule.getTotalDifficultyScore()).isEqualTo(5);
     }
 
+    @Test
+    public void 과제_3개_중에_NORMAL인_과제1개가_삭제되면_총_점수가_2점_감소한다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        // when
+        schedule.deleteTask(NAME2);
+
+        //then
+        assertThat(schedule.getTotalDifficultyScore()).isEqualTo(5);
+    }
+
+    @Test
+    public void 과제_3개_중에_Hard인_과제와_EASY인_과제가_삭제되면_총_점수가_4점_감소한다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD);
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        // when
+        schedule.deleteTask(NAME3);
+        schedule.deleteTask(NAME);
+
+        //then
+        assertThat(schedule.getTotalDifficultyScore()).isEqualTo(2);
+    }
+
     @ParameterizedTest
     @MethodSource("provideTasksAndTotalScore")
     public void 계획표에_3개의_과제_중_2개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
@@ -190,6 +221,27 @@ public class ScheduleScoreAndPercentTest {
 
         // then
         int donePercent = 0;
+        assertThat(schedule.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @Test
+    public void 계획표에_3개의_과제_중_과제1개가_삭제됐을_때_성취도를_체크한다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        schedule.addTask(tasks.get(0));
+        schedule.addTask(tasks.get(1));
+        schedule.addTask(tasks.get(2));
+
+        schedule.changeTaskStatusToDone(NAME);
+        schedule.changeTaskStatusToDone(NAME2);
+        schedule.changeTaskStatusToTodo(NAME3);
+
+        //when
+        schedule.deleteTask(NAME2);
+
+        // then
+        int doneScore = tasks.get(0).getDifficultyScore();
+        int donePercent = (int) (doneScore / (double) 6 * 100);
         assertThat(schedule.getTodayDonePercent()).isEqualTo(donePercent);
     }
 
