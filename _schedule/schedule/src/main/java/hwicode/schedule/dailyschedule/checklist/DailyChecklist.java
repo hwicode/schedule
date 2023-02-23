@@ -55,7 +55,7 @@ public class DailyChecklist {
 
     private double getDoneTasksScore() {
         return tasks.stream()
-                .filter(task -> task.isSameStatus(Status.DONE))
+                .filter(Task::isDone)
                 .mapToInt(Task::getDifficultyScore)
                 .sum();
     }

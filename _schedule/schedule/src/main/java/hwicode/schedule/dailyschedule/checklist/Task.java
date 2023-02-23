@@ -111,8 +111,8 @@ public class Task {
         return this.name.equals(name);
     }
 
-    boolean isSameStatus(Status status) {
-        return this.status == status;
+    boolean isDone() {
+        return this.status.isDone();
     }
 
     int getDifficultyScore() {
