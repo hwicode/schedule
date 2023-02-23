@@ -1,9 +1,9 @@
-package hwicode.schedule.dailyschedule;
+package hwicode.schedule.dailyschedule.checklist;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Schedule {
+public class DailyChecklist {
 
     private final List<Task> tasks = new ArrayList<>();
 

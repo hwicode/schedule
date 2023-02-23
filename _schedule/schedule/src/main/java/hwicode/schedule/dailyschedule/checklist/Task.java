@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule;
+package hwicode.schedule.dailyschedule.checklist;
 
 import java.util.ArrayList;
 import java.util.List;

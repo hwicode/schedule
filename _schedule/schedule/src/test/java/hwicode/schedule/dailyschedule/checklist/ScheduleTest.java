@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule;
+package hwicode.schedule.dailyschedule.checklist;
 
 import org.junit.jupiter.api.Test;
 
@@ -11,14 +11,14 @@ public class ScheduleTest {
     @Test
     public void 과제의_이름이_중복되면_에러가_발생한다() {
         // given
-        Schedule schedule = new Schedule();
+        DailyChecklist dailyChecklist = new DailyChecklist();
         Task task = new Task(NAME);
-        schedule.addTask(task);
+        dailyChecklist.addTask(task);
 
         Task task2 = new Task(NAME);
 
         // when then
-        assertThatThrownBy(() -> schedule.addTask(task2))
+        assertThatThrownBy(() -> dailyChecklist.addTask(task2))
                 .isInstanceOf(IllegalStateException.class);
     }
 }

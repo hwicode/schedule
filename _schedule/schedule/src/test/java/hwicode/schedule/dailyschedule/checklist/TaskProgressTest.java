@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule;
+package hwicode.schedule.dailyschedule.checklist;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
