@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist;
+package hwicode.schedule.dailyschedule.checklist.domain;
 
 import java.util.ArrayList;
 import java.util.List;

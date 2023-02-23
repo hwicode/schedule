@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist;
+package hwicode.schedule.dailyschedule.checklist.domain;
 
 public enum Difficulty {
     EASY(1), NORMAL(2), HARD(3);
