@@ -1,9 +1,5 @@
 package hwicode.schedule.dailyschedule.checklist;
 
-import hwicode.schedule.dailyschedule.checklist.DailyChecklist;
-import hwicode.schedule.dailyschedule.checklist.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.Status;
-import hwicode.schedule.dailyschedule.checklist.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,10 +12,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ScheduleScoreAndPercentTest {
+public class DailyChecklistTest {
 
     DailyChecklist dailyChecklist;
 
@@ -247,6 +244,20 @@ public class ScheduleScoreAndPercentTest {
         int doneScore = tasks.get(0).getDifficultyScore();
         int donePercent = (int) (doneScore / (double) 6 * 100);
         assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @Test
+    public void 과제의_이름이_중복되면_에러가_발생한다() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        Task task = new Task(NAME);
+        dailyChecklist.addTask(task);
+
+        Task task2 = new Task(NAME);
+
+        // when then
+        assertThatThrownBy(() -> dailyChecklist.addTask(task2))
+                .isInstanceOf(IllegalStateException.class);
     }
 
 }
