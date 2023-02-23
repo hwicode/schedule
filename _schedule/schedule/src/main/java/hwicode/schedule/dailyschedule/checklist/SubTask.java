@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.checklist;
 public class SubTask {
 
     private Status status;
-    private String name;
+    private final String name;
 
     public SubTask(String name) {
         this.status = Status.TODO;

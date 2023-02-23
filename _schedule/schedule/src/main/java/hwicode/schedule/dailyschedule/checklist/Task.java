@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Task {
 
-    private String name;
+    private final String name;
     private Status status;
     private Difficulty difficulty;
     private final List<SubTask> subTasks = new ArrayList<>();
