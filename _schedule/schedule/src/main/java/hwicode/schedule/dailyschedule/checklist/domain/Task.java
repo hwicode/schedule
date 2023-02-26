@@ -1,14 +1,32 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class Task {
 
-    private final String name;
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JoinColumn(name = "daily_checklist_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DailyChecklist dailyChecklist;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @Enumerated(value = EnumType.STRING)
     private Status status;
+
+    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
+
+    @Transient
     private final List<SubTask> subTasks = new ArrayList<>();
+
+    public Task(){}
 
     public Task(String name) {
         this.name = name;
@@ -101,6 +119,10 @@ public class Task {
     Status changeToProgress() {
         this.status = Status.PROGRESS;
         return this.status;
+    }
+
+    void savedInChecklist(DailyChecklist dailyChecklist) {
+        this.dailyChecklist = dailyChecklist;
     }
 
     void changeDifficulty(Difficulty difficulty) {

@@ -1,15 +1,22 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity
 public class DailyChecklist {
 
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<Task> tasks = new ArrayList<>();
 
     public void addTask(Task task) {
         validateTaskDuplication(task.getName());
         tasks.add(task);
+        task.savedInChecklist(this);
     }
 
     private void validateTaskDuplication(String name) {
@@ -66,4 +73,7 @@ public class DailyChecklist {
                 .sum();
     }
 
+    public Long getId() {
+        return id;
+    }
 }
