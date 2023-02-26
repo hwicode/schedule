@@ -39,6 +39,22 @@ public class TaskServiceTest {
         assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(4);
     }
 
+    @Test
+    public void 체크리스트에_과제를_삭제할_수_있다() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.addTask(new Task("name1"));
+        dailyChecklist.addTask(new Task("name2"));
+        dailyChecklistRepository.save(dailyChecklist);
+
+        // when
+        taskService.deleteTask(dailyChecklist.getId(), "name1");
+
+        // then
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(2);
+    }
+
 
 }
 
@@ -61,6 +77,14 @@ class TaskService {
         dailyChecklist.addTask(task);
 
         taskRepository.save(task);
+    }
+
+    @Transactional
+    public void deleteTask(Long dailyChecklistId, String taskName) {
+        DailyChecklist dailyChecklist = dailyChecklistRepository.findById(dailyChecklistId)
+                .orElseThrow();
+
+        dailyChecklist.deleteTask(taskName);
     }
 
 }
