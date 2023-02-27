@@ -31,7 +31,7 @@ public class DailyChecklistTest {
 
     @ParameterizedTest
     @MethodSource("provideTasksAndTotalScore")
-    public void 계획표에_과제가_생기면_총_점수를_계산할_수_있다(List<Task> tasks, int totalScore) {
+    public void 체크리스트에_과제가_생기면_총_점수를_계산할_수_있다(List<Task> tasks, int totalScore) {
         // given
         dailyChecklist.addTask(tasks.get(0));
         dailyChecklist.addTask(tasks.get(1));
@@ -67,7 +67,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_보통_난이도의_과제가_어려움으로_바뀌면_총_점수가_1점_증가한다() {
+    public void 체크리스트에_보통_난이도의_과제가_어려움으로_바뀌면_총_점수가_1점_증가한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.NORMAL, Difficulty.NORMAL, Difficulty.NORMAL);
         dailyChecklist.addTask(tasks.get(0));
@@ -82,7 +82,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_쉬움_난이도의_과제가_어려움으로_바뀌면_총_점수가_2점_증가한다() {
+    public void 체크리스트에_쉬움_난이도의_과제가_어려움으로_바뀌면_총_점수가_2점_증가한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.NORMAL, Difficulty.EASY, Difficulty.NORMAL);
         dailyChecklist.addTask(tasks.get(0));
@@ -97,7 +97,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_어려운_난이도의_과제가_쉬움으로_바뀌면_총_점수가_2점_감소한다() {
+    public void 체크리스트에_어려운_난이도의_과제가_쉬움으로_바뀌면_총_점수가_2점_감소한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
         dailyChecklist.addTask(tasks.get(0));
@@ -112,7 +112,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_보통_난이도의_과제가_쉬움으로_바뀌면_총_점수가_1점_감소한다() {
+    public void 체크리스트에_보통_난이도의_과제가_쉬움으로_바뀌면_총_점수가_1점_감소한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
         dailyChecklist.addTask(tasks.get(0));
@@ -127,7 +127,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_보통_난이도의_과제를_쉬움으로_바꾸고_어려움_과제를_보통으로_바꾸면_총_점수가_3점_감소한다() {
+    public void 체크리스트에_보통_난이도의_과제를_쉬움으로_바꾸고_어려움_과제를_보통으로_바꾸면_총_점수가_3점_감소한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
         dailyChecklist.addTask(tasks.get(0));
@@ -175,7 +175,7 @@ public class DailyChecklistTest {
 
     @ParameterizedTest
     @MethodSource("provideTasksAndTotalScore")
-    public void 계획표에_3개의_과제_중_2개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
+    public void 체크리스트에_3개의_과제_중_2개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
         // given
         dailyChecklist.addTask(tasks.get(0));
         dailyChecklist.addTask(tasks.get(1));
@@ -193,7 +193,7 @@ public class DailyChecklistTest {
 
     @ParameterizedTest
     @MethodSource("provideTasksAndTotalScore")
-    public void 계획표에_3개의_과제_중_1개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
+    public void 체크리스트에_3개의_과제_중_1개를_완료했을_때_성취도를_체크한다(List<Task> tasks, int totalScore) {
         // given
         dailyChecklist.addTask(tasks.get(0));
         dailyChecklist.addTask(tasks.get(1));
@@ -211,7 +211,7 @@ public class DailyChecklistTest {
 
     @ParameterizedTest
     @MethodSource("provideTasksAndTotalScore")
-    public void 계획표에_3개의_과제_중_0개를_완료하면_성취도는_0이_된다(List<Task> tasks, int totalScore) {
+    public void 체크리스트에_3개의_과제_중_0개를_완료하면_성취도는_0이_된다(List<Task> tasks, int totalScore) {
         // given
         dailyChecklist.addTask(tasks.get(0));
         dailyChecklist.addTask(tasks.get(1));
@@ -226,7 +226,7 @@ public class DailyChecklistTest {
     }
 
     @Test
-    public void 계획표에_3개의_과제_중_과제1개가_삭제됐을_때_성취도를_체크한다() {
+    public void 체크리스트에_3개의_과제_중_과제1개가_삭제됐을_때_성취도를_체크한다() {
         // given
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
         dailyChecklist.addTask(tasks.get(0));
