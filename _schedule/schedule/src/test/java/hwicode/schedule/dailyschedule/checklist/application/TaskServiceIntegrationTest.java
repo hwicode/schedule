@@ -1,26 +1,22 @@
-package hwicode.schedule.dailyschedule.checklist.service;
+package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
-public class TaskServiceTest {
+public class TaskServiceIntegrationTest {
 
     @Autowired
     TaskService taskService;
@@ -112,65 +108,5 @@ public class TaskServiceTest {
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
         assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
     }
-
-
-}
-
-@Service
-class TaskService {
-
-    private final DailyChecklistRepository dailyChecklistRepository;
-    private final TaskRepository taskRepository;
-
-    public TaskService(DailyChecklistRepository dailyChecklistRepository, TaskRepository taskRepository) {
-        this.dailyChecklistRepository = dailyChecklistRepository;
-        this.taskRepository = taskRepository;
-    }
-
-    @Transactional
-    public void saveTask(Long dailyChecklistId, Task task) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
-        dailyChecklist.addTask(task);
-
-        taskRepository.save(task);
-    }
-
-    @Transactional
-    public void deleteTask(Long dailyChecklistId, String taskName) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
-        dailyChecklist.deleteTask(taskName);
-    }
-
-    @Transactional
-    public void changeTaskStatus(Long dailyChecklistId, String taskName, Status status) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
-        dailyChecklist.changeTaskStatus(taskName, status);
-    }
-
-    @Transactional
-    public void changeTaskDifficulty(Long dailyChecklistId, String taskName, Difficulty difficulty) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
-        dailyChecklist.changeTaskDifficulty(taskName, difficulty);
-    }
-
-}
-
-interface DailyChecklistRepository extends JpaRepository<DailyChecklist, Long> {
-
-    @Query("SELECT d FROM DailyChecklist d "
-    + "JOIN FETCH d.tasks "
-    + "WHERE d.id = :id")
-    Optional<DailyChecklist> findDailyChecklistWithTasks(@Param("id") Long id);
-}
-
-interface TaskRepository extends JpaRepository<Task, Long> {
 
 }
