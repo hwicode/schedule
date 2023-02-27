@@ -28,37 +28,45 @@ public class TaskServiceIntegrationTest {
     @PersistenceContext
     EntityManager entityManager;
 
+    final String NAME = "name";
+    final String NAME2 = "name2";
+    final String NEW = "new";
+
+    DailyChecklist createDailyChecklistWithTwoTask() {
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.addTask(new Task(NAME));
+        dailyChecklist.addTask(new Task(NAME2));
+
+        return dailyChecklist;
+    }
+
     @Test
     public void 체크리스트에_과제를_추가할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task("name1"));
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
         entityManager.clear();
 
         // when
-        taskService.saveTask(dailyChecklist.getId(), new Task("name2"));
-
+        taskService.saveTask(dailyChecklist.getId(), new Task(NEW));
         entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
-        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(4);
+        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(6);
     }
 
     @Test
     public void 체크리스트에_과제를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task("name1"));
-        dailyChecklist.addTask(new Task("name2"));
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
         entityManager.clear();
 
         // when
-        taskService.deleteTask(dailyChecklist.getId(), "name1");
+        taskService.deleteTask(dailyChecklist.getId(), NAME2);
 
         entityManager.flush();
         entityManager.clear();
@@ -71,15 +79,13 @@ public class TaskServiceIntegrationTest {
     @Test
     public void 체크리스트내에_있는_과제의_어려움_점수를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task("name1"));
-        dailyChecklist.addTask(new Task("name2"));
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
         entityManager.clear();
 
         // when
-        taskService.changeTaskDifficulty(dailyChecklist.getId(), "name1", Difficulty.HARD);
+        taskService.changeTaskDifficulty(dailyChecklist.getId(), NAME2, Difficulty.HARD);
 
         entityManager.flush();
         entityManager.clear();
@@ -92,15 +98,13 @@ public class TaskServiceIntegrationTest {
     @Test
     public void 체크리스트내에_있는_과제의_진행상태를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task("name1"));
-        dailyChecklist.addTask(new Task("name2"));
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
         entityManager.clear();
 
         // when
-        taskService.changeTaskStatus(dailyChecklist.getId(), "name1", Status.DONE);
+        taskService.changeTaskStatus(dailyChecklist.getId(), NAME, Status.DONE);
 
         entityManager.flush();
         entityManager.clear();
