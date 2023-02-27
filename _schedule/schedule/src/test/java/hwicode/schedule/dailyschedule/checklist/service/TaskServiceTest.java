@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.service;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import org.junit.jupiter.api.Test;
@@ -71,6 +72,27 @@ public class TaskServiceTest {
     }
 
     @Test
+    public void 체크리스트내에_있는_과제의_어려움_점수를_수정할_수_있다() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.addTask(new Task("name1"));
+        dailyChecklist.addTask(new Task("name2"));
+        dailyChecklistRepository.save(dailyChecklist);
+
+        entityManager.clear();
+
+        // when
+        taskService.changeTaskDifficulty(dailyChecklist.getId(), "name1", Difficulty.HARD);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
+    }
+
+    @Test
     public void 체크리스트내에_있는_과제의_진행상태를_수정할_수_있다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
@@ -129,6 +151,14 @@ class TaskService {
                 .orElseThrow();
 
         dailyChecklist.changeTaskStatus(taskName, status);
+    }
+
+    @Transactional
+    public void changeTaskDifficulty(Long dailyChecklistId, String taskName, Difficulty difficulty) {
+        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
+                .orElseThrow();
+
+        dailyChecklist.changeTaskDifficulty(taskName, difficulty);
     }
 
 }
