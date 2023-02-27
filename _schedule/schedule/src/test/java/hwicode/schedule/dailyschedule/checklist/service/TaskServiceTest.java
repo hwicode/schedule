@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,14 +26,22 @@ public class TaskServiceTest {
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
 
+    @Autowired
+    EntityManager entityManager;
+
     @Test
     public void 체크리스트에_과제를_추가할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.addTask(new Task("name1"));
+        dailyChecklistRepository.save(dailyChecklist);
+
+        entityManager.clear();
 
         // when
-        taskService.saveTask(dailyChecklist.getId(), new Task("name1"));
         taskService.saveTask(dailyChecklist.getId(), new Task("name2"));
+
+        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -47,8 +56,13 @@ public class TaskServiceTest {
         dailyChecklist.addTask(new Task("name2"));
         dailyChecklistRepository.save(dailyChecklist);
 
+        entityManager.clear();
+
         // when
         taskService.deleteTask(dailyChecklist.getId(), "name1");
+
+        entityManager.flush();
+        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -71,7 +85,7 @@ class TaskService {
 
     @Transactional
     public void saveTask(Long dailyChecklistId, Task task) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findById(dailyChecklistId)
+        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
                 .orElseThrow();
 
         dailyChecklist.addTask(task);
@@ -81,7 +95,7 @@ class TaskService {
 
     @Transactional
     public void deleteTask(Long dailyChecklistId, String taskName) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findById(dailyChecklistId)
+        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
                 .orElseThrow();
 
         dailyChecklist.deleteTask(taskName);
@@ -92,7 +106,7 @@ class TaskService {
 interface DailyChecklistRepository extends JpaRepository<DailyChecklist, Long> {
 
     @Query("SELECT d FROM DailyChecklist d "
-    + "JOIN FETCH d.tasks t "
+    + "JOIN FETCH d.tasks "
     + "WHERE d.id = :id")
     Optional<DailyChecklist> findDailyChecklistWithTasks(@Param("id") Long id);
 }
