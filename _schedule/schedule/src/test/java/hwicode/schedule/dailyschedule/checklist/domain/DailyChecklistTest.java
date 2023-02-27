@@ -260,4 +260,10 @@ public class DailyChecklistTest {
                 .isInstanceOf(IllegalStateException.class);
     }
 
+    @Test
+    public void 체크리스트에_과제가_없을_때_성취도를_체크하면_0이_된다() {
+        // when then
+        assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(0);
+    }
+
 }
