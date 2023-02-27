@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.service;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -69,6 +70,27 @@ public class TaskServiceTest {
         assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(2);
     }
 
+    @Test
+    public void 체크리스트내에_있는_과제의_진행상태를_수정할_수_있다() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.addTask(new Task("name1"));
+        dailyChecklist.addTask(new Task("name2"));
+        dailyChecklistRepository.save(dailyChecklist);
+
+        entityManager.clear();
+
+        // when
+        taskService.changeTaskStatus(dailyChecklist.getId(), "name1", Status.DONE);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
+    }
+
 
 }
 
@@ -99,6 +121,14 @@ class TaskService {
                 .orElseThrow();
 
         dailyChecklist.deleteTask(taskName);
+    }
+
+    @Transactional
+    public void changeTaskStatus(Long dailyChecklistId, String taskName, Status status) {
+        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
+                .orElseThrow();
+
+        dailyChecklist.changeTaskStatus(taskName, status);
     }
 
 }
