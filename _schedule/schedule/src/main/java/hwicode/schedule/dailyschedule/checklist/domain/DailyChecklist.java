@@ -53,6 +53,9 @@ public class DailyChecklist {
                 break;
             case DONE:
                 findTaskBy(name).changeToDone();
+                break;
+            default:
+                throw new IllegalArgumentException();
         }
     }
 
