@@ -23,7 +23,7 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @Transient
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public Task(){}
