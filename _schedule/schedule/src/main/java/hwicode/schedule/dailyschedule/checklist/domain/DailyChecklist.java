@@ -36,13 +36,6 @@ public class DailyChecklist {
         tasks.remove(findTaskBy(name));
     }
 
-    private Task findTaskBy(String name) {
-        return tasks.stream()
-                .filter(s -> s.isSame(name))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-    }
-
     public void changeTaskStatus(String name, Status status) {
         switch (status) {
             case TODO:
@@ -57,6 +50,25 @@ public class DailyChecklist {
             default:
                 throw new IllegalArgumentException();
         }
+    }
+
+    private Task findTaskBy(String name) {
+        return tasks.stream()
+                .filter(s -> s.isSame(name))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public void addSubTask(String taskName, SubTask subTask) {
+        findTaskBy(taskName).addSubTask(subTask);
+    }
+
+    public void changeSubTaskStatus(String taskName, String subTaskName, Status status) {
+        findTaskBy(taskName).changeSubTaskStatus(subTaskName, status);
+    }
+
+    public void deleteSubTask(String taskName, String subTaskName) {
+        findTaskBy(taskName).deleteSubTask(subTaskName);
     }
 
     public int getTodayDonePercent() {
