@@ -5,6 +5,8 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklistFindService.findDailyChecklistWithTasks;
+
 @Service
 public class TaskService {
 
@@ -18,8 +20,7 @@ public class TaskService {
 
     @Transactional
     public void saveTask(Long dailyChecklistId, Task task) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
 
         dailyChecklist.addTask(task);
         taskSaveOnlyRepository.save(task);
@@ -27,25 +28,19 @@ public class TaskService {
 
     @Transactional
     public void deleteTask(Long dailyChecklistId, String taskName) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
         dailyChecklist.deleteTask(taskName);
     }
 
     @Transactional
     public void changeTaskStatus(Long dailyChecklistId, String taskName, Status status) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
         dailyChecklist.changeTaskStatus(taskName, status);
     }
 
     @Transactional
     public void changeTaskDifficulty(Long dailyChecklistId, String taskName, Difficulty difficulty) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
         dailyChecklist.changeTaskDifficulty(taskName, difficulty);
     }
 

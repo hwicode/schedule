@@ -7,6 +7,8 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklistFindService.findDailyChecklistWithTasks;
+
 @Service
 public class SubTaskService {
 
@@ -20,8 +22,7 @@ public class SubTaskService {
 
     @Transactional
     public void saveSubTask(Long dailyChecklistId, String taskName, SubTask subTask) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
 
         dailyChecklist.addSubTask(taskName, subTask);
         subTaskSaveOnlyRepository.save(subTask);
