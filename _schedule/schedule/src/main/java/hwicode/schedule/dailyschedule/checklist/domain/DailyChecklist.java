@@ -52,6 +52,10 @@ public class DailyChecklist {
         }
     }
 
+    public void makeTaskDone(String taskName) {
+        findTaskBy(taskName).makeDone();
+    }
+
     private Task findTaskBy(String name) {
         return tasks.stream()
                 .filter(s -> s.isSame(name))

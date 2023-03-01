@@ -82,6 +82,11 @@ public class Task {
         return this.status;
     }
 
+    void makeDone() {
+        subTasks.forEach(subTask -> subTask.changeStatus(Status.DONE));
+        changeToDone();
+    }
+
     private SubTask findSubTaskBy(String name) {
         return subTasks.stream()
                 .filter(s -> s.isSame(name))
