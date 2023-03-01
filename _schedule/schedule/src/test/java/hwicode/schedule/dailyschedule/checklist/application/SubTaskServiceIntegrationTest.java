@@ -8,8 +8,6 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -63,30 +61,5 @@ public class SubTaskServiceIntegrationTest {
                 .orElseThrow();
         assertThat(savedDailyChecklist.changeSubTaskStatus(NAME, NAME2, Status.PROGRESS)).isEqualTo(Status.PROGRESS);
     }
-
-}
-
-@Service
-class SubTaskService {
-
-    private final DailyChecklistRepository dailyChecklistRepository;
-    private final SubTaskRepository subTaskRepository;
-
-    public SubTaskService(DailyChecklistRepository dailyChecklistRepository, SubTaskRepository subTaskRepository) {
-        this.dailyChecklistRepository = dailyChecklistRepository;
-        this.subTaskRepository = subTaskRepository;
-    }
-
-    @Transactional
-    public void saveSubTask(Long dailyChecklistId, String taskName, SubTask subTask) {
-        DailyChecklist dailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
-                .orElseThrow();
-
-        dailyChecklist.addSubTask(taskName, subTask);
-        subTaskRepository.save(subTask);
-    }
-}
-
-interface SubTaskRepository extends JpaRepository<SubTask, Long> {
 
 }
