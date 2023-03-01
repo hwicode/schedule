@@ -1,11 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
-import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,11 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
-    private final TaskRepository taskRepository;
+    private final TaskSaveOnlyRepository taskSaveOnlyRepository;
 
-    public TaskService(DailyChecklistRepository dailyChecklistRepository, TaskRepository taskRepository) {
+    public TaskService(DailyChecklistRepository dailyChecklistRepository, TaskSaveOnlyRepository taskSaveOnlyRepository) {
         this.dailyChecklistRepository = dailyChecklistRepository;
-        this.taskRepository = taskRepository;
+        this.taskSaveOnlyRepository = taskSaveOnlyRepository;
     }
 
     @Transactional
@@ -26,8 +22,7 @@ public class TaskService {
                 .orElseThrow();
 
         dailyChecklist.addTask(task);
-
-        taskRepository.save(task);
+        taskSaveOnlyRepository.save(task);
     }
 
     @Transactional
