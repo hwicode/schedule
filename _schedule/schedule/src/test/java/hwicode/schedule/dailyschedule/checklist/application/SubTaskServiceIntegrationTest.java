@@ -83,4 +83,25 @@ public class SubTaskServiceIntegrationTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    public void 체크리스트내에_있는_서브_과제의_진행상태를_수정할_수_있다() {
+        // given
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
+        dailyChecklist.makeTaskDone(TASK_NAME);
+        dailyChecklist.makeTaskDone(TASK_NAME2);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        entityManager.clear();
+
+        // when
+        subTaskService.changeSubTaskStatus(dailyChecklist.getId(), TASK_NAME, SUB_TASK_NAME, Status.PROGRESS);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // then
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
+    }
+
 }
