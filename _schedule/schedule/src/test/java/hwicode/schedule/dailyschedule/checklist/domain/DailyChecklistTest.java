@@ -20,9 +20,11 @@ public class DailyChecklistTest {
 
     DailyChecklist dailyChecklist;
 
-    String NAME = "name";
-    String NAME2 = "name2";
-    String NAME3 = "name3";
+    final String NAME = "name";
+    final String NAME2 = "name2";
+    final String NAME3 = "name3";
+    final String TASK_NAME = NAME2;
+    final String SUB_TASK_NAME = "subTaskName";
 
     @BeforeEach
     public void beforeEach() {
@@ -264,6 +266,72 @@ public class DailyChecklistTest {
     public void 체크리스트에_과제가_없을_때_성취도를_체크하면_0이_된다() {
         // when then
         assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(0);
+    }
+
+    @Test
+    public void 체크리스트내에_있는_DONE과제에_서브과제를_더하면_성취도_계산에서_제외된다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeDoneTask(
+                tasks.get(0), tasks.get(1), tasks.get(2)
+        );
+
+        //when
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
+
+        // then
+        int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
+        int donePercent = (int) (doneScore / (double) 8 * 100);
+        assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @Test
+    public void 체크리스트내에_있는_DONE과제에_서브과제의_상태를_PROGRESS로_바꾸면_성취도_계산에서_제외된다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeDoneTask(
+                tasks.get(0), tasks.get(1), tasks.get(2)
+        );
+
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
+
+        //when
+        dailyChecklist.changeSubTaskStatus(TASK_NAME, SUB_TASK_NAME, Status.PROGRESS);
+
+        // then
+        int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
+        int donePercent = (int) (doneScore / (double) 8 * 100);
+        assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(donePercent);
+    }
+
+    @Test
+    public void 체크리스트내에_있는_과제에_서브과제를_삭제하면_서브과제가_삭제된다() {
+        // given
+        List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeDoneTask(
+                tasks.get(0), tasks.get(1), tasks.get(2)
+        );
+
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
+
+        //when
+        dailyChecklist.deleteSubTask(TASK_NAME, SUB_TASK_NAME);
+
+        // then
+        assertThatThrownBy(() -> dailyChecklist.deleteSubTask(TASK_NAME, SUB_TASK_NAME))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    private DailyChecklist createDailyChecklistWithThreeDoneTask(Task task1, Task task2, Task task3) {
+        dailyChecklist.addTask(task1);
+        dailyChecklist.addTask(task2);
+        dailyChecklist.addTask(task3);
+
+        dailyChecklist.changeTaskStatus(NAME, Status.DONE);
+        dailyChecklist.changeTaskStatus(NAME2, Status.DONE);
+        dailyChecklist.changeTaskStatus(NAME3, Status.DONE);
+
+        return dailyChecklist;
     }
 
 }

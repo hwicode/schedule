@@ -263,6 +263,19 @@ public class TaskTest {
     }
 
     @Test
+    public void makeDone_메서드를_사용하면_TODO상태인_과제와_서브과제가_모두_DONE상태가_된다() {
+        // given
+        task.addSubTask(subTask);
+        task.addSubTask(subTask2);
+
+        // when
+        task.makeDone();
+
+        //then
+        assertThat(task.isDone()).isTrue();
+    }
+
+    @Test
     public void 서브_과제의_이름이_중복되면_에러가_발생한다() {
         // given
         Task task = new Task(NAME);

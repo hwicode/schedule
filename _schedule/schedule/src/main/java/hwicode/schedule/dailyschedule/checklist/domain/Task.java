@@ -23,7 +23,7 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @Transient
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public Task(){}
@@ -43,6 +43,7 @@ public class Task {
     Status addSubTask(SubTask subTask) {
         validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
+        subTask.savedInTask(this);
 
         if (this.status.isDone()) {
             changeToProgress();
@@ -79,6 +80,11 @@ public class Task {
     Status deleteSubTask(String name) {
         subTasks.remove(findSubTaskBy(name));
         return this.status;
+    }
+
+    void makeDone() {
+        subTasks.forEach(subTask -> subTask.changeStatus(Status.DONE));
+        changeToDone();
     }
 
     private SubTask findSubTaskBy(String name) {

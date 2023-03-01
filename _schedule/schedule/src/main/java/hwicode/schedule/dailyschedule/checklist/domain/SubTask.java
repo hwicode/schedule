@@ -1,13 +1,33 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import javax.persistence.*;
+
+@Entity
 public class SubTask {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JoinColumn(name = "task_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Task task;
+
+    @Column(nullable = false, unique = true)
+    private String name;
+
+    @Enumerated(value = EnumType.STRING)
     private Status status;
-    private final String name;
+
+    public SubTask() {}
 
     public SubTask(String name) {
         this.status = Status.TODO;
         this.name = name;
+    }
+
+    void savedInTask(Task task) {
+        this.task = task;
     }
 
     boolean isSame(String name) {
