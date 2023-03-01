@@ -63,8 +63,8 @@ public class DailyChecklist {
         findTaskBy(taskName).addSubTask(subTask);
     }
 
-    public void changeSubTaskStatus(String taskName, String subTaskName, Status status) {
-        findTaskBy(taskName).changeSubTaskStatus(subTaskName, status);
+    public Status changeSubTaskStatus(String taskName, String subTaskName, Status status) {
+        return findTaskBy(taskName).changeSubTaskStatus(subTaskName, status);
     }
 
     public void deleteSubTask(String taskName, String subTaskName) {

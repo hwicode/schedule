@@ -43,6 +43,7 @@ public class Task {
     Status addSubTask(SubTask subTask) {
         validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
+        subTask.savedInTask(this);
 
         if (this.status.isDone()) {
             changeToProgress();

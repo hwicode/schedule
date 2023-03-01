@@ -26,6 +26,10 @@ public class SubTask {
         this.name = name;
     }
 
+    void savedInTask(Task task) {
+        this.task = task;
+    }
+
     boolean isSame(String name) {
         return this.name.equals(name);
     }
