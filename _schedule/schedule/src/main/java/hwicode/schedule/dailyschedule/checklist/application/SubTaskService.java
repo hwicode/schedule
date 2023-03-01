@@ -27,4 +27,10 @@ public class SubTaskService {
         dailyChecklist.addSubTask(taskName, subTask);
         subTaskSaveOnlyRepository.save(subTask);
     }
+
+    @Transactional
+    public void deleteSubTask(Long dailyChecklistId, String taskName, String subTaskName) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
+        dailyChecklist.deleteSubTask(taskName, subTaskName);
+    }
 }
