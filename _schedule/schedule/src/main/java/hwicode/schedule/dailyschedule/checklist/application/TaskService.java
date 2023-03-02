@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.TaskSaveRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,11 +20,15 @@ public class TaskService {
     }
 
     @Transactional
-    public void saveTask(Long dailyChecklistId, Task task) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
+    public Long saveTask(TaskSaveRequest taskSaveRequest) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
+                dailyChecklistRepository, taskSaveRequest.getDailyChecklistId());
 
+        Task task = taskSaveRequest.toEntity();
         dailyChecklist.addTask(task);
-        taskSaveOnlyRepository.save(task);
+
+        return taskSaveOnlyRepository.save(task)
+                .getId();
     }
 
     @Transactional
