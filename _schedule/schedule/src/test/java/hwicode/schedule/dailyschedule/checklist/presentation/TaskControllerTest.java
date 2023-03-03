@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -47,6 +48,8 @@ public class TaskControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().string(
                         String.valueOf(DAILY_CHECKLIST_ID)));
+
+        verify(taskService).saveTask(any());
     }
 
     @Test
@@ -59,6 +62,8 @@ public class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDeleteRequest)))
                 .andExpect(status().isNoContent());
+
+        verify(taskService).deleteTask(any(), any());
     }
 
     @Test
@@ -75,6 +80,8 @@ public class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.taskName").value("taskName"))
                 .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
+
+        verify(taskService).changeTaskStatus(any(), any());
     }
 
     @Test
@@ -91,6 +98,8 @@ public class TaskControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.taskName").value("taskName"))
                 .andExpect(jsonPath("$.modifiedDifficulty").value("HARD"));
+
+        verify(taskService).changeTaskDifficulty(any(), any());
     }
 
 }
