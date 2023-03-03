@@ -9,16 +9,15 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TaskController.class)
 public class TaskControllerTest {
@@ -101,44 +100,6 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.modifiedDifficulty").value("HARD"));
 
         verify(taskService).changeTaskDifficulty(any(), any());
-    }
-
-}
-
-@RestController
-class TaskController {
-
-    private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
-
-    @PostMapping("/tasks")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@RequestBody TaskSaveRequest taskSaveRequest) {
-        Long taskId = taskService.saveTask(taskSaveRequest);
-        return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
-    }
-
-    @DeleteMapping("/tasks/{taskName}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable String taskName, @RequestBody TaskDeleteRequest taskDeleteRequest) {
-        taskService.deleteTask(taskDeleteRequest.getDailyChecklistId(), taskName);
-    }
-
-    @PatchMapping("/tasks/{taskName}/status")
-    @ResponseStatus(value = HttpStatus.OK)
-    public TaskStatusModifyResponse changeTaskStatus(@PathVariable String taskName, @RequestBody TaskStatusModifyRequest taskStatusModifyRequest) {
-        Status modifiedStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
-        return new TaskStatusModifyResponse(taskName, modifiedStatus);
-    }
-
-    @PatchMapping("/tasks/{taskName}/difficulty")
-    @ResponseStatus(value = HttpStatus.OK)
-    public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable String taskName, @RequestBody TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
-        Difficulty modifiedDifficulty = taskService.changeTaskDifficulty(taskName, taskDifficultyModifyRequest);
-        return new TaskDifficultyModifyResponse(taskName, modifiedDifficulty);
     }
 
 }
