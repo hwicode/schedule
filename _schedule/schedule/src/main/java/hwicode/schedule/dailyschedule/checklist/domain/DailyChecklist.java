@@ -36,17 +36,14 @@ public class DailyChecklist {
         tasks.remove(findTaskBy(name));
     }
 
-    public void changeTaskStatus(String name, Status status) {
+    public Status changeTaskStatus(String name, Status status) {
         switch (status) {
             case TODO:
-                findTaskBy(name).changeToTodo();
-                break;
+                return findTaskBy(name).changeToTodo();
             case PROGRESS:
-                findTaskBy(name).changeToProgress();
-                break;
+                return findTaskBy(name).changeToProgress();
             case DONE:
-                findTaskBy(name).changeToDone();
-                break;
+                return findTaskBy(name).changeToDone();
             default:
                 throw new IllegalArgumentException();
         }

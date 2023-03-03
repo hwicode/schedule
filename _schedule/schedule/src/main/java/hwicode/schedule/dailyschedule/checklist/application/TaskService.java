@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.TaskStatusModifyRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,9 +39,11 @@ public class TaskService {
     }
 
     @Transactional
-    public void changeTaskStatus(Long dailyChecklistId, String taskName, Status status) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
-        dailyChecklist.changeTaskStatus(taskName, status);
+    public Status changeTaskStatus(String taskName, TaskStatusModifyRequest taskStatusModifyRequest) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
+                dailyChecklistRepository, taskStatusModifyRequest.getDailyChecklistId());
+
+        return dailyChecklist.changeTaskStatus(taskName, taskStatusModifyRequest.getStatus());
     }
 
     @Transactional

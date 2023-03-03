@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.TaskStatusModifyRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -102,11 +103,12 @@ public class TaskServiceIntegrationTest {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
-
         entityManager.clear();
 
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
+
         // when
-        taskService.changeTaskStatus(dailyChecklist.getId(), NAME, Status.DONE);
+        taskService.changeTaskStatus(NAME, taskStatusModifyRequest);
 
         entityManager.flush();
         entityManager.clear();

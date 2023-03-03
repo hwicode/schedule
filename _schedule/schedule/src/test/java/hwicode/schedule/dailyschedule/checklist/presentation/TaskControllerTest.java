@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
+import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -14,10 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(TaskController.class)
 public class TaskControllerTest {
@@ -40,8 +39,8 @@ public class TaskControllerTest {
 
         // when then
         mockMvc.perform(post("/tasks")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskSaveRequest)))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskSaveRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(content().string("1"));
     }
@@ -56,6 +55,22 @@ public class TaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskDeleteRequest)))
                 .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(1L, Status.DONE);
+        given(taskService.changeTaskStatus(any(), any()))
+                .willReturn(Status.DONE);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskStatusModifyRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskName").value("taskName"))
+                .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
     }
 
 }
@@ -79,6 +94,13 @@ class TaskController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable String taskName, @RequestBody TaskDeleteRequest taskDeleteRequest) {
         taskService.deleteTask(taskDeleteRequest.getDailyChecklistId(), taskName);
+    }
+
+    @PatchMapping("/tasks/{taskName}/status")
+    @ResponseStatus(value = HttpStatus.OK)
+    public TaskStatusModifyResponse changeTaskStatus(@PathVariable String taskName, @RequestBody TaskStatusModifyRequest taskStatusModifyRequest) {
+        Status modifiedStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
+        return new TaskStatusModifyResponse(taskName, modifiedStatus);
     }
 
 }
