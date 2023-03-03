@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskStatusModifyRequest;
 import org.springframework.stereotype.Service;
@@ -47,9 +48,11 @@ public class TaskService {
     }
 
     @Transactional
-    public void changeTaskDifficulty(Long dailyChecklistId, String taskName, Difficulty difficulty) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
-        dailyChecklist.changeTaskDifficulty(taskName, difficulty);
+    public Difficulty changeTaskDifficulty(String taskName, TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
+                dailyChecklistRepository, taskDifficultyModifyRequest.getDailyChecklistId());
+
+        return dailyChecklist.changeTaskDifficulty(taskName, taskDifficultyModifyRequest.getDifficulty());
     }
 
 }

@@ -131,8 +131,9 @@ public class Task {
         this.dailyChecklist = dailyChecklist;
     }
 
-    void changeDifficulty(Difficulty difficulty) {
+    Difficulty changeDifficulty(Difficulty difficulty) {
         this.difficulty = difficulty;
+        return this.difficulty;
     }
 
     boolean isSame(String name) {

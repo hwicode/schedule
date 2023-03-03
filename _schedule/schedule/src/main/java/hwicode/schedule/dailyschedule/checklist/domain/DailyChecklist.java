@@ -28,8 +28,8 @@ public class DailyChecklist {
         }
     }
 
-    public void changeTaskDifficulty(String name, Difficulty difficulty) {
-        findTaskBy(name).changeDifficulty(difficulty);
+    public Difficulty changeTaskDifficulty(String name, Difficulty difficulty) {
+        return findTaskBy(name).changeDifficulty(difficulty);
     }
 
     public void deleteTask(String name) {

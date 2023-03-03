@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.TaskStatusModifyRequest;
 import org.junit.jupiter.api.Test;
@@ -84,11 +85,12 @@ public class TaskServiceIntegrationTest {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
-
         entityManager.clear();
 
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
+
         // when
-        taskService.changeTaskDifficulty(dailyChecklist.getId(), NAME2, Difficulty.HARD);
+        taskService.changeTaskDifficulty(NAME2, taskDifficultyModifyRequest);
 
         entityManager.flush();
         entityManager.clear();

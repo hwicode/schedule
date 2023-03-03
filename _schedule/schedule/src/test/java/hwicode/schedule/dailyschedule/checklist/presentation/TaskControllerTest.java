@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
+import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +74,22 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
     }
 
+    @Test
+    void 과제의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(1L, Difficulty.HARD);
+        given(taskService.changeTaskDifficulty(any(), any()))
+                .willReturn(Difficulty.HARD);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/difficulty")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDifficultyModifyRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.taskName").value("taskName"))
+                .andExpect(jsonPath("$.modifiedDifficulty").value("HARD"));
+    }
+
 }
 
 @RestController
@@ -101,6 +118,13 @@ class TaskController {
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable String taskName, @RequestBody TaskStatusModifyRequest taskStatusModifyRequest) {
         Status modifiedStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
         return new TaskStatusModifyResponse(taskName, modifiedStatus);
+    }
+
+    @PatchMapping("/tasks/{taskName}/difficulty")
+    @ResponseStatus(value = HttpStatus.OK)
+    public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable String taskName, @RequestBody TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
+        Difficulty modifiedDifficulty = taskService.changeTaskDifficulty(taskName, taskDifficultyModifyRequest);
+        return new TaskDifficultyModifyResponse(taskName, modifiedDifficulty);
     }
 
 }
