@@ -29,27 +29,30 @@ public class TaskControllerTest {
     private TaskService taskService;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
+
+    private final Long DAILY_CHECKLIST_ID = 1L;
 
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(1L, "name");
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, "name");
         given(taskService.saveTask(any()))
-                .willReturn(1L);
+                .willReturn(DAILY_CHECKLIST_ID);
 
         // when then
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskSaveRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string("1"));
+                .andExpect(content().string(
+                        String.valueOf(DAILY_CHECKLIST_ID)));
     }
 
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(1L);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(DAILY_CHECKLIST_ID);
 
         // when then
         mockMvc.perform(delete("/tasks/taskName")
@@ -61,7 +64,7 @@ public class TaskControllerTest {
     @Test
     void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(1L, Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE);
         given(taskService.changeTaskStatus(any(), any()))
                 .willReturn(Status.DONE);
 
@@ -77,7 +80,7 @@ public class TaskControllerTest {
     @Test
     void 과제의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(1L, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, Difficulty.HARD);
         given(taskService.changeTaskDifficulty(any(), any()))
                 .willReturn(Difficulty.HARD);
 
@@ -128,4 +131,3 @@ class TaskController {
     }
 
 }
-
