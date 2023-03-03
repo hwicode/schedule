@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation;
+package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify;
 
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 

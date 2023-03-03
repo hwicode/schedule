@@ -3,6 +3,13 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 

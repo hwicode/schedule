@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation;
+package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete;
 
 public class TaskDeleteRequest {
 
