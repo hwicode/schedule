@@ -33,21 +33,22 @@ public class TaskControllerTest {
     private ObjectMapper objectMapper;
 
     private final Long DAILY_CHECKLIST_ID = 1L;
+    private final Long TASK_ID = 2L;
 
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, "name");
         given(taskService.saveTask(any()))
-                .willReturn(DAILY_CHECKLIST_ID);
+                .willReturn(TASK_ID);
 
         // when then
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskSaveRequest)))
                 .andExpect(status().isCreated())
-                .andExpect(content().string(
-                        String.valueOf(DAILY_CHECKLIST_ID)));
+                .andExpect(jsonPath("$.taskId").value(TASK_ID))
+                .andExpect(jsonPath("$.taskName").value("name"));
 
         verify(taskService).saveTask(any());
     }
@@ -115,8 +116,9 @@ class TaskController {
 
     @PostMapping("/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Long saveTask(@RequestBody TaskSaveRequest taskSaveRequest) {
-        return taskService.saveTask(taskSaveRequest);
+    public TaskSaveResponse saveTask(@RequestBody TaskSaveRequest taskSaveRequest) {
+        Long taskId = taskService.saveTask(taskSaveRequest);
+        return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
     @DeleteMapping("/tasks/{taskName}")
