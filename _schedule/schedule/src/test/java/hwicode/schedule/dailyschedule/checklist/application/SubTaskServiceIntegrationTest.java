@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -53,8 +54,10 @@ public class SubTaskServiceIntegrationTest {
 
         entityManager.clear();
 
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK);
+
         // when
-        subTaskService.saveSubTask(dailyChecklist.getId(), TASK_NAME2, new SubTask(NEW_SUB_TASK));
+        subTaskService.saveSubTask(subTaskSaveRequest);
 
         entityManager.clear();
 
