@@ -259,7 +259,7 @@ public class DailyChecklistTest {
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.addTask(task2))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(TaskNameDuplicationException.class);
     }
 
     @Test

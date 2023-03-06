@@ -24,7 +24,7 @@ public class DailyChecklist {
                 .anyMatch(task -> task.isSame(name));
 
         if (duplication) {
-            throw new IllegalStateException();
+            throw new TaskNameDuplicationException();
         }
     }
 
@@ -45,7 +45,7 @@ public class DailyChecklist {
             case DONE:
                 return findTaskBy(name).changeToDone();
             default:
-                throw new IllegalArgumentException();
+                throw new StatusNotFoundException();
         }
     }
 
@@ -57,7 +57,7 @@ public class DailyChecklist {
         return tasks.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TaskNotFoundException::new);
     }
 
     public void addSubTask(String taskName, SubTask subTask) {
@@ -91,5 +91,26 @@ public class DailyChecklist {
 
     public Long getId() {
         return id;
+    }
+}
+
+class TaskNameDuplicationException extends RuntimeException {
+
+    public TaskNameDuplicationException() {
+        super("과제의 이름이 중복되었습니다.");
+    }
+}
+
+class StatusNotFoundException extends RuntimeException {
+
+    public StatusNotFoundException() {
+        super("알 수 없는 진행 상태입니다.");
+    }
+}
+
+class TaskNotFoundException extends RuntimeException {
+
+    public TaskNotFoundException() {
+        super("과제를 찾을 수 없습니다.");
     }
 }
