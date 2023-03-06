@@ -2,9 +2,14 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
+import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,8 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -71,6 +75,24 @@ public class SubTaskControllerTest {
         verify(subTaskService).deleteSubTask(any(), any());
     }
 
+    @Test
+    void 서브_과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
+        given(subTaskService.changeSubTaskStatus(any(), any()))
+                .willReturn(Status.DONE);
+
+        // when then
+        mockMvc.perform(patch("/subtasks/subTaskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.subTaskName").value("subTaskName"))
+                .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
+
+        verify(subTaskService).changeSubTaskStatus(any(), any());
+    }
+
 }
 
 @RestController
@@ -95,5 +117,13 @@ class SubTaskController {
     public void deleteSubTask(@PathVariable String subTaskName,
                            @RequestBody SubTaskDeleteRequest subTaskDeleteRequest) {
         subTaskService.deleteSubTask(subTaskName, subTaskDeleteRequest);
+    }
+
+    @PatchMapping("/subtasks/{subTaskName}/status")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable String subTaskName,
+                                                     @RequestBody SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
+        Status modifiedStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
+        return new SubTaskStatusModifyResponse(subTaskName, modifiedStatus);
     }
 }
