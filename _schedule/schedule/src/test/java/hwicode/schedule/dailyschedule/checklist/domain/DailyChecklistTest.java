@@ -263,6 +263,16 @@ public class DailyChecklistTest {
     }
 
     @Test
+    public void 체크리스트에_존재하지_않는_과제를_조회하면_에러가_발생한다() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+
+        // when then
+        assertThatThrownBy(() -> dailyChecklist.deleteTask(NAME))
+                .isInstanceOf(TaskNotFoundException.class);
+    }
+
+    @Test
     public void 체크리스트에_과제가_없을_때_성취도를_체크하면_0이_된다() {
         // when then
         assertThat(dailyChecklist.getTodayDonePercent()).isEqualTo(0);
