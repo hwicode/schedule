@@ -5,19 +5,13 @@ import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -95,35 +89,3 @@ public class SubTaskControllerTest {
 
 }
 
-@RestController
-class SubTaskController {
-
-    private final SubTaskService subTaskService;
-
-
-    public SubTaskController(SubTaskService subTaskService) {
-        this.subTaskService = subTaskService;
-    }
-
-    @PostMapping("/subtasks")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public SubTaskSaveResponse saveSubTask(@RequestBody SubTaskSaveRequest subTaskSaveRequest) {
-        Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
-        return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
-    }
-
-    @DeleteMapping("/subtasks/{subTaskName}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteSubTask(@PathVariable String subTaskName,
-                           @RequestBody SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskService.deleteSubTask(subTaskName, subTaskDeleteRequest);
-    }
-
-    @PatchMapping("/subtasks/{subTaskName}/status")
-    @ResponseStatus(value = HttpStatus.OK)
-    public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable String subTaskName,
-                                                     @RequestBody SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        Status modifiedStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
-        return new SubTaskStatusModifyResponse(subTaskName, modifiedStatus);
-    }
-}
