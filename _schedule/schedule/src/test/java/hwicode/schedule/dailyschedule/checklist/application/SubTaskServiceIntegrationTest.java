@@ -4,6 +4,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
@@ -87,7 +88,7 @@ public class SubTaskServiceIntegrationTest {
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
         assertThatThrownBy(() -> savedDailyChecklist.deleteSubTask(TASK_NAME, SUB_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNotFoundException.class);
     }
 
     @Test

@@ -1,5 +1,10 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -56,7 +61,7 @@ public class Task {
                 .anyMatch(subTask -> subTask.isSame(name));
 
         if (duplication) {
-            throw new IllegalStateException();
+            throw new SubTaskNameDuplicationException();
         }
     }
 
@@ -91,13 +96,13 @@ public class Task {
         return subTasks.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubTaskNotFoundException::new);
     }
 
     Status changeToDone() {
         boolean isAllDone = isAllSameStatus(Status.DONE);
         if (!isAllDone) {
-            throw new IllegalStateException();
+            throw new SubTaskNotAllDoneException();
         }
 
         this.status = Status.DONE;
@@ -107,7 +112,7 @@ public class Task {
     Status changeToTodo() {
         boolean isAllTodo = isAllSameStatus(Status.TODO);
         if (!isAllTodo) {
-            throw new IllegalStateException();
+            throw new SubTaskNotAllTodoException();
         }
 
         this.status = Status.TODO;
@@ -156,3 +161,4 @@ public class Task {
         return this.id;
     }
 }
+

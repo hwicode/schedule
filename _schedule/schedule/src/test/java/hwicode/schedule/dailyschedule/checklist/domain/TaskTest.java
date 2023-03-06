@@ -1,5 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -98,7 +101,7 @@ public class TaskTest {
 
         //when then
         assertThatThrownBy(task::changeToDone)
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(SubTaskNotAllDoneException.class);
     }
 
     @Test
@@ -182,7 +185,7 @@ public class TaskTest {
 
         //when then
         assertThatThrownBy(task::changeToTodo)
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(SubTaskNotAllTodoException.class);
     }
 
     @Test
@@ -286,7 +289,7 @@ public class TaskTest {
 
         // when then
         assertThatThrownBy(() -> task.addSubTask(subTask2))
-                .isInstanceOf(IllegalStateException.class);
+                .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 
 }

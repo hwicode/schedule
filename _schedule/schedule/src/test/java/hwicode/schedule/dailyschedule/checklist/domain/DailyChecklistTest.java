@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -331,7 +332,7 @@ public class DailyChecklistTest {
 
         // then
         assertThatThrownBy(() -> dailyChecklist.deleteSubTask(TASK_NAME, SUB_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNotFoundException.class);
     }
 
     private DailyChecklist createDailyChecklistWithThreeDoneTask(Task task1, Task task2, Task task3) {
