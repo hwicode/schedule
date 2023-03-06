@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskSaveOnlyRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,9 +36,11 @@ public class SubTaskService {
     }
 
     @Transactional
-    public void deleteSubTask(Long dailyChecklistId, String taskName, String subTaskName) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
-        dailyChecklist.deleteSubTask(taskName, subTaskName);
+    public void deleteSubTask(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
+                dailyChecklistRepository, subTaskDeleteRequest.getDailyChecklistId());
+
+        dailyChecklist.deleteSubTask(subTaskDeleteRequest.getTaskName(), subTaskName);
     }
 
     @Transactional

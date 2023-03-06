@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -11,14 +12,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -58,6 +57,20 @@ public class SubTaskControllerTest {
         verify(subTaskService).saveSubTask(any());
     }
 
+    @Test
+    void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
+
+        // when then
+        mockMvc.perform(delete("/subtasks/subTaskName")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskDeleteRequest)))
+                .andExpect(status().isNoContent());
+
+        verify(subTaskService).deleteSubTask(any(), any());
+    }
+
 }
 
 @RestController
@@ -75,5 +88,12 @@ class SubTaskController {
     public SubTaskSaveResponse saveSubTask(@RequestBody SubTaskSaveRequest subTaskSaveRequest) {
         Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
         return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
+    }
+
+    @DeleteMapping("/subtasks/{subTaskName}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteSubTask(@PathVariable String subTaskName,
+                           @RequestBody SubTaskDeleteRequest subTaskDeleteRequest) {
+        subTaskService.deleteSubTask(subTaskName, subTaskDeleteRequest);
     }
 }
