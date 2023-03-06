@@ -1,5 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,26 +95,5 @@ public class DailyChecklist {
 
     public Long getId() {
         return id;
-    }
-}
-
-class TaskNameDuplicationException extends RuntimeException {
-
-    public TaskNameDuplicationException() {
-        super("과제의 이름이 중복되었습니다.");
-    }
-}
-
-class StatusNotFoundException extends RuntimeException {
-
-    public StatusNotFoundException() {
-        super("알 수 없는 진행 상태입니다.");
-    }
-}
-
-class TaskNotFoundException extends RuntimeException {
-
-    public TaskNotFoundException() {
-        super("과제를 찾을 수 없습니다.");
     }
 }

@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
