@@ -1,24 +1,18 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify;
 
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor
 public class TaskDifficultyModifyResponse {
 
     private String taskName;
     private Difficulty modifiedDifficulty;
 
-    public TaskDifficultyModifyResponse() {}
-
     public TaskDifficultyModifyResponse(String taskName, Difficulty modifiedDifficulty) {
         this.taskName = taskName;
         this.modifiedDifficulty = modifiedDifficulty;
-    }
-
-    public String getTaskName() {
-        return taskName;
-    }
-
-    public Difficulty getModifiedDifficulty() {
-        return modifiedDifficulty;
     }
 }
