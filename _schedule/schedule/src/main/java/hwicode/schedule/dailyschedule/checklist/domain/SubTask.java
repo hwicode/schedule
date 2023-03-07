@@ -1,7 +1,10 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import lombok.NoArgsConstructor;
+
 import javax.persistence.*;
 
+@NoArgsConstructor
 @Entity
 public class SubTask {
 
@@ -18,8 +21,6 @@ public class SubTask {
 
     @Enumerated(value = EnumType.STRING)
     private Status status;
-
-    public SubTask() {}
 
     public SubTask(String name) {
         this.status = Status.TODO;

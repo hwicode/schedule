@@ -4,11 +4,13 @@ import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplic
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 @Entity
 public class Task {
 
@@ -30,8 +32,6 @@ public class Task {
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
-
-    public Task(){}
 
     public Task(String name) {
         this.name = name;
