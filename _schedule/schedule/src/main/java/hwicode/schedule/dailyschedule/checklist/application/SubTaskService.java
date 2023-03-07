@@ -8,21 +8,18 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklistFindService.findDailyChecklistWithTasks;
 
+@RequiredArgsConstructor
 @Service
 public class SubTaskService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
     private final SubTaskSaveOnlyRepository subTaskSaveOnlyRepository;
-
-    public SubTaskService(DailyChecklistRepository dailyChecklistRepository, SubTaskSaveOnlyRepository subTaskSaveOnlyRepository) {
-        this.dailyChecklistRepository = dailyChecklistRepository;
-        this.subTaskSaveOnlyRepository = subTaskSaveOnlyRepository;
-    }
 
     @Transactional
     public Long saveSubTask(SubTaskSaveRequest subTaskSaveRequest) {
