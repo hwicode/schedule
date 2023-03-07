@@ -7,18 +7,15 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.Su
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 class SubTaskController {
 
     private final SubTaskService subTaskService;
-
-
-    public SubTaskController(SubTaskService subTaskService) {
-        this.subTaskService = subTaskService;
-    }
 
     @PostMapping("/subtasks")
     @ResponseStatus(value = HttpStatus.CREATED)

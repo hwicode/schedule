@@ -10,17 +10,15 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskS
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+@RequiredArgsConstructor
 @RestController
 class TaskController {
 
     private final TaskService taskService;
-
-    public TaskController(TaskService taskService) {
-        this.taskService = taskService;
-    }
 
     @PostMapping("/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
