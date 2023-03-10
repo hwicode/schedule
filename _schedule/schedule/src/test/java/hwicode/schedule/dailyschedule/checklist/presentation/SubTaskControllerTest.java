@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
@@ -119,6 +120,23 @@ public class SubTaskControllerTest {
                         .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest())))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskNotFoundException.getMessage()));
+
+        verify(subTaskService).changeSubTaskStatus(any(), any());
+    }
+
+    @Test
+    void 체크리스트를_조회할_때_체크리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
+        given(subTaskService.changeSubTaskStatus(any(), any()))
+                .willThrow(dailyChecklistNotFoundException);
+
+        // when then
+        mockMvc.perform(patch("/subtasks/subTaskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
         verify(subTaskService).changeSubTaskStatus(any(), any());
     }
