@@ -5,6 +5,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
@@ -104,6 +109,91 @@ public class TaskControllerTest {
                 .andExpect(jsonPath("$.modifiedDifficulty").value("HARD"));
 
         verify(taskService).changeTaskDifficulty(any(), any());
+    }
+
+    @Test
+    void 과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
+        // given
+        TaskNameDuplicationException taskNameDuplicationException = new TaskNameDuplicationException();
+        given(taskService.saveTask(any()))
+                .willThrow(taskNameDuplicationException);
+
+        // when then
+        mockMvc.perform(post("/tasks")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new TaskSaveRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
+
+        verify(taskService).saveTask(any());
+    }
+
+    @Test
+    void 과제의_진행_상태_변경을_요청할_때_진행_상태가_존재하지_않는다면_에러가_발생한다() throws Exception {
+        // given
+        StatusNotFoundException statusNotFoundException = new StatusNotFoundException();
+        given(taskService.changeTaskStatus(any(), any()))
+                .willThrow(statusNotFoundException);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(statusNotFoundException.getMessage()));
+
+        verify(taskService).changeTaskStatus(any(), any());
+    }
+
+    @Test
+    void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        TaskNotFoundException taskNotFoundException = new TaskNotFoundException();
+        given(taskService.changeTaskStatus(any(), any()))
+                .willThrow(taskNotFoundException);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                .andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(taskNotFoundException.getMessage()));
+
+        verify(taskService).changeTaskStatus(any(), any());
+    }
+
+    @Test
+    void 과제의_진행_상태를_DONE으로_변경을_요청할_때_서브_과제의_진행_상태가_모두_DONE이_아니면_에러가_발생한다() throws Exception {
+        // given
+        SubTaskNotAllDoneException subTaskNotAllDoneException = new SubTaskNotAllDoneException();
+        given(taskService.changeTaskStatus(any(), any()))
+                .willThrow(subTaskNotAllDoneException);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(subTaskNotAllDoneException.getMessage()));
+
+        verify(taskService).changeTaskStatus(any(), any());
+    }
+
+    @Test
+    void 과제의_진행_상태를_TODO로_변경을_요청할_때_서브_과제의_진행_상태가_모두_TODO가_아니면_에러가_발생한다() throws Exception {
+        // given
+        SubTaskNotAllTodoException subTaskNotAllTodoException = new SubTaskNotAllTodoException();
+        given(taskService.changeTaskStatus(any(), any()))
+                .willThrow(subTaskNotAllTodoException);
+
+        // when then
+        mockMvc.perform(patch("/tasks/taskName/status")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(subTaskNotAllTodoException.getMessage()));
+
+        verify(taskService).changeTaskStatus(any(), any());
     }
 
 }
