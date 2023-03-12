@@ -100,7 +100,7 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(post("/subtasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskSaveRequest())))
+                        .content(objectMapper.writeValueAsString(new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, SUB_TASK_NAME))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNameDuplicationException.getMessage()));
 
@@ -117,7 +117,7 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(patch("/subtasks/subTaskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskNotFoundException.getMessage()));
 
@@ -134,7 +134,7 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(patch("/subtasks/subTaskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 

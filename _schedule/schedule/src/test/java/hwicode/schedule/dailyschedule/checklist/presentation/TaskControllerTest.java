@@ -121,7 +121,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskSaveRequest())))
+                        .content(objectMapper.writeValueAsString(new TaskSaveRequest(DAILY_CHECKLIST_ID, "name"))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
 
@@ -138,7 +138,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(statusNotFoundException.getMessage()));
 
@@ -155,7 +155,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskNotFoundException.getMessage()));
 
@@ -172,7 +172,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNotAllDoneException.getMessage()));
 
@@ -189,7 +189,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest())))
+                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNotAllTodoException.getMessage()));
 
