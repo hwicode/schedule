@@ -25,13 +25,22 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleExceptionInternal(
+            Exception ex,
+            Object body,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(ex.getMessage()));
     }
 
     @Override
-    protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleHttpMessageNotReadable(
+            HttpMessageNotReadableException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_MESSAGE_BODY_TYPE;
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
