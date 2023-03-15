@@ -24,6 +24,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return ResponseEntity.status(status)
+                .body(new ErrorResponse(ex.getMessage()));
+    }
+
+    @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException e,
             HttpHeaders headers,
