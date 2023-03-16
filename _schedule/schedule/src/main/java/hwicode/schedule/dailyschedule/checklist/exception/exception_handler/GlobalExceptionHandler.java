@@ -21,9 +21,9 @@ import java.util.stream.Collectors;
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ChecklistBusinessException.class)
-    protected ResponseEntity<Object> handleChecklistBusinessException(ChecklistBusinessException e) {
-        return ResponseEntity.status(e.getHttpStatus())
-                .body(new ErrorResponse(e.getMessage()));
+    protected ResponseEntity<Object> handleChecklistBusinessException(ChecklistBusinessException ex) {
+        return ResponseEntity.status(ex.getHttpStatus())
+                .body(new ErrorResponse(ex.getMessage()));
     }
 
     @ExceptionHandler(Exception.class)
@@ -55,7 +55,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    protected ResponseEntity<Object> handleNoHandlerFoundException(
+            NoHandlerFoundException ex,
+            HttpHeaders headers,
+            HttpStatus status,
+            WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.NOT_FOUND;
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
