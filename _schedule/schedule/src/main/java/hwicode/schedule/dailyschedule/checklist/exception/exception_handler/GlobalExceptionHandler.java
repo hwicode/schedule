@@ -26,8 +26,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ErrorResponse(e.getMessage()));
     }
 
-    @ExceptionHandler({Exception.class})
-    public ResponseEntity<Object> handleAllException(Exception ex) {
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<Object> handleAllException(Exception ex) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INTERNAL_SERVER_ERROR;
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
