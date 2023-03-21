@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.exception.exception_handler;
 
 import hwicode.schedule.dailyschedule.checklist.exception.ChecklistBusinessException;
 import hwicode.schedule.dailyschedule.checklist.exception.exception_handler.ErrorResponse.ValidationError;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +18,20 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private static final String LOG_FORMAT = "Class : {}, Message : {}";
+    private static final String CUSTOM_LOG_FORMAT = "Class : {}, Message : {}, CustomMessage : {}";
+
     @ExceptionHandler(ChecklistBusinessException.class)
     protected ResponseEntity<Object> handleChecklistBusinessException(ChecklistBusinessException ex) {
+        log.warn(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                null,
+                ex.getMessage());
+
         return ResponseEntity.status(ex.getHttpStatus())
                 .body(new ErrorResponse(ex.getMessage()));
     }
@@ -29,6 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> handleAllException(Exception ex) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INTERNAL_SERVER_ERROR;
+
+        log.error(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                globalErrorCode.getMessage());
+
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
     }
@@ -40,6 +56,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
+
+        log.warn(LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage());
+
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(ex.getMessage()));
     }
@@ -50,6 +71,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
+
+        log.warn(LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage());
+
         return ResponseEntity.status(status)
                 .body(null);
     }
@@ -72,27 +98,39 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_MESSAGE_BODY_TYPE;
+
+        log.warn(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                globalErrorCode.getMessage());
+
         return ResponseEntity.status(status)
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
     }
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
-            MethodArgumentNotValidException e,
+            MethodArgumentNotValidException ex,
             HttpHeaders headers,
             HttpStatus status,
             WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_PARAMETER;
-        return handleExceptionInternal(e, globalErrorCode);
+
+        log.warn(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                globalErrorCode.getMessage());
+
+        return handleExceptionInternal(ex, globalErrorCode);
     }
 
-    private ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException e, GlobalErrorCode globalErrorCode) {
+    private ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException ex, GlobalErrorCode globalErrorCode) {
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
-                .body(makeErrorResponse(e, globalErrorCode));
+                .body(makeErrorResponse(ex, globalErrorCode));
     }
 
-    private ErrorResponse makeErrorResponse(MethodArgumentNotValidException e, GlobalErrorCode globalErrorCode) {
-        List<ValidationError> validationErrors = e.getBindingResult()
+    private ErrorResponse makeErrorResponse(MethodArgumentNotValidException ex, GlobalErrorCode globalErrorCode) {
+        List<ValidationError> validationErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(ValidationError::new)
