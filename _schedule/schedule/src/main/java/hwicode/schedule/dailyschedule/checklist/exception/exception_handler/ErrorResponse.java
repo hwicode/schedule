@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.MDC;
 import org.springframework.validation.FieldError;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ErrorResponse {
 
+    private final String id = MDC.get("request_id");
     private final LocalDateTime createdTime = LocalDateTime.now();
     private final String message;
 
