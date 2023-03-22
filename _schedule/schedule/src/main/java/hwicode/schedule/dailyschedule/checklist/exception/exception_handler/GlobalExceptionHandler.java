@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ChecklistBusinessException.class)
     protected ResponseEntity<Object> handleChecklistBusinessException(ChecklistBusinessException ex) {
-        log.warn(CUSTOM_LOG_FORMAT,
+        log.info(CUSTOM_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 null,
                 ex.getMessage());
@@ -57,7 +57,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 
-        log.warn(LOG_FORMAT,
+        log.info(LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 ex.getMessage());
 
@@ -72,7 +72,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             HttpStatus status,
             WebRequest request) {
 
-        log.warn(LOG_FORMAT,
+        log.info(LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 ex.getMessage());
 
@@ -99,7 +99,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_MESSAGE_BODY_TYPE;
 
-        log.warn(CUSTOM_LOG_FORMAT,
+        log.info(CUSTOM_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 ex.getMessage(),
                 globalErrorCode.getMessage());
@@ -116,7 +116,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             WebRequest request) {
         GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_PARAMETER;
 
-        log.warn(CUSTOM_LOG_FORMAT,
+        log.info(CUSTOM_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 ex.getMessage(),
                 globalErrorCode.getMessage());
