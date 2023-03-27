@@ -3,12 +3,14 @@ package hwicode.schedule.dailyschedule.checklist;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -112,4 +114,31 @@ public class SubTaskEndToEndTest {
         assertThat(subTaskRepository.findById(subTaskId).isEmpty()).isTrue();
     }
 
+    @Test
+    public void 서브_과제_진행_상태_변경_요청() {
+        //given
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
+        dailyChecklistId = savedDailyChecklist.getId();
+
+        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, taskName));
+        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName));
+
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklistId, taskName, Status.DONE);
+
+        RequestSpecification requestSpecification = given()
+                .pathParam("subTaskName", subTaskName)
+                .contentType(ContentType.JSON)
+                .body(subTaskStatusModifyRequest);
+
+        //when
+        Response response = requestSpecification.when()
+                .patch(String.format("http://localhost:%s/subtasks/{subTaskName}/status", port));
+
+        //then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        SubTask subTask = subTaskRepository.findById(subTaskId).orElseThrow();
+        assertThat(subTask.isSameStatus(Status.DONE)).isTrue();
+    }
 }

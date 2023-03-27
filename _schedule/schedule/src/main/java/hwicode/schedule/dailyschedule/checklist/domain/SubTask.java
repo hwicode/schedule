@@ -39,15 +39,15 @@ public class SubTask {
         this.status = status;
     }
 
-    boolean isSameStatus(Status status) {
-        return this.status == status;
-    }
-
     String getName() {
         return this.name;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public boolean isSameStatus(Status status) {
+        return this.status == status;
     }
 }
