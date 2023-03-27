@@ -77,7 +77,7 @@ public class SubTaskControllerTest {
         // given
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
         given(subTaskService.changeSubTaskStatus(any(), any()))
-                .willReturn(Status.DONE);
+                .willReturn(Status.PROGRESS);
 
         // when then
         mockMvc.perform(patch("/subtasks/subTaskName/status")
@@ -85,7 +85,8 @@ public class SubTaskControllerTest {
                         .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.subTaskName").value("subTaskName"))
-                .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
+                .andExpect(jsonPath("$.taskStatus").value("PROGRESS"))
+                .andExpect(jsonPath("$.subTaskStatus").value("DONE"));
 
         verify(subTaskService).changeSubTaskStatus(any(), any());
     }
