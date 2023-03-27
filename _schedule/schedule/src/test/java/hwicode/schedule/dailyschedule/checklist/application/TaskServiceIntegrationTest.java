@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
+import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
@@ -8,19 +9,18 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
-@Transactional
 public class TaskServiceIntegrationTest {
+
+    @Autowired
+    DatabaseCleanUp databaseCleanUp;
 
     @Autowired
     TaskService taskService;
@@ -28,12 +28,14 @@ public class TaskServiceIntegrationTest {
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
 
-    @PersistenceContext
-    EntityManager entityManager;
-
     final String NAME = "name";
     final String NAME2 = "name2";
     final String NEW = "new";
+
+    @BeforeEach
+    void clearDatabase() {
+        databaseCleanUp.execute();
+    }
 
     DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
@@ -48,13 +50,11 @@ public class TaskServiceIntegrationTest {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
-        entityManager.clear();
 
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW);
 
         // when
         taskService.saveTask(taskSaveRequest);
-        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -67,13 +67,8 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        entityManager.clear();
-
         // when
         taskService.deleteTask(dailyChecklist.getId(), NAME2);
-
-        entityManager.flush();
-        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -85,15 +80,11 @@ public class TaskServiceIntegrationTest {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
-        entityManager.clear();
 
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         // when
         taskService.changeTaskDifficulty(NAME2, taskDifficultyModifyRequest);
-
-        entityManager.flush();
-        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -105,15 +96,11 @@ public class TaskServiceIntegrationTest {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
-        entityManager.clear();
 
         TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
 
         // when
         taskService.changeTaskStatus(NAME, taskStatusModifyRequest);
-
-        entityManager.flush();
-        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();

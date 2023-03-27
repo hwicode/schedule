@@ -6,7 +6,6 @@ import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
@@ -15,7 +14,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_mod
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,25 +35,23 @@ public class TaskEndToEndTest {
     private int port;
 
     @Autowired
-    DailyChecklistRepository dailyChecklistRepository;
-
-    @Autowired
-    SubTaskRepository subTaskRepository;
-
-    @Autowired
-    TaskRepository taskRepository;
+    DatabaseCleanUp databaseCleanUp;
 
     @Autowired
     TaskService taskService;
 
+    @Autowired
+    DailyChecklistRepository dailyChecklistRepository;
+
+    @Autowired
+    TaskRepository taskRepository;
+
     Long dailyChecklistId;
     String taskName = "taskName";
 
-    @AfterEach
+    @BeforeEach
     void clearDatabase() {
-        dailyChecklistRepository.deleteAll();
-        subTaskRepository.deleteAll();
-        taskRepository.deleteAll();
+        databaseCleanUp.execute();
     }
 
     @Test
@@ -92,7 +89,7 @@ public class TaskEndToEndTest {
         TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyChecklistId);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", taskName)
+                .pathParam(taskName, taskName)
                 .contentType(ContentType.JSON)
                 .body(taskDeleteRequest);
 
@@ -104,7 +101,7 @@ public class TaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(taskRepository.findById(taskId).isEmpty()).isTrue();
+        assertThat(taskRepository.existsById(taskId)).isFalse();
     }
 
     @Test
@@ -118,7 +115,7 @@ public class TaskEndToEndTest {
         TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklistId, Status.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", taskName)
+                .pathParam(taskName, taskName)
                 .contentType(ContentType.JSON)
                 .body(taskStatusModifyRequest);
 
@@ -145,7 +142,7 @@ public class TaskEndToEndTest {
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklistId, Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", taskName)
+                .pathParam(taskName, taskName)
                 .contentType(ContentType.JSON)
                 .body(taskDifficultyModifyRequest);
 

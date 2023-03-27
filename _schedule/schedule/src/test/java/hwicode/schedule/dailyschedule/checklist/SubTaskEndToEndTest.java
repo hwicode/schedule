@@ -7,7 +7,6 @@ import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
@@ -15,7 +14,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskS
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
-import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,13 +35,7 @@ public class SubTaskEndToEndTest {
     private int port;
 
     @Autowired
-    DailyChecklistRepository dailyChecklistRepository;
-
-    @Autowired
-    SubTaskRepository subTaskRepository;
-
-    @Autowired
-    TaskRepository taskRepository;
+    DatabaseCleanUp databaseCleanUp;
 
     @Autowired
     TaskService taskService;
@@ -50,15 +43,19 @@ public class SubTaskEndToEndTest {
     @Autowired
     SubTaskService subTaskService;
 
+    @Autowired
+    DailyChecklistRepository dailyChecklistRepository;
+
+    @Autowired
+    SubTaskRepository subTaskRepository;
+
     Long dailyChecklistId;
     String taskName = "taskName";
     String subTaskName = "subTaskName";
 
-    @AfterEach
+    @BeforeEach
     void clearDatabase() {
-        dailyChecklistRepository.deleteAll();
-        subTaskRepository.deleteAll();
-        taskRepository.deleteAll();
+        databaseCleanUp.execute();
     }
 
     @Test
@@ -99,7 +96,7 @@ public class SubTaskEndToEndTest {
         SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklistId, taskName);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("subTaskName", subTaskName)
+                .pathParam(subTaskName, subTaskName)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
@@ -111,7 +108,7 @@ public class SubTaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(subTaskRepository.findById(subTaskId).isEmpty()).isTrue();
+        assertThat(subTaskRepository.existsById(subTaskId)).isFalse();
     }
 
     @Test
@@ -126,7 +123,7 @@ public class SubTaskEndToEndTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklistId, taskName, Status.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("subTaskName", subTaskName)
+                .pathParam(subTaskName, subTaskName)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 

@@ -1,28 +1,29 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
+import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-@Transactional
 public class SubTaskServiceIntegrationTest {
+
+    @Autowired
+    DatabaseCleanUp databaseCleanUp;
 
     @Autowired
     SubTaskService subTaskService;
@@ -30,14 +31,19 @@ public class SubTaskServiceIntegrationTest {
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
 
-    @PersistenceContext
-    EntityManager entityManager;
+    @Autowired
+    SubTaskRepository subTaskRepository;
 
     final String TASK_NAME = "taskName";
     final String TASK_NAME2 = "taskName2";
     final String SUB_TASK_NAME = "subTaskName";
     final String SUB_TASK_NAME2 = "subTaskName2";
     final String NEW_SUB_TASK = "newSubTaskName";
+
+    @BeforeEach
+    void clearDatabase() {
+        databaseCleanUp.execute();
+    }
 
     DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
@@ -55,18 +61,13 @@ public class SubTaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        entityManager.clear();
-
         SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK);
 
         // when
-        subTaskService.saveSubTask(subTaskSaveRequest);
-
-        entityManager.clear();
+        Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
-        assertThat(savedDailyChecklist.changeSubTaskStatus(TASK_NAME2, NEW_SUB_TASK, Status.PROGRESS)).isEqualTo(Status.PROGRESS);
+        assertThat(subTaskRepository.existsById(subTaskId)).isTrue();
     }
 
     @Test
@@ -75,19 +76,13 @@ public class SubTaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        entityManager.clear();
-
         SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         // when
         subTaskService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest);
 
-        entityManager.flush();
-        entityManager.clear();
-
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
-        assertThatThrownBy(() -> savedDailyChecklist.deleteSubTask(TASK_NAME, SUB_TASK_NAME))
+        assertThatThrownBy(() -> subTaskService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest))
                 .isInstanceOf(SubTaskNotFoundException.class);
     }
 
@@ -99,15 +94,10 @@ public class SubTaskServiceIntegrationTest {
         dailyChecklist.makeTaskDone(TASK_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
 
-        entityManager.clear();
-
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.PROGRESS);
 
         // when
         subTaskService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);
-
-        entityManager.flush();
-        entityManager.clear();
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
