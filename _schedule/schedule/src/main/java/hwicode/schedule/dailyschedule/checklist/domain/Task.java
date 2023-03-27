@@ -21,7 +21,7 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     private DailyChecklist dailyChecklist;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(value = EnumType.STRING)

@@ -16,7 +16,7 @@ public class SubTask {
     @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private String name;
 
     @Enumerated(value = EnumType.STRING)
