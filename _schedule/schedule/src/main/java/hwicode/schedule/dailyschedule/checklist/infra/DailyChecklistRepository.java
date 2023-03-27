@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface DailyChecklistRepository extends JpaRepository<DailyChecklist, Long> {
 
     @Query("SELECT d FROM DailyChecklist d "
-            + "JOIN FETCH d.tasks "
+            + "LEFT JOIN FETCH d.tasks "
             + "WHERE d.id = :id")
     Optional<DailyChecklist> findDailyChecklistWithTasks(@Param("id") Long dailyCheckListId);
 }
