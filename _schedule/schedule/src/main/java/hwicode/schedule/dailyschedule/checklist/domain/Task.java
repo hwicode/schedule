@@ -145,20 +145,20 @@ public class Task {
         return this.name.equals(name);
     }
 
-    boolean isDone() {
-        return this.status.isDone();
-    }
-
-    int getDifficultyScore() {
-        return difficulty.getValue();
-    }
-
     String getName() {
         return this.name;
     }
 
     public Long getId() {
         return this.id;
+    }
+
+    public boolean isDone() {
+        return this.status.isDone();
+    }
+
+    public int getDifficultyScore() {
+        return difficulty.getValue();
     }
 }
 
