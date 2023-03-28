@@ -1,10 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
-import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
@@ -40,12 +37,14 @@ public class SubTaskServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-    DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
+    private DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task(TASK_NAME));
-        dailyChecklist.addTask(new Task(TASK_NAME2));
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME2));
+
+        dailyChecklist.addTask(new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME2, Status.TODO, Difficulty.NORMAL));
+
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME, Status.TODO));
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME2, Status.TODO));
 
         return dailyChecklist;
     }
