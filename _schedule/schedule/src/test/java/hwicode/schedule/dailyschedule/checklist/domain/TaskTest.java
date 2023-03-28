@@ -12,15 +12,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class TaskTest {
 
-    Task task;
-    SubTask subTask;
-    SubTask subTask2;
+    private Task task;
+    private SubTask subTask;
+    private SubTask subTask2;
 
     @BeforeEach
     public void beforeEach() {
-        task = new Task(TASK_NAME);
-        subTask = new SubTask(SUB_TASK_NAME);
-        subTask2 = new SubTask(SUB_TASK_NAME2);
+        task = new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL);
+        subTask = new SubTask(SUB_TASK_NAME, Status.TODO);
+        subTask2 = new SubTask(SUB_TASK_NAME2, Status.TODO);
     }
 
     @Test
