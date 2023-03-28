@@ -41,8 +41,8 @@ class TaskController {
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
-        Status modifiedStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
-        return new TaskStatusModifyResponse(taskName, modifiedStatus);
+        Status taskStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
+        return new TaskStatusModifyResponse(taskName, taskStatus);
     }
 
     @PatchMapping("/tasks/{taskName}/difficulty")

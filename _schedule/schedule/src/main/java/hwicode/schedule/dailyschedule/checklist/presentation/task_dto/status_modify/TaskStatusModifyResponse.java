@@ -15,10 +15,10 @@ public class TaskStatusModifyResponse {
     private String taskName;
 
     @NotNull
-    private Status modifiedStatus;
+    private Status taskStatus;
 
-    public TaskStatusModifyResponse(String taskName, Status modifiedStatus) {
+    public TaskStatusModifyResponse(String taskName, Status taskStatus) {
         this.taskName = taskName;
-        this.modifiedStatus = modifiedStatus;
+        this.taskStatus = taskStatus;
     }
 }

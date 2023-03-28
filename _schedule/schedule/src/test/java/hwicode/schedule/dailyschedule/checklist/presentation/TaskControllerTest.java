@@ -88,7 +88,7 @@ public class TaskControllerTest {
                         .content(objectMapper.writeValueAsString(taskStatusModifyRequest)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.taskName").value("taskName"))
-                .andExpect(jsonPath("$.modifiedStatus").value("DONE"));
+                .andExpect(jsonPath("$.taskStatus").value("DONE"));
 
         verify(taskService).changeTaskStatus(any(), any());
     }
