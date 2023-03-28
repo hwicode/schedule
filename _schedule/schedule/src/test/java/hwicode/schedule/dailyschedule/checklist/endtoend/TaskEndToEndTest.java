@@ -48,8 +48,6 @@ public class TaskEndToEndTest {
     @Autowired
     TaskRepository taskRepository;
 
-    Long dailyChecklistId;
-
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -58,10 +56,10 @@ public class TaskEndToEndTest {
     @Test
     public void 과제_생성_요청() {
         //given
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
-        dailyChecklistId = savedDailyChecklist.getId();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklistId, TASK_NAME);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -82,12 +80,12 @@ public class TaskEndToEndTest {
     @Test
     public void 과제_삭제_요청() {
         //given
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
-        dailyChecklistId = savedDailyChecklist.getId();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
+        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), TASK_NAME));
 
-        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyChecklistId);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyChecklist.getId());
 
         RequestSpecification requestSpecification = given()
                 .pathParam(TASK_NAME, TASK_NAME)
@@ -108,12 +106,12 @@ public class TaskEndToEndTest {
     @Test
     public void 과제_진행_상태_변경_요청() {
         //given
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
-        dailyChecklistId = savedDailyChecklist.getId();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
+        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), TASK_NAME));
 
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklistId, Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam(TASK_NAME, TASK_NAME)
@@ -135,12 +133,12 @@ public class TaskEndToEndTest {
     @Test
     public void 과제_어려움_점수_변경_요청() {
         //given
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
-        dailyChecklistId = savedDailyChecklist.getId();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
+        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), TASK_NAME));
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklistId, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
                 .pathParam(TASK_NAME, TASK_NAME)
