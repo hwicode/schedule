@@ -23,8 +23,13 @@ public class SubTask {
     private Status status;
 
     public SubTask(String name) {
-        this.status = Status.TODO;
         this.name = name;
+        this.status = Status.TODO;
+    }
+
+    public SubTask(String name, Status status) {
+        this.name = name;
+        this.status = status;
     }
 
     void savedInTask(Task task) {

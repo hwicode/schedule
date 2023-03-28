@@ -35,14 +35,14 @@ public class Task {
 
     public Task(String name) {
         this.name = name;
-        this.difficulty = Difficulty.NORMAL;
         this.status = Status.TODO;
+        this.difficulty = Difficulty.NORMAL;
     }
 
-    public Task(String name, Difficulty difficulty) {
+    public Task(String name, Status status, Difficulty difficulty) {
         this.name = name;
+        this.status = status;
         this.difficulty = difficulty;
-        this.status = Status.TODO;
     }
 
     Status addSubTask(SubTask subTask) {
