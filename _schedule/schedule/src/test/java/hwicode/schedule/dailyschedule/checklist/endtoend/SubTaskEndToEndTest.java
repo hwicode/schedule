@@ -25,6 +25,8 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.SUB_TASK_NAME;
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.TASK_NAME;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -51,8 +53,6 @@ public class SubTaskEndToEndTest {
     SubTaskRepository subTaskRepository;
 
     Long dailyChecklistId;
-    String taskName = "taskName";
-    String subTaskName = "subTaskName";
 
     @BeforeEach
     void clearDatabase() {
@@ -65,9 +65,9 @@ public class SubTaskEndToEndTest {
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
         dailyChecklistId = savedDailyChecklist.getId();
 
-        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, taskName));
+        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklistId, TASK_NAME, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -91,13 +91,13 @@ public class SubTaskEndToEndTest {
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
         dailyChecklistId = savedDailyChecklist.getId();
 
-        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, taskName));
-        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName));
+        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
+        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklistId, TASK_NAME, SUB_TASK_NAME));
 
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklistId, taskName);
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklistId, TASK_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam(subTaskName, subTaskName)
+                .pathParam(SUB_TASK_NAME, SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
@@ -118,13 +118,13 @@ public class SubTaskEndToEndTest {
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.save(new DailyChecklist());
         dailyChecklistId = savedDailyChecklist.getId();
 
-        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, taskName));
-        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName));
+        taskService.saveTask(new TaskSaveRequest(dailyChecklistId, TASK_NAME));
+        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklistId, TASK_NAME, SUB_TASK_NAME));
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklistId, taskName, Status.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklistId, TASK_NAME, Status.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam(subTaskName, subTaskName)
+                .pathParam(SUB_TASK_NAME, SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 

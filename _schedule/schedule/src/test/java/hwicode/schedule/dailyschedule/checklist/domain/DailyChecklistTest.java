@@ -14,6 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -22,12 +23,6 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 public class DailyChecklistTest {
 
     DailyChecklist dailyChecklist;
-
-    final String NAME = "name";
-    final String NAME2 = "name2";
-    final String NAME3 = "name3";
-    final String TASK_NAME = NAME2;
-    final String SUB_TASK_NAME = "subTaskName";
 
     @BeforeEach
     public void beforeEach() {
@@ -65,9 +60,9 @@ public class DailyChecklistTest {
 
     private List<Task> makeTasksWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
         return Arrays.asList(
-                new Task(NAME, difficulty),
-                new Task(NAME2, difficulty2),
-                new Task(NAME3, difficulty3)
+                new Task(TASK_NAME, difficulty),
+                new Task(TASK_NAME2, difficulty2),
+                new Task(TASK_NAME3, difficulty3)
         );
     }
 
@@ -80,7 +75,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.changeTaskDifficulty(NAME, Difficulty.HARD);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.HARD);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(7);
@@ -95,7 +90,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.changeTaskDifficulty(NAME2, Difficulty.HARD);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME2, Difficulty.HARD);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(7);
@@ -110,7 +105,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.changeTaskDifficulty(NAME, Difficulty.EASY);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.EASY);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -125,7 +120,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.changeTaskDifficulty(NAME3, Difficulty.EASY);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME3, Difficulty.EASY);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(6);
@@ -140,8 +135,8 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.changeTaskDifficulty(NAME3, Difficulty.EASY);
-        dailyChecklist.changeTaskDifficulty(NAME, Difficulty.NORMAL);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME3, Difficulty.EASY);
+        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.NORMAL);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -156,7 +151,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.deleteTask(NAME2);
+        dailyChecklist.deleteTask(TASK_NAME2);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -171,8 +166,8 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         // when
-        dailyChecklist.deleteTask(NAME3);
-        dailyChecklist.deleteTask(NAME);
+        dailyChecklist.deleteTask(TASK_NAME3);
+        dailyChecklist.deleteTask(TASK_NAME);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(2);
@@ -187,8 +182,8 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         //when
-        dailyChecklist.changeTaskStatus(NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME3, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.DONE);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -205,8 +200,8 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         //when
-        dailyChecklist.changeTaskStatus(NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME3, Status.PROGRESS);
+        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.PROGRESS);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore();
@@ -223,7 +218,7 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(2));
 
         //when
-        dailyChecklist.changeTaskStatus(NAME2, Status.TODO);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.TODO);
 
         // then
         int donePercent = 0;
@@ -238,12 +233,12 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(tasks.get(1));
         dailyChecklist.addTask(tasks.get(2));
 
-        dailyChecklist.changeTaskStatus(NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME2, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME3, Status.PROGRESS);
+        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.PROGRESS);
 
         //when
-        dailyChecklist.deleteTask(NAME2);
+        dailyChecklist.deleteTask(TASK_NAME2);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore();
@@ -255,10 +250,10 @@ public class DailyChecklistTest {
     public void 과제의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
-        Task task = new Task(NAME);
+        Task task = new Task(TASK_NAME);
         dailyChecklist.addTask(task);
 
-        Task task2 = new Task(NAME);
+        Task task2 = new Task(TASK_NAME);
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.addTask(task2))
@@ -271,7 +266,7 @@ public class DailyChecklistTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         // when then
-        assertThatThrownBy(() -> dailyChecklist.deleteTask(NAME))
+        assertThatThrownBy(() -> dailyChecklist.deleteTask(TASK_NAME))
                 .isInstanceOf(TaskNotFoundException.class);
     }
 
@@ -290,7 +285,7 @@ public class DailyChecklistTest {
         );
 
         //when
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
+        dailyChecklist.addSubTask(TASK_NAME2, new SubTask(SUB_TASK_NAME));
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -306,10 +301,10 @@ public class DailyChecklistTest {
                 tasks.get(0), tasks.get(1), tasks.get(2)
         );
 
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME));
+        dailyChecklist.addSubTask(TASK_NAME2, new SubTask(SUB_TASK_NAME));
 
         //when
-        dailyChecklist.changeSubTaskStatus(TASK_NAME, SUB_TASK_NAME, Status.PROGRESS);
+        dailyChecklist.changeSubTaskStatus(TASK_NAME2, SUB_TASK_NAME, Status.PROGRESS);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -340,9 +335,9 @@ public class DailyChecklistTest {
         dailyChecklist.addTask(task2);
         dailyChecklist.addTask(task3);
 
-        dailyChecklist.changeTaskStatus(NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME2, Status.DONE);
-        dailyChecklist.changeTaskStatus(NAME3, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.DONE);
 
         return dailyChecklist;
     }

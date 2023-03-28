@@ -16,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -34,11 +35,6 @@ public class SubTaskControllerTest {
 
     @Autowired
     private ObjectMapper objectMapper;
-
-    private final Long DAILY_CHECKLIST_ID = 1L;
-    private final Long SUB_TASK_ID = 2L;
-    private final String TASK_NAME = "taskName";
-    private final String SUB_TASK_NAME = "subTaskName";
 
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -84,7 +80,7 @@ public class SubTaskControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.subTaskName").value("subTaskName"))
+                .andExpect(jsonPath("$.subTaskName").value(SUB_TASK_NAME))
                 .andExpect(jsonPath("$.taskStatus").value("PROGRESS"))
                 .andExpect(jsonPath("$.subTaskStatus").value("DONE"));
 

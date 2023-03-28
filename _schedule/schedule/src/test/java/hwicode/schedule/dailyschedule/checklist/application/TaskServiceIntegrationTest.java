@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -28,10 +29,6 @@ public class TaskServiceIntegrationTest {
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
 
-    final String NAME = "name";
-    final String NAME2 = "name2";
-    final String NEW = "new";
-
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -39,8 +36,8 @@ public class TaskServiceIntegrationTest {
 
     DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task(NAME));
-        dailyChecklist.addTask(new Task(NAME2));
+        dailyChecklist.addTask(new Task(TASK_NAME));
+        dailyChecklist.addTask(new Task(TASK_NAME2));
 
         return dailyChecklist;
     }
@@ -51,7 +48,7 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         // when
         taskService.saveTask(taskSaveRequest);
@@ -68,7 +65,7 @@ public class TaskServiceIntegrationTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
-        taskService.deleteTask(dailyChecklist.getId(), NAME2);
+        taskService.deleteTask(dailyChecklist.getId(), TASK_NAME2);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -84,7 +81,7 @@ public class TaskServiceIntegrationTest {
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         // when
-        taskService.changeTaskDifficulty(NAME2, taskDifficultyModifyRequest);
+        taskService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -100,7 +97,7 @@ public class TaskServiceIntegrationTest {
         TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
 
         // when
-        taskService.changeTaskStatus(NAME, taskStatusModifyRequest);
+        taskService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();

@@ -16,6 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -33,12 +34,6 @@ public class SubTaskServiceIntegrationTest {
 
     @Autowired
     SubTaskRepository subTaskRepository;
-
-    final String TASK_NAME = "taskName";
-    final String TASK_NAME2 = "taskName2";
-    final String SUB_TASK_NAME = "subTaskName";
-    final String SUB_TASK_NAME2 = "subTaskName2";
-    final String NEW_SUB_TASK = "newSubTaskName";
 
     @BeforeEach
     void clearDatabase() {
@@ -61,7 +56,7 @@ public class SubTaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
 
         // when
         Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);

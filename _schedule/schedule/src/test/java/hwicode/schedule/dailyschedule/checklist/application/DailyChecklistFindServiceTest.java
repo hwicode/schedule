@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.DAILY_CHECKLIST_ID;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
@@ -18,8 +19,6 @@ public class DailyChecklistFindServiceTest {
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
-
-    final Long DAILY_CHECKLIST_ID =  1L;
 
     @BeforeEach
     void clearDatabase() {
