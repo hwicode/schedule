@@ -5,7 +5,9 @@ import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
@@ -16,6 +18,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 public class TaskServiceIntegrationTest {
@@ -29,15 +32,19 @@ public class TaskServiceIntegrationTest {
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
 
+    @Autowired
+    TaskRepository taskRepository;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
     }
 
-    DailyChecklist createDailyChecklistWithTwoTask() {
+    private DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task(TASK_NAME));
-        dailyChecklist.addTask(new Task(TASK_NAME2));
+
+        dailyChecklist.addTask(new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME2, Status.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }
@@ -51,11 +58,10 @@ public class TaskServiceIntegrationTest {
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         // when
-        taskService.saveTask(taskSaveRequest);
+        Long taskId = taskService.saveTask(taskSaveRequest);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
-        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(6);
+        assertThat(taskRepository.existsById(taskId)).isTrue();
     }
 
     @Test
@@ -68,8 +74,8 @@ public class TaskServiceIntegrationTest {
         taskService.deleteTask(dailyChecklist.getId(), TASK_NAME2);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
-        assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(2);
+        assertThatThrownBy(() -> taskService.deleteTask(dailyChecklist.getId(), TASK_NAME2))
+                .isInstanceOf(TaskNotFoundException.class);
     }
 
     @Test
