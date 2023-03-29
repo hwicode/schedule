@@ -280,10 +280,10 @@ public class TaskTest {
     @Test
     public void 서브_과제의_이름이_중복되면_에러가_발생한다() {
         // given
-        SubTask subTask = new SubTask(SUB_TASK_NAME);
+        SubTask subTask = new SubTask(NEW_SUB_TASK_NAME);
         task.addSubTask(subTask);
 
-        SubTask duplicatedSubTask = new SubTask(SUB_TASK_NAME);
+        SubTask duplicatedSubTask = new SubTask(NEW_SUB_TASK_NAME);
 
         // when then
         assertThatThrownBy(() -> task.addSubTask(duplicatedSubTask))

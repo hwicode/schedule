@@ -44,7 +44,7 @@ public class TaskControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
         given(taskService.saveTask(any()))
                 .willReturn(TASK_ID);
 
@@ -54,7 +54,7 @@ public class TaskControllerTest {
                         .content(objectMapper.writeValueAsString(taskSaveRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.taskId").value(TASK_ID))
-                .andExpect(jsonPath("$.taskName").value(TASK_NAME));
+                .andExpect(jsonPath("$.taskName").value(NEW_TASK_NAME));
 
         verify(taskService).saveTask(any());
     }
@@ -119,7 +119,7 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME))))
+                        .content(objectMapper.writeValueAsString(new TaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
 

@@ -39,7 +39,7 @@ public class SubTaskControllerTest {
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
         given(subTaskService.saveSubTask(any()))
                 .willReturn(SUB_TASK_ID);
 
@@ -49,7 +49,7 @@ public class SubTaskControllerTest {
                         .content(objectMapper.writeValueAsString(subTaskSaveRequest)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.subTaskId").value(SUB_TASK_ID))
-                .andExpect(jsonPath("$.subTaskName").value(SUB_TASK_NAME));
+                .andExpect(jsonPath("$.subTaskName").value(NEW_SUB_TASK_NAME));
 
         verify(subTaskService).saveSubTask(any());
     }
@@ -97,7 +97,7 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(post("/subtasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, SUB_TASK_NAME))))
+                        .content(objectMapper.writeValueAsString(new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME))))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNameDuplicationException.getMessage()));
 

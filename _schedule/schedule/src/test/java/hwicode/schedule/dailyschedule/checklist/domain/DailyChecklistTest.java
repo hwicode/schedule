@@ -157,10 +157,10 @@ public class DailyChecklistTest {
     public void 과제의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
-        Task task = new Task(TASK_NAME);
+        Task task = new Task(NEW_TASK_NAME);
         dailyChecklist.addTask(task);
 
-        Task duplicatedTask = new Task(TASK_NAME);
+        Task duplicatedTask = new Task(NEW_TASK_NAME);
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.addTask(duplicatedTask))
@@ -173,7 +173,7 @@ public class DailyChecklistTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         // when then
-        assertThatThrownBy(() -> dailyChecklist.deleteTask(TASK_NAME))
+        assertThatThrownBy(() -> dailyChecklist.deleteTask(NEW_TASK_NAME))
                 .isInstanceOf(TaskNotFoundException.class);
     }
 

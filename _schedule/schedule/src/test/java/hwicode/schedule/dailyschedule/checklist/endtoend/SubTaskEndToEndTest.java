@@ -91,7 +91,7 @@ public class SubTaskEndToEndTest {
         SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam(NEW_SUB_TASK_NAME, NEW_SUB_TASK_NAME)
+                .pathParam("subTaskName", NEW_SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
@@ -112,12 +112,12 @@ public class SubTaskEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, SUB_TASK_NAME));
+        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME));
 
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam(SUB_TASK_NAME, SUB_TASK_NAME)
+                .pathParam("subTaskName", NEW_SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 
