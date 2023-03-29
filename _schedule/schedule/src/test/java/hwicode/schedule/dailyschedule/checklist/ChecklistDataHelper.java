@@ -4,11 +4,16 @@ import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.save.TaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify.TaskStatusModifyResponse;
 
 public class ChecklistDataHelper {
 
@@ -57,4 +62,25 @@ public class ChecklistDataHelper {
         return new SubTaskDeleteRequest(dailyChecklistId, taskName);
     }
 
+
+    // checklist response dto
+    public static TaskSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
+        return new TaskSaveResponse(taskId, taskName);
+    }
+
+    public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskName, Status taskStatus) {
+        return new TaskStatusModifyResponse(taskName, taskStatus);
+    }
+
+    public static TaskDifficultyModifyResponse createTaskDifficultyModifyResponse(String taskName, Difficulty modifiedDifficulty) {
+        return new TaskDifficultyModifyResponse(taskName, modifiedDifficulty);
+    }
+
+    public static SubTaskSaveResponse createSubTaskSaveResponse(Long subTaskId, String subtaskName) {
+        return new SubTaskSaveResponse(subTaskId, subtaskName);
+    }
+
+    public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskName, Status taskStatus, Status subTaskStatus) {
+        return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatus);
+    }
 }
