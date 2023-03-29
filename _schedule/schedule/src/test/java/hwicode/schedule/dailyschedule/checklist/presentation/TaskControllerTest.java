@@ -44,7 +44,7 @@ public class TaskControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
+        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
         given(taskService.saveTask(any()))
                 .willReturn(TASK_ID);
 
@@ -62,7 +62,7 @@ public class TaskControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(DAILY_CHECKLIST_ID);
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_CHECKLIST_ID);
 
         // when then
         mockMvc.perform(delete("/tasks/taskName")
@@ -76,7 +76,7 @@ public class TaskControllerTest {
     @Test
     void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE);
         given(taskService.changeTaskStatus(any(), any()))
                 .willReturn(Status.DONE);
 
@@ -94,7 +94,7 @@ public class TaskControllerTest {
     @Test
     void 과제의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, Difficulty.HARD);
         given(taskService.changeTaskDifficulty(any(), any()))
                 .willReturn(Difficulty.HARD);
 
@@ -119,7 +119,9 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(post("/tasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME))))
+                        .content(objectMapper.writeValueAsString(
+                                createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME)
+                        )))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
 
@@ -136,7 +138,9 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        )))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(statusNotFoundException.getMessage()));
 
@@ -153,7 +157,9 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        )))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskNotFoundException.getMessage()));
 
@@ -170,7 +176,9 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        )))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNotAllDoneException.getMessage()));
 
@@ -187,7 +195,9 @@ public class TaskControllerTest {
         // when then
         mockMvc.perform(patch("/tasks/taskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        )))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNotAllTodoException.getMessage()));
 

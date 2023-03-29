@@ -39,7 +39,7 @@ public class SubTaskControllerTest {
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
         given(subTaskService.saveSubTask(any()))
                 .willReturn(SUB_TASK_ID);
 
@@ -57,7 +57,7 @@ public class SubTaskControllerTest {
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
 
         // when then
         mockMvc.perform(delete("/subtasks/subTaskName")
@@ -71,7 +71,7 @@ public class SubTaskControllerTest {
     @Test
     void 서브_과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
         given(subTaskService.changeSubTaskStatus(any(), any()))
                 .willReturn(Status.PROGRESS);
 
@@ -97,7 +97,9 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(post("/subtasks")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME))))
+                        .content(objectMapper.writeValueAsString(
+                                createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME)
+                        )))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNameDuplicationException.getMessage()));
 
@@ -114,7 +116,9 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(patch("/subtasks/subTaskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                        )))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskNotFoundException.getMessage()));
 
@@ -131,7 +135,9 @@ public class SubTaskControllerTest {
         // when then
         mockMvc.perform(patch("/subtasks/subTaskName/status")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE))))
+                        .content(objectMapper.writeValueAsString(
+                                createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                        )))
                 .andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 

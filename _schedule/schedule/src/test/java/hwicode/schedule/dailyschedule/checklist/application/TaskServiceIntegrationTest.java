@@ -55,7 +55,7 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
+        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         // when
         Long taskId = taskService.saveTask(taskSaveRequest);
@@ -84,7 +84,7 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         // when
         taskService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
@@ -100,7 +100,7 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
 
         // when
         taskService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);

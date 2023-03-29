@@ -62,7 +62,7 @@ public class SubTaskEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -86,9 +86,11 @@ public class SubTaskEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME));
+        Long subTaskId = subTaskService.saveSubTask(
+                createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
+        );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("subTaskName", NEW_SUB_TASK_NAME)
@@ -112,9 +114,11 @@ public class SubTaskEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskService.saveSubTask(new SubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME));
+        Long subTaskId = subTaskService.saveSubTask(
+                createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
+        );
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("subTaskName", NEW_SUB_TASK_NAME)

@@ -25,8 +25,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.NEW_TASK_NAME;
-import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.TASK_NAME;
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -60,7 +59,7 @@ public class TaskEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
+        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -84,9 +83,11 @@ public class TaskEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME));
+        Long taskId = taskService.saveTask(
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+        );
 
-        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyChecklist.getId());
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyChecklist.getId());
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskName", NEW_TASK_NAME)
@@ -110,9 +111,11 @@ public class TaskEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME));
+        Long taskId = taskService.saveTask(
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+        );
 
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskName", NEW_TASK_NAME)
@@ -137,9 +140,11 @@ public class TaskEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME));
+        Long taskId = taskService.saveTask(
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+        );
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskName", NEW_TASK_NAME)
