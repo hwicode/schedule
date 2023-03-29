@@ -8,13 +8,17 @@ import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplic
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -40,16 +44,21 @@ public class SubTaskControllerTest {
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
+        SubTaskSaveResponse subTaskSaveResponse = createSubTaskSaveResponse(SUB_TASK_ID, NEW_SUB_TASK_NAME);
+
         given(subTaskService.saveSubTask(any()))
                 .willReturn(SUB_TASK_ID);
 
-        // when then
-        mockMvc.perform(post("/subtasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(subTaskSaveRequest)))
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.subTaskId").value(SUB_TASK_ID))
-                .andExpect(jsonPath("$.subTaskName").value(NEW_SUB_TASK_NAME));
+        // when
+        ResultActions perform = mockMvc.perform(post("/subtasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
+
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                                objectMapper.writeValueAsString(subTaskSaveResponse)
+                        ));
 
         verify(subTaskService).saveSubTask(any());
     }
@@ -72,17 +81,21 @@ public class SubTaskControllerTest {
     void 서브_과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
+        SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_NAME, Status.PROGRESS, Status.DONE);
+
         given(subTaskService.changeSubTaskStatus(any(), any()))
                 .willReturn(Status.PROGRESS);
 
-        // when then
-        mockMvc.perform(patch("/subtasks/subTaskName/status")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.subTaskName").value(SUB_TASK_NAME))
-                .andExpect(jsonPath("$.taskStatus").value("PROGRESS"))
-                .andExpect(jsonPath("$.subTaskStatus").value("DONE"));
+        // when
+        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subTaskStatusModifyResponse)
+                ));
 
         verify(subTaskService).changeSubTaskStatus(any(), any());
     }
@@ -94,13 +107,15 @@ public class SubTaskControllerTest {
         given(subTaskService.saveSubTask(any()))
                 .willThrow(subTaskNameDuplicationException);
 
-        // when then
-        mockMvc.perform(post("/subtasks")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME)
-                        )))
-                .andExpect(status().isBadRequest())
+        // when
+        ResultActions perform = mockMvc.perform(post("/subtasks")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskNameDuplicationException.getMessage()));
 
         verify(subTaskService).saveSubTask(any());
@@ -113,13 +128,15 @@ public class SubTaskControllerTest {
         given(subTaskService.changeSubTaskStatus(any(), any()))
                 .willThrow(subTaskNotFoundException);
 
-        // when then
-        mockMvc.perform(patch("/subtasks/subTaskName/status")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
-                        )))
-                .andExpect(status().isNotFound())
+        // when
+        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskNotFoundException.getMessage()));
 
         verify(subTaskService).changeSubTaskStatus(any(), any());
@@ -132,13 +149,15 @@ public class SubTaskControllerTest {
         given(subTaskService.changeSubTaskStatus(any(), any()))
                 .willThrow(dailyChecklistNotFoundException);
 
-        // when then
-        mockMvc.perform(patch("/subtasks/subTaskName/status")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
-                        )))
-                .andExpect(status().isNotFound())
+        // when
+        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
         verify(subTaskService).changeSubTaskStatus(any(), any());
