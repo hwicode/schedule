@@ -23,8 +23,10 @@ public class ChecklistDataHelper {
     public static final String SUB_TASK_NAME = "subTaskName";
     public static final String SUB_TASK_NAME2 = "subTaskName2";
 
+    // given절 중복 메서드를 제외하고, Task나 SubTask를 생성해야 할 때만 사용
     public static final String NEW_TASK_NAME = "newTaskName";
     public static final String NEW_SUB_TASK_NAME = "newSubTaskName";
+
 
     // checklist request dto
     public static TaskSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName) {
