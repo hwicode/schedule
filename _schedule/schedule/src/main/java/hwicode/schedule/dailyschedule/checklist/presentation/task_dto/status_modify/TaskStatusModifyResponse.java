@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify;
 
 import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class TaskStatusModifyResponse {
 
     @NotBlank
