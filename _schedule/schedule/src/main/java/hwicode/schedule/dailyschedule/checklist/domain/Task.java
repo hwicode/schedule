@@ -50,7 +50,7 @@ public class Task {
         subTasks.add(subTask);
         subTask.savedInTask(this);
 
-        if (this.status.isDone()) {
+        if (this.status == Status.DONE) {
             changeToProgress();
         }
         return this.status;
@@ -73,11 +73,11 @@ public class Task {
     }
 
     private void checkTaskStatusConditions(Status subTaskStatus) {
-        if (this.status.isDone() && !subTaskStatus.isDone()) {
+        if (this.status == Status.DONE && subTaskStatus != Status.DONE) {
             changeToProgress();
         }
 
-        else if (this.status.isTodo() && !subTaskStatus.isTodo()) {
+        else if (this.status == Status.TODO && subTaskStatus != Status.TODO) {
             changeToProgress();
         }
     }
@@ -154,7 +154,7 @@ public class Task {
     }
 
     public boolean isDone() {
-        return this.status.isDone();
+        return this.status == Status.DONE;
     }
 
     public int getDifficultyScore() {
