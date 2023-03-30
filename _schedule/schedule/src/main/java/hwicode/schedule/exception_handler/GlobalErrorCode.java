@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.exception.exception_handler;
+package hwicode.schedule.exception_handler;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
