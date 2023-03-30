@@ -37,11 +37,11 @@ public class TaskService {
     }
 
     @Transactional
-    public Status changeTaskStatus(String taskName, TaskStatusModifyRequest taskStatusModifyRequest) {
+    public TaskStatus changeTaskStatus(String taskName, TaskStatusModifyRequest taskStatusModifyRequest) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
                 dailyChecklistRepository, taskStatusModifyRequest.getDailyChecklistId());
 
-        return dailyChecklist.changeTaskStatus(taskName, taskStatusModifyRequest.getStatus());
+        return dailyChecklist.changeTaskStatus(taskName, taskStatusModifyRequest.getTaskStatus());
     }
 
     @Transactional

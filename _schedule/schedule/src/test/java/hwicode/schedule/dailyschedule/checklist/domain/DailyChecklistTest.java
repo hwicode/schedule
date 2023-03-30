@@ -33,9 +33,9 @@ public class DailyChecklistTest {
 
     private List<Task> makeTasksWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
         return Arrays.asList(
-                new Task(TASK_NAME, Status.TODO, difficulty),
-                new Task(TASK_NAME2, Status.TODO, difficulty2),
-                new Task(TASK_NAME3, Status.TODO, difficulty3)
+                new Task(TASK_NAME, TaskStatus.TODO, difficulty),
+                new Task(TASK_NAME2, TaskStatus.TODO, difficulty2),
+                new Task(TASK_NAME3, TaskStatus.TODO, difficulty3)
         );
     }
 
@@ -140,9 +140,9 @@ public class DailyChecklistTest {
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
-        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.PROGRESS);
+        dailyChecklist.changeTaskStatus(TASK_NAME, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.PROGRESS);
 
         //when
         dailyChecklist.deleteTask(TASK_NAME2);
@@ -192,9 +192,9 @@ public class DailyChecklistTest {
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
-        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.DONE);
 
         //when
         dailyChecklist.addSubTask(TASK_NAME2, new SubTask(NEW_SUB_TASK_NAME));
@@ -211,14 +211,14 @@ public class DailyChecklistTest {
         List<Task> tasks = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
-        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.DONE);
 
         dailyChecklist.addSubTask(TASK_NAME2, new SubTask(NEW_SUB_TASK_NAME));
 
         //when
-        dailyChecklist.changeSubTaskStatus(TASK_NAME2, NEW_SUB_TASK_NAME, Status.PROGRESS);
+        dailyChecklist.changeSubTaskStatus(TASK_NAME2, NEW_SUB_TASK_NAME, SubTaskStatus.PROGRESS);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -276,8 +276,8 @@ public class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
         //when
-        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.DONE);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore() + tasks.get(2).getDifficultyScore();
@@ -292,8 +292,8 @@ public class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
         //when
-        dailyChecklist.changeTaskStatus(TASK_NAME, Status.DONE);
-        dailyChecklist.changeTaskStatus(TASK_NAME3, Status.PROGRESS);
+        dailyChecklist.changeTaskStatus(TASK_NAME, TaskStatus.DONE);
+        dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.PROGRESS);
 
         // then
         int doneScore = tasks.get(0).getDifficultyScore();
@@ -308,7 +308,7 @@ public class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(tasks);
 
         //when
-        dailyChecklist.changeTaskStatus(TASK_NAME2, Status.TODO);
+        dailyChecklist.changeTaskStatus(TASK_NAME2, TaskStatus.TODO);
 
         // then
         int donePercent = 0;

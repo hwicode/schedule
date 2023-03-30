@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
@@ -38,7 +38,7 @@ class SubTaskController {
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        Status taskStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
-        return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatusModifyRequest.getStatus());
+        TaskStatus taskStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
+        return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 }

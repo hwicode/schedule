@@ -2,7 +2,8 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
@@ -80,11 +81,11 @@ public class SubTaskControllerTest {
     @Test
     void 서브_과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE);
-        SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_NAME, Status.PROGRESS, Status.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
         given(subTaskService.changeSubTaskStatus(any(), any()))
-                .willReturn(Status.PROGRESS);
+                .willReturn(TaskStatus.PROGRESS);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
@@ -132,7 +133,7 @@ public class SubTaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, SubTaskStatus.DONE)
                 )));
 
         // then
@@ -153,7 +154,7 @@ public class SubTaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, Status.DONE)
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, SubTaskStatus.DONE)
                 )));
 
         // then

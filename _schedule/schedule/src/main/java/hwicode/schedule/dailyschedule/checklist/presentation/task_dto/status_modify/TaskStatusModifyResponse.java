@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.status_modify;
 
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,9 +16,9 @@ public class TaskStatusModifyResponse {
     private String taskName;
 
     @NotNull
-    private Status taskStatus;
+    private TaskStatus taskStatus;
 
-    public TaskStatusModifyResponse(String taskName, Status taskStatus) {
+    public TaskStatusModifyResponse(String taskName, TaskStatus taskStatus) {
         this.taskName = taskName;
         this.taskStatus = taskStatus;
     }

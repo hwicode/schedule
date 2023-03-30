@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
@@ -41,7 +41,7 @@ class TaskController {
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
-        Status taskStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
+        TaskStatus taskStatus = taskService.changeTaskStatus(taskName, taskStatusModifyRequest);
         return new TaskStatusModifyResponse(taskName, taskStatus);
     }
 

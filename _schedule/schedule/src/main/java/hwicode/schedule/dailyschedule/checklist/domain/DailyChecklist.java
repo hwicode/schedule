@@ -42,8 +42,8 @@ public class DailyChecklist {
         tasks.remove(findTaskBy(name));
     }
 
-    public Status changeTaskStatus(String name, Status status) {
-        switch (status) {
+    public TaskStatus changeTaskStatus(String name, TaskStatus taskStatus) {
+        switch (taskStatus) {
             case TODO:
                 return findTaskBy(name).changeToTodo();
             case PROGRESS:
@@ -70,8 +70,8 @@ public class DailyChecklist {
         findTaskBy(taskName).addSubTask(subTask);
     }
 
-    public Status changeSubTaskStatus(String taskName, String subTaskName, Status status) {
-        return findTaskBy(taskName).changeSubTaskStatus(subTaskName, status);
+    public TaskStatus changeSubTaskStatus(String taskName, String subTaskName, SubTaskStatus subTaskStatus) {
+        return findTaskBy(taskName).changeSubTaskStatus(subTaskName, subTaskStatus);
     }
 
     public void deleteSubTask(String taskName, String subTaskName) {

@@ -20,16 +20,16 @@ public class SubTask {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
-    private Status status;
+    private SubTaskStatus subTaskStatus;
 
     public SubTask(String name) {
         this.name = name;
-        this.status = Status.TODO;
+        this.subTaskStatus = SubTaskStatus.TODO;
     }
 
-    public SubTask(String name, Status status) {
+    public SubTask(String name, SubTaskStatus subTaskStatus) {
         this.name = name;
-        this.status = status;
+        this.subTaskStatus = subTaskStatus;
     }
 
     void savedInTask(Task task) {
@@ -40,8 +40,8 @@ public class SubTask {
         return this.name.equals(name);
     }
 
-    void changeStatus(Status status) {
-        this.status = status;
+    void changeStatus(SubTaskStatus subTaskStatus) {
+        this.subTaskStatus = subTaskStatus;
     }
 
     String getName() {
@@ -52,7 +52,7 @@ public class SubTask {
         return id;
     }
 
-    public boolean isSameStatus(Status status) {
-        return this.status == status;
+    public boolean isSameStatus(SubTaskStatus subTaskStatus) {
+        return this.subTaskStatus == subTaskStatus;
     }
 }

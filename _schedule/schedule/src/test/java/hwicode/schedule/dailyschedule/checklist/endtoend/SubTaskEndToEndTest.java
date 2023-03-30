@@ -51,7 +51,7 @@ public class SubTaskEndToEndTest {
 
     private DailyChecklist createDailyChecklistWithTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }
@@ -118,7 +118,7 @@ public class SubTaskEndToEndTest {
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, SubTaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("subTaskName", NEW_SUB_TASK_NAME)
@@ -134,6 +134,6 @@ public class SubTaskEndToEndTest {
                 .statusCode(HttpStatus.OK.value());
 
         SubTask subTask = subTaskRepository.findById(subTaskId).orElseThrow();
-        assertThat(subTask.isSameStatus(Status.DONE)).isTrue();
+        assertThat(subTask.isSameStatus(SubTaskStatus.DONE)).isTrue();
     }
 }

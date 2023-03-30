@@ -4,7 +4,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
@@ -86,11 +86,11 @@ public class TaskControllerTest {
     @Test
     void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE);
-        TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_NAME, Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE);
+        TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_NAME, TaskStatus.DONE);
 
         given(taskService.changeTaskStatus(any(), any()))
-                .willReturn(Status.DONE);
+                .willReturn(TaskStatus.DONE);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/tasks/taskName/status")
@@ -161,7 +161,7 @@ public class TaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/tasks/taskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
                 )));
 
         // then
@@ -182,7 +182,7 @@ public class TaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/tasks/taskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
                 )));
 
         // then
@@ -203,7 +203,7 @@ public class TaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/tasks/taskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
                 )));
 
         // then
@@ -224,7 +224,7 @@ public class TaskControllerTest {
         ResultActions perform = mockMvc.perform(patch("/tasks/taskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, Status.DONE)
+                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
                 )));
 
         // then

@@ -3,8 +3,8 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
@@ -43,8 +43,8 @@ public class TaskServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTask(new Task(TASK_NAME2, Status.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }
@@ -100,7 +100,7 @@ public class TaskServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
 
         // when
         taskService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);

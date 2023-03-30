@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskSaveOnlyRepository;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
@@ -42,13 +42,13 @@ public class SubTaskService {
     }
 
     @Transactional
-    public Status changeSubTaskStatus(String subTaskName, SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
+    public TaskStatus changeSubTaskStatus(String subTaskName, SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
                 dailyChecklistRepository, subTaskStatusModifyRequest.getDailyChecklistId());
 
         return dailyChecklist.changeSubTaskStatus(
                 subTaskStatusModifyRequest.getTaskName(),
                 subTaskName,
-                subTaskStatusModifyRequest.getStatus());
+                subTaskStatusModifyRequest.getSubTaskStatus());
     }
 }

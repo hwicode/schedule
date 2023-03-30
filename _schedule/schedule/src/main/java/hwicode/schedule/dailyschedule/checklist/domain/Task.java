@@ -25,7 +25,7 @@ public class Task {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
-    private Status status;
+    private TaskStatus taskStatus;
 
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
@@ -35,25 +35,25 @@ public class Task {
 
     public Task(String name) {
         this.name = name;
-        this.status = Status.TODO;
+        this.taskStatus = TaskStatus.TODO;
         this.difficulty = Difficulty.NORMAL;
     }
 
-    public Task(String name, Status status, Difficulty difficulty) {
+    public Task(String name, TaskStatus taskStatus, Difficulty difficulty) {
         this.name = name;
-        this.status = status;
+        this.taskStatus = taskStatus;
         this.difficulty = difficulty;
     }
 
-    Status addSubTask(SubTask subTask) {
+    TaskStatus addSubTask(SubTask subTask) {
         validateSubTaskDuplication(subTask.getName());
         subTasks.add(subTask);
         subTask.savedInTask(this);
 
-        if (this.status == Status.DONE) {
+        if (this.taskStatus == TaskStatus.DONE) {
             changeToProgress();
         }
-        return this.status;
+        return this.taskStatus;
     }
 
     private void validateSubTaskDuplication(String name) {
@@ -65,30 +65,30 @@ public class Task {
         }
     }
 
-    Status changeSubTaskStatus(String name, Status subTaskStatus) {
+    TaskStatus changeSubTaskStatus(String name, SubTaskStatus subTaskStatus) {
         findSubTaskBy(name).changeStatus(subTaskStatus);
         checkTaskStatusConditions(subTaskStatus);
 
-        return this.status;
+        return this.taskStatus;
     }
 
-    private void checkTaskStatusConditions(Status subTaskStatus) {
-        if (this.status == Status.DONE && subTaskStatus != Status.DONE) {
+    private void checkTaskStatusConditions(SubTaskStatus subTaskStatus) {
+        if (this.taskStatus == TaskStatus.DONE && subTaskStatus != SubTaskStatus.DONE) {
             changeToProgress();
         }
 
-        else if (this.status == Status.TODO && subTaskStatus != Status.TODO) {
+        else if (this.taskStatus == TaskStatus.TODO && subTaskStatus != SubTaskStatus.TODO) {
             changeToProgress();
         }
     }
 
-    Status deleteSubTask(String name) {
+    TaskStatus deleteSubTask(String name) {
         subTasks.remove(findSubTaskBy(name));
-        return this.status;
+        return this.taskStatus;
     }
 
     void makeDone() {
-        subTasks.forEach(subTask -> subTask.changeStatus(Status.DONE));
+        subTasks.forEach(subTask -> subTask.changeStatus(SubTaskStatus.DONE));
         changeToDone();
     }
 
@@ -99,37 +99,37 @@ public class Task {
                 .orElseThrow(SubTaskNotFoundException::new);
     }
 
-    Status changeToDone() {
-        boolean isAllDone = isAllSameStatus(Status.DONE);
+    TaskStatus changeToDone() {
+        boolean isAllDone = isAllSameStatus(SubTaskStatus.DONE);
         if (!isAllDone) {
             throw new SubTaskNotAllDoneException();
         }
 
-        this.status = Status.DONE;
-        return this.status;
+        this.taskStatus = TaskStatus.DONE;
+        return this.taskStatus;
     }
 
-    Status changeToTodo() {
-        boolean isAllTodo = isAllSameStatus(Status.TODO);
+    TaskStatus changeToTodo() {
+        boolean isAllTodo = isAllSameStatus(SubTaskStatus.TODO);
         if (!isAllTodo) {
             throw new SubTaskNotAllTodoException();
         }
 
-        this.status = Status.TODO;
-        return this.status;
+        this.taskStatus = TaskStatus.TODO;
+        return this.taskStatus;
     }
 
-    private boolean isAllSameStatus(Status status) {
+    private boolean isAllSameStatus(SubTaskStatus subTaskStatus) {
         int count = (int) subTasks.stream()
-                .filter(subTask -> subTask.isSameStatus(status))
+                .filter(subTask -> subTask.isSameStatus(subTaskStatus))
                 .count();
 
         return count == subTasks.size();
     }
 
-    Status changeToProgress() {
-        this.status = Status.PROGRESS;
-        return this.status;
+    TaskStatus changeToProgress() {
+        this.taskStatus = TaskStatus.PROGRESS;
+        return this.taskStatus;
     }
 
     void savedInChecklist(DailyChecklist dailyChecklist) {
@@ -154,7 +154,7 @@ public class Task {
     }
 
     public boolean isDone() {
-        return this.status == Status.DONE;
+        return this.taskStatus == TaskStatus.DONE;
     }
 
     public int getDifficultyScore() {

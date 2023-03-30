@@ -40,11 +40,11 @@ public class SubTaskServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(new Task(TASK_NAME, Status.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTask(new Task(TASK_NAME2, Status.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new Task(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME, Status.TODO));
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME2, Status.TODO));
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME, SubTaskStatus.TODO));
+        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME2, SubTaskStatus.TODO));
 
         return dailyChecklist;
     }
@@ -88,7 +88,7 @@ public class SubTaskServiceIntegrationTest {
         dailyChecklist.makeTaskDone(TASK_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, Status.PROGRESS);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, SubTaskStatus.PROGRESS);
 
         // when
         subTaskService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);

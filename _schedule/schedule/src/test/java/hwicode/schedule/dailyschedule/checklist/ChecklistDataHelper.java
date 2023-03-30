@@ -1,7 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist;
 
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
@@ -42,8 +43,8 @@ public class ChecklistDataHelper {
         return new TaskSaveRequest(dailyChecklistId, taskName);
     }
 
-    public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, Status status) {
-        return new TaskStatusModifyRequest(dailyChecklistId, status);
+    public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, TaskStatus taskStatus) {
+        return new TaskStatusModifyRequest(dailyChecklistId, taskStatus);
     }
 
     public static TaskDifficultyModifyRequest createTaskDifficultyModifyRequest(Long dailyChecklistId, Difficulty difficulty) {
@@ -60,8 +61,8 @@ public class ChecklistDataHelper {
         return new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName);
     }
 
-    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskName, Status status) {
-        return new SubTaskStatusModifyRequest(dailyChecklistId, taskName, status);
+    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskName, SubTaskStatus subTaskStatus) {
+        return new SubTaskStatusModifyRequest(dailyChecklistId, taskName, subTaskStatus);
     }
 
     public static SubTaskDeleteRequest createSubTaskDeleteRequest(Long dailyChecklistId, String taskName) {
@@ -74,7 +75,7 @@ public class ChecklistDataHelper {
         return new TaskSaveResponse(taskId, taskName);
     }
 
-    public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskName, Status taskStatus) {
+    public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskName, TaskStatus taskStatus) {
         return new TaskStatusModifyResponse(taskName, taskStatus);
     }
 
@@ -88,7 +89,7 @@ public class ChecklistDataHelper {
         return new SubTaskSaveResponse(subTaskId, subtaskName);
     }
 
-    public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskName, Status taskStatus, Status subTaskStatus) {
+    public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
         return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatus);
     }
 }

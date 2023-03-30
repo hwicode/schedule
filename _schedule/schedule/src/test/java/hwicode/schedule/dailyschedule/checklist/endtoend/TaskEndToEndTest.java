@@ -4,8 +4,8 @@ import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Status;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete.TaskDeleteRequest;
@@ -115,7 +115,7 @@ public class TaskEndToEndTest {
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
         );
 
-        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), Status.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskName", NEW_TASK_NAME)
