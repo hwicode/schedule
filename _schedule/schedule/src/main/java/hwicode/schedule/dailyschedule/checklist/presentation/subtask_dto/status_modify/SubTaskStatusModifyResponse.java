@@ -17,14 +17,14 @@ public class SubTaskStatusModifyResponse {
     private String subTaskName;
 
     @NotNull
-    private TaskStatus taskStatus;
+    private TaskStatus modifiedTaskStatus;
 
     @NotNull
-    private SubTaskStatus subTaskStatus;
+    private SubTaskStatus modifiedSubTaskStatus;
 
-    public SubTaskStatusModifyResponse(String subTaskName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
+    public SubTaskStatusModifyResponse(String subTaskName, TaskStatus modifiedTaskStatus, SubTaskStatus modifiedSubTaskStatus) {
         this.subTaskName = subTaskName;
-        this.taskStatus = taskStatus;
-        this.subTaskStatus = subTaskStatus;
+        this.modifiedTaskStatus = modifiedTaskStatus;
+        this.modifiedSubTaskStatus = modifiedSubTaskStatus;
     }
 }

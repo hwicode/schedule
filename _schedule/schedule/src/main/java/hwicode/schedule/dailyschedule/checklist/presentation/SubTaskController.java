@@ -38,7 +38,7 @@ class SubTaskController {
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        TaskStatus taskStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
-        return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
+        TaskStatus modifiedTaskStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
+        return new SubTaskStatusModifyResponse(subTaskName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 }
