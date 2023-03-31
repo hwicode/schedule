@@ -4,7 +4,6 @@ import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNam
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -18,7 +17,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DailyChecklistTest {
 
     private DailyChecklist createDailyChecklistWithThreeTasks(List<Task> tasks) {
@@ -31,7 +29,7 @@ public class DailyChecklistTest {
         return dailyChecklist;
     }
 
-    private List<Task> makeTasksWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
+    private static List<Task> makeTasksWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
         return Arrays.asList(
                 new Task(TASK_NAME, TaskStatus.TODO, difficulty),
                 new Task(TASK_NAME2, TaskStatus.TODO, difficulty2),
@@ -242,7 +240,7 @@ public class DailyChecklistTest {
                 .isInstanceOf(SubTaskNotFoundException.class);
     }
 
-    private Stream<Arguments> provideTasksAndTotalScore() {
+    private static Stream<Arguments> provideTasksAndTotalScore() {
         return Stream.of(
                 arguments(makeTasksWithDifficulty(
                         Difficulty.NORMAL, Difficulty.NORMAL, Difficulty.NORMAL
