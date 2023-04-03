@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task_dto.delete;
+package hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete;
 
 import lombok.AccessLevel;
 import lombok.Getter;

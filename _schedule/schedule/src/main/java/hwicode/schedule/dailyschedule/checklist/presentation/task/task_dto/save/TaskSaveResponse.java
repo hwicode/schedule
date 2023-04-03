@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save;
+package hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -10,16 +10,16 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SubTaskSaveResponse {
+public class TaskSaveResponse {
 
     @NotNull @Positive
-    private Long subTaskId;
+    private Long taskId;
 
     @NotBlank
-    private String subTaskName;
+    private String taskName;
 
-    public SubTaskSaveResponse(Long subTaskId, String subTaskName) {
-        this.subTaskId = subTaskId;
-        this.subTaskName = subTaskName;
+    public TaskSaveResponse(Long taskId, String taskName) {
+        this.taskId = taskId;
+        this.taskName = taskName;
     }
 }

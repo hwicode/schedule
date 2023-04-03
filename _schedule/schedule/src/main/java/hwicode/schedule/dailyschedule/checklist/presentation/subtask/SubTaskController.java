@@ -1,12 +1,12 @@
-package hwicode.schedule.dailyschedule.checklist.presentation;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtask;
 
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.save.SubTaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
-class SubTaskController {
+public class SubTaskController {
 
     private final SubTaskService subTaskService;
 
