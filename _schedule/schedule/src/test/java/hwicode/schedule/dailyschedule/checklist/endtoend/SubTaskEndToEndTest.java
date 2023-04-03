@@ -70,7 +70,7 @@ public class SubTaskEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/subtasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/checklist/subtasks", port));
 
         //then
         response.then()
@@ -99,7 +99,7 @@ public class SubTaskEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/subtasks/{subTaskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/checklist/subtasks/{subTaskName}", port));
 
         //then
         response.then()
@@ -127,7 +127,7 @@ public class SubTaskEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/subtasks/{subTaskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtasks/{subTaskName}/status", port));
 
         //then
         response.then()

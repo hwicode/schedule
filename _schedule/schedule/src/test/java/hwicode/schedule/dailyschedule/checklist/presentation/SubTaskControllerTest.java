@@ -52,7 +52,7 @@ public class SubTaskControllerTest {
                 .willReturn(SUB_TASK_ID);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/subtasks")
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/subtasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
 
@@ -71,7 +71,7 @@ public class SubTaskControllerTest {
         SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
 
         // when then
-        mockMvc.perform(delete("/subtasks/subTaskName")
+        mockMvc.perform(delete("/dailyschedule/checklist/subtasks/subTaskName")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subTaskDeleteRequest)))
                 .andExpect(status().isNoContent());
@@ -89,7 +89,7 @@ public class SubTaskControllerTest {
                 .willReturn(TaskStatus.PROGRESS);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtasks/subTaskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
 
@@ -110,7 +110,7 @@ public class SubTaskControllerTest {
                 .willThrow(subTaskNameDuplicationException);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/subtasks")
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/subtasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME)
@@ -131,7 +131,7 @@ public class SubTaskControllerTest {
                 .willThrow(subTaskNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtasks/subTaskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, SubTaskStatus.DONE)
@@ -152,7 +152,7 @@ public class SubTaskControllerTest {
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/subtasks/subTaskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtasks/subTaskName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_NAME, SubTaskStatus.DONE)

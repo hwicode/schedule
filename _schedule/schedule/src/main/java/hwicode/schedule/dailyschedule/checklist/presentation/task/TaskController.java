@@ -23,21 +23,21 @@ public class TaskController {
 
     private final TaskService taskService;
 
-    @PostMapping("/tasks")
+    @PostMapping("/dailyschedule/checklist/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
     public TaskSaveResponse saveTask(@RequestBody @Valid TaskSaveRequest taskSaveRequest) {
         Long taskId = taskService.saveTask(taskSaveRequest);
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
-    @DeleteMapping("/tasks/{taskName}")
+    @DeleteMapping("/dailyschedule/checklist/tasks/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @NotBlank String taskName,
                            @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
         taskService.deleteTask(taskDeleteRequest.getDailyChecklistId(), taskName);
     }
 
-    @PatchMapping("/tasks/{taskName}/status")
+    @PatchMapping("/dailyschedule/checklist/tasks/{taskName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
@@ -45,7 +45,7 @@ public class TaskController {
         return new TaskStatusModifyResponse(taskName, modifiedTaskStatus);
     }
 
-    @PatchMapping("/tasks/{taskName}/difficulty")
+    @PatchMapping("/dailyschedule/checklist/tasks/{taskName}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable @NotBlank String taskName,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {

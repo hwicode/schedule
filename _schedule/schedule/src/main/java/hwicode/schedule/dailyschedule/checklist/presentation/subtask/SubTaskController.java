@@ -20,21 +20,21 @@ public class SubTaskController {
 
     private final SubTaskService subTaskService;
 
-    @PostMapping("/subtasks")
+    @PostMapping("/dailyschedule/checklist/subtasks")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SubTaskSaveResponse saveSubTask(@RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
         Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
         return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
     }
 
-    @DeleteMapping("/subtasks/{subTaskName}")
+    @DeleteMapping("/dailyschedule/checklist/subtasks/{subTaskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
                               @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
         subTaskService.deleteSubTask(subTaskName, subTaskDeleteRequest);
     }
 
-    @PatchMapping("/subtasks/{subTaskName}/status")
+    @PatchMapping("/dailyschedule/checklist/subtasks/{subTaskName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
