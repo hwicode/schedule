@@ -27,7 +27,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-public class SubTaskEndToEndTest {
+class SubTaskEndToEndTest {
 
     @LocalServerPort
     private int port;
@@ -57,7 +57,7 @@ public class SubTaskEndToEndTest {
     }
 
     @Test
-    public void 서브_과제_생성_요청() {
+    void 서브_과제_생성_요청() {
         //given
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
@@ -81,7 +81,7 @@ public class SubTaskEndToEndTest {
     }
 
     @Test
-    public void 서브_과제_삭제_요청() {
+    void 서브_과제_삭제_요청() {
         //given
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
@@ -109,7 +109,7 @@ public class SubTaskEndToEndTest {
     }
 
     @Test
-    public void 서브_과제_진행_상태_변경_요청() {
+    void 서브_과제_진행_상태_변경_요청() {
         //given
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);

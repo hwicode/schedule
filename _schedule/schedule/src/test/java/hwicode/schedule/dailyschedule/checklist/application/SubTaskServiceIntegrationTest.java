@@ -18,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class SubTaskServiceIntegrationTest {
+class SubTaskServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -50,7 +50,7 @@ public class SubTaskServiceIntegrationTest {
     }
 
     @Test
-    public void 체크리스트에_서브_과제를_추가할_수_있다() {
+    void 체크리스트에_서브_과제를_추가할_수_있다() {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
@@ -65,7 +65,7 @@ public class SubTaskServiceIntegrationTest {
     }
 
     @Test
-    public void 체크리스트에_서브_과제를_삭제할_수_있다() {
+    void 체크리스트에_서브_과제를_삭제할_수_있다() {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
@@ -81,7 +81,7 @@ public class SubTaskServiceIntegrationTest {
     }
 
     @Test
-    public void 체크리스트내에_있는_서브_과제의_진행상태를_수정할_수_있다() {
+    void 체크리스트내에_있는_서브_과제의_진행상태를_수정할_수_있다() {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklist.makeTaskDone(TASK_NAME);

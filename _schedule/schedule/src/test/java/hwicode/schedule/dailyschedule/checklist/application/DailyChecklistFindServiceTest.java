@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-public class DailyChecklistFindServiceTest {
+class DailyChecklistFindServiceTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -25,7 +25,7 @@ public class DailyChecklistFindServiceTest {
     }
 
     @Test
-    public void 존재하지_않는_체크리스트를_조회하면_에러가_발생한다() {
+    void 존재하지_않는_체크리스트를_조회하면_에러가_발생한다() {
         //given
         Long noneExistId = 1L;
 
