@@ -1,4 +1,4 @@
-package hwicode.schedule.config;
+package hwicode.schedule.common.config;
 
 import org.slf4j.MDC;
 import org.springframework.core.Ordered;

@@ -1,7 +1,7 @@
-package hwicode.schedule.exception_handler;
+package hwicode.schedule.common.exception_handler;
 
 import hwicode.schedule.dailyschedule.checklist.exception.ChecklistBusinessException;
-import hwicode.schedule.exception_handler.ErrorResponse.ValidationError;
+import hwicode.schedule.common.exception_handler.ErrorResponse.ValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
