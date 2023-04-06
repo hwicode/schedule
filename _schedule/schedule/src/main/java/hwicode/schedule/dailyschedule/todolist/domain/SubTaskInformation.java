@@ -1,7 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +17,7 @@ public class SubTaskInformation {
 
     @JoinColumn(name = "task_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Task task;
+    private TaskInformation taskInformation;
 
     @Column(nullable = false)
     private String name;
@@ -26,14 +25,18 @@ public class SubTaskInformation {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    SubTaskInformation(Task task, String name) {
-        this.task = task;
+    SubTaskInformation(TaskInformation taskInformation, String name) {
+        this.taskInformation = taskInformation;
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
     }
 
-    public String changeSubTaskName(String name) {
+    String changeSubTaskName(String name) {
         this.name = name;
         return name;
+    }
+
+    boolean isSame(String name) {
+        return this.name.equals(name);
     }
 }

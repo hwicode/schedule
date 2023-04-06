@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
+@Table(name = "task")
 @Entity
 public class Task {
 
