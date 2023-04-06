@@ -19,12 +19,20 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Priority priority;
 
+    @Enumerated(value = EnumType.STRING)
+    private Importance importance;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public Priority changePriority(Priority priority) {
         this.priority = priority;
         return this.priority;
+    }
+
+    public Importance changeImportance(Importance importance) {
+        this.importance = importance;
+        return this.importance;
     }
 
     public SubTask createSubTask(String subTaskName) {
