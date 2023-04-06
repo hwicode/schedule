@@ -5,7 +5,7 @@ import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
@@ -31,7 +31,7 @@ class SubTaskCheckerServiceIntegrationTest {
     DailyChecklistRepository dailyChecklistRepository;
 
     @Autowired
-    SubTaskRepository subTaskRepository;
+    SubTaskCheckerRepository subTaskCheckerRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -62,7 +62,7 @@ class SubTaskCheckerServiceIntegrationTest {
         Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
 
         // then
-        assertThat(subTaskRepository.existsById(subTaskId)).isTrue();
+        assertThat(subTaskCheckerRepository.existsById(subTaskId)).isTrue();
     }
 
     @Test

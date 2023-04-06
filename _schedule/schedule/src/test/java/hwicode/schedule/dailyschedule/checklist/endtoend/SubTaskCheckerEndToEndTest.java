@@ -5,7 +5,7 @@ import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
@@ -43,7 +43,7 @@ class SubTaskCheckerEndToEndTest {
     DailyChecklistRepository dailyChecklistRepository;
 
     @Autowired
-    SubTaskRepository subTaskRepository;
+    SubTaskCheckerRepository subTaskCheckerRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -77,7 +77,7 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        List<SubTaskChecker> all = subTaskRepository.findAll();
+        List<SubTaskChecker> all = subTaskCheckerRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
     }
 
@@ -106,7 +106,7 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(subTaskRepository.existsById(subTaskId)).isFalse();
+        assertThat(subTaskCheckerRepository.existsById(subTaskId)).isFalse();
     }
 
     @Test
@@ -134,7 +134,7 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        SubTaskChecker subTaskChecker = subTaskRepository.findById(subTaskId).orElseThrow();
+        SubTaskChecker subTaskChecker = subTaskCheckerRepository.findById(subTaskId).orElseThrow();
         assertThat(subTaskChecker.isSameStatus(SubTaskStatus.DONE)).isTrue();
     }
 }
