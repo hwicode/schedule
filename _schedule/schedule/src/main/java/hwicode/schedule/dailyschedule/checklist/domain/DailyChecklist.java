@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;

@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
