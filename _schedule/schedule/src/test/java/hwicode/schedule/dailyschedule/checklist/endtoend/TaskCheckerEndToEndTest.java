@@ -67,7 +67,7 @@ class TaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/checklist/tasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers", port));
 
         //then
         response.then()
@@ -96,7 +96,7 @@ class TaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/checklist/tasks/{taskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}", port));
 
         //then
         response.then()
@@ -124,7 +124,7 @@ class TaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/tasks/{taskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}/status", port));
 
         //then
         response.then()
@@ -153,7 +153,7 @@ class TaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/tasks/{taskName}/difficulty", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}/difficulty", port));
 
         //then
         response.then()

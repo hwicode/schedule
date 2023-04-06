@@ -19,25 +19,25 @@ import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
-public class TaskController {
+public class TaskCheckerController {
 
     private final TaskCheckerService taskCheckerService;
 
-    @PostMapping("/dailyschedule/checklist/tasks")
+    @PostMapping("/dailyschedule/checklist/taskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
     public TaskSaveResponse saveTask(@RequestBody @Valid TaskSaveRequest taskSaveRequest) {
         Long taskId = taskCheckerService.saveTask(taskSaveRequest);
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
-    @DeleteMapping("/dailyschedule/checklist/tasks/{taskName}")
+    @DeleteMapping("/dailyschedule/checklist/taskCheckers/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @NotBlank String taskName,
                            @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
         taskCheckerService.deleteTask(taskDeleteRequest.getDailyChecklistId(), taskName);
     }
 
-    @PatchMapping("/dailyschedule/checklist/tasks/{taskName}/status")
+    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
@@ -45,7 +45,7 @@ public class TaskController {
         return new TaskStatusModifyResponse(taskName, modifiedTaskStatus);
     }
 
-    @PatchMapping("/dailyschedule/checklist/tasks/{taskName}/difficulty")
+    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable @NotBlank String taskName,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
