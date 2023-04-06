@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @NoArgsConstructor
+@Table(name = "sub_task")
 @Entity
 public class SubTask {
 
