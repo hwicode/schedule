@@ -17,8 +17,10 @@ create table sub_task (
 
 create table task (
    id bigint not null auto_increment,
-   difficulty varchar(255),
    name varchar(255) not null,
+   priority varchar(255),
+   importance varchar(255),
+   difficulty varchar(255),
    task_status varchar(255),
    daily_checklist_id bigint,
    primary key (id)
