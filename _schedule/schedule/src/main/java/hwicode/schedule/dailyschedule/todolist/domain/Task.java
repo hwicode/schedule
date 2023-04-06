@@ -16,6 +16,9 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String name;
+
     @Enumerated(value = EnumType.STRING)
     private Priority priority;
 
@@ -24,6 +27,11 @@ public class Task {
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
+
+    String changeTaskName(String name) {
+        this.name = name;
+        return this.name;
+    }
 
     public Priority changePriority(Priority priority) {
         this.priority = priority;
