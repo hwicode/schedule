@@ -71,7 +71,7 @@ class SubTaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/checklist/subtasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/checklist/subtaskCheckers", port));
 
         //then
         response.then()
@@ -100,7 +100,7 @@ class SubTaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/checklist/subtasks/{subTaskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/checklist/subtaskCheckers/{subTaskName}", port));
 
         //then
         response.then()
@@ -128,7 +128,7 @@ class SubTaskCheckerEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtasks/{subTaskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtaskCheckers/{subTaskName}/status", port));
 
         //then
         response.then()

@@ -16,25 +16,25 @@ import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
-public class SubTaskController {
+public class SubTaskCheckerController {
 
     private final SubTaskCheckerService subTaskCheckerService;
 
-    @PostMapping("/dailyschedule/checklist/subtasks")
+    @PostMapping("/dailyschedule/checklist/subtaskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SubTaskSaveResponse saveSubTask(@RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
         Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
         return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
     }
 
-    @DeleteMapping("/dailyschedule/checklist/subtasks/{subTaskName}")
+    @DeleteMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
                               @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
         subTaskCheckerService.deleteSubTask(subTaskName, subTaskDeleteRequest);
     }
 
-    @PatchMapping("/dailyschedule/checklist/subtasks/{subTaskName}/status")
+    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
