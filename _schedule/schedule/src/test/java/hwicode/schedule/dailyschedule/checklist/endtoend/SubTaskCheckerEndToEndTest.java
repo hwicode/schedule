@@ -6,9 +6,9 @@ import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerServic
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -63,11 +63,11 @@ class SubTaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME);
+        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
-                .body(subTaskSaveRequest);
+                .body(subTaskCheckerSaveRequest);
 
         //when
         Response response = requestSpecification.when()
@@ -91,12 +91,12 @@ class SubTaskCheckerEndToEndTest {
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
+        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("subTaskName", NEW_SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
-                .body(subTaskDeleteRequest);
+                .body(subTaskCheckerDeleteRequest);
 
         //when
         Response response = requestSpecification.when()

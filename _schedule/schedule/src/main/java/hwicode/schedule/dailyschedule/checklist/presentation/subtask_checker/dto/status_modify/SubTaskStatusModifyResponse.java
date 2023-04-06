@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;

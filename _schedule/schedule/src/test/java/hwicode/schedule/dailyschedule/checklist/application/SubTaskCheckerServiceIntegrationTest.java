@@ -6,9 +6,9 @@ import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,10 +56,10 @@ class SubTaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
+        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
 
         // when
-        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
+        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskCheckerSaveRequest);
 
         // then
         assertThat(subTaskCheckerRepository.existsById(subTaskId)).isTrue();
@@ -71,13 +71,13 @@ class SubTaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
+        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         // when
-        subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest);
+        subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskCheckerDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskCheckerDeleteRequest))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 

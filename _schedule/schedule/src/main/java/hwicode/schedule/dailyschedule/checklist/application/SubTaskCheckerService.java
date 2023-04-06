@@ -5,9 +5,9 @@ import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskSaveOnlyRepository;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,23 +22,23 @@ public class SubTaskCheckerService {
     private final SubTaskSaveOnlyRepository subTaskSaveOnlyRepository;
 
     @Transactional
-    public Long saveSubTask(SubTaskSaveRequest subTaskSaveRequest) {
+    public Long saveSubTask(SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
-                dailyChecklistRepository, subTaskSaveRequest.getDailyChecklistId());
+                dailyChecklistRepository, subTaskCheckerSaveRequest.getDailyChecklistId());
 
-        SubTaskChecker subTaskChecker = subTaskSaveRequest.toEntity();
-        dailyChecklist.addSubTask(subTaskSaveRequest.getTaskName(), subTaskChecker);
+        SubTaskChecker subTaskChecker = subTaskCheckerSaveRequest.toEntity();
+        dailyChecklist.addSubTask(subTaskCheckerSaveRequest.getTaskName(), subTaskChecker);
 
         return subTaskSaveOnlyRepository.save(subTaskChecker)
                 .getId();
     }
 
     @Transactional
-    public void deleteSubTask(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
+    public void deleteSubTask(String subTaskName, SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
-                dailyChecklistRepository, subTaskDeleteRequest.getDailyChecklistId());
+                dailyChecklistRepository, subTaskCheckerDeleteRequest.getDailyChecklistId());
 
-        dailyChecklist.deleteSubTask(subTaskDeleteRequest.getTaskName(), subTaskName);
+        dailyChecklist.deleteSubTask(subTaskCheckerDeleteRequest.getTaskName(), subTaskName);
     }
 
     @Transactional

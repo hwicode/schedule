@@ -7,12 +7,12 @@ import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.SubTaskCheckerController;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.SubTaskCheckerController;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,8 +45,8 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
-        SubTaskSaveResponse subTaskSaveResponse = createSubTaskSaveResponse(SUB_TASK_ID, NEW_SUB_TASK_NAME);
+        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
+        SubTaskCheckerSaveResponse subTaskCheckerSaveResponse = createSubTaskSaveResponse(SUB_TASK_ID, NEW_SUB_TASK_NAME);
 
         given(subTaskCheckerService.saveSubTask(any()))
                 .willReturn(SUB_TASK_ID);
@@ -54,12 +54,12 @@ class SubTaskCheckerControllerTest {
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/subtaskCheckers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
+                .content(objectMapper.writeValueAsString(subTaskCheckerSaveRequest)));
 
         // then
         perform.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string(
-                                objectMapper.writeValueAsString(subTaskSaveResponse)
+                                objectMapper.writeValueAsString(subTaskCheckerSaveResponse)
                         ));
 
         verify(subTaskCheckerService).saveSubTask(any());
@@ -68,12 +68,12 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
+        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskDeleteRequest(DAILY_CHECKLIST_ID, TASK_NAME);
 
         // when then
         mockMvc.perform(delete("/dailyschedule/checklist/subtaskCheckers/subTaskName")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(subTaskDeleteRequest)))
+                        .content(objectMapper.writeValueAsString(subTaskCheckerDeleteRequest)))
                 .andExpect(status().isNoContent());
 
         verify(subTaskCheckerService).deleteSubTask(any(), any());

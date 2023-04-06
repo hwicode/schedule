@@ -1,12 +1,12 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker;
 
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,16 +22,16 @@ public class SubTaskCheckerController {
 
     @PostMapping("/dailyschedule/checklist/subtaskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SubTaskSaveResponse saveSubTask(@RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
-        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
-        return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
+    public SubTaskCheckerSaveResponse saveSubTask(@RequestBody @Valid SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
+        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskCheckerSaveRequest);
+        return new SubTaskCheckerSaveResponse(subTaskId, subTaskCheckerSaveRequest.getSubTaskName());
     }
 
     @DeleteMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
-                              @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskCheckerService.deleteSubTask(subTaskName, subTaskDeleteRequest);
+                              @RequestBody @Valid SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
+        subTaskCheckerService.deleteSubTask(subTaskName, subTaskCheckerDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}/status")

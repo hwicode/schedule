@@ -3,11 +3,11 @@ package hwicode.schedule.dailyschedule.checklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.status_modify.SubTaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
@@ -57,16 +57,16 @@ public class ChecklistDataHelper {
 
 
     // checklist SubTask request dto
-    public static SubTaskSaveRequest createSubTaskSaveRequest(Long dailyChecklistId, String taskName, String subTaskName) {
-        return new SubTaskSaveRequest(dailyChecklistId, taskName, subTaskName);
+    public static SubTaskCheckerSaveRequest createSubTaskSaveRequest(Long dailyChecklistId, String taskName, String subTaskName) {
+        return new SubTaskCheckerSaveRequest(dailyChecklistId, taskName, subTaskName);
     }
 
     public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskName, SubTaskStatus subTaskStatus) {
         return new SubTaskStatusModifyRequest(dailyChecklistId, taskName, subTaskStatus);
     }
 
-    public static SubTaskDeleteRequest createSubTaskDeleteRequest(Long dailyChecklistId, String taskName) {
-        return new SubTaskDeleteRequest(dailyChecklistId, taskName);
+    public static SubTaskCheckerDeleteRequest createSubTaskDeleteRequest(Long dailyChecklistId, String taskName) {
+        return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskName);
     }
 
 
@@ -85,8 +85,8 @@ public class ChecklistDataHelper {
 
 
     // checklist SubTask response dto
-    public static SubTaskSaveResponse createSubTaskSaveResponse(Long subTaskId, String subtaskName) {
-        return new SubTaskSaveResponse(subTaskId, subtaskName);
+    public static SubTaskCheckerSaveResponse createSubTaskSaveResponse(Long subTaskId, String subtaskName) {
+        return new SubTaskCheckerSaveResponse(subTaskId, subtaskName);
     }
 
     public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
