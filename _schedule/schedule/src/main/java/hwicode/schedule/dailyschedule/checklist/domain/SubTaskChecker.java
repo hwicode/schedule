@@ -8,7 +8,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "sub_task")
 @Entity
-public class SubTask {
+public class SubTaskChecker {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,12 +24,12 @@ public class SubTask {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    public SubTask(String name) {
+    public SubTaskChecker(String name) {
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
     }
 
-    public SubTask(String name, SubTaskStatus subTaskStatus) {
+    public SubTaskChecker(String name, SubTaskStatus subTaskStatus) {
         this.name = name;
         this.subTaskStatus = subTaskStatus;
     }

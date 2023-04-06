@@ -33,7 +33,7 @@ public class Task {
     private Difficulty difficulty;
 
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<SubTask> subTasks = new ArrayList<>();
+    private final List<SubTaskChecker> subTaskCheckers = new ArrayList<>();
 
     public Task(String name) {
         this.name = name;
@@ -47,10 +47,10 @@ public class Task {
         this.difficulty = difficulty;
     }
 
-    TaskStatus addSubTask(SubTask subTask) {
-        validateSubTaskDuplication(subTask.getName());
-        subTasks.add(subTask);
-        subTask.savedInTask(this);
+    TaskStatus addSubTask(SubTaskChecker subTaskChecker) {
+        validateSubTaskDuplication(subTaskChecker.getName());
+        subTaskCheckers.add(subTaskChecker);
+        subTaskChecker.savedInTask(this);
 
         if (this.taskStatus == TaskStatus.DONE) {
             changeToProgress();
@@ -59,7 +59,7 @@ public class Task {
     }
 
     private void validateSubTaskDuplication(String name) {
-        boolean duplication = subTasks.stream()
+        boolean duplication = subTaskCheckers.stream()
                 .anyMatch(subTask -> subTask.isSame(name));
 
         if (duplication) {
@@ -85,17 +85,17 @@ public class Task {
     }
 
     TaskStatus deleteSubTask(String name) {
-        subTasks.remove(findSubTaskBy(name));
+        subTaskCheckers.remove(findSubTaskBy(name));
         return this.taskStatus;
     }
 
     void makeDone() {
-        subTasks.forEach(subTask -> subTask.changeStatus(SubTaskStatus.DONE));
+        subTaskCheckers.forEach(subTask -> subTask.changeStatus(SubTaskStatus.DONE));
         changeToDone();
     }
 
-    private SubTask findSubTaskBy(String name) {
-        return subTasks.stream()
+    private SubTaskChecker findSubTaskBy(String name) {
+        return subTaskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
                 .orElseThrow(SubTaskNotFoundException::new);
@@ -122,11 +122,11 @@ public class Task {
     }
 
     private boolean isAllSameStatus(SubTaskStatus subTaskStatus) {
-        int count = (int) subTasks.stream()
+        int count = (int) subTaskCheckers.stream()
                 .filter(subTask -> subTask.isSameStatus(subTaskStatus))
                 .count();
 
-        return count == subTasks.size();
+        return count == subTaskCheckers.size();
     }
 
     TaskStatus changeToProgress() {

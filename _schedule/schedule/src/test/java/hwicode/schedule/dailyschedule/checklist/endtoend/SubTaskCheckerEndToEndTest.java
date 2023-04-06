@@ -28,7 +28,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SubTaskEndToEndTest {
+class SubTaskCheckerEndToEndTest {
 
     @LocalServerPort
     private int port;
@@ -77,7 +77,7 @@ class SubTaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        List<SubTask> all = subTaskRepository.findAll();
+        List<SubTaskChecker> all = subTaskRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
     }
 
@@ -134,7 +134,7 @@ class SubTaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        SubTask subTask = subTaskRepository.findById(subTaskId).orElseThrow();
-        assertThat(subTask.isSameStatus(SubTaskStatus.DONE)).isTrue();
+        SubTaskChecker subTaskChecker = subTaskRepository.findById(subTaskId).orElseThrow();
+        assertThat(subTaskChecker.isSameStatus(SubTaskStatus.DONE)).isTrue();
     }
 }

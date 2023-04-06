@@ -67,8 +67,8 @@ public class DailyChecklist {
                 .orElseThrow(TaskNotFoundException::new);
     }
 
-    public void addSubTask(String taskName, SubTask subTask) {
-        findTaskBy(taskName).addSubTask(subTask);
+    public void addSubTask(String taskName, SubTaskChecker subTaskChecker) {
+        findTaskBy(taskName).addSubTask(subTaskChecker);
     }
 
     public TaskStatus changeSubTaskStatus(String taskName, String subTaskName, SubTaskStatus subTaskStatus) {

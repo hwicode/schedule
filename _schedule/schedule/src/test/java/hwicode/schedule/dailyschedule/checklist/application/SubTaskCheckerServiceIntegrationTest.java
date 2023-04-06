@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class SubTaskServiceIntegrationTest {
+class SubTaskCheckerServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -44,8 +44,8 @@ class SubTaskServiceIntegrationTest {
         dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
         dailyChecklist.addTask(new Task(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME, SubTaskStatus.TODO));
-        dailyChecklist.addSubTask(TASK_NAME, new SubTask(SUB_TASK_NAME2, SubTaskStatus.TODO));
+        dailyChecklist.addSubTask(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME, SubTaskStatus.TODO));
+        dailyChecklist.addSubTask(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME2, SubTaskStatus.TODO));
 
         return dailyChecklist;
     }

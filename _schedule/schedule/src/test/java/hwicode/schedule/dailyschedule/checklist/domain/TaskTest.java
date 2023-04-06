@@ -14,14 +14,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TaskTest {
 
     private Task task;
-    private SubTask subTask;
-    private SubTask subTask2;
+    private SubTaskChecker subTaskChecker;
+    private SubTaskChecker subTaskChecker2;
 
     @BeforeEach
     void beforeEach() {
         task = new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL);
-        subTask = new SubTask(SUB_TASK_NAME, SubTaskStatus.TODO);
-        subTask2 = new SubTask(SUB_TASK_NAME2, SubTaskStatus.TODO);
+        subTaskChecker = new SubTaskChecker(SUB_TASK_NAME, SubTaskStatus.TODO);
+        subTaskChecker2 = new SubTaskChecker(SUB_TASK_NAME2, SubTaskStatus.TODO);
     }
 
     @Test
@@ -30,7 +30,7 @@ class TaskTest {
         task.changeToDone();
 
         // when
-        TaskStatus taskStatus = task.addSubTask(subTask);
+        TaskStatus taskStatus = task.addSubTask(subTaskChecker);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -39,7 +39,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_DONE_일_때_서브_과제_삭제시_DONE_상태가_유지된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
         task.changeToDone();
 
@@ -53,7 +53,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_DONE_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
         task.changeToDone();
 
@@ -67,7 +67,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_DONE_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS가_된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
         task.changeToDone();
 
@@ -81,7 +81,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_DONE_일_때_서브_과제가_DONE으로_변하면_과제는_DONE을_유지한다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
         task.changeToDone();
 
@@ -95,8 +95,8 @@ class TaskTest {
     @Test
     void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이_아니면_에러가_발생한다() {
         //given
-        task.addSubTask(subTask);
-        task.addSubTask(subTask2);
+        task.addSubTask(subTaskChecker);
+        task.addSubTask(subTaskChecker2);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
 
         //when then
@@ -107,8 +107,8 @@ class TaskTest {
     @Test
     void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이면_과제는_DONE으로_변한다() {
         //given
-        task.addSubTask(subTask);
-        task.addSubTask(subTask2);
+        task.addSubTask(subTaskChecker);
+        task.addSubTask(subTaskChecker2);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
         task.changeSubTaskStatus(SUB_TASK_NAME2, SubTaskStatus.DONE);
 
@@ -122,7 +122,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_TODO_일_때_서브_과제_추가시_TODO_상태가_유지된다() {
         // when
-        TaskStatus taskStatus = task.addSubTask(subTask);
+        TaskStatus taskStatus = task.addSubTask(subTaskChecker);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.TODO);
@@ -131,7 +131,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_TODO_일_때_서브_과제_삭제시_TODO_상태가_유지된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.deleteSubTask(SUB_TASK_NAME);
@@ -143,7 +143,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_TODO_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.PROGRESS);
@@ -155,7 +155,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_TODO_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS가_된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
@@ -167,7 +167,7 @@ class TaskTest {
     @Test
     void 과제의_상태가_TODO_일_때_서브_과제가_TODO로_변하면_과제는_TODO상태가_유지된다() {
         // given
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.TODO);
@@ -179,8 +179,8 @@ class TaskTest {
     @Test
     void 과제가_TODO로_변할_때_서브_과제가_모두_TODO가_아니면_에러가_발생한다() {
         //given
-        task.addSubTask(subTask);
-        task.addSubTask(subTask2);
+        task.addSubTask(subTaskChecker);
+        task.addSubTask(subTaskChecker2);
         task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
 
         //when then
@@ -191,8 +191,8 @@ class TaskTest {
     @Test
     void 과제가_TODO로_변할_때_서브_과제가_모두_TODO면_과제는_TODO_로_변한다() {
         //given
-        task.addSubTask(subTask);
-        task.addSubTask(subTask2);
+        task.addSubTask(subTaskChecker);
+        task.addSubTask(subTaskChecker2);
 
         //when
         TaskStatus taskStatus = task.changeToTodo();
@@ -207,7 +207,7 @@ class TaskTest {
         task.changeToProgress();
 
         // when
-        TaskStatus taskStatus = task.addSubTask(subTask);
+        TaskStatus taskStatus = task.addSubTask(subTaskChecker);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -217,7 +217,7 @@ class TaskTest {
     void 과제의_상태가_PROGRESS_일_때_서브_과제_삭제시_PROGRESS_상태가_유지된다() {
         // given
         task.changeToProgress();
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.deleteSubTask(SUB_TASK_NAME);
@@ -230,7 +230,7 @@ class TaskTest {
     void 과제의_상태가_PROGRESS_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS_상태가_유지된다() {
         // given
         task.changeToProgress();
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.TODO);
@@ -243,7 +243,7 @@ class TaskTest {
     void 과제의_상태가_PROGRESS_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS_상태가_유지된다() {
         // given
         task.changeToProgress();
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.PROGRESS);
@@ -256,7 +256,7 @@ class TaskTest {
     void 과제의_상태가_PROGRESS_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS_상태가_유지된다() {
         // given
         task.changeToProgress();
-        task.addSubTask(subTask);
+        task.addSubTask(subTaskChecker);
 
         // when
         TaskStatus taskStatus = task.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
@@ -268,8 +268,8 @@ class TaskTest {
     @Test
     void makeDone_메서드를_사용하면_TODO상태인_과제와_서브과제가_모두_DONE상태가_된다() {
         // given
-        task.addSubTask(subTask);
-        task.addSubTask(subTask2);
+        task.addSubTask(subTaskChecker);
+        task.addSubTask(subTaskChecker2);
 
         // when
         task.makeDone();
@@ -281,13 +281,13 @@ class TaskTest {
     @Test
     void 서브_과제의_이름이_중복되면_에러가_발생한다() {
         // given
-        SubTask subTask = new SubTask(NEW_SUB_TASK_NAME);
-        task.addSubTask(subTask);
+        SubTaskChecker subTaskChecker = new SubTaskChecker(NEW_SUB_TASK_NAME);
+        task.addSubTask(subTaskChecker);
 
-        SubTask duplicatedSubTask = new SubTask(NEW_SUB_TASK_NAME);
+        SubTaskChecker duplicatedSubTaskChecker = new SubTaskChecker(NEW_SUB_TASK_NAME);
 
         // when then
-        assertThatThrownBy(() -> task.addSubTask(duplicatedSubTask))
+        assertThatThrownBy(() -> task.addSubTask(duplicatedSubTaskChecker))
                 .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 

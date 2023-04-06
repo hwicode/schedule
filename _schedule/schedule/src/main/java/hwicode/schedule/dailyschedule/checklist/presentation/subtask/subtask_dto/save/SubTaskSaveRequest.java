@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save;
 
-import hwicode.schedule.dailyschedule.checklist.domain.SubTask;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -28,7 +28,7 @@ public class SubTaskSaveRequest {
         this.subTaskName = subTaskName;
     }
 
-    public SubTask toEntity() {
-        return new SubTask(subTaskName);
+    public SubTaskChecker toEntity() {
+        return new SubTaskChecker(subTaskName);
     }
 }
