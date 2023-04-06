@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
+import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskRepository;
@@ -37,7 +37,7 @@ class SubTaskCheckerEndToEndTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    SubTaskService subTaskService;
+    SubTaskCheckerService subTaskCheckerService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -87,7 +87,7 @@ class SubTaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskService.saveSubTask(
+        Long subTaskId = subTaskCheckerService.saveSubTask(
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 
@@ -115,7 +115,7 @@ class SubTaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskService.saveSubTask(
+        Long subTaskId = subTaskCheckerService.saveSubTask(
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 

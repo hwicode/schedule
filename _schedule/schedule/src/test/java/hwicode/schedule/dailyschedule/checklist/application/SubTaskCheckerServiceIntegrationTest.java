@@ -25,7 +25,7 @@ class SubTaskCheckerServiceIntegrationTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    SubTaskService subTaskService;
+    SubTaskCheckerService subTaskCheckerService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -59,7 +59,7 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
 
         // when
-        Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
+        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
 
         // then
         assertThat(subTaskRepository.existsById(subTaskId)).isTrue();
@@ -74,10 +74,10 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         // when
-        subTaskService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest);
+        subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> subTaskService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest))
                 .isInstanceOf(SubTaskNotFoundException.class);
     }
 
@@ -92,7 +92,7 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, SubTaskStatus.PROGRESS);
 
         // when
-        subTaskService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);
+        subTaskCheckerService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();

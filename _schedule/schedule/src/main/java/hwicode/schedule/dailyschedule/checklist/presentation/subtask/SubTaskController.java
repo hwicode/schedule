@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.subtask;
 
-import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
+import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
@@ -18,12 +18,12 @@ import javax.validation.constraints.NotBlank;
 @RestController
 public class SubTaskController {
 
-    private final SubTaskService subTaskService;
+    private final SubTaskCheckerService subTaskCheckerService;
 
     @PostMapping("/dailyschedule/checklist/subtasks")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SubTaskSaveResponse saveSubTask(@RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
-        Long subTaskId = subTaskService.saveSubTask(subTaskSaveRequest);
+        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskSaveRequest);
         return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
     }
 
@@ -31,14 +31,14 @@ public class SubTaskController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
                               @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskService.deleteSubTask(subTaskName, subTaskDeleteRequest);
+        subTaskCheckerService.deleteSubTask(subTaskName, subTaskDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/checklist/subtasks/{subTaskName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        TaskStatus modifiedTaskStatus = subTaskService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
+        TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
         return new SubTaskStatusModifyResponse(subTaskName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 }

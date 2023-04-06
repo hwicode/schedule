@@ -16,7 +16,7 @@ import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklis
 
 @RequiredArgsConstructor
 @Service
-public class SubTaskService {
+public class SubTaskCheckerService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
     private final SubTaskSaveOnlyRepository subTaskSaveOnlyRepository;
