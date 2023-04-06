@@ -28,6 +28,11 @@ public class Task {
         return subTask;
     }
 
+    public String changeSubTaskName(String subTaskName, String newSubTaskName) {
+        validateSubTaskDuplication(newSubTaskName);
+        return findSubTaskBy(subTaskName).changeSubTaskName(newSubTaskName);
+    }
+
     private void validateSubTaskDuplication(String name) {
         boolean duplication = subTasks.stream()
                 .anyMatch(subTask -> subTask.isSame(name));
@@ -35,5 +40,12 @@ public class Task {
         if (duplication) {
             throw new IllegalArgumentException();
         }
+    }
+
+    private SubTask findSubTaskBy(String name) {
+        return subTasks.stream()
+                .filter(s -> s.isSame(name))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 }
