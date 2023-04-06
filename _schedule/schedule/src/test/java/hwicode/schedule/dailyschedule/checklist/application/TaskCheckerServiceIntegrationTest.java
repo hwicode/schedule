@@ -27,7 +27,7 @@ class TaskCheckerServiceIntegrationTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TaskService taskService;
+    TaskCheckerService taskCheckerService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -58,7 +58,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         // when
-        Long taskId = taskService.saveTask(taskSaveRequest);
+        Long taskId = taskCheckerService.saveTask(taskSaveRequest);
 
         // then
         assertThat(taskRepository.existsById(taskId)).isTrue();
@@ -71,10 +71,10 @@ class TaskCheckerServiceIntegrationTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
-        taskService.deleteTask(dailyChecklist.getId(), TASK_NAME2);
+        taskCheckerService.deleteTask(dailyChecklist.getId(), TASK_NAME2);
 
         // then
-        assertThatThrownBy(() -> taskService.deleteTask(dailyChecklist.getId(), TASK_NAME2))
+        assertThatThrownBy(() -> taskCheckerService.deleteTask(dailyChecklist.getId(), TASK_NAME2))
                 .isInstanceOf(TaskNotFoundException.class);
     }
 
@@ -87,7 +87,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         // when
-        taskService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
+        taskCheckerService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
@@ -103,7 +103,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
 
         // when
-        taskService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);
+        taskCheckerService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();

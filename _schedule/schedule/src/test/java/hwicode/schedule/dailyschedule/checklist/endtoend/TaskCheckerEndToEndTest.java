@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.application.TaskService;
+import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
@@ -40,7 +40,7 @@ class TaskCheckerEndToEndTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TaskService taskService;
+    TaskCheckerService taskCheckerService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -83,7 +83,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(
+        Long taskId = taskCheckerService.saveTask(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
         );
 
@@ -111,7 +111,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(
+        Long taskId = taskCheckerService.saveTask(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
         );
 
@@ -140,7 +140,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskService.saveTask(
+        Long taskId = taskCheckerService.saveTask(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
         );
 

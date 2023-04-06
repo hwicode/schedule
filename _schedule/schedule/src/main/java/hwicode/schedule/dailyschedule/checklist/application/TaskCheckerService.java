@@ -13,7 +13,7 @@ import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklis
 
 @RequiredArgsConstructor
 @Service
-public class TaskService {
+public class TaskCheckerService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
     private final TaskSaveOnlyRepository taskSaveOnlyRepository;
