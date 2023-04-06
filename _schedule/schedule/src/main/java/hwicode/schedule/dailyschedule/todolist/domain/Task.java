@@ -16,8 +16,16 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
+    private Priority priority;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
+
+    public Priority changePriority(Priority priority) {
+        this.priority = priority;
+        return this.priority;
+    }
 
     public SubTask createSubTask(String subTaskName) {
         validateSubTaskName(subTaskName);
