@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.endtoend;
 
-import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
+import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;

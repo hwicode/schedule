@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist;
+package hwicode.schedule;
 
 import com.google.common.base.CaseFormat;
 import org.springframework.stereotype.Service;

@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
-import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
+import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.Task;

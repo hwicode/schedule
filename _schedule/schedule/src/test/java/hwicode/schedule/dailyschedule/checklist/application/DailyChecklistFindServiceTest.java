@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
-import hwicode.schedule.dailyschedule.checklist.DatabaseCleanUp;
+import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import org.junit.jupiter.api.BeforeEach;
