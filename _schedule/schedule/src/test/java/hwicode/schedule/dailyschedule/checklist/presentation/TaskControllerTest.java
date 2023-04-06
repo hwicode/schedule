@@ -8,8 +8,8 @@ import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
@@ -196,9 +196,9 @@ class TaskControllerTest {
     @Test
     void 과제의_진행_상태를_DONE으로_변경을_요청할_때_서브_과제의_진행_상태가_모두_DONE이_아니면_에러가_발생한다() throws Exception {
         // given
-        SubTaskNotAllDoneException subTaskNotAllDoneException = new SubTaskNotAllDoneException();
+        SubTaskCheckerNotAllDoneException subTaskCheckerNotAllDoneException = new SubTaskCheckerNotAllDoneException();
         given(taskService.changeTaskStatus(any(), any()))
-                .willThrow(subTaskNotAllDoneException);
+                .willThrow(subTaskCheckerNotAllDoneException);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/tasks/taskName/status")
@@ -209,7 +209,7 @@ class TaskControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(subTaskNotAllDoneException.getMessage()));
+                .andExpect(jsonPath("$.message").value(subTaskCheckerNotAllDoneException.getMessage()));
 
         verify(taskService).changeTaskStatus(any(), any());
     }
@@ -217,9 +217,9 @@ class TaskControllerTest {
     @Test
     void 과제의_진행_상태를_TODO로_변경을_요청할_때_서브_과제의_진행_상태가_모두_TODO가_아니면_에러가_발생한다() throws Exception {
         // given
-        SubTaskNotAllTodoException subTaskNotAllTodoException = new SubTaskNotAllTodoException();
+        SubTaskCheckerNotAllTodoException subTaskCheckerNotAllTodoException = new SubTaskCheckerNotAllTodoException();
         given(taskService.changeTaskStatus(any(), any()))
-                .willThrow(subTaskNotAllTodoException);
+                .willThrow(subTaskCheckerNotAllTodoException);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/tasks/taskName/status")
@@ -230,7 +230,7 @@ class TaskControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(subTaskNotAllTodoException.getMessage()));
+                .andExpect(jsonPath("$.message").value(subTaskCheckerNotAllTodoException.getMessage()));
 
         verify(taskService).changeTaskStatus(any(), any());
     }

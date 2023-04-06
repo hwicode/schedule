@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllTodoException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -101,7 +101,7 @@ class TaskTest {
 
         //when then
         assertThatThrownBy(task::changeToDone)
-                .isInstanceOf(SubTaskNotAllDoneException.class);
+                .isInstanceOf(SubTaskCheckerNotAllDoneException.class);
     }
 
     @Test
@@ -185,7 +185,7 @@ class TaskTest {
 
         //when then
         assertThatThrownBy(task::changeToTodo)
-                .isInstanceOf(SubTaskNotAllTodoException.class);
+                .isInstanceOf(SubTaskCheckerNotAllTodoException.class);
     }
 
     @Test
@@ -288,7 +288,7 @@ class TaskTest {
 
         // when then
         assertThatThrownBy(() -> task.addSubTask(duplicatedSubTaskChecker))
-                .isInstanceOf(SubTaskNameDuplicationException.class);
+                .isInstanceOf(SubTaskCheckerNameDuplicationException.class);
     }
 
 }

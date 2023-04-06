@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
@@ -78,7 +78,7 @@ class SubTaskCheckerServiceIntegrationTest {
 
         // then
         assertThatThrownBy(() -> subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskDeleteRequest))
-                .isInstanceOf(SubTaskNotFoundException.class);
+                .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
     @Test

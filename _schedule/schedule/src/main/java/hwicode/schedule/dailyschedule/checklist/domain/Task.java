@@ -1,10 +1,10 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllDoneException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotAllTodoException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -63,7 +63,7 @@ public class Task {
                 .anyMatch(subTask -> subTask.isSame(name));
 
         if (duplication) {
-            throw new SubTaskNameDuplicationException();
+            throw new SubTaskCheckerNameDuplicationException();
         }
     }
 
@@ -98,13 +98,13 @@ public class Task {
         return subTaskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
-                .orElseThrow(SubTaskNotFoundException::new);
+                .orElseThrow(SubTaskCheckerNotFoundException::new);
     }
 
     TaskStatus changeToDone() {
         boolean isAllDone = isAllSameStatus(SubTaskStatus.DONE);
         if (!isAllDone) {
-            throw new SubTaskNotAllDoneException();
+            throw new SubTaskCheckerNotAllDoneException();
         }
 
         this.taskStatus = TaskStatus.DONE;
@@ -114,7 +114,7 @@ public class Task {
     TaskStatus changeToTodo() {
         boolean isAllTodo = isAllSameStatus(SubTaskStatus.TODO);
         if (!isAllTodo) {
-            throw new SubTaskNotAllTodoException();
+            throw new SubTaskCheckerNotAllTodoException();
         }
 
         this.taskStatus = TaskStatus.TODO;

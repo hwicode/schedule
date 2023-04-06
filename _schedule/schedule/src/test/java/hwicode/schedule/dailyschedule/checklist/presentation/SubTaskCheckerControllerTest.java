@@ -5,8 +5,8 @@ import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerServic
 import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.SubTaskController;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask.subtask_dto.save.SubTaskSaveRequest;
@@ -105,9 +105,9 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
-        SubTaskNameDuplicationException subTaskNameDuplicationException = new SubTaskNameDuplicationException();
+        SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
         given(subTaskCheckerService.saveSubTask(any()))
-                .willThrow(subTaskNameDuplicationException);
+                .willThrow(subTaskCheckerNameDuplicationException);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/subtasks")
@@ -118,7 +118,7 @@ class SubTaskCheckerControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(subTaskNameDuplicationException.getMessage()));
+                .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
         verify(subTaskCheckerService).saveSubTask(any());
     }
@@ -126,9 +126,9 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제를_찾을_때_서브_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
-        SubTaskNotFoundException subTaskNotFoundException = new SubTaskNotFoundException();
+        SubTaskCheckerNotFoundException subTaskCheckerNotFoundException = new SubTaskCheckerNotFoundException();
         given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
-                .willThrow(subTaskNotFoundException);
+                .willThrow(subTaskCheckerNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtasks/subTaskName/status")
@@ -139,7 +139,7 @@ class SubTaskCheckerControllerTest {
 
         // then
         perform.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(subTaskNotFoundException.getMessage()));
+                .andExpect(jsonPath("$.message").value(subTaskCheckerNotFoundException.getMessage()));
 
         verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
     }
