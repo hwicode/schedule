@@ -7,7 +7,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
@@ -46,7 +46,7 @@ class TaskCheckerEndToEndTest {
     DailyChecklistRepository dailyChecklistRepository;
 
     @Autowired
-    TaskRepository taskRepository;
+    TaskCheckerRepository taskCheckerRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -73,7 +73,7 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        List<TaskChecker> all = taskRepository.findAll();
+        List<TaskChecker> all = taskCheckerRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
     }
 
@@ -102,7 +102,7 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(taskRepository.existsById(taskId)).isFalse();
+        assertThat(taskCheckerRepository.existsById(taskId)).isFalse();
     }
 
     @Test
@@ -130,7 +130,7 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        TaskChecker taskChecker = taskRepository.findById(taskId).orElseThrow();
+        TaskChecker taskChecker = taskCheckerRepository.findById(taskId).orElseThrow();
         assertThat(taskChecker.isDone()).isTrue();
     }
 
@@ -159,7 +159,7 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        TaskChecker taskChecker = taskRepository.findById(taskId).orElseThrow();
+        TaskChecker taskChecker = taskCheckerRepository.findById(taskId).orElseThrow();
         assertThat(taskChecker.getDifficultyScore()).isEqualTo(Difficulty.HARD.getValue());
     }
 }

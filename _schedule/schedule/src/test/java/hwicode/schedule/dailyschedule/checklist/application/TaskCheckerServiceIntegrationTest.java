@@ -7,7 +7,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
@@ -33,7 +33,7 @@ class TaskCheckerServiceIntegrationTest {
     DailyChecklistRepository dailyChecklistRepository;
 
     @Autowired
-    TaskRepository taskRepository;
+    TaskCheckerRepository taskCheckerRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -61,7 +61,7 @@ class TaskCheckerServiceIntegrationTest {
         Long taskId = taskCheckerService.saveTask(taskSaveRequest);
 
         // then
-        assertThat(taskRepository.existsById(taskId)).isTrue();
+        assertThat(taskCheckerRepository.existsById(taskId)).isTrue();
     }
 
     @Test
