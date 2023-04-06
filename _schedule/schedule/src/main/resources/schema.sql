@@ -1,8 +1,8 @@
 drop table if exists sub_task cascade;
 drop table if exists task cascade;
-drop table if exists daily_checklist cascade;
+drop table if exists daily_to_do_list cascade;
 
-create table daily_checklist (
+create table daily_to_do_list (
    id bigint not null auto_increment,
    primary key (id)
 ) engine=InnoDB;
@@ -22,7 +22,7 @@ create table task (
    importance varchar(255),
    difficulty varchar(255),
    task_status varchar(255),
-   daily_checklist_id bigint,
+   daily_to_do_list_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
@@ -33,5 +33,5 @@ alter table sub_task
 
 alter table task
    add constraint
-   foreign key (daily_checklist_id)
-   references daily_checklist (id);
+   foreign key (daily_to_do_list_id)
+   references daily_to_do_list (id);

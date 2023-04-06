@@ -16,6 +16,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "daily_to_do_list_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private DailyToDoList dailyToDoList;
+
     @Column(nullable = false)
     private String name;
 

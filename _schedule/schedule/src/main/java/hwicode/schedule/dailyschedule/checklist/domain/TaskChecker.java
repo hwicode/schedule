@@ -19,7 +19,7 @@ public class TaskChecker {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "daily_checklist_id")
+    @JoinColumn(name = "daily_to_do_list_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private DailyChecklist dailyChecklist;
 
@@ -78,7 +78,6 @@ public class TaskChecker {
         if (this.taskStatus == TaskStatus.DONE && subTaskStatus != SubTaskStatus.DONE) {
             changeToProgress();
         }
-
         else if (this.taskStatus == TaskStatus.TODO && subTaskStatus != SubTaskStatus.TODO) {
             changeToProgress();
         }
