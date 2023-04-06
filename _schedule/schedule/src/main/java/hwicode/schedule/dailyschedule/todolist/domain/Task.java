@@ -20,7 +20,7 @@ public class Task {
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public SubTask createSubTask(String subTaskName) {
-        validateSubTaskDuplication(subTaskName);
+        validateSubTaskName(subTaskName);
 
         SubTask subTask = new SubTask(this, subTaskName);
         subTasks.add(subTask);
@@ -29,15 +29,15 @@ public class Task {
     }
 
     public String changeSubTaskName(String subTaskName, String newSubTaskName) {
-        validateSubTaskDuplication(newSubTaskName);
+        validateSubTaskName(newSubTaskName);
         return findSubTaskBy(subTaskName).changeSubTaskName(newSubTaskName);
     }
 
-    private void validateSubTaskDuplication(String name) {
+    private void validateSubTaskName(String name) {
         boolean duplication = subTasks.stream()
                 .anyMatch(subTask -> subTask.isSame(name));
 
-        if (duplication) {
+        if (duplication || name == null) {
             throw new IllegalArgumentException();
         }
     }
