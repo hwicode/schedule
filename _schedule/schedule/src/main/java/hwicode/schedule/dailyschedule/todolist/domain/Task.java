@@ -10,22 +10,22 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "task")
 @Entity
-public class TaskInformation {
+public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "taskInformation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<SubTaskInformation> subTasks = new ArrayList<>();
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<SubTask> subTasks = new ArrayList<>();
 
-    public SubTaskInformation createSubTaskInformation(String subTaskName) {
+    public SubTask createSubTask(String subTaskName) {
         validateSubTaskDuplication(subTaskName);
 
-        SubTaskInformation subTaskInformation = new SubTaskInformation(this, subTaskName);
-        subTasks.add(subTaskInformation);
+        SubTask subTask = new SubTask(this, subTaskName);
+        subTasks.add(subTask);
 
-        return subTaskInformation;
+        return subTask;
     }
 
     private void validateSubTaskDuplication(String name) {
