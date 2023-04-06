@@ -52,7 +52,7 @@ class SubTaskCheckerEndToEndTest {
 
     private DailyChecklist createDailyChecklistWithTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }

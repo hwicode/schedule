@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class TaskServiceIntegrationTest {
+class TaskCheckerServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -43,8 +43,8 @@ class TaskServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTask(new Task(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }

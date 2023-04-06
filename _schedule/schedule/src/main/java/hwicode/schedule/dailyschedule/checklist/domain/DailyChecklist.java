@@ -18,16 +18,16 @@ public class DailyChecklist {
     private Long id;
 
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
-    private final List<Task> tasks = new ArrayList<>();
+    private final List<TaskChecker> taskCheckers = new ArrayList<>();
 
-    public void addTask(Task task) {
-        validateTaskDuplication(task.getName());
-        tasks.add(task);
-        task.savedInChecklist(this);
+    public void addTask(TaskChecker taskChecker) {
+        validateTaskDuplication(taskChecker.getName());
+        taskCheckers.add(taskChecker);
+        taskChecker.savedInChecklist(this);
     }
 
     private void validateTaskDuplication(String name) {
-        boolean duplication = tasks.stream()
+        boolean duplication = taskCheckers.stream()
                 .anyMatch(task -> task.isSame(name));
 
         if (duplication) {
@@ -40,7 +40,7 @@ public class DailyChecklist {
     }
 
     public void deleteTask(String name) {
-        tasks.remove(findTaskBy(name));
+        taskCheckers.remove(findTaskBy(name));
     }
 
     public TaskStatus changeTaskStatus(String name, TaskStatus taskStatus) {
@@ -60,8 +60,8 @@ public class DailyChecklist {
         findTaskBy(taskName).makeDone();
     }
 
-    private Task findTaskBy(String name) {
-        return tasks.stream()
+    private TaskChecker findTaskBy(String name) {
+        return taskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
                 .orElseThrow(TaskNotFoundException::new);
@@ -84,15 +84,15 @@ public class DailyChecklist {
     }
 
     private double getDoneTasksScore() {
-        return tasks.stream()
-                .filter(Task::isDone)
-                .mapToInt(Task::getDifficultyScore)
+        return taskCheckers.stream()
+                .filter(TaskChecker::isDone)
+                .mapToInt(TaskChecker::getDifficultyScore)
                 .sum();
     }
 
     public int getTotalDifficultyScore() {
-        return tasks.stream()
-                .mapToInt(Task::getDifficultyScore)
+        return taskCheckers.stream()
+                .mapToInt(TaskChecker::getDifficultyScore)
                 .sum();
     }
 

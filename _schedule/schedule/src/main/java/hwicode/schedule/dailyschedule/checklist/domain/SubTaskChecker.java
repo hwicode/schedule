@@ -16,7 +16,7 @@ public class SubTaskChecker {
 
     @JoinColumn(name = "task_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Task task;
+    private TaskChecker taskChecker;
 
     @Column(nullable = false)
     private String name;
@@ -34,8 +34,8 @@ public class SubTaskChecker {
         this.subTaskStatus = subTaskStatus;
     }
 
-    void savedInTask(Task task) {
-        this.task = task;
+    void savedInTask(TaskChecker taskChecker) {
+        this.taskChecker = taskChecker;
     }
 
     boolean isSame(String name) {

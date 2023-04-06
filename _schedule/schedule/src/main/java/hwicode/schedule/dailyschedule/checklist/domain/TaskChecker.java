@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @Table(name = "task")
 @Entity
-public class Task {
+public class TaskChecker {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -32,16 +32,16 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
-    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "taskChecker", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTaskChecker> subTaskCheckers = new ArrayList<>();
 
-    public Task(String name) {
+    public TaskChecker(String name) {
         this.name = name;
         this.taskStatus = TaskStatus.TODO;
         this.difficulty = Difficulty.NORMAL;
     }
 
-    public Task(String name, TaskStatus taskStatus, Difficulty difficulty) {
+    public TaskChecker(String name, TaskStatus taskStatus, Difficulty difficulty) {
         this.name = name;
         this.taskStatus = taskStatus;
         this.difficulty = difficulty;

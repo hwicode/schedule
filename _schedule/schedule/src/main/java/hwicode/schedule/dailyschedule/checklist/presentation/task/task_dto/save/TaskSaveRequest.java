@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save;
 
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,7 +24,7 @@ public class TaskSaveRequest {
         this.taskName = taskName;
     }
 
-    public Task toEntity() {
-        return new Task(taskName);
+    public TaskChecker toEntity() {
+        return new TaskChecker(taskName);
     }
 }

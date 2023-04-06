@@ -36,7 +36,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TaskController.class)
-class TaskControllerTest {
+class TaskCheckerControllerTest {
 
     @Autowired
     MockMvc mockMvc;

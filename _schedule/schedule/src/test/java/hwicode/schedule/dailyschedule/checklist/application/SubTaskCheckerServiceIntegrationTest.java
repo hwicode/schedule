@@ -41,8 +41,8 @@ class SubTaskCheckerServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(new Task(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTask(new Task(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTask(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
         dailyChecklist.addSubTask(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME, SubTaskStatus.TODO));
         dailyChecklist.addSubTask(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME2, SubTaskStatus.TODO));

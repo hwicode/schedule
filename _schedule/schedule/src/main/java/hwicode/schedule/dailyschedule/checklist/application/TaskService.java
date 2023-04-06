@@ -23,10 +23,10 @@ public class TaskService {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
                 dailyChecklistRepository, taskSaveRequest.getDailyChecklistId());
 
-        Task task = taskSaveRequest.toEntity();
-        dailyChecklist.addTask(task);
+        TaskChecker taskChecker = taskSaveRequest.toEntity();
+        dailyChecklist.addTask(taskChecker);
 
-        return taskSaveOnlyRepository.save(task)
+        return taskSaveOnlyRepository.save(taskChecker)
                 .getId();
     }
 

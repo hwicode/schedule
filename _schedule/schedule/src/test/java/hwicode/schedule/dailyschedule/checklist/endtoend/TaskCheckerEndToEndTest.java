@@ -4,7 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.TaskService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.Task;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskRepository;
@@ -31,7 +31,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class TaskEndToEndTest {
+class TaskCheckerEndToEndTest {
 
     @LocalServerPort
     private int port;
@@ -73,7 +73,7 @@ class TaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        List<Task> all = taskRepository.findAll();
+        List<TaskChecker> all = taskRepository.findAll();
         assertThat(all.size()).isEqualTo(1);
     }
 
@@ -130,8 +130,8 @@ class TaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Task task = taskRepository.findById(taskId).orElseThrow();
-        assertThat(task.isDone()).isTrue();
+        TaskChecker taskChecker = taskRepository.findById(taskId).orElseThrow();
+        assertThat(taskChecker.isDone()).isTrue();
     }
 
     @Test
@@ -159,7 +159,7 @@ class TaskEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Task task = taskRepository.findById(taskId).orElseThrow();
-        assertThat(task.getDifficultyScore()).isEqualTo(Difficulty.HARD.getValue());
+        TaskChecker taskChecker = taskRepository.findById(taskId).orElseThrow();
+        assertThat(taskChecker.getDifficultyScore()).isEqualTo(Difficulty.HARD.getValue());
     }
 }
