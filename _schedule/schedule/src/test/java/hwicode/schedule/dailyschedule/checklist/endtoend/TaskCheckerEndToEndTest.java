@@ -8,10 +8,10 @@ import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -59,11 +59,11 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
-                .body(taskSaveRequest);
+                .body(taskCheckerSaveRequest);
 
         //when
         Response response = requestSpecification.when()
@@ -87,12 +87,12 @@ class TaskCheckerEndToEndTest {
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
         );
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyChecklist.getId());
+        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskDeleteRequest(dailyChecklist.getId());
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskName", NEW_TASK_NAME)
                 .contentType(ContentType.JSON)
-                .body(taskDeleteRequest);
+                .body(taskCheckerDeleteRequest);
 
         //when
         Response response = requestSpecification.when()

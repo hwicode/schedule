@@ -10,14 +10,14 @@ import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskChe
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllTodoException;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.TaskCheckerController;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.TaskCheckerController;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,8 +50,8 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
-        TaskSaveResponse taskSaveResponse = createTaskSaveResponse(TASK_ID, NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
+        TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskSaveResponse(TASK_ID, NEW_TASK_NAME);
 
         given(taskCheckerService.saveTask(any()))
                 .willReturn(TASK_ID);
@@ -59,12 +59,12 @@ class TaskCheckerControllerTest {
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskSaveRequest)));
+                .content(objectMapper.writeValueAsString(taskCheckerSaveRequest)));
 
         // then
         perform.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string(
-                        objectMapper.writeValueAsString(taskSaveResponse)
+                        objectMapper.writeValueAsString(taskCheckerSaveResponse)
                 ));
 
         verify(taskCheckerService).saveTask(any());
@@ -73,12 +73,12 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_CHECKLIST_ID);
+        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskDeleteRequest(DAILY_CHECKLIST_ID);
 
         // when then
         mockMvc.perform(delete("/dailyschedule/checklist/taskCheckers/taskName")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskDeleteRequest)))
+                        .content(objectMapper.writeValueAsString(taskCheckerDeleteRequest)))
                 .andExpect(status().isNoContent());
 
         verify(taskCheckerService).deleteTask(any(), any());

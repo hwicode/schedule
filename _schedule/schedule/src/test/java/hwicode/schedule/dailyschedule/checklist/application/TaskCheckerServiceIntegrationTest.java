@@ -8,9 +8,9 @@ import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +55,10 @@ class TaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
 
         // when
-        Long taskId = taskCheckerService.saveTask(taskSaveRequest);
+        Long taskId = taskCheckerService.saveTask(taskCheckerSaveRequest);
 
         // then
         assertThat(taskCheckerRepository.existsById(taskId)).isTrue();

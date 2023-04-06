@@ -8,13 +8,13 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 
 public class ChecklistDataHelper {
 
@@ -39,8 +39,8 @@ public class ChecklistDataHelper {
 
 
     // checklist Task request dto
-    public static TaskSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName) {
-        return new TaskSaveRequest(dailyChecklistId, taskName);
+    public static TaskCheckerSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName) {
+        return new TaskCheckerSaveRequest(dailyChecklistId, taskName);
     }
 
     public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, TaskStatus taskStatus) {
@@ -51,8 +51,8 @@ public class ChecklistDataHelper {
         return new TaskDifficultyModifyRequest(dailyChecklistId, difficulty);
     }
 
-    public static TaskDeleteRequest createTaskDeleteRequest(Long dailyChecklistId) {
-        return new TaskDeleteRequest(dailyChecklistId);
+    public static TaskCheckerDeleteRequest createTaskDeleteRequest(Long dailyChecklistId) {
+        return new TaskCheckerDeleteRequest(dailyChecklistId);
     }
 
 
@@ -71,8 +71,8 @@ public class ChecklistDataHelper {
 
 
     // checklist Task response dto
-    public static TaskSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
-        return new TaskSaveResponse(taskId, taskName);
+    public static TaskCheckerSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
+        return new TaskCheckerSaveResponse(taskId, taskName);
     }
 
     public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskName, TaskStatus taskStatus) {

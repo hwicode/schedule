@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save;
+package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save;
 
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import lombok.AccessLevel;
@@ -11,7 +11,7 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskSaveRequest {
+public class TaskCheckerSaveRequest {
 
     @NotNull @Positive
     private Long dailyChecklistId;
@@ -19,7 +19,7 @@ public class TaskSaveRequest {
     @NotBlank
     private String taskName;
 
-    public TaskSaveRequest(Long dailyChecklistId, String taskName) {
+    public TaskCheckerSaveRequest(Long dailyChecklistId, String taskName) {
         this.dailyChecklistId = dailyChecklistId;
         this.taskName = taskName;
     }

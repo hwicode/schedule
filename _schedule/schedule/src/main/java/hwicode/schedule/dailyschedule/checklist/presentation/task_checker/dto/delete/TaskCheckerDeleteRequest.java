@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete;
+package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete;
 
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -9,12 +9,12 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class TaskDeleteRequest {
+public class TaskCheckerDeleteRequest {
 
     @NotNull @Positive
     private Long dailyChecklistId;
 
-    public TaskDeleteRequest(Long dailyChecklistId) {
+    public TaskCheckerDeleteRequest(Long dailyChecklistId) {
         this.dailyChecklistId = dailyChecklistId;
     }
 }

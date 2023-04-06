@@ -1,15 +1,15 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task;
+package hwicode.schedule.dailyschedule.checklist.presentation.task_checker;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.save.TaskSaveResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.status_modify.TaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -25,16 +25,16 @@ public class TaskCheckerController {
 
     @PostMapping("/dailyschedule/checklist/taskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@RequestBody @Valid TaskSaveRequest taskSaveRequest) {
-        Long taskId = taskCheckerService.saveTask(taskSaveRequest);
-        return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
+    public TaskCheckerSaveResponse saveTask(@RequestBody @Valid TaskCheckerSaveRequest taskCheckerSaveRequest) {
+        Long taskId = taskCheckerService.saveTask(taskCheckerSaveRequest);
+        return new TaskCheckerSaveResponse(taskId, taskCheckerSaveRequest.getTaskName());
     }
 
     @DeleteMapping("/dailyschedule/checklist/taskCheckers/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @NotBlank String taskName,
-                           @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
-        taskCheckerService.deleteTask(taskDeleteRequest.getDailyChecklistId(), taskName);
+                           @RequestBody @Valid TaskCheckerDeleteRequest taskCheckerDeleteRequest) {
+        taskCheckerService.deleteTask(taskCheckerDeleteRequest.getDailyChecklistId(), taskName);
     }
 
     @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/status")
