@@ -2,8 +2,8 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -31,7 +31,7 @@ public class DailyChecklist {
                 .anyMatch(task -> task.isSame(name));
 
         if (duplication) {
-            throw new TaskNameDuplicationException();
+            throw new TaskCheckerNameDuplicationException();
         }
     }
 
@@ -64,7 +64,7 @@ public class DailyChecklist {
         return taskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
-                .orElseThrow(TaskNotFoundException::new);
+                .orElseThrow(TaskCheckerNotFoundException::new);
     }
 
     public void addSubTask(String taskName, SubTaskChecker subTaskChecker) {

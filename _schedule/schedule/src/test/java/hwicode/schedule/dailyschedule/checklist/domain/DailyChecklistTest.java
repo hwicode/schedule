@@ -1,8 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -163,7 +163,7 @@ class DailyChecklistTest {
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.addTask(duplicatedTaskChecker))
-                .isInstanceOf(TaskNameDuplicationException.class);
+                .isInstanceOf(TaskCheckerNameDuplicationException.class);
     }
 
     @Test
@@ -173,7 +173,7 @@ class DailyChecklistTest {
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.deleteTask(NEW_TASK_NAME))
-                .isInstanceOf(TaskNotFoundException.class);
+                .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 
     @Test

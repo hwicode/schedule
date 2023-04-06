@@ -6,8 +6,8 @@ import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.TaskController;
@@ -133,9 +133,9 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
-        TaskNameDuplicationException taskNameDuplicationException = new TaskNameDuplicationException();
+        TaskCheckerNameDuplicationException taskCheckerNameDuplicationException = new TaskCheckerNameDuplicationException();
         given(taskCheckerService.saveTask(any()))
-                .willThrow(taskNameDuplicationException);
+                .willThrow(taskCheckerNameDuplicationException);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/tasks")
@@ -146,7 +146,7 @@ class TaskCheckerControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
+                .andExpect(jsonPath("$.message").value(taskCheckerNameDuplicationException.getMessage()));
 
         verify(taskCheckerService).saveTask(any());
     }
@@ -175,9 +175,9 @@ class TaskCheckerControllerTest {
     @Test
     void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
-        TaskNotFoundException taskNotFoundException = new TaskNotFoundException();
+        TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
         given(taskCheckerService.changeTaskStatus(any(), any()))
-                .willThrow(taskNotFoundException);
+                .willThrow(taskCheckerNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/tasks/taskName/status")
@@ -188,7 +188,7 @@ class TaskCheckerControllerTest {
 
         // then
         perform.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(taskNotFoundException.getMessage()));
+                .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
 
         verify(taskCheckerService).changeTaskStatus(any(), any());
     }

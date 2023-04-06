@@ -5,7 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task.task_dto.difficulty_modify.TaskDifficultyModifyRequest;
@@ -75,7 +75,7 @@ class TaskCheckerServiceIntegrationTest {
 
         // then
         assertThatThrownBy(() -> taskCheckerService.deleteTask(dailyChecklist.getId(), TASK_NAME2))
-                .isInstanceOf(TaskNotFoundException.class);
+                .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 
     @Test
