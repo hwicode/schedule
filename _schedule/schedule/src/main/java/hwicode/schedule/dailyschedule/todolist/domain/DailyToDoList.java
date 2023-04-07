@@ -15,8 +15,16 @@ public class DailyToDoList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(columnDefinition = "TEXT")
+    private String review;
+
     @OneToMany(mappedBy = "dailyToDoList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
+
+    public String writeReview(String review) {
+        this.review = review;
+        return this.review;
+    }
 
     public Task createTask(TaskCreateDto taskCreateDto) {
         validateTaskName(taskCreateDto.getTaskName());
