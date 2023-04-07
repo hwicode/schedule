@@ -18,12 +18,20 @@ public class DailyToDoList {
     @Column(columnDefinition = "TEXT")
     private String review;
 
+    @Enumerated(value = EnumType.STRING)
+    private Emoji emoji;
+
     @OneToMany(mappedBy = "dailyToDoList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
 
     public String writeReview(String review) {
         this.review = review;
         return this.review;
+    }
+
+    public Emoji changeTodayEmoji(Emoji emoji) {
+        this.emoji = emoji;
+        return this.emoji;
     }
 
     public Task createTask(TaskCreateDto taskCreateDto) {
