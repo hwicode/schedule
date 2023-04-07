@@ -27,6 +27,11 @@ public class DailyToDoList {
         return task;
     }
 
+    public String changeTaskName(String taskName, String newTaskName) {
+        validateTaskName(newTaskName);
+        return findTaskBy(taskName).changeTaskName(newTaskName);
+    }
+
     private void validateTaskName(String name) {
         boolean duplication = tasks.stream()
                 .anyMatch(task -> task.isSame(name));
@@ -36,4 +41,10 @@ public class DailyToDoList {
         }
     }
 
+    private Task findTaskBy(String name) {
+        return tasks.stream()
+                .filter(s -> s.isSame(name))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
 }
