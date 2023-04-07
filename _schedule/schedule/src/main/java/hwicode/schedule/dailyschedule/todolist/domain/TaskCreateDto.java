@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
+import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

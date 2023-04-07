@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule;
+package hwicode.schedule.dailyschedule.common.domain;
 
 public enum SubTaskStatus {
     TODO, PROGRESS, DONE

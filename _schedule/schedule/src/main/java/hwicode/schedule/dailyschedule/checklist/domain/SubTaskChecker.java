@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
-import hwicode.schedule.dailyschedule.SubTaskStatus;
+import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
