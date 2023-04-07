@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.domain.Difficulty;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -24,13 +26,28 @@ public class Task {
     private String name;
 
     @Enumerated(value = EnumType.STRING)
+    private Difficulty difficulty;
+
+    @Enumerated(value = EnumType.STRING)
     private Priority priority;
 
     @Enumerated(value = EnumType.STRING)
     private Importance importance;
 
+    @Enumerated(value = EnumType.STRING)
+    private TaskStatus taskStatus;
+
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
+
+    Task(DailyToDoList dailyToDoList, TaskCreateDto taskCreateDto) {
+        this.dailyToDoList = dailyToDoList;
+        this.name = taskCreateDto.getTaskName();
+        this.difficulty = taskCreateDto.getDifficulty();
+        this.priority = taskCreateDto.getPriority();
+        this.importance = taskCreateDto.getImportance();
+        this.taskStatus = TaskStatus.TODO;
+    }
 
     String changeTaskName(String name) {
         this.name = name;
@@ -75,5 +92,9 @@ public class Task {
                 .filter(s -> s.isSame(name))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    boolean isSame(String name) {
+        return this.name.equals(name);
     }
 }

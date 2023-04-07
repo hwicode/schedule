@@ -17,4 +17,23 @@ public class DailyToDoList {
 
     @OneToMany(mappedBy = "dailyToDoList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
+
+    public Task createTask(TaskCreateDto taskCreateDto) {
+        validateTaskName(taskCreateDto.getTaskName());
+
+        Task task = new Task(this, taskCreateDto);
+        tasks.add(task);
+
+        return task;
+    }
+
+    private void validateTaskName(String name) {
+        boolean duplication = tasks.stream()
+                .anyMatch(task -> task.isSame(name));
+
+        if (duplication || name == null) {
+            throw new IllegalArgumentException();
+        }
+    }
+
 }
