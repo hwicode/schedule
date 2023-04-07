@@ -5,6 +5,7 @@ drop table if exists daily_to_do_list cascade;
 create table daily_to_do_list (
    id bigint not null auto_increment,
    review text,
+   emoji varchar(255),
    primary key (id)
 ) engine=InnoDB;
 
