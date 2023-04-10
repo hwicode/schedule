@@ -98,11 +98,16 @@ public class Task {
         return this.name.equals(name);
     }
 
-    String getName() {
+    public Long getId() {
+        return this.id;
+    }
+
+    public String getName() {
         return name;
     }
 
-    Long getDailyToDoListId() {
+    public Long getDailyToDoListId() {
         return dailyToDoList.getId();
     }
+
 }
