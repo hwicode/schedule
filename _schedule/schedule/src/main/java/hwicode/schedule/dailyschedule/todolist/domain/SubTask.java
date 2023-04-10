@@ -39,4 +39,20 @@ public class SubTask {
     boolean isSame(String name) {
         return this.name.equals(name);
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getTaskName() {
+        return task.getName();
+    }
+
+    public Long getDailyToDoListId() {
+        return task.getDailyToDoListId();
+    }
 }

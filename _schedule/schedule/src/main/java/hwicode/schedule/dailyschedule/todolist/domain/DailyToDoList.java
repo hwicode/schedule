@@ -63,4 +63,8 @@ public class DailyToDoList {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    Long getId() {
+        return id;
+    }
 }

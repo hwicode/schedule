@@ -97,4 +97,12 @@ public class Task {
     boolean isSame(String name) {
         return this.name.equals(name);
     }
+
+    String getName() {
+        return name;
+    }
+
+    Long getDailyToDoListId() {
+        return dailyToDoList.getId();
+    }
 }
