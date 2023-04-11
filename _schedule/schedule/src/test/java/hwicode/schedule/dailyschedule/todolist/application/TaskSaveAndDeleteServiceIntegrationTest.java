@@ -1,10 +1,12 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
+import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,16 +14,17 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class TaskSaveServiceIntegrationTest {
+class TaskSaveAndDeleteServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TaskSaveService taskSaveService;
+    TaskSaveAndDeleteService taskSaveAndDeleteService;
 
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
@@ -43,9 +46,24 @@ class TaskSaveServiceIntegrationTest {
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest("TASK_NAME", Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
-        Long taskId = taskSaveService.save(dailyToDoList.getId(), taskSaveRequest);
+        Long taskId = taskSaveAndDeleteService.save(dailyToDoList.getId(), taskSaveRequest);
 
         // then
         assertThat(taskRepository.existsById(taskId)).isTrue();
+    }
+
+    @Test
+    void ToDo_리스트에_과제를_삭제할_수_있다() {
+        // given
+        DailyToDoList dailyToDoList = new DailyToDoList();
+        dailyToDoList.createTask(new TaskCreateDto("TASK_NAME", Difficulty.NORMAL, Priority.SECOND, Importance.SECOND));
+        dailyToDoListRepository.save(dailyToDoList);
+
+        // when
+        taskSaveAndDeleteService.delete(dailyToDoList.getId(), "TASK_NAME");
+
+        // then
+        assertThatThrownBy(() -> taskSaveAndDeleteService.delete(dailyToDoList.getId(), "TASK_NAME"))
+                .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 }
