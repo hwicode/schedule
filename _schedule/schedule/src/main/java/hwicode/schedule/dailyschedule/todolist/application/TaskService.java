@@ -1,7 +1,5 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
-import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
-import hwicode.schedule.dailyschedule.todolist.domain.SubTaskSaveService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,15 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class TaskService {
 
     private final TaskRepository taskRepository;
-    private final SubTaskSaveService subTaskSaveService;
 
     @Transactional
-    public Long saveSubTask(Long taskId, String subTaskName) {
+    public String changeSubTaskName(Long taskId, String subTaskName, String newSubTaskName) {
         Task task = taskRepository.findTaskWithSubtasks(taskId)
                 .orElseThrow(IllegalArgumentException::new);
 
-        SubTask subTask = task.createSubTask(subTaskName);
-        return subTaskSaveService.save(subTask)
-                .getId();
+        return task.changeSubTaskName(subTaskName, newSubTaskName);
     }
 }
