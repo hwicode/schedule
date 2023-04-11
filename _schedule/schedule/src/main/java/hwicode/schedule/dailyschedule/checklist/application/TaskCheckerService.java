@@ -18,7 +18,7 @@ import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklis
 public class TaskCheckerService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
-    private final TaskSaveOnlyRepository taskSaveOnlyRepository;
+    private final TaskCheckerSaveOnlyRepository taskCheckerSaveOnlyRepository;
 
     @Transactional
     public Long saveTask(TaskCheckerSaveRequest taskCheckerSaveRequest) {
@@ -28,7 +28,7 @@ public class TaskCheckerService {
         TaskChecker taskChecker = taskCheckerSaveRequest.toEntity();
         dailyChecklist.addTask(taskChecker);
 
-        return taskSaveOnlyRepository.save(taskChecker)
+        return taskCheckerSaveOnlyRepository.save(taskChecker)
                 .getId();
     }
 

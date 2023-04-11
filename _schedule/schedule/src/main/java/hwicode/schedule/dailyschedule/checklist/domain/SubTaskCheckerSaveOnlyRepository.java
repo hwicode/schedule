@@ -1,5 +1,5 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
-public interface SubTaskSaveOnlyRepository {
+public interface SubTaskCheckerSaveOnlyRepository {
     SubTaskChecker save(SubTaskChecker subTaskChecker);
 }

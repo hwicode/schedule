@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskSaveOnlyRepository;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskCheckerSaveOnlyRepository;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
@@ -19,7 +19,7 @@ import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklis
 public class SubTaskCheckerService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
-    private final SubTaskSaveOnlyRepository subTaskSaveOnlyRepository;
+    private final SubTaskCheckerSaveOnlyRepository subTaskCheckerSaveOnlyRepository;
 
     @Transactional
     public Long saveSubTask(SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
@@ -29,7 +29,7 @@ public class SubTaskCheckerService {
         SubTaskChecker subTaskChecker = subTaskCheckerSaveRequest.toEntity();
         dailyChecklist.addSubTask(subTaskCheckerSaveRequest.getTaskName(), subTaskChecker);
 
-        return subTaskSaveOnlyRepository.save(subTaskChecker)
+        return subTaskCheckerSaveOnlyRepository.save(subTaskChecker)
                 .getId();
     }
 
