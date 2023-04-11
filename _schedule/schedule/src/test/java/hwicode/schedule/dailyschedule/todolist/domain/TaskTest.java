@@ -2,15 +2,10 @@ package hwicode.schedule.dailyschedule.todolist.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class TaskTest {
-
-    private final String SUB_TASK_NAME = "subTaskName";
-    private final String SUB_TASK_NAME2 = "subTaskName2";
-
-    private final String NEW_SUB_TASK_NAME = "newSubTaskName";
-    private final String NEW_SUB_TASK_NAME2 = "newSubTaskName2";
 
     @Test
     void 서브_과제를_생성할_때_새로운_이름이면_서브_과제가_생성된다() {
