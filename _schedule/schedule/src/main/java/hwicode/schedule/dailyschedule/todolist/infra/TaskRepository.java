@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("SELECT t FROM Task t "
-            + "LEFT JOIN FETCH t.subtasks "
+            + "LEFT JOIN FETCH t.subTasks "
             + "WHERE t.id = :id")
     Optional<Task> findTaskWithSubtasks(@Param("id") Long taskId);
 }
