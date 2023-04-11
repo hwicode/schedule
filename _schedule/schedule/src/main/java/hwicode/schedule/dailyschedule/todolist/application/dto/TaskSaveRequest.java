@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.application;
+package hwicode.schedule.dailyschedule.todolist.application.dto;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;

@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
