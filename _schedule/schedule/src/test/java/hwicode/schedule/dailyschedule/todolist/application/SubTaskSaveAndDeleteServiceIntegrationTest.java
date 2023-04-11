@@ -44,7 +44,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
         dailyToDoListRepository.save(dailyToDoList);
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
 
         // when
         Long subTaskId = subTaskSaveAndDeleteService.save(subTaskSaveRequest);
@@ -61,7 +61,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         task.createSubTask(SUB_TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
 
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
 
         // when
         subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);

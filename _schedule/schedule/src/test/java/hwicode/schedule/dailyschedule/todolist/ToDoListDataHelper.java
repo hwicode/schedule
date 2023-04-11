@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
@@ -24,11 +26,25 @@ public class ToDoListDataHelper {
     public static final String NEW_SUB_TASK_NAME2 = "newSubTaskName2";
 
 
+    // todolist Task create dto
     public static TaskCreateDto createTaskCreateDto(String taskName) {
         return new TaskCreateDto(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
     }
 
+
+    // todolist Task request dto
     public static TaskSaveRequest createTaskSaveRequest(String taskName) {
         return new TaskSaveRequest(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
     }
+
+
+    // todolist SubTask request dto
+    public static SubTaskSaveRequest createSubTaskSaveRequest(Long dailyToDoListId, String taskName, String subTaskName) {
+        return new SubTaskSaveRequest(dailyToDoListId, taskName, subTaskName);
+    }
+
+    public static SubTaskDeleteRequest createSubTaskDeleteRequest(Long dailyToDoListId, String taskName) {
+        return new SubTaskDeleteRequest(dailyToDoListId, taskName);
+    }
+
 }
