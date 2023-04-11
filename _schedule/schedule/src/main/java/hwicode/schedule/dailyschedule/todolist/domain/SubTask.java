@@ -48,11 +48,4 @@ public class SubTask {
         return name;
     }
 
-    public String getTaskName() {
-        return task.getName();
-    }
-
-    public Long getDailyToDoListId() {
-        return task.getDailyToDoListId();
-    }
 }
