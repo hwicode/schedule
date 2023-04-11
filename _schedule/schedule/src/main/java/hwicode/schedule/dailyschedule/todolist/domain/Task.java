@@ -107,12 +107,4 @@ public class Task {
         return this.id;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public Long getDailyToDoListId() {
-        return dailyToDoList.getId();
-    }
-
 }
