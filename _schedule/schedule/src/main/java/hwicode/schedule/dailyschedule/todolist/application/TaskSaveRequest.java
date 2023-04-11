@@ -3,8 +3,10 @@ package hwicode.schedule.dailyschedule.todolist.application;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
-import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -25,8 +27,4 @@ public class TaskSaveRequest {
 
     @NotNull
     private Importance importance;
-
-    public TaskCreateDto toTaskCreateDto() {
-        return new TaskCreateDto(taskName, difficulty, priority, importance);
-    }
 }

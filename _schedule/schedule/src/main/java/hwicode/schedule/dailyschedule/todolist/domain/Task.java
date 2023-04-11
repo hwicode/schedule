@@ -49,6 +49,11 @@ public class Task {
         this.taskStatus = TaskStatus.TODO;
     }
 
+    public void initialize(Priority priority, Importance importance) {
+        this.priority = priority;
+        this.importance = importance;
+    }
+
     String changeTaskName(String name) {
         this.name = name;
         return this.name;

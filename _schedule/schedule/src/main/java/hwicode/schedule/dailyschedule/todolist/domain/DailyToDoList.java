@@ -64,7 +64,7 @@ public class DailyToDoList {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
-    Long getId() {
+    public Long getId() {
         return id;
     }
 }

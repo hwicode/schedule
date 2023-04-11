@@ -2,10 +2,12 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.TaskSaveService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
-import hwicode.schedule.dailyschedule.todolist.domain.TaskSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -15,18 +17,23 @@ public class TaskSaveServiceImpl implements TaskSaveService {
     private final TaskRepository taskRepository;
 
     @Override
-    public Task save(Task task) {
-        Task savedTask = taskRepository.save(task);
-        taskCheckerService.saveTask(
-                createTaskCheckerSaveRequest(task)
+    @Transactional
+    public Long save(Long dailyToDoListId, TaskSaveRequest taskSaveRequest) {
+        Long taskId = taskCheckerService.saveTask(
+                createTaskCheckerSaveRequest(dailyToDoListId, taskSaveRequest)
         );
-        return savedTask;
+
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
+        return taskId;
     }
 
-    public TaskCheckerSaveRequest createTaskCheckerSaveRequest(Task task) {
+    private TaskCheckerSaveRequest createTaskCheckerSaveRequest(Long dailyToDoListId, TaskSaveRequest taskSaveRequest) {
         return new TaskCheckerSaveRequest(
-                task.getDailyToDoListId(),
-                task.getName()
-        );
+                dailyToDoListId,
+                taskSaveRequest.getTaskName(),
+                taskSaveRequest.getDifficulty());
     }
 }
