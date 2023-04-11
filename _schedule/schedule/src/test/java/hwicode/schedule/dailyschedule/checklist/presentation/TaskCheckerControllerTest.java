@@ -3,8 +3,6 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
@@ -18,6 +16,8 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.sa
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -50,7 +50,7 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME, Difficulty.NORMAL);
         TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskSaveResponse(TASK_ID, NEW_TASK_NAME);
 
         given(taskCheckerService.saveTask(any()))
@@ -141,7 +141,7 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME)
+                        createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME, Difficulty.NORMAL)
                 )));
 
         // then

@@ -39,8 +39,8 @@ public class ChecklistDataHelper {
 
 
     // checklist Task request dto
-    public static TaskCheckerSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName) {
-        return new TaskCheckerSaveRequest(dailyChecklistId, taskName);
+    public static TaskCheckerSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName, Difficulty difficulty) {
+        return new TaskCheckerSaveRequest(dailyChecklistId, taskName, Difficulty.NORMAL);
     }
 
     public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, TaskStatus taskStatus) {

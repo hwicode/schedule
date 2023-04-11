@@ -37,10 +37,10 @@ public class TaskChecker {
     @OneToMany(mappedBy = "taskChecker", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTaskChecker> subTaskCheckers = new ArrayList<>();
 
-    public TaskChecker(String name) {
+    public TaskChecker(String name, Difficulty difficulty) {
         this.name = name;
         this.taskStatus = TaskStatus.TODO;
-        this.difficulty = Difficulty.NORMAL;
+        this.difficulty = difficulty;
     }
 
     public TaskChecker(String name, TaskStatus taskStatus, Difficulty difficulty) {

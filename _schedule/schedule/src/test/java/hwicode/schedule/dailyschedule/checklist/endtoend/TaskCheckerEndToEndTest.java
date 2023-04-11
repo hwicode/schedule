@@ -3,15 +3,15 @@ package hwicode.schedule.dailyschedule.checklist.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
-import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -59,7 +59,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -84,7 +84,7 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTask(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 
         TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskDeleteRequest(dailyChecklist.getId());
@@ -112,7 +112,7 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTask(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
@@ -141,7 +141,7 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTask(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME)
+                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);

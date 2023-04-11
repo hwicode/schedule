@@ -158,10 +158,10 @@ class DailyChecklistTest {
     void 과제의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
-        TaskChecker taskChecker = new TaskChecker(NEW_TASK_NAME);
+        TaskChecker taskChecker = new TaskChecker(NEW_TASK_NAME, Difficulty.NORMAL);
         dailyChecklist.addTask(taskChecker);
 
-        TaskChecker duplicatedTaskChecker = new TaskChecker(NEW_TASK_NAME);
+        TaskChecker duplicatedTaskChecker = new TaskChecker(NEW_TASK_NAME, Difficulty.NORMAL);
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.addTask(duplicatedTaskChecker))
