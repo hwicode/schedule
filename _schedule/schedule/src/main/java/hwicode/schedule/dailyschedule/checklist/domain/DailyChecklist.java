@@ -24,63 +24,63 @@ public class DailyChecklist {
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TaskChecker> taskCheckers = new ArrayList<>();
 
-    public void addTask(TaskChecker taskChecker) {
-        validateTaskDuplication(taskChecker.getName());
+    public void addTaskChecker(TaskChecker taskChecker) {
+        validateTaskCheckerDuplication(taskChecker.getName());
         taskCheckers.add(taskChecker);
         taskChecker.savedInChecklist(this);
     }
 
-    private void validateTaskDuplication(String name) {
+    private void validateTaskCheckerDuplication(String name) {
         boolean duplication = taskCheckers.stream()
-                .anyMatch(task -> task.isSame(name));
+                .anyMatch(taskChecker -> taskChecker.isSame(name));
 
         if (duplication) {
             throw new TaskCheckerNameDuplicationException();
         }
     }
 
-    public Difficulty changeTaskDifficulty(String name, Difficulty difficulty) {
-        return findTaskBy(name).changeDifficulty(difficulty);
+    public Difficulty changeDifficulty(String name, Difficulty difficulty) {
+        return findTaskCheckerBy(name).changeDifficulty(difficulty);
     }
 
-    public void deleteTask(String name) {
-        taskCheckers.remove(findTaskBy(name));
+    public void deleteTaskChecker(String name) {
+        taskCheckers.remove(findTaskCheckerBy(name));
     }
 
     public TaskStatus changeTaskStatus(String name, TaskStatus taskStatus) {
         switch (taskStatus) {
             case TODO:
-                return findTaskBy(name).changeToTodo();
+                return findTaskCheckerBy(name).changeToTodo();
             case PROGRESS:
-                return findTaskBy(name).changeToProgress();
+                return findTaskCheckerBy(name).changeToProgress();
             case DONE:
-                return findTaskBy(name).changeToDone();
+                return findTaskCheckerBy(name).changeToDone();
             default:
                 throw new StatusNotFoundException();
         }
     }
 
-    public void makeTaskDone(String taskName) {
-        findTaskBy(taskName).makeDone();
+    public void makeTaskCheckerToDone(String name) {
+        findTaskCheckerBy(name).makeDone();
     }
 
-    private TaskChecker findTaskBy(String name) {
+    private TaskChecker findTaskCheckerBy(String name) {
         return taskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
                 .orElseThrow(TaskCheckerNotFoundException::new);
     }
 
-    public void addSubTask(String taskName, SubTaskChecker subTaskChecker) {
-        findTaskBy(taskName).addSubTask(subTaskChecker);
+    public void addSubTaskChecker(String taskCheckerName, SubTaskChecker subTaskChecker) {
+        findTaskCheckerBy(taskCheckerName).addSubTaskChecker(subTaskChecker);
     }
 
-    public TaskStatus changeSubTaskStatus(String taskName, String subTaskName, SubTaskStatus subTaskStatus) {
-        return findTaskBy(taskName).changeSubTaskStatus(subTaskName, subTaskStatus);
+    public TaskStatus changeSubTaskStatus(String taskCheckerName, String subTaskCheckerName, SubTaskStatus subTaskStatus) {
+        return findTaskCheckerBy(taskCheckerName).changeSubTaskStatus(subTaskCheckerName, subTaskStatus);
     }
 
-    public void deleteSubTask(String taskName, String subTaskName) {
-        findTaskBy(taskName).deleteSubTask(subTaskName);
+    public void deleteSubTaskChecker(String taskCheckerName, String subTaskCheckerName) {
+        findTaskCheckerBy(taskCheckerName).deleteSubTaskChecker(subTaskCheckerName);
     }
 
     public int getTodayDonePercent() {

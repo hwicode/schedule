@@ -36,7 +36,7 @@ public class SubTaskChecker {
         this.subTaskStatus = subTaskStatus;
     }
 
-    void savedInTask(TaskChecker taskChecker) {
+    void savedInTaskChecker(TaskChecker taskChecker) {
         this.taskChecker = taskChecker;
     }
 

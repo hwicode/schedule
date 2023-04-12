@@ -26,7 +26,7 @@ public class TaskCheckerService {
                 dailyChecklistRepository, taskCheckerSaveRequest.getDailyChecklistId());
 
         TaskChecker taskChecker = taskCheckerSaveRequest.toEntity();
-        dailyChecklist.addTask(taskChecker);
+        dailyChecklist.addTaskChecker(taskChecker);
 
         return taskCheckerSaveOnlyRepository.save(taskChecker)
                 .getId();
@@ -35,7 +35,7 @@ public class TaskCheckerService {
     @Transactional
     public void deleteTask(Long dailyChecklistId, String taskName) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(dailyChecklistRepository, dailyChecklistId);
-        dailyChecklist.deleteTask(taskName);
+        dailyChecklist.deleteTaskChecker(taskName);
     }
 
     @Transactional
@@ -51,7 +51,7 @@ public class TaskCheckerService {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
                 dailyChecklistRepository, taskDifficultyModifyRequest.getDailyChecklistId());
 
-        return dailyChecklist.changeTaskDifficulty(taskName, taskDifficultyModifyRequest.getDifficulty());
+        return dailyChecklist.changeDifficulty(taskName, taskDifficultyModifyRequest.getDifficulty());
     }
 
 }

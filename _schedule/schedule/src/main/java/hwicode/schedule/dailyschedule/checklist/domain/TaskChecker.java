@@ -53,10 +53,10 @@ public class TaskChecker {
         this.difficulty = difficulty;
     }
 
-    TaskStatus addSubTask(SubTaskChecker subTaskChecker) {
-        validateSubTaskDuplication(subTaskChecker.getName());
+    TaskStatus addSubTaskChecker(SubTaskChecker subTaskChecker) {
+        validateSubTaskCheckerDuplication(subTaskChecker.getName());
         subTaskCheckers.add(subTaskChecker);
-        subTaskChecker.savedInTask(this);
+        subTaskChecker.savedInTaskChecker(this);
 
         if (this.taskStatus == TaskStatus.DONE) {
             changeToProgress();
@@ -64,9 +64,9 @@ public class TaskChecker {
         return this.taskStatus;
     }
 
-    private void validateSubTaskDuplication(String name) {
+    private void validateSubTaskCheckerDuplication(String name) {
         boolean duplication = subTaskCheckers.stream()
-                .anyMatch(subTask -> subTask.isSame(name));
+                .anyMatch(subTaskChecker -> subTaskChecker.isSame(name));
 
         if (duplication) {
             throw new SubTaskCheckerNameDuplicationException();
@@ -74,7 +74,7 @@ public class TaskChecker {
     }
 
     TaskStatus changeSubTaskStatus(String name, SubTaskStatus subTaskStatus) {
-        findSubTaskBy(name).changeStatus(subTaskStatus);
+        findSubTaskCheckerBy(name).changeStatus(subTaskStatus);
         checkTaskStatusConditions(subTaskStatus);
 
         return this.taskStatus;
@@ -89,17 +89,17 @@ public class TaskChecker {
         }
     }
 
-    TaskStatus deleteSubTask(String name) {
-        subTaskCheckers.remove(findSubTaskBy(name));
+    TaskStatus deleteSubTaskChecker(String name) {
+        subTaskCheckers.remove(findSubTaskCheckerBy(name));
         return this.taskStatus;
     }
 
     void makeDone() {
-        subTaskCheckers.forEach(subTask -> subTask.changeStatus(SubTaskStatus.DONE));
+        subTaskCheckers.forEach(subTaskChecker -> subTaskChecker.changeStatus(SubTaskStatus.DONE));
         changeToDone();
     }
 
-    private SubTaskChecker findSubTaskBy(String name) {
+    private SubTaskChecker findSubTaskCheckerBy(String name) {
         return subTaskCheckers.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
@@ -128,7 +128,7 @@ public class TaskChecker {
 
     private boolean isAllSameStatus(SubTaskStatus subTaskStatus) {
         int count = (int) subTaskCheckers.stream()
-                .filter(subTask -> subTask.isSameStatus(subTaskStatus))
+                .filter(subTaskChecker -> subTaskChecker.isSameStatus(subTaskStatus))
                 .count();
 
         return count == subTaskCheckers.size();

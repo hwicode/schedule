@@ -25,9 +25,9 @@ class DailyChecklistTest {
     private DailyChecklist createDailyChecklistWithThreeTasks(List<TaskChecker> taskCheckers) {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(taskCheckers.get(0));
-        dailyChecklist.addTask(taskCheckers.get(1));
-        dailyChecklist.addTask(taskCheckers.get(2));
+        dailyChecklist.addTaskChecker(taskCheckers.get(0));
+        dailyChecklist.addTaskChecker(taskCheckers.get(1));
+        dailyChecklist.addTaskChecker(taskCheckers.get(2));
 
         return dailyChecklist;
     }
@@ -47,7 +47,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.HARD);
+        dailyChecklist.changeDifficulty(TASK_NAME, Difficulty.HARD);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(7);
@@ -60,7 +60,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.changeTaskDifficulty(TASK_NAME2, Difficulty.HARD);
+        dailyChecklist.changeDifficulty(TASK_NAME2, Difficulty.HARD);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(7);
@@ -73,7 +73,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.EASY);
+        dailyChecklist.changeDifficulty(TASK_NAME, Difficulty.EASY);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -86,7 +86,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.changeTaskDifficulty(TASK_NAME3, Difficulty.EASY);
+        dailyChecklist.changeDifficulty(TASK_NAME3, Difficulty.EASY);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(6);
@@ -99,8 +99,8 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.changeTaskDifficulty(TASK_NAME3, Difficulty.EASY);
-        dailyChecklist.changeTaskDifficulty(TASK_NAME, Difficulty.NORMAL);
+        dailyChecklist.changeDifficulty(TASK_NAME3, Difficulty.EASY);
+        dailyChecklist.changeDifficulty(TASK_NAME, Difficulty.NORMAL);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -113,7 +113,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.deleteTask(TASK_NAME2);
+        dailyChecklist.deleteTaskChecker(TASK_NAME2);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
@@ -126,8 +126,8 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
         // when
-        dailyChecklist.deleteTask(TASK_NAME3);
-        dailyChecklist.deleteTask(TASK_NAME);
+        dailyChecklist.deleteTaskChecker(TASK_NAME3);
+        dailyChecklist.deleteTaskChecker(TASK_NAME);
 
         //then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(2);
@@ -146,7 +146,7 @@ class DailyChecklistTest {
         dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.PROGRESS);
 
         //when
-        dailyChecklist.deleteTask(TASK_NAME2);
+        dailyChecklist.deleteTaskChecker(TASK_NAME2);
 
         // then
         int doneScore = taskCheckers.get(0).getDifficultyScore();
@@ -159,12 +159,12 @@ class DailyChecklistTest {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
         TaskChecker taskChecker = new TaskChecker(NEW_TASK_NAME, Difficulty.NORMAL);
-        dailyChecklist.addTask(taskChecker);
+        dailyChecklist.addTaskChecker(taskChecker);
 
         TaskChecker duplicatedTaskChecker = new TaskChecker(NEW_TASK_NAME, Difficulty.NORMAL);
 
         // when then
-        assertThatThrownBy(() -> dailyChecklist.addTask(duplicatedTaskChecker))
+        assertThatThrownBy(() -> dailyChecklist.addTaskChecker(duplicatedTaskChecker))
                 .isInstanceOf(TaskCheckerNameDuplicationException.class);
     }
 
@@ -174,7 +174,7 @@ class DailyChecklistTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         // when then
-        assertThatThrownBy(() -> dailyChecklist.deleteTask(NEW_TASK_NAME))
+        assertThatThrownBy(() -> dailyChecklist.deleteTaskChecker(NEW_TASK_NAME))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 
@@ -198,7 +198,7 @@ class DailyChecklistTest {
         dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.DONE);
 
         //when
-        dailyChecklist.addSubTask(TASK_NAME2, new SubTaskChecker(NEW_SUB_TASK_NAME));
+        dailyChecklist.addSubTaskChecker(TASK_NAME2, new SubTaskChecker(NEW_SUB_TASK_NAME));
 
         // then
         int doneScore = taskCheckers.get(0).getDifficultyScore() + taskCheckers.get(2).getDifficultyScore();
@@ -216,7 +216,7 @@ class DailyChecklistTest {
         dailyChecklist.changeTaskStatus(TASK_NAME2, TaskStatus.DONE);
         dailyChecklist.changeTaskStatus(TASK_NAME3, TaskStatus.DONE);
 
-        dailyChecklist.addSubTask(TASK_NAME2, new SubTaskChecker(NEW_SUB_TASK_NAME));
+        dailyChecklist.addSubTaskChecker(TASK_NAME2, new SubTaskChecker(NEW_SUB_TASK_NAME));
 
         //when
         dailyChecklist.changeSubTaskStatus(TASK_NAME2, NEW_SUB_TASK_NAME, SubTaskStatus.PROGRESS);
@@ -233,13 +233,13 @@ class DailyChecklistTest {
         List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
         DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
 
-        dailyChecklist.addSubTask(TASK_NAME, new SubTaskChecker(NEW_SUB_TASK_NAME));
+        dailyChecklist.addSubTaskChecker(TASK_NAME, new SubTaskChecker(NEW_SUB_TASK_NAME));
 
         //when
-        dailyChecklist.deleteSubTask(TASK_NAME, NEW_SUB_TASK_NAME);
+        dailyChecklist.deleteSubTaskChecker(TASK_NAME, NEW_SUB_TASK_NAME);
 
         // then
-        assertThatThrownBy(() -> dailyChecklist.deleteSubTask(TASK_NAME, NEW_SUB_TASK_NAME))
+        assertThatThrownBy(() -> dailyChecklist.deleteSubTaskChecker(TASK_NAME, NEW_SUB_TASK_NAME))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 

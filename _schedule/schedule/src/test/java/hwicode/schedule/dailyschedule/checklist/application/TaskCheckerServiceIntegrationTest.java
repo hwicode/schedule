@@ -43,8 +43,8 @@ class TaskCheckerServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTask(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTask(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }
