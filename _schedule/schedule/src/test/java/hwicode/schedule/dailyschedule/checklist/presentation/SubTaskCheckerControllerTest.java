@@ -5,8 +5,8 @@ import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerServic
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service.DailyChecklistNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.SubTaskCheckerController;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;

@@ -4,7 +4,7 @@ import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

@@ -4,7 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
-import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
