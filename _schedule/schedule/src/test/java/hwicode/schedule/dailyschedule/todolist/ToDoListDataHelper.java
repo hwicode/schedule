@@ -6,8 +6,14 @@ import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
+import hwicode.schedule.dailyschedule.todolist.presentation.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.TaskSaveResponse;
 
 public class ToDoListDataHelper {
+
+    // 단순히 id값으로 숫자가 필요할 때만 사용
+    public static final Long DAILY_TO_DO_LIST_ID = 1L;
+    public static final Long TASK_ID = 2L;
 
     // given절에서 사용됨, 테스트 중간에 사용되면 이미 존재하는 Task나 SubTask임
     public static final String TASK_NAME = "taskName";
@@ -72,4 +78,9 @@ public class ToDoListDataHelper {
         return new SubTaskDeleteRequest(dailyToDoListId, taskName);
     }
 
+
+    // todolist Task response dto
+    public static TaskSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
+        return new TaskSaveResponse(taskId, taskName);
+    }
 }

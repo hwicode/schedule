@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.TaskSaveRequest;
 
 public interface TaskSaveAndDeleteService {
     Long save(TaskSaveRequest taskSaveRequest);
