@@ -27,7 +27,7 @@ public class TaskCheckerController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public TaskCheckerSaveResponse saveTask(@RequestBody @Valid TaskCheckerSaveRequest taskCheckerSaveRequest) {
         Long taskId = taskCheckerService.saveTask(taskCheckerSaveRequest);
-        return new TaskCheckerSaveResponse(taskId, taskCheckerSaveRequest.getTaskName());
+        return new TaskCheckerSaveResponse(taskId, taskCheckerSaveRequest.getTaskCheckerName());
     }
 
     @DeleteMapping("/dailyschedule/checklist/taskCheckers/{taskName}")

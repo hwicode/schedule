@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.d
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class TaskDifficultyModifyRequest {
 
     @NotNull @Positive
@@ -17,9 +19,4 @@ public class TaskDifficultyModifyRequest {
 
     @NotNull
     private Difficulty difficulty;
-
-    public TaskDifficultyModifyRequest(Long dailyChecklistId, Difficulty difficulty) {
-        this.dailyChecklistId = dailyChecklistId;
-        this.difficulty = difficulty;
-    }
 }

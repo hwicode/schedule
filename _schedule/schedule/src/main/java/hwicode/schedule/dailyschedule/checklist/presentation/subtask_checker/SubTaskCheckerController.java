@@ -24,7 +24,7 @@ public class SubTaskCheckerController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public SubTaskCheckerSaveResponse saveSubTask(@RequestBody @Valid SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
         Long subTaskId = subTaskCheckerService.saveSubTask(subTaskCheckerSaveRequest);
-        return new SubTaskCheckerSaveResponse(subTaskId, subTaskCheckerSaveRequest.getSubTaskName());
+        return new SubTaskCheckerSaveResponse(subTaskId, subTaskCheckerSaveRequest.getSubTaskCheckerName());
     }
 
     @DeleteMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}")

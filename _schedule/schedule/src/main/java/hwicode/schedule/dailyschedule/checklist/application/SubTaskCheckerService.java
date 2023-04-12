@@ -27,7 +27,7 @@ public class SubTaskCheckerService {
                 dailyChecklistRepository, subTaskCheckerSaveRequest.getDailyChecklistId());
 
         SubTaskChecker subTaskChecker = subTaskCheckerSaveRequest.toEntity();
-        dailyChecklist.addSubTask(subTaskCheckerSaveRequest.getTaskName(), subTaskChecker);
+        dailyChecklist.addSubTask(subTaskCheckerSaveRequest.getTaskCheckerName(), subTaskChecker);
 
         return subTaskCheckerSaveOnlyRepository.save(subTaskChecker)
                 .getId();
@@ -38,7 +38,7 @@ public class SubTaskCheckerService {
         DailyChecklist dailyChecklist = findDailyChecklistWithTasks(
                 dailyChecklistRepository, subTaskCheckerDeleteRequest.getDailyChecklistId());
 
-        dailyChecklist.deleteSubTask(subTaskCheckerDeleteRequest.getTaskName(), subTaskName);
+        dailyChecklist.deleteSubTask(subTaskCheckerDeleteRequest.getTaskCheckerName(), subTaskName);
     }
 
     @Transactional
@@ -47,7 +47,7 @@ public class SubTaskCheckerService {
                 dailyChecklistRepository, subTaskStatusModifyRequest.getDailyChecklistId());
 
         return dailyChecklist.changeSubTaskStatus(
-                subTaskStatusModifyRequest.getTaskName(),
+                subTaskStatusModifyRequest.getTaskCheckerName(),
                 subTaskName,
                 subTaskStatusModifyRequest.getSubTaskStatus());
     }

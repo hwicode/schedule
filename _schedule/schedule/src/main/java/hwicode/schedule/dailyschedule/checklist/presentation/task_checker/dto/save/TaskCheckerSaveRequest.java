@@ -20,12 +20,12 @@ public class TaskCheckerSaveRequest {
     private Long dailyChecklistId;
 
     @NotBlank
-    private String taskName;
+    private String taskCheckerName;
 
     @NotNull
     private Difficulty difficulty;
 
     public TaskChecker toEntity() {
-        return new TaskChecker(taskName, difficulty);
+        return new TaskChecker(taskCheckerName, difficulty);
     }
 }

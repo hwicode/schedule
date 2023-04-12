@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -10,16 +11,12 @@ import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class TaskCheckerSaveResponse {
 
     @NotNull @Positive
     private Long taskId;
 
     @NotBlank
-    private String taskName;
-
-    public TaskCheckerSaveResponse(Long taskId, String taskName) {
-        this.taskId = taskId;
-        this.taskName = taskName;
-    }
+    private String taskCheckerName;
 }
