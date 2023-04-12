@@ -5,6 +5,8 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
@@ -98,5 +100,28 @@ class TaskControllerTest {
                 ));
 
         verify(taskService).changeTaskInformation(any(), any());
+    }
+
+    @Test
+    void 서브과제의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        SubTaskNameChangeRequest subTaskNameChangeRequest = createSubTaskNameChangeRequest(TASK_ID, NEW_SUB_TASK_NAME);
+        SubTaskNameChangeResponse subTaskNameChangeResponse = createSubTaskNameChangeResponse(TASK_ID, NEW_SUB_TASK_NAME);
+
+        given(taskService.changeSubTaskName(any(), any()))
+                .willReturn(NEW_SUB_TASK_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/todolist/subtasks/subTaskName")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskNameChangeRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subTaskNameChangeResponse)
+                ));
+
+        verify(taskService).changeSubTaskName(any(), any());
     }
 }

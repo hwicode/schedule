@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
-import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskNameChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;

@@ -47,4 +47,12 @@ public class TaskController {
                 taskInformationModifyRequest.getImportance()
         );
     }
+
+    @PatchMapping("/dailyschedule/todolist/subtasks/{subTaskName}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubTaskNameChangeResponse changeSubTaskName(@PathVariable @NotBlank String subTaskName,
+                                                               @RequestBody @Valid SubTaskNameChangeRequest subTaskNameChangeRequest) {
+        String changedName = taskService.changeSubTaskName(subTaskName, subTaskNameChangeRequest);
+        return new SubTaskNameChangeResponse(subTaskNameChangeRequest.getTaskId(), changedName);
+    }
 }

@@ -6,6 +6,8 @@ import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
@@ -89,5 +91,11 @@ public class ToDoListDataHelper {
 
     public static TaskInformationModifyResponse createTaskInformationModifyResponse(Long taskId, Priority priority, Importance importance) {
         return new TaskInformationModifyResponse(taskId, priority, importance);
+    }
+
+
+    // todolist SubTask response dto
+    public static SubTaskNameChangeResponse createSubTaskNameChangeResponse(Long taskId, String newSubTaskName) {
+        return new SubTaskNameChangeResponse(taskId, newSubTaskName);
     }
 }
