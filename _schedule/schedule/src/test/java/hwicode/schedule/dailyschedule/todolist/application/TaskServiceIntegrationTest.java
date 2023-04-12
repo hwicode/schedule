@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -63,8 +64,10 @@ class TaskServiceIntegrationTest {
         SubTask subTask = task.createSubTask(SUB_TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
 
+        SubTaskNameChangeRequest subTaskNameChangeRequest = createSubTaskNameChangeRequest(task.getId(), NEW_SUB_TASK_NAME);
+
         // when
-        String newSubTaskName = taskService.changeSubTaskName(task.getId(), SUB_TASK_NAME, NEW_SUB_TASK_NAME);
+        String newSubTaskName = taskService.changeSubTaskName(SUB_TASK_NAME, subTaskNameChangeRequest);
 
         // then
         SubTask savedSubTask = subTaskRepository.findById(subTask.getId()).orElseThrow();

@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
+import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
@@ -23,10 +24,10 @@ public class TaskService {
     }
 
     @Transactional
-    public String changeSubTaskName(Long taskId, String subTaskName, String newSubTaskName) {
-        Task task = taskRepository.findTaskWithSubtasks(taskId)
+    public String changeSubTaskName(String subTaskName, SubTaskNameChangeRequest subTaskNameChangeRequest) {
+        Task task = taskRepository.findTaskWithSubtasks(subTaskNameChangeRequest.getTaskId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        return task.changeSubTaskName(subTaskName, newSubTaskName);
+        return task.changeSubTaskName(subTaskName, subTaskNameChangeRequest.getNewSubTaskName());
     }
 }

@@ -60,6 +60,10 @@ public class ToDoListDataHelper {
 
 
     // todolist SubTask request dto
+    public static SubTaskNameChangeRequest createSubTaskNameChangeRequest(Long taskId, String newSubTaskName) {
+        return new SubTaskNameChangeRequest(taskId, newSubTaskName);
+    }
+
     public static SubTaskSaveRequest createSubTaskSaveRequest(Long dailyToDoListId, String taskName, String subTaskName) {
         return new SubTaskSaveRequest(dailyToDoListId, taskName, subTaskName);
     }
