@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -41,9 +43,10 @@ class DailyToDoListServiceIntegrationTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         String review = "좋았다!";
+        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = createDailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         // when
-        dailyToDoListService.changeDailyToDoListInformation(dailyToDoList.getId(), review, Emoji.GOOD);
+        dailyToDoListService.changeDailyToDoListInformation(dailyToDoList.getId(), dailyToDoListInformationChangeRequest);
 
         // then
         DailyToDoList savedDailyToDoList = dailyToDoListRepository.findById(dailyToDoList.getId()).orElseThrow();
@@ -58,8 +61,10 @@ class DailyToDoListServiceIntegrationTest {
         Task task = dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
         dailyToDoListRepository.save(dailyToDoList);
 
+        TaskNameChangeRequest taskNameChangeRequest = createTaskNameChangeRequest(dailyToDoList.getId(), NEW_TASK_NAME);
+
         // when
-        dailyToDoListService.changeTaskName(dailyToDoList.getId(), TASK_NAME, NEW_TASK_NAME);
+        dailyToDoListService.changeTaskName(TASK_NAME, taskNameChangeRequest);
 
         // then
         Task savedTask = taskRepository.findById(task.getId()).orElseThrow();

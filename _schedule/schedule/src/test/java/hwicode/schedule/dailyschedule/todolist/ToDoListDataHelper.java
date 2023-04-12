@@ -1,10 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationChangeRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.*;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
@@ -27,6 +25,12 @@ public class ToDoListDataHelper {
     public static final String NEW_SUB_TASK_NAME2 = "newSubTaskName2";
 
 
+    // todolist DailyToDoList request dto
+    public static DailyToDoListInformationChangeRequest createDailyToDoListInformationChangeRequest(String review, Emoji emoji) {
+        return new DailyToDoListInformationChangeRequest(review, emoji);
+    }
+
+
     // todolist Task create dto
     public static TaskCreateDto createTaskCreateDto(String taskName) {
         return new TaskCreateDto(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
@@ -44,6 +48,10 @@ public class ToDoListDataHelper {
 
     public static TaskInformationChangeRequest createTaskInformationChangeRequest(Priority priority, Importance importance) {
         return new TaskInformationChangeRequest(priority, importance);
+    }
+
+    public static TaskNameChangeRequest createTaskNameChangeRequest(Long dailyToDoListId, String newTaskName) {
+        return new TaskNameChangeRequest(dailyToDoListId, newTaskName);
     }
 
 
