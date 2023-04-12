@@ -52,7 +52,7 @@ class SubTaskCheckerEndToEndTest {
         databaseCleanUp.execute();
     }
 
-    private DailyChecklist createDailyChecklistWithTask() {
+    private DailyChecklist createDailyChecklistWithTaskChecker() {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
 
@@ -60,9 +60,9 @@ class SubTaskCheckerEndToEndTest {
     }
 
     @Test
-    void 서브_과제_생성_요청() {
+    void 서브_과제체커_생성_요청() {
         //given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
@@ -84,12 +84,12 @@ class SubTaskCheckerEndToEndTest {
     }
 
     @Test
-    void 서브_과제_삭제_요청() {
+    void 서브_과제체커_삭제_요청() {
         //given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(
+        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
         );
 
@@ -108,16 +108,16 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(subTaskCheckerRepository.existsById(subTaskId)).isFalse();
+        assertThat(subTaskCheckerRepository.existsById(subTaskCheckerId)).isFalse();
     }
 
     @Test
-    void 서브_과제_진행_상태_변경_요청() {
+    void 서브_과제체커_진행_상태_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(
+        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
         );
 
@@ -136,7 +136,7 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        SubTaskChecker subTaskChecker = subTaskCheckerRepository.findById(subTaskId).orElseThrow();
+        SubTaskChecker subTaskChecker = subTaskCheckerRepository.findById(subTaskCheckerId).orElseThrow();
         assertThat(subTaskChecker.isSameStatus(SubTaskStatus.DONE)).isTrue();
     }
 }

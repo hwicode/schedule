@@ -27,7 +27,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_DONE_일_때_서브_과제_추가시_PROGRESS_상태가_된다() {
+    void 과제체커의_상태가_DONE_일_때_서브_과제체커_추가시_PROGRESS_상태가_된다() {
         // given
         taskChecker.changeToDone();
 
@@ -39,7 +39,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_DONE_일_때_서브_과제_삭제시_DONE_상태가_유지된다() {
+    void 과제체커의_상태가_DONE_일_때_서브_과제체커_삭제시_DONE_상태가_유지된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
@@ -53,7 +53,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_DONE_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
+    void 과제체커의_상태가_DONE_일_때_서브_과제체커가_PROGRESS로_변하면_과제체커는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
@@ -67,7 +67,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_DONE_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS가_된다() {
+    void 과제체커의_상태가_DONE_일_때_서브_과제체커가_TODO로_변하면_과제체커는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
@@ -81,7 +81,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_DONE_일_때_서브_과제가_DONE으로_변하면_과제는_DONE을_유지한다() {
+    void 과제체커의_상태가_DONE_일_때_서브_과제체커가_DONE으로_변하면_과제체커는_DONE을_유지한다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
@@ -95,7 +95,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이_아니면_에러가_발생한다() {
+    void 과제체커가_DONE으로_변할_때_서브_과제체커가_모두_DONE이_아니면_에러가_발생한다() {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
@@ -107,7 +107,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제가_DONE으로_변할_때_서브_과제가_모두_DONE이면_과제는_DONE으로_변한다() {
+    void 과제체커가_DONE으로_변할_때_서브_과제체커가_모두_DONE이면_과제체커는_DONE으로_변한다() {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
@@ -122,7 +122,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_TODO_일_때_서브_과제_추가시_TODO_상태가_유지된다() {
+    void 과제체커의_상태가_TODO_일_때_서브_과제체커_추가시_TODO_상태가_유지된다() {
         // when
         TaskStatus taskStatus = taskChecker.addSubTaskChecker(subTaskChecker);
 
@@ -131,7 +131,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_TODO_일_때_서브_과제_삭제시_TODO_상태가_유지된다() {
+    void 과제체커의_상태가_TODO_일_때_서브_과제체커_삭제시_TODO_상태가_유지된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
 
@@ -143,7 +143,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_TODO_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
+    void 과제체커의_상태가_TODO_일_때_서브_과제체커가_PROGRESS로_변하면_과제체커는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
 
@@ -155,7 +155,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_TODO_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS가_된다() {
+    void 과제체커의_상태가_TODO_일_때_서브_과제체커가_DONE으로_변하면_과제체커는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
 
@@ -167,7 +167,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_TODO_일_때_서브_과제가_TODO로_변하면_과제는_TODO상태가_유지된다() {
+    void 과제체커의_상태가_TODO_일_때_서브_과제체커가_TODO로_변하면_과제체커는_TODO상태가_유지된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
 
@@ -179,7 +179,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제가_TODO로_변할_때_서브_과제가_모두_TODO가_아니면_에러가_발생한다() {
+    void 과제체커가_TODO로_변할_때_서브_과제체커가_모두_TODO가_아니면_에러가_발생한다() {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
@@ -191,7 +191,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제가_TODO로_변할_때_서브_과제가_모두_TODO면_과제는_TODO_로_변한다() {
+    void 과제체커가_TODO로_변할_때_서브_과제체커가_모두_TODO면_과제체커는_TODO_로_변한다() {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
@@ -204,7 +204,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_PROGRESS_일_때_서브_과제_추가시_PROGRESS_상태가_유지된다() {
+    void 과제체커의_상태가_PROGRESS_일_때_서브_과제체커_추가시_PROGRESS_상태가_유지된다() {
         // given
         taskChecker.changeToProgress();
 
@@ -216,7 +216,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_PROGRESS_일_때_서브_과제_삭제시_PROGRESS_상태가_유지된다() {
+    void 과제체커의_상태가_PROGRESS_일_때_서브_과제체커_삭제시_PROGRESS_상태가_유지된다() {
         // given
         taskChecker.changeToProgress();
         taskChecker.addSubTaskChecker(subTaskChecker);
@@ -229,7 +229,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_PROGRESS_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS_상태가_유지된다() {
+    void 과제체커의_상태가_PROGRESS_일_때_서브_과제체커가_TODO로_변하면_과제체커는_PROGRESS_상태가_유지된다() {
         // given
         taskChecker.changeToProgress();
         taskChecker.addSubTaskChecker(subTaskChecker);
@@ -242,7 +242,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_PROGRESS_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS_상태가_유지된다() {
+    void 과제체커의_상태가_PROGRESS_일_때_서브_과제체커가_PROGRESS로_변하면_과제체커는_PROGRESS_상태가_유지된다() {
         // given
         taskChecker.changeToProgress();
         taskChecker.addSubTaskChecker(subTaskChecker);
@@ -255,7 +255,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 과제의_상태가_PROGRESS_일_때_서브_과제가_DONE으로_변하면_과제는_PROGRESS_상태가_유지된다() {
+    void 과제체커의_상태가_PROGRESS_일_때_서브_과제체커가_DONE으로_변하면_과제체커는_PROGRESS_상태가_유지된다() {
         // given
         taskChecker.changeToProgress();
         taskChecker.addSubTaskChecker(subTaskChecker);
@@ -268,7 +268,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void makeDone_메서드를_사용하면_TODO상태인_과제와_서브과제가_모두_DONE상태가_된다() {
+    void makeDone_메서드를_사용하면_TODO상태인_과제체커와_서브과제체커가_모두_DONE상태가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
@@ -281,7 +281,7 @@ class TaskCheckerTest {
     }
 
     @Test
-    void 서브_과제의_이름이_중복되면_에러가_발생한다() {
+    void 서브_과제체커의_이름이_중복되면_에러가_발생한다() {
         // given
         SubTaskChecker subTaskChecker = new SubTaskChecker(NEW_SUB_TASK_CHECKER_NAME);
         taskChecker.addSubTaskChecker(subTaskChecker);

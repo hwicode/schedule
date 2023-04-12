@@ -22,7 +22,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class DailyChecklistTest {
 
-    private DailyChecklist createDailyChecklistWithThreeTasks(List<TaskChecker> taskCheckers) {
+    private DailyChecklist createDailyChecklistWithThreeTaskCheckers(List<TaskChecker> taskCheckers) {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         dailyChecklist.addTaskChecker(taskCheckers.get(0));
@@ -32,7 +32,7 @@ class DailyChecklistTest {
         return dailyChecklist;
     }
 
-    private static List<TaskChecker> makeTasksWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
+    private static List<TaskChecker> makeTaskCheckersWithDifficulty(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
         return Arrays.asList(
                 new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, difficulty),
                 new TaskChecker(TASK_CHECKER_NAME2, TaskStatus.TODO, difficulty2),
@@ -41,10 +41,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_보통_난이도의_과제가_어려움으로_바뀌면_총_점수가_1점_증가한다() {
+    void 체크리스트에_보통_난이도의_과제체커가_어려움으로_바뀌면_총_점수가_1점_증가한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.NORMAL, Difficulty.NORMAL, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.NORMAL, Difficulty.NORMAL, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.changeDifficulty(TASK_CHECKER_NAME, Difficulty.HARD);
@@ -54,10 +54,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_쉬움_난이도의_과제가_어려움으로_바뀌면_총_점수가_2점_증가한다() {
+    void 체크리스트에_쉬움_난이도의_과제체커가_어려움으로_바뀌면_총_점수가_2점_증가한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.NORMAL, Difficulty.EASY, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.NORMAL, Difficulty.EASY, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.changeDifficulty(TASK_CHECKER_NAME2, Difficulty.HARD);
@@ -67,10 +67,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_어려운_난이도의_과제가_쉬움으로_바뀌면_총_점수가_2점_감소한다() {
+    void 체크리스트에_어려운_난이도의_과제체커가_쉬움으로_바뀌면_총_점수가_2점_감소한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.changeDifficulty(TASK_CHECKER_NAME, Difficulty.EASY);
@@ -80,10 +80,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_보통_난이도의_과제가_쉬움으로_바뀌면_총_점수가_1점_감소한다() {
+    void 체크리스트에_보통_난이도의_과제체커가_쉬움으로_바뀌면_총_점수가_1점_감소한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.changeDifficulty(TASK_CHECKER_NAME3, Difficulty.EASY);
@@ -93,10 +93,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_보통_난이도의_과제를_쉬움으로_바꾸고_어려움_과제를_보통으로_바꾸면_총_점수가_3점_감소한다() {
+    void 체크리스트에_보통_난이도의_과제체커를_쉬움으로_바꾸고_어려움_과제체커를_보통으로_바꾸면_총_점수가_3점_감소한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.changeDifficulty(TASK_CHECKER_NAME3, Difficulty.EASY);
@@ -107,10 +107,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 과제_3개_중에_NORMAL인_과제1개가_삭제되면_총_점수가_2점_감소한다() {
+    void 과제체커_3개_중에_NORMAL인_과제체커1개가_삭제되면_총_점수가_2점_감소한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.deleteTaskChecker(TASK_CHECKER_NAME2);
@@ -120,10 +120,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 과제_3개_중에_Hard인_과제와_EASY인_과제가_삭제되면_총_점수가_4점_감소한다() {
+    void 과제체커_3개_중에_Hard인_과제체커와_EASY인_과제체커가_삭제되면_총_점수가_4점_감소한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.EASY, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // when
         dailyChecklist.deleteTaskChecker(TASK_CHECKER_NAME3);
@@ -136,10 +136,10 @@ class DailyChecklistTest {
 
 
     @Test
-    void 체크리스트에_3개의_과제_중_과제1개가_삭제됐을_때_성취도를_체크한다() {
+    void 체크리스트에_3개의_과제체커_중_과제체커1개가_삭제됐을_때_성취도를_체크한다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME, TaskStatus.DONE);
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME2, TaskStatus.DONE);
@@ -155,7 +155,7 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 과제의_이름이_중복되면_에러가_발생한다() {
+    void 과제체커의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
         TaskChecker taskChecker = new TaskChecker(NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
@@ -169,7 +169,7 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_존재하지_않는_과제를_조회하면_에러가_발생한다() {
+    void 체크리스트에_존재하지_않는_과제체커를_조회하면_에러가_발생한다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
 
@@ -179,7 +179,7 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트에_과제가_없을_때_성취도를_체크하면_0이_된다() {
+    void 체크리스트에_과제체커가_없을_때_성취도를_체크하면_0이_된다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
 
@@ -188,10 +188,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트내에_있는_DONE과제에_서브과제를_더하면_성취도_계산에서_제외된다() {
+    void 체크리스트내에_있는_DONE과제체커에_서브과제체커를_더하면_성취도_계산에서_제외된다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME, TaskStatus.DONE);
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME2, TaskStatus.DONE);
@@ -207,10 +207,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트내에_있는_DONE과제에_서브과제의_상태를_PROGRESS로_바꾸면_성취도_계산에서_제외된다() {
+    void 체크리스트내에_있는_DONE과제체커에_서브과제체커의_상태를_PROGRESS로_바꾸면_성취도_계산에서_제외된다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME, TaskStatus.DONE);
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME2, TaskStatus.DONE);
@@ -228,10 +228,10 @@ class DailyChecklistTest {
     }
 
     @Test
-    void 체크리스트내에_있는_과제에_서브과제를_삭제하면_서브과제가_삭제된다() {
+    void 체크리스트내에_있는_과제체커에_서브과제체커를_삭제하면_서브과제체커가_삭제된다() {
         // given
-        List<TaskChecker> taskCheckers = makeTasksWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        List<TaskChecker> taskCheckers = makeTaskCheckersWithDifficulty(Difficulty.HARD, Difficulty.NORMAL, Difficulty.HARD);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, new SubTaskChecker(NEW_SUB_TASK_CHECKER_NAME));
 
@@ -243,38 +243,38 @@ class DailyChecklistTest {
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
-    private static Stream<Arguments> provideTasksAndTotalScore() {
+    private static Stream<Arguments> provideTaskCheckersAndTotalScore() {
         return Stream.of(
-                arguments(makeTasksWithDifficulty(
+                arguments(makeTaskCheckersWithDifficulty(
                         Difficulty.NORMAL, Difficulty.NORMAL, Difficulty.NORMAL
                 ), 6),
-                arguments(makeTasksWithDifficulty(
+                arguments(makeTaskCheckersWithDifficulty(
                         Difficulty.HARD, Difficulty.HARD, Difficulty.HARD
                 ), 9),
-                arguments(makeTasksWithDifficulty(
+                arguments(makeTaskCheckersWithDifficulty(
                         Difficulty.NORMAL, Difficulty.HARD, Difficulty.EASY
                 ), 6),
-                arguments(makeTasksWithDifficulty(
+                arguments(makeTaskCheckersWithDifficulty(
                         Difficulty.EASY, Difficulty.NORMAL, Difficulty.EASY
                 ), 4)
         );
     }
 
     @ParameterizedTest
-    @MethodSource("provideTasksAndTotalScore")
-    void 체크리스트에_과제가_생기면_총_점수를_계산할_수_있다(List<TaskChecker> taskCheckers, int totalScore) {
+    @MethodSource("provideTaskCheckersAndTotalScore")
+    void 체크리스트에_과제체커가_생기면_총_점수를_계산할_수_있다(List<TaskChecker> taskCheckers, int totalScore) {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         // then
         assertThat(dailyChecklist.getTotalDifficultyScore()).isEqualTo(totalScore);
     }
 
     @ParameterizedTest
-    @MethodSource("provideTasksAndTotalScore")
-    void 체크리스트에_3개의_과제_중_2개를_완료했을_때_성취도를_체크한다(List<TaskChecker> taskCheckers, int totalScore) {
+    @MethodSource("provideTaskCheckersAndTotalScore")
+    void 체크리스트에_3개의_과제체커_중_2개를_완료했을_때_성취도를_체크한다(List<TaskChecker> taskCheckers, int totalScore) {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         //when
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME, TaskStatus.DONE);
@@ -287,10 +287,10 @@ class DailyChecklistTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideTasksAndTotalScore")
-    void 체크리스트에_3개의_과제_중_1개를_완료했을_때_성취도를_체크한다(List<TaskChecker> taskCheckers, int totalScore) {
+    @MethodSource("provideTaskCheckersAndTotalScore")
+    void 체크리스트에_3개의_과제체커_중_1개를_완료했을_때_성취도를_체크한다(List<TaskChecker> taskCheckers, int totalScore) {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         //when
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME, TaskStatus.DONE);
@@ -303,10 +303,10 @@ class DailyChecklistTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideTasksAndTotalScore")
-    void 체크리스트에_3개의_과제_중_0개를_완료하면_성취도는_0이_된다(List<TaskChecker> taskCheckers) {
+    @MethodSource("provideTaskCheckersAndTotalScore")
+    void 체크리스트에_3개의_과제체커_중_0개를_완료하면_성취도는_0이_된다(List<TaskChecker> taskCheckers) {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTasks(taskCheckers);
+        DailyChecklist dailyChecklist = createDailyChecklistWithThreeTaskCheckers(taskCheckers);
 
         //when
         dailyChecklist.changeTaskStatus(TASK_CHECKER_NAME2, TaskStatus.TODO);

@@ -71,8 +71,8 @@ public class ChecklistDataHelper {
 
 
     // checklist TaskChecker response dto
-    public static TaskCheckerSaveResponse createTaskCheckerSaveResponse(Long taskId, String taskCheckerName) {
-        return new TaskCheckerSaveResponse(taskId, taskCheckerName);
+    public static TaskCheckerSaveResponse createTaskCheckerSaveResponse(Long taskCheckerId, String taskCheckerName) {
+        return new TaskCheckerSaveResponse(taskCheckerId, taskCheckerName);
     }
 
     public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskCheckerName, TaskStatus taskStatus) {
@@ -85,8 +85,8 @@ public class ChecklistDataHelper {
 
 
     // checklist SubTaskChecker response dto
-    public static SubTaskCheckerSaveResponse createSubTaskCheckerSaveResponse(Long subTaskId, String subtaskCheckerName) {
-        return new SubTaskCheckerSaveResponse(subTaskId, subtaskCheckerName);
+    public static SubTaskCheckerSaveResponse createSubTaskCheckerSaveResponse(Long subTaskCheckerId, String subtaskCheckerName) {
+        return new SubTaskCheckerSaveResponse(subTaskCheckerId, subtaskCheckerName);
     }
 
     public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskCheckerName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {

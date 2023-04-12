@@ -48,7 +48,7 @@ class TaskCheckerControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+    void 과제체커_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
         TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskCheckerSaveResponse(TASK_CHECKER_ID, NEW_TASK_CHECKER_NAME);
@@ -71,7 +71,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+    void 과제체커_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
         TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskCheckerDeleteRequest(DAILY_CHECKLIST_ID);
 
@@ -85,7 +85,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+    void 과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE);
         TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_CHECKER_NAME, TaskStatus.DONE);
@@ -108,7 +108,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+    void 과제체커의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, Difficulty.HARD);
         TaskDifficultyModifyResponse taskDifficultyModifyResponse = createTaskDifficultyModifyResponse(TASK_CHECKER_NAME, Difficulty.HARD);
@@ -131,7 +131,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
+    void 과제체커_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNameDuplicationException taskCheckerNameDuplicationException = new TaskCheckerNameDuplicationException();
         given(taskCheckerService.saveTaskChecker(any()))
@@ -152,7 +152,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제의_진행_상태_변경을_요청할_때_진행_상태가_존재하지_않는다면_에러가_발생한다() throws Exception {
+    void 과제체커의_진행_상태_변경을_요청할_때_진행_상태가_존재하지_않는다면_에러가_발생한다() throws Exception {
         // given
         StatusNotFoundException statusNotFoundException = new StatusNotFoundException();
         given(taskCheckerService.changeTaskStatus(any(), any()))
@@ -173,7 +173,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
+    void 과제체커를_찾을_때_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
         given(taskCheckerService.changeTaskStatus(any(), any()))
@@ -194,7 +194,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제의_진행_상태를_DONE으로_변경을_요청할_때_서브_과제의_진행_상태가_모두_DONE이_아니면_에러가_발생한다() throws Exception {
+    void 과제체커의_진행_상태를_DONE으로_변경을_요청할_때_서브_과제체커의_진행_상태가_모두_DONE이_아니면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNotAllDoneException subTaskCheckerNotAllDoneException = new SubTaskCheckerNotAllDoneException();
         given(taskCheckerService.changeTaskStatus(any(), any()))
@@ -215,7 +215,7 @@ class TaskCheckerControllerTest {
     }
 
     @Test
-    void 과제의_진행_상태를_TODO로_변경을_요청할_때_서브_과제의_진행_상태가_모두_TODO가_아니면_에러가_발생한다() throws Exception {
+    void 과제체커의_진행_상태를_TODO로_변경을_요청할_때_서브_과제체커의_진행_상태가_모두_TODO가_아니면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNotAllTodoException subTaskCheckerNotAllTodoException = new SubTaskCheckerNotAllTodoException();
         given(taskCheckerService.changeTaskStatus(any(), any()))

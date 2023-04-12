@@ -54,7 +54,7 @@ class TaskCheckerEndToEndTest {
     }
 
     @Test
-    void 과제_생성_요청() {
+    void 과제체커_생성_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
@@ -78,12 +78,12 @@ class TaskCheckerEndToEndTest {
     }
 
     @Test
-    void 과제_삭제_요청() {
+    void 과제체커_삭제_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -102,16 +102,16 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThat(taskCheckerRepository.existsById(taskId)).isFalse();
+        assertThat(taskCheckerRepository.existsById(taskCheckerId)).isFalse();
     }
 
     @Test
-    void 과제_진행_상태_변경_요청() {
+    void 과제체커_진행_상태_변경_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -130,17 +130,17 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        TaskChecker taskChecker = taskCheckerRepository.findById(taskId).orElseThrow();
+        TaskChecker taskChecker = taskCheckerRepository.findById(taskCheckerId).orElseThrow();
         assertThat(taskChecker.isDone()).isTrue();
     }
 
     @Test
-    void 과제_어려움_점수_변경_요청() {
+    void 과제체커_어려움_점수_변경_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -159,7 +159,7 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        TaskChecker taskChecker = taskCheckerRepository.findById(taskId).orElseThrow();
+        TaskChecker taskChecker = taskCheckerRepository.findById(taskCheckerId).orElseThrow();
         assertThat(taskChecker.getDifficultyScore()).isEqualTo(Difficulty.HARD.getValue());
     }
 }

@@ -40,7 +40,7 @@ class TaskCheckerServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-    private DailyChecklist createDailyChecklistWithTwoTask() {
+    private DailyChecklist createDailyChecklistWithTwoTaskChecker() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
@@ -50,24 +50,24 @@ class TaskCheckerServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트에_과제를_추가할_수_있다() {
+    void 체크리스트에_과제체커를_추가할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
 
         // when
-        Long taskId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
 
         // then
-        assertThat(taskCheckerRepository.existsById(taskId)).isTrue();
+        assertThat(taskCheckerRepository.existsById(taskCheckerId)).isTrue();
     }
 
     @Test
-    void 체크리스트에_과제를_삭제할_수_있다() {
+    void 체크리스트에_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
@@ -79,9 +79,9 @@ class TaskCheckerServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트내에_있는_과제의_어려움_점수를_수정할_수_있다() {
+    void 체크리스트내에_있는_과제체커의_어려움_점수를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
@@ -95,9 +95,9 @@ class TaskCheckerServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트내에_있는_과제의_진행상태를_수정할_수_있다() {
+    void 체크리스트내에_있는_과제체커의_진행상태를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);

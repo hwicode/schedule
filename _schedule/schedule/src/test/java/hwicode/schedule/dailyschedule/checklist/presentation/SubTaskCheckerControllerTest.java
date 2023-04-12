@@ -43,7 +43,7 @@ class SubTaskCheckerControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+    void 서브_과제체커_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerSaveResponse subTaskCheckerSaveResponse = createSubTaskCheckerSaveResponse(SUB_TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
@@ -66,7 +66,7 @@ class SubTaskCheckerControllerTest {
     }
 
     @Test
-    void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+    void 서브_과제체커_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
         SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskCheckerDeleteRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME);
 
@@ -80,7 +80,7 @@ class SubTaskCheckerControllerTest {
     }
 
     @Test
-    void 서브_과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+    void 서브_과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE);
         SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
@@ -103,7 +103,7 @@ class SubTaskCheckerControllerTest {
     }
 
     @Test
-    void 서브_과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
+    void 서브_과제체커_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
         given(subTaskCheckerService.saveSubTaskChecker(any()))
@@ -124,7 +124,7 @@ class SubTaskCheckerControllerTest {
     }
 
     @Test
-    void 서브_과제를_찾을_때_서브_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
+    void 서브_과제체커를_찾을_때_서브_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNotFoundException subTaskCheckerNotFoundException = new SubTaskCheckerNotFoundException();
         given(subTaskCheckerService.changeSubTaskStatus(any(), any()))

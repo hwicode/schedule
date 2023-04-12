@@ -40,7 +40,7 @@ class SubTaskCheckerServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-    private DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
+    private DailyChecklist createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
         dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
@@ -53,24 +53,24 @@ class SubTaskCheckerServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트에_서브_과제를_추가할_수_있다() {
+    void 체크리스트에_서브_과제체커를_추가할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
-        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
+        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
 
         // then
-        assertThat(subTaskCheckerRepository.existsById(subTaskId)).isTrue();
+        assertThat(subTaskCheckerRepository.existsById(subTaskCheckerId)).isTrue();
     }
 
     @Test
-    void 체크리스트에_서브_과제를_삭제할_수_있다() {
+    void 체크리스트에_서브_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
         SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskCheckerDeleteRequest(dailyChecklist.getId(), TASK_CHECKER_NAME);
@@ -84,9 +84,9 @@ class SubTaskCheckerServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트내에_있는_서브_과제의_진행상태를_수정할_수_있다() {
+    void 체크리스트내에_있는_서브_과제체커의_진행상태를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker();
         dailyChecklist.makeTaskCheckerToDone(TASK_CHECKER_NAME);
         dailyChecklist.makeTaskCheckerToDone(TASK_CHECKER_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
