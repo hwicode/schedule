@@ -42,16 +42,20 @@ public class ToDoListDataHelper {
 
 
     // todolist Task request dto
-    public static TaskSaveRequest createTaskSaveRequest(String taskName) {
-        return new TaskSaveRequest(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+    public static TaskNameChangeRequest createTaskNameChangeRequest(Long dailyToDoListId, String newTaskName) {
+        return new TaskNameChangeRequest(dailyToDoListId, newTaskName);
+    }
+
+    public static TaskSaveRequest createTaskSaveRequest(Long dailyToDoListId, String taskName) {
+        return new TaskSaveRequest(dailyToDoListId, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
     }
 
     public static TaskInformationChangeRequest createTaskInformationChangeRequest(Priority priority, Importance importance) {
         return new TaskInformationChangeRequest(priority, importance);
     }
 
-    public static TaskNameChangeRequest createTaskNameChangeRequest(Long dailyToDoListId, String newTaskName) {
-        return new TaskNameChangeRequest(dailyToDoListId, newTaskName);
+    public static TaskDeleteRequest createTaskDeleteRequest(Long dailyToDoListId) {
+        return new TaskDeleteRequest(dailyToDoListId);
     }
 
 

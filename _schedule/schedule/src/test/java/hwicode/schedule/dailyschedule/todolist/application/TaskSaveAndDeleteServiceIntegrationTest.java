@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -41,10 +42,10 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         DailyToDoList dailyToDoList = new DailyToDoList();
         dailyToDoListRepository.save(dailyToDoList);
 
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(TASK_NAME);
+        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
 
         // when
-        Long taskId = taskSaveAndDeleteService.save(dailyToDoList.getId(), taskSaveRequest);
+        Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
 
         // then
         assertThat(taskRepository.existsById(taskId)).isTrue();
@@ -57,11 +58,13 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
         dailyToDoListRepository.save(dailyToDoList);
 
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId());
+
         // when
-        taskSaveAndDeleteService.delete(dailyToDoList.getId(), TASK_NAME);
+        taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> taskSaveAndDeleteService.delete(dailyToDoList.getId(), TASK_NAME))
+        assertThatThrownBy(() -> taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 }

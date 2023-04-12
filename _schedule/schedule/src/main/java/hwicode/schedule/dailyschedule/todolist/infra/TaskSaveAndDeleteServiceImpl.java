@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -18,9 +19,9 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     @Override
     @Transactional
-    public Long save(Long dailyToDoListId, TaskSaveRequest taskSaveRequest) {
+    public Long save(TaskSaveRequest taskSaveRequest) {
         Long taskId = taskCheckerService.saveTask(
-                createTaskCheckerSaveRequest(dailyToDoListId, taskSaveRequest)
+                createTaskCheckerSaveRequest(taskSaveRequest)
         );
 
         Task task = taskRepository.findById(taskId)
@@ -30,16 +31,19 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
         return taskId;
     }
 
-    private TaskCheckerSaveRequest createTaskCheckerSaveRequest(Long dailyToDoListId, TaskSaveRequest taskSaveRequest) {
+    private TaskCheckerSaveRequest createTaskCheckerSaveRequest(TaskSaveRequest taskSaveRequest) {
         return new TaskCheckerSaveRequest(
-                dailyToDoListId,
+                taskSaveRequest.getDailyChecklistId(),
                 taskSaveRequest.getTaskName(),
                 taskSaveRequest.getDifficulty());
     }
 
     @Override
     @Transactional
-    public void delete(Long dailyChecklistId, String taskName) {
-        taskCheckerService.deleteTask(dailyChecklistId, taskName);
+    public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
+        taskCheckerService.deleteTask(
+                taskDeleteRequest.getDailyChecklistId(),
+                taskName
+        );
     }
 }
