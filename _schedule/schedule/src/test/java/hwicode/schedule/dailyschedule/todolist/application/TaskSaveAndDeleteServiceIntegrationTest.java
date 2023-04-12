@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.todolist.application.dto.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;

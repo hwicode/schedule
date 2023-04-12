@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.application.dto;
+package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

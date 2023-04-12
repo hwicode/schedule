@@ -15,6 +15,7 @@ import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -51,5 +52,19 @@ class TaskControllerTest {
                 ));
 
         verify(taskSaveAndDeleteService).save(any());
+    }
+
+    @Test
+    void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID);
+
+        // when then
+        mockMvc.perform(delete("/dailyschedule/todolist/tasks/taskName")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDeleteRequest)))
+                .andExpect(status().isNoContent());
+
+        verify(taskSaveAndDeleteService).delete(any(), any());
     }
 }
