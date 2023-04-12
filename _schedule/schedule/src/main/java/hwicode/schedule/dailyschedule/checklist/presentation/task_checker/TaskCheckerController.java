@@ -25,32 +25,32 @@ public class TaskCheckerController {
 
     @PostMapping("/dailyschedule/checklist/taskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskCheckerSaveResponse saveTask(@RequestBody @Valid TaskCheckerSaveRequest taskCheckerSaveRequest) {
-        Long taskId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
-        return new TaskCheckerSaveResponse(taskId, taskCheckerSaveRequest.getTaskCheckerName());
+    public TaskCheckerSaveResponse saveTaskChecker(@RequestBody @Valid TaskCheckerSaveRequest taskCheckerSaveRequest) {
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
+        return new TaskCheckerSaveResponse(taskCheckerId, taskCheckerSaveRequest.getTaskCheckerName());
     }
 
-    @DeleteMapping("/dailyschedule/checklist/taskCheckers/{taskName}")
+    @DeleteMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable @NotBlank String taskName,
-                           @RequestBody @Valid TaskCheckerDeleteRequest taskCheckerDeleteRequest) {
-        taskCheckerService.deleteTaskChecker(taskCheckerDeleteRequest.getDailyChecklistId(), taskName);
+    public void deleteTaskChecker(@PathVariable @NotBlank String taskCheckerName,
+                                  @RequestBody @Valid TaskCheckerDeleteRequest taskCheckerDeleteRequest) {
+        taskCheckerService.deleteTaskChecker(taskCheckerDeleteRequest.getDailyChecklistId(), taskCheckerName);
     }
 
-    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/status")
+    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/status")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskName,
+    public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskCheckerName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
-        TaskStatus modifiedTaskStatus = taskCheckerService.changeTaskStatus(taskName, taskStatusModifyRequest);
-        return new TaskStatusModifyResponse(taskName, modifiedTaskStatus);
+        TaskStatus modifiedTaskStatus = taskCheckerService.changeTaskStatus(taskCheckerName, taskStatusModifyRequest);
+        return new TaskStatusModifyResponse(taskCheckerName, modifiedTaskStatus);
     }
 
-    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/difficulty")
+    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable @NotBlank String taskName,
+    public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable @NotBlank String taskCheckerName,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
-        Difficulty modifiedDifficulty = taskCheckerService.changeTaskDifficulty(taskName, taskDifficultyModifyRequest);
-        return new TaskDifficultyModifyResponse(taskName, modifiedDifficulty);
+        Difficulty modifiedDifficulty = taskCheckerService.changeTaskDifficulty(taskCheckerName, taskDifficultyModifyRequest);
+        return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
     }
 
 }

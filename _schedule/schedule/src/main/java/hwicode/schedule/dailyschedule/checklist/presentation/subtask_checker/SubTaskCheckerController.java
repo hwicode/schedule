@@ -22,23 +22,23 @@ public class SubTaskCheckerController {
 
     @PostMapping("/dailyschedule/checklist/subtaskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SubTaskCheckerSaveResponse saveSubTask(@RequestBody @Valid SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
-        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
-        return new SubTaskCheckerSaveResponse(subTaskId, subTaskCheckerSaveRequest.getSubTaskCheckerName());
+    public SubTaskCheckerSaveResponse saveSubTaskChecker(@RequestBody @Valid SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
+        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
+        return new SubTaskCheckerSaveResponse(subTaskCheckerId, subTaskCheckerSaveRequest.getSubTaskCheckerName());
     }
 
-    @DeleteMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}")
+    @DeleteMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
-                              @RequestBody @Valid SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
-        subTaskCheckerService.deleteSubTaskChecker(subTaskName, subTaskCheckerDeleteRequest);
+    public void deleteSubTaskChecker(@PathVariable @NotBlank String subTaskCheckerName,
+                                     @RequestBody @Valid SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
+        subTaskCheckerService.deleteSubTaskChecker(subTaskCheckerName, subTaskCheckerDeleteRequest);
     }
 
-    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}/status")
+    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}/status")
     @ResponseStatus(value = HttpStatus.OK)
-    public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskName,
+    public SubTaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String subTaskCheckerName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(subTaskName, subTaskStatusModifyRequest);
-        return new SubTaskStatusModifyResponse(subTaskName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
+        TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(subTaskCheckerName, subTaskStatusModifyRequest);
+        return new SubTaskStatusModifyResponse(subTaskCheckerName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 }
