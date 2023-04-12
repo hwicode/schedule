@@ -24,14 +24,24 @@ public class DailyToDoList {
     @OneToMany(mappedBy = "dailyToDoList", cascade = CascadeType.ALL, orphanRemoval = true)
     List<Task> tasks = new ArrayList<>();
 
-    public String writeReview(String review) {
-        this.review = review;
-        return this.review;
+    public DailyToDoList(Emoji emoji) {
+        this.emoji = emoji;
     }
 
-    public Emoji changeTodayEmoji(Emoji emoji) {
+    public boolean writeReview(String review) {
+        if (!review.equals(this.review)) {
+            return false;
+        }
+        this.review = review;
+        return true;
+    }
+
+    public boolean changeTodayEmoji(Emoji emoji) {
+        if (this.emoji == emoji) {
+            return false;
+        }
         this.emoji = emoji;
-        return this.emoji;
+        return true;
     }
 
     public Task createTask(TaskCreateDto taskCreateDto) {

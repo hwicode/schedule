@@ -113,4 +113,7 @@ public class Task {
         return this.id;
     }
 
+    public String getName() {
+        return name;
+    }
 }
