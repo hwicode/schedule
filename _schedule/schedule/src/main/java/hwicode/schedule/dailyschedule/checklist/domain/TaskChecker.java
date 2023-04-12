@@ -8,6 +8,7 @@ import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNot
 import hwicode.schedule.dailyschedule.checklist.exception.task.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +19,8 @@ import java.util.List;
 @Entity
 public class TaskChecker {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JoinColumn(name = "daily_to_do_list_id")
@@ -28,9 +30,11 @@ public class TaskChecker {
     @Column(nullable = false)
     private String name;
 
+    @ColumnDefault(value = "TODO")
     @Enumerated(value = EnumType.STRING)
     private TaskStatus taskStatus;
 
+    @ColumnDefault(value = "NORMAL")
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 

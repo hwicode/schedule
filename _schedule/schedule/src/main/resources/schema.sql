@@ -5,14 +5,14 @@ drop table if exists daily_to_do_list cascade;
 create table daily_to_do_list (
    id bigint not null auto_increment,
    review text,
-   emoji varchar(255),
+   emoji varchar(255) DEFAULT 'NOT_BAD',
    primary key (id)
 ) engine=InnoDB;
 
 create table sub_task (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   sub_task_status varchar(255),
+   sub_task_status varchar(255) DEFAULT 'TODO',
    task_id bigint,
    primary key (id)
 ) engine=InnoDB;
@@ -20,10 +20,10 @@ create table sub_task (
 create table task (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   priority varchar(255),
-   importance varchar(255),
-   difficulty varchar(255),
-   task_status varchar(255),
+   priority varchar(255) DEFAULT 'SECOND',
+   importance varchar(255) DEFAULT 'SECOND',
+   difficulty varchar(255) DEFAULT 'NORMAL',
+   task_status varchar(255) DEFAULT 'TODO',
    daily_to_do_list_id bigint,
    primary key (id)
 ) engine=InnoDB;

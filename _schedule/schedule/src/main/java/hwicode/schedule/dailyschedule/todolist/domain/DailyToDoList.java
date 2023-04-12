@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +19,7 @@ public class DailyToDoList {
     @Column(columnDefinition = "TEXT")
     private String review;
 
+    @ColumnDefault(value = "NOT_BAD")
     @Enumerated(value = EnumType.STRING)
     private Emoji emoji;
 

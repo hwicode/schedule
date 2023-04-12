@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -21,6 +22,7 @@ public class SubTaskChecker {
     @Column(nullable = false)
     private String name;
 
+    @ColumnDefault(value = "TODO")
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 

@@ -4,6 +4,7 @@ import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -25,15 +26,19 @@ public class Task {
     @Column(nullable = false)
     private String name;
 
+    @ColumnDefault(value = "NORMAL")
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
+    @ColumnDefault(value = "SECOND")
     @Enumerated(value = EnumType.STRING)
     private Priority priority;
 
+    @ColumnDefault(value = "SECOND")
     @Enumerated(value = EnumType.STRING)
     private Importance importance;
 
+    @ColumnDefault(value = "TODO")
     @Enumerated(value = EnumType.STRING)
     private TaskStatus taskStatus;
 
