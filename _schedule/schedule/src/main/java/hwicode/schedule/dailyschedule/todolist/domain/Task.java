@@ -93,7 +93,7 @@ public class Task {
         boolean duplication = subTasks.stream()
                 .anyMatch(subTask -> subTask.isSame(name));
 
-        if (duplication || name == null) {
+        if (duplication) {
             throw new IllegalArgumentException();
         }
     }
