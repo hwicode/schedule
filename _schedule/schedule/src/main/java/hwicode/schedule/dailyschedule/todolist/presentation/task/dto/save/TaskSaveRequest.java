@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation;
+package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;

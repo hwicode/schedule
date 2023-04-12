@@ -2,8 +2,8 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import lombok.RequiredArgsConstructor;

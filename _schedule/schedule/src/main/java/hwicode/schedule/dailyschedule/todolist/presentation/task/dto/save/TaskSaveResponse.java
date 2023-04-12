@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation;
+package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
