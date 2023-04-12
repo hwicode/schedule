@@ -1,11 +1,11 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
-import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
-import hwicode.schedule.dailyschedule.todolist.domain.Task;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.SubTaskRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,11 +27,32 @@ class TaskServiceIntegrationTest {
     DailyToDoListRepository dailyToDoListRepository;
 
     @Autowired
+    TaskRepository taskRepository;
+
+    @Autowired
     SubTaskRepository subTaskRepository;
 
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
+    }
+
+    @Test
+    void ToDo_리스트에_있는_과제의_정보를_변경할_수_있다() {
+        // given
+        DailyToDoList dailyToDoList = new DailyToDoList();
+        Task task = dailyToDoList.createTask(createTaskCreateDto(TASK_NAME, Priority.SECOND, Importance.SECOND));
+        dailyToDoListRepository.save(dailyToDoList);
+
+        TaskInformationChangeRequest taskInformationChangeRequest = createTaskInformationChangeRequest(Priority.FIRST, Importance.FIRST);
+
+        // when
+        taskService.changeTaskInformation(task.getId(), taskInformationChangeRequest);
+
+        // then
+        Task savedTask = taskRepository.findById(task.getId()).orElseThrow();
+        assertThat(savedTask.changePriority(Priority.FIRST)).isFalse();
+        assertThat(savedTask.changeImportance(Importance.FIRST)).isFalse();
     }
 
     @Test

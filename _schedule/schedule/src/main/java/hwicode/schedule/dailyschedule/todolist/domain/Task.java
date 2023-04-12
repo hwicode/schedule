@@ -59,14 +59,20 @@ public class Task {
         return this.name;
     }
 
-    public Priority changePriority(Priority priority) {
+    public boolean changePriority(Priority priority) {
+        if (this.priority == priority) {
+            return false;
+        }
         this.priority = priority;
-        return this.priority;
+        return true;
     }
 
-    public Importance changeImportance(Importance importance) {
-        this.importance = importance;
-        return this.importance;
+    public boolean changeImportance(Importance importance) {
+       if (this.importance == importance) {
+           return false;
+       }
+       this.importance = importance;
+       return true;
     }
 
     public SubTask createSubTask(String subTaskName) {

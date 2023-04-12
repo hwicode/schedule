@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.todolist;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
@@ -31,10 +32,18 @@ public class ToDoListDataHelper {
         return new TaskCreateDto(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
     }
 
+    public static TaskCreateDto createTaskCreateDto(String taskName, Priority priority, Importance importance) {
+        return new TaskCreateDto(taskName, Difficulty.NORMAL, priority, importance);
+    }
+
 
     // todolist Task request dto
     public static TaskSaveRequest createTaskSaveRequest(String taskName) {
         return new TaskSaveRequest(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+    }
+
+    public static TaskInformationChangeRequest createTaskInformationChangeRequest(Priority priority, Importance importance) {
+        return new TaskInformationChangeRequest(priority, importance);
     }
 
 
