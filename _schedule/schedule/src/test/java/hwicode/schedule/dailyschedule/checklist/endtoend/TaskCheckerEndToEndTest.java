@@ -59,7 +59,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -84,19 +84,19 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTaskChecker(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
+                createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
-        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskDeleteRequest(dailyChecklist.getId());
+        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskCheckerDeleteRequest(dailyChecklist.getId());
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", NEW_TASK_NAME)
+                .pathParam("taskCheckerName", NEW_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(taskCheckerDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskCheckerName}", port));
 
         //then
         response.then()
@@ -112,19 +112,19 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTaskChecker(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
+                createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", NEW_TASK_NAME)
+                .pathParam("taskCheckerName", NEW_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(taskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskCheckerName}/status", port));
 
         //then
         response.then()
@@ -141,19 +141,19 @@ class TaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerService.saveTaskChecker(
-                createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
+                createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", NEW_TASK_NAME)
+                .pathParam("taskCheckerName", NEW_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(taskDifficultyModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskName}/difficulty", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskCheckerName}/difficulty", port));
 
         //then
         response.then()

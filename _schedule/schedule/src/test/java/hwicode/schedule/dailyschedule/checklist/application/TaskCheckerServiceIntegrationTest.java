@@ -43,8 +43,8 @@ class TaskCheckerServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
         return dailyChecklist;
     }
@@ -55,7 +55,7 @@ class TaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
 
         // when
         Long taskId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
@@ -71,10 +71,10 @@ class TaskCheckerServiceIntegrationTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
-        taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_NAME2);
+        taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_CHECKER_NAME2);
 
         // then
-        assertThatThrownBy(() -> taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_NAME2))
+        assertThatThrownBy(() -> taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_CHECKER_NAME2))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 
@@ -87,7 +87,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
 
         // when
-        taskCheckerService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
+        taskCheckerService.changeTaskDifficulty(TASK_CHECKER_NAME2, taskDifficultyModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
@@ -103,7 +103,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
 
         // when
-        taskCheckerService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);
+        taskCheckerService.changeTaskStatus(TASK_CHECKER_NAME, taskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();

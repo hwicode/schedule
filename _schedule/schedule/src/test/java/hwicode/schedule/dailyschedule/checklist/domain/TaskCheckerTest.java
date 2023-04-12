@@ -21,9 +21,9 @@ class TaskCheckerTest {
 
     @BeforeEach
     void beforeEach() {
-        taskChecker = new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL);
-        subTaskChecker = new SubTaskChecker(SUB_TASK_NAME, SubTaskStatus.TODO);
-        subTaskChecker2 = new SubTaskChecker(SUB_TASK_NAME2, SubTaskStatus.TODO);
+        taskChecker = new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL);
+        subTaskChecker = new SubTaskChecker(SUB_TASK_CHECKER_NAME, SubTaskStatus.TODO);
+        subTaskChecker2 = new SubTaskChecker(SUB_TASK_CHECKER_NAME2, SubTaskStatus.TODO);
     }
 
     @Test
@@ -42,11 +42,11 @@ class TaskCheckerTest {
     void 과제의_상태가_DONE_일_때_서브_과제_삭제시_DONE_상태가_유지된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         taskChecker.changeToDone();
 
         // when
-        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_NAME);
+        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.DONE);
@@ -56,11 +56,11 @@ class TaskCheckerTest {
     void 과제의_상태가_DONE_일_때_서브_과제가_PROGRESS로_변하면_과제는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         taskChecker.changeToDone();
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.PROGRESS);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -70,11 +70,11 @@ class TaskCheckerTest {
     void 과제의_상태가_DONE_일_때_서브_과제가_TODO로_변하면_과제는_PROGRESS가_된다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         taskChecker.changeToDone();
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.TODO);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.TODO);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -84,11 +84,11 @@ class TaskCheckerTest {
     void 과제의_상태가_DONE_일_때_서브_과제가_DONE으로_변하면_과제는_DONE을_유지한다() {
         // given
         taskChecker.addSubTaskChecker(subTaskChecker);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         taskChecker.changeToDone();
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.DONE);
@@ -99,7 +99,7 @@ class TaskCheckerTest {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         //when then
         assertThatThrownBy(taskChecker::changeToDone)
@@ -111,8 +111,8 @@ class TaskCheckerTest {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME2, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME2, SubTaskStatus.DONE);
 
         // when
         TaskStatus taskStatus = taskChecker.changeToDone();
@@ -136,7 +136,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_NAME);
+        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.TODO);
@@ -148,7 +148,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.PROGRESS);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -160,7 +160,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -172,7 +172,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.TODO);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.TODO);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.TODO);
@@ -183,7 +183,7 @@ class TaskCheckerTest {
         //given
         taskChecker.addSubTaskChecker(subTaskChecker);
         taskChecker.addSubTaskChecker(subTaskChecker2);
-        taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         //when then
         assertThatThrownBy(taskChecker::changeToTodo)
@@ -222,7 +222,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_NAME);
+        TaskStatus taskStatus = taskChecker.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME);
 
         // then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -235,7 +235,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.TODO);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.TODO);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -248,7 +248,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.PROGRESS);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -261,7 +261,7 @@ class TaskCheckerTest {
         taskChecker.addSubTaskChecker(subTaskChecker);
 
         // when
-        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_NAME, SubTaskStatus.DONE);
+        TaskStatus taskStatus = taskChecker.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         //then
         assertThat(taskStatus).isEqualTo(TaskStatus.PROGRESS);
@@ -283,10 +283,10 @@ class TaskCheckerTest {
     @Test
     void 서브_과제의_이름이_중복되면_에러가_발생한다() {
         // given
-        SubTaskChecker subTaskChecker = new SubTaskChecker(NEW_SUB_TASK_NAME);
+        SubTaskChecker subTaskChecker = new SubTaskChecker(NEW_SUB_TASK_CHECKER_NAME);
         taskChecker.addSubTaskChecker(subTaskChecker);
 
-        SubTaskChecker duplicatedSubTaskChecker = new SubTaskChecker(NEW_SUB_TASK_NAME);
+        SubTaskChecker duplicatedSubTaskChecker = new SubTaskChecker(NEW_SUB_TASK_CHECKER_NAME);
 
         // when then
         assertThatThrownBy(() -> taskChecker.addSubTaskChecker(duplicatedSubTaskChecker))

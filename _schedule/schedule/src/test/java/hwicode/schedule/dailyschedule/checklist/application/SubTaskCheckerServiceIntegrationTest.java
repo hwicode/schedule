@@ -43,11 +43,11 @@ class SubTaskCheckerServiceIntegrationTest {
     private DailyChecklist createDailyChecklistWithTwoTaskAndSubTask() {
         DailyChecklist dailyChecklist = new DailyChecklist();
 
-        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-        dailyChecklist.addTaskChecker(new TaskChecker(TASK_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
+        dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME2, TaskStatus.TODO, Difficulty.NORMAL));
 
-        dailyChecklist.addSubTaskChecker(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME, SubTaskStatus.TODO));
-        dailyChecklist.addSubTaskChecker(TASK_NAME, new SubTaskChecker(SUB_TASK_NAME2, SubTaskStatus.TODO));
+        dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, new SubTaskChecker(SUB_TASK_CHECKER_NAME, SubTaskStatus.TODO));
+        dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, new SubTaskChecker(SUB_TASK_CHECKER_NAME2, SubTaskStatus.TODO));
 
         return dailyChecklist;
     }
@@ -58,7 +58,7 @@ class SubTaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
+        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
         Long subTaskId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
@@ -73,13 +73,13 @@ class SubTaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
+        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskCheckerDeleteRequest(dailyChecklist.getId(), TASK_CHECKER_NAME);
 
         // when
-        subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_NAME, subTaskCheckerDeleteRequest);
+        subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_NAME, subTaskCheckerDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
@@ -87,14 +87,14 @@ class SubTaskCheckerServiceIntegrationTest {
     void 체크리스트내에_있는_서브_과제의_진행상태를_수정할_수_있다() {
         // given
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskAndSubTask();
-        dailyChecklist.makeTaskCheckerToDone(TASK_NAME);
-        dailyChecklist.makeTaskCheckerToDone(TASK_NAME2);
+        dailyChecklist.makeTaskCheckerToDone(TASK_CHECKER_NAME);
+        dailyChecklist.makeTaskCheckerToDone(TASK_CHECKER_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_NAME, SubTaskStatus.PROGRESS);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         // when
-        subTaskCheckerService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);
+        subTaskCheckerService.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, subTaskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();

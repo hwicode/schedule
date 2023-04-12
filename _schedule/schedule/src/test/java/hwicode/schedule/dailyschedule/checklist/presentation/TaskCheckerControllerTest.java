@@ -50,11 +50,11 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME, Difficulty.NORMAL);
-        TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskSaveResponse(TASK_ID, NEW_TASK_NAME);
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
+        TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskCheckerSaveResponse(TASK_CHECKER_ID, NEW_TASK_CHECKER_NAME);
 
         given(taskCheckerService.saveTaskChecker(any()))
-                .willReturn(TASK_ID);
+                .willReturn(TASK_CHECKER_ID);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
@@ -73,10 +73,10 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskDeleteRequest(DAILY_CHECKLIST_ID);
+        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskCheckerDeleteRequest(DAILY_CHECKLIST_ID);
 
         // when then
-        mockMvc.perform(delete("/dailyschedule/checklist/taskCheckers/taskName")
+        mockMvc.perform(delete("/dailyschedule/checklist/taskCheckers/taskCheckerName")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskCheckerDeleteRequest)))
                 .andExpect(status().isNoContent());
@@ -88,13 +88,13 @@ class TaskCheckerControllerTest {
     void 과제의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE);
-        TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_NAME, TaskStatus.DONE);
+        TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_CHECKER_NAME, TaskStatus.DONE);
 
         given(taskCheckerService.changeTaskStatus(any(), any()))
                 .willReturn(TaskStatus.DONE);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskStatusModifyRequest)));
 
@@ -111,13 +111,13 @@ class TaskCheckerControllerTest {
     void 과제의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, Difficulty.HARD);
-        TaskDifficultyModifyResponse taskDifficultyModifyResponse = createTaskDifficultyModifyResponse(TASK_NAME, Difficulty.HARD);
+        TaskDifficultyModifyResponse taskDifficultyModifyResponse = createTaskDifficultyModifyResponse(TASK_CHECKER_NAME, Difficulty.HARD);
 
         given(taskCheckerService.changeTaskDifficulty(any(), any()))
                 .willReturn(Difficulty.HARD);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/difficulty")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/difficulty")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskDifficultyModifyRequest)));
 
@@ -141,7 +141,7 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME, Difficulty.NORMAL)
+                        createTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
                 )));
 
         // then
@@ -159,7 +159,7 @@ class TaskCheckerControllerTest {
                 .willThrow(statusNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
@@ -180,7 +180,7 @@ class TaskCheckerControllerTest {
                 .willThrow(taskCheckerNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
@@ -201,7 +201,7 @@ class TaskCheckerControllerTest {
                 .willThrow(subTaskCheckerNotAllDoneException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)
@@ -222,7 +222,7 @@ class TaskCheckerControllerTest {
                 .willThrow(subTaskCheckerNotAllTodoException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskName/status")
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/taskCheckers/taskCheckerName/status")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TaskStatus.DONE)

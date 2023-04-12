@@ -20,27 +20,27 @@ public class ChecklistDataHelper {
 
     // 단순히 id값으로 숫자가 필요할 때만 사용
     public static final Long DAILY_CHECKLIST_ID = 1L;
-    public static final Long TASK_ID = 2L;
-    public static final Long SUB_TASK_ID = 3L;
+    public static final Long TASK_CHECKER_ID = 2L;
+    public static final Long SUB_TASK_CHECKER_ID = 3L;
 
 
-    // 생성 메서드에서 사용됨. 테스트 중간에 사용되면 이미 존재하는 Task나 SubTask임
-    public static final String TASK_NAME = "taskName";
-    public static final String TASK_NAME2 = "taskName2";
-    public static final String TASK_NAME3 = "taskName3";
+    // 생성 메서드에서 사용됨. 테스트 중간에 사용되면 이미 존재하는 TaskChecker나 SubTaskChecker임
+    public static final String TASK_CHECKER_NAME = "taskCheckerName";
+    public static final String TASK_CHECKER_NAME2 = "taskCheckerName2";
+    public static final String TASK_CHECKER_NAME3 = "taskCheckerName3";
 
-    public static final String SUB_TASK_NAME = "subTaskName";
-    public static final String SUB_TASK_NAME2 = "subTaskName2";
-
-
-    // 생성 메서드를 제외하고, Task나 SubTask를 생성해야 할 때만 사용
-    public static final String NEW_TASK_NAME = "newTaskName";
-    public static final String NEW_SUB_TASK_NAME = "newSubTaskName";
+    public static final String SUB_TASK_CHECKER_NAME = "subTaskCheckerName";
+    public static final String SUB_TASK_CHECKER_NAME2 = "subTaskCheckerName2";
 
 
-    // checklist Task request dto
-    public static TaskCheckerSaveRequest createTaskSaveRequest(Long dailyChecklistId, String taskName, Difficulty difficulty) {
-        return new TaskCheckerSaveRequest(dailyChecklistId, taskName, Difficulty.NORMAL);
+    // 생성 메서드를 제외하고, TaskChecker나 SubTaskChecker를 생성해야 할 때만 사용
+    public static final String NEW_TASK_CHECKER_NAME = "newTaskCheckerName";
+    public static final String NEW_SUB_TASK_CHECKER_NAME = "newSubTaskCheckerName";
+
+
+    // checklist TaskChecker request dto
+    public static TaskCheckerSaveRequest createTaskCheckerSaveRequest(Long dailyChecklistId, String taskCheckerName, Difficulty difficulty) {
+        return new TaskCheckerSaveRequest(dailyChecklistId, taskCheckerName, difficulty);
     }
 
     public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, TaskStatus taskStatus) {
@@ -51,45 +51,45 @@ public class ChecklistDataHelper {
         return new TaskDifficultyModifyRequest(dailyChecklistId, difficulty);
     }
 
-    public static TaskCheckerDeleteRequest createTaskDeleteRequest(Long dailyChecklistId) {
+    public static TaskCheckerDeleteRequest createTaskCheckerDeleteRequest(Long dailyChecklistId) {
         return new TaskCheckerDeleteRequest(dailyChecklistId);
     }
 
 
-    // checklist SubTask request dto
-    public static SubTaskCheckerSaveRequest createSubTaskSaveRequest(Long dailyChecklistId, String taskName, String subTaskName) {
-        return new SubTaskCheckerSaveRequest(dailyChecklistId, taskName, subTaskName);
+    // checklist SubTaskChecker request dto
+    public static SubTaskCheckerSaveRequest createSubTaskCheckerSaveRequest(Long dailyChecklistId, String taskCheckerName, String subTaskCheckerName) {
+        return new SubTaskCheckerSaveRequest(dailyChecklistId, taskCheckerName, subTaskCheckerName);
     }
 
-    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskName, SubTaskStatus subTaskStatus) {
-        return new SubTaskStatusModifyRequest(dailyChecklistId, taskName, subTaskStatus);
+    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskCheckerName, SubTaskStatus subTaskStatus) {
+        return new SubTaskStatusModifyRequest(dailyChecklistId, taskCheckerName, subTaskStatus);
     }
 
-    public static SubTaskCheckerDeleteRequest createSubTaskDeleteRequest(Long dailyChecklistId, String taskName) {
-        return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskName);
-    }
-
-
-    // checklist Task response dto
-    public static TaskCheckerSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
-        return new TaskCheckerSaveResponse(taskId, taskName);
-    }
-
-    public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskName, TaskStatus taskStatus) {
-        return new TaskStatusModifyResponse(taskName, taskStatus);
-    }
-
-    public static TaskDifficultyModifyResponse createTaskDifficultyModifyResponse(String taskName, Difficulty modifiedDifficulty) {
-        return new TaskDifficultyModifyResponse(taskName, modifiedDifficulty);
+    public static SubTaskCheckerDeleteRequest createSubTaskCheckerDeleteRequest(Long dailyChecklistId, String taskCheckerName) {
+        return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskCheckerName);
     }
 
 
-    // checklist SubTask response dto
-    public static SubTaskCheckerSaveResponse createSubTaskSaveResponse(Long subTaskId, String subtaskName) {
-        return new SubTaskCheckerSaveResponse(subTaskId, subtaskName);
+    // checklist TaskChecker response dto
+    public static TaskCheckerSaveResponse createTaskCheckerSaveResponse(Long taskId, String taskCheckerName) {
+        return new TaskCheckerSaveResponse(taskId, taskCheckerName);
     }
 
-    public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
-        return new SubTaskStatusModifyResponse(subTaskName, taskStatus, subTaskStatus);
+    public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskCheckerName, TaskStatus taskStatus) {
+        return new TaskStatusModifyResponse(taskCheckerName, taskStatus);
+    }
+
+    public static TaskDifficultyModifyResponse createTaskDifficultyModifyResponse(String taskCheckerName, Difficulty modifiedDifficulty) {
+        return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
+    }
+
+
+    // checklist SubTaskChecker response dto
+    public static SubTaskCheckerSaveResponse createSubTaskCheckerSaveResponse(Long subTaskId, String subtaskCheckerName) {
+        return new SubTaskCheckerSaveResponse(subTaskId, subtaskCheckerName);
+    }
+
+    public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskCheckerName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
+        return new SubTaskStatusModifyResponse(subTaskCheckerName, taskStatus, subTaskStatus);
     }
 }
