@@ -7,6 +7,8 @@ import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.TaskCreateDto;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 
@@ -57,8 +59,8 @@ public class ToDoListDataHelper {
         return new TaskSaveRequest(dailyToDoListId, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
     }
 
-    public static TaskInformationChangeRequest createTaskInformationChangeRequest(Priority priority, Importance importance) {
-        return new TaskInformationChangeRequest(priority, importance);
+    public static TaskInformationModifyRequest createTaskInformationModifyRequest(Priority priority, Importance importance) {
+        return new TaskInformationModifyRequest(priority, importance);
     }
 
     public static TaskDeleteRequest createTaskDeleteRequest(Long dailyToDoListId) {
@@ -83,5 +85,9 @@ public class ToDoListDataHelper {
     // todolist Task response dto
     public static TaskSaveResponse createTaskSaveResponse(Long taskId, String taskName) {
         return new TaskSaveResponse(taskId, taskName);
+    }
+
+    public static TaskInformationModifyResponse createTaskInformationModifyResponse(Long taskId, Priority priority, Importance importance) {
+        return new TaskInformationModifyResponse(taskId, priority, importance);
     }
 }

@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.application.dto;
+package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify;
 
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TaskInformationChangeRequest {
+public class TaskInformationModifyRequest {
 
     @NotNull
     private Priority priority;

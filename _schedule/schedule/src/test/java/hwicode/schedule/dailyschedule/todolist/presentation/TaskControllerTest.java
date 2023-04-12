@@ -2,8 +2,13 @@ package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
+import hwicode.schedule.dailyschedule.todolist.application.TaskService;
+import hwicode.schedule.dailyschedule.todolist.domain.Importance;
+import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -19,8 +24,7 @@ import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TaskController.class)
@@ -31,6 +35,9 @@ class TaskControllerTest {
 
     @MockBean
     TaskSaveAndDeleteService taskSaveAndDeleteService;
+
+    @MockBean
+    TaskService taskService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -70,5 +77,26 @@ class TaskControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(taskSaveAndDeleteService).delete(any(), any());
+    }
+
+    @Test
+    void 과제의_정보_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        TaskInformationModifyRequest taskInformationModifyRequest = createTaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
+        TaskInformationModifyResponse taskInformationModifyResponse = createTaskInformationModifyResponse(TASK_ID, Priority.THIRD, Importance.THIRD);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/todolist/tasks/%s/information", TASK_ID))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskInformationModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(taskInformationModifyResponse)
+                ));
+
+        verify(taskService).changeTaskInformation(any(), any());
     }
 }

@@ -1,7 +1,10 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task;
 
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
+import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -10,12 +13,14 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @RequiredArgsConstructor
 @RestController
 public class TaskController {
 
     private final TaskSaveAndDeleteService taskSaveAndDeleteService;
+    private final TaskService taskService;
 
     @PostMapping("/dailyschedule/todolist/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -29,5 +34,17 @@ public class TaskController {
     public void deleteTask(@PathVariable @NotBlank String taskName,
                                   @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
         taskSaveAndDeleteService.delete(taskName, taskDeleteRequest);
+    }
+
+    @PatchMapping("/dailyschedule/todolist/tasks/{taskId}/information")
+    @ResponseStatus(value = HttpStatus.OK)
+    public TaskInformationModifyResponse changeTaskInformation(@PathVariable @NotNull Long taskId,
+                                                     @RequestBody @Valid TaskInformationModifyRequest taskInformationModifyRequest) {
+        taskService.changeTaskInformation(taskId, taskInformationModifyRequest);
+        return new TaskInformationModifyResponse(
+                taskId,
+                taskInformationModifyRequest.getPriority(),
+                taskInformationModifyRequest.getImportance()
+        );
     }
 }
