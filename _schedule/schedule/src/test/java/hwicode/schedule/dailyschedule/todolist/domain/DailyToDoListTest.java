@@ -35,17 +35,6 @@ class DailyToDoListTest {
     }
 
     @Test
-    void 과제를_생성할_때_이름이_null이면_에러가_발생한다() {
-        // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
-        TaskCreateDto nullTaskNameDto = createTaskCreateDto(null);
-
-        // when then
-        assertThatThrownBy(() -> dailyToDoList.createTask(nullTaskNameDto))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void 과제의_이름_변경_요청을_할_때_새로운_이름이면_이름이_변경된다() {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList();
@@ -81,16 +70,4 @@ class DailyToDoListTest {
         assertThatThrownBy(() -> dailyToDoList.changeTaskName(NEW_TASK_NAME, NEW_TASK_NAME2))
                 .isInstanceOf(IllegalArgumentException.class);
     }
-
-    @Test
-    void 과제의_이름_변경_요청을_할_때_이름이_null이면_에러가_발생한다() {
-        // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
-        dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
-
-        // when then
-        assertThatThrownBy(() -> dailyToDoList.changeTaskName(null, NEW_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
 }

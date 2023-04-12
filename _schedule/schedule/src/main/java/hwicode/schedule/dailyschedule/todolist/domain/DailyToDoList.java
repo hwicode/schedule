@@ -62,7 +62,7 @@ public class DailyToDoList {
         boolean duplication = tasks.stream()
                 .anyMatch(task -> task.isSame(name));
 
-        if (duplication || name == null) {
+        if (duplication) {
             throw new IllegalArgumentException();
         }
     }
