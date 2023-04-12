@@ -23,7 +23,7 @@ public class SubTaskCheckerController {
     @PostMapping("/dailyschedule/checklist/subtaskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
     public SubTaskCheckerSaveResponse saveSubTask(@RequestBody @Valid SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
-        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskCheckerSaveRequest);
+        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
         return new SubTaskCheckerSaveResponse(subTaskId, subTaskCheckerSaveRequest.getSubTaskCheckerName());
     }
 
@@ -31,7 +31,7 @@ public class SubTaskCheckerController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
                               @RequestBody @Valid SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
-        subTaskCheckerService.deleteSubTask(subTaskName, subTaskCheckerDeleteRequest);
+        subTaskCheckerService.deleteSubTaskChecker(subTaskName, subTaskCheckerDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskName}/status")

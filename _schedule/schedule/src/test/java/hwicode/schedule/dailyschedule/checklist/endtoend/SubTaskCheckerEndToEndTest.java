@@ -89,7 +89,7 @@ class SubTaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskCheckerService.saveSubTask(
+        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 
@@ -117,7 +117,7 @@ class SubTaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTask();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long subTaskId = subTaskCheckerService.saveSubTask(
+        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME, NEW_SUB_TASK_NAME)
         );
 

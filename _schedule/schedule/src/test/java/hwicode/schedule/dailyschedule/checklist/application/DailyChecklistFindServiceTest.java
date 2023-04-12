@@ -30,7 +30,7 @@ class DailyChecklistFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> DailyChecklistFindService.findDailyChecklistWithTasks(dailyChecklistRepository, noneExistId))
+        assertThatThrownBy(() -> DailyChecklistFindService.findDailyChecklistWithTaskCheckers(dailyChecklistRepository, noneExistId))
                 .isInstanceOf(DailyChecklistNotFoundException.class);
     }
 }

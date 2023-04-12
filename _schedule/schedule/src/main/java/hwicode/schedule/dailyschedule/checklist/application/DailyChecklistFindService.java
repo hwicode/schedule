@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DailyChecklistFindService {
 
-    static DailyChecklist findDailyChecklistWithTasks(DailyChecklistRepository dailyChecklistRepository, Long dailyChecklistId) {
-        return dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklistId)
+    static DailyChecklist findDailyChecklistWithTaskCheckers(DailyChecklistRepository dailyChecklistRepository, Long dailyChecklistId) {
+        return dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklistId)
                 .orElseThrow(DailyChecklistNotFoundException::new);
     }
 }

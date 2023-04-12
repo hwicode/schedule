@@ -53,7 +53,7 @@ class TaskCheckerControllerTest {
         TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_NAME, Difficulty.NORMAL);
         TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskSaveResponse(TASK_ID, NEW_TASK_NAME);
 
-        given(taskCheckerService.saveTask(any()))
+        given(taskCheckerService.saveTaskChecker(any()))
                 .willReturn(TASK_ID);
 
         // when
@@ -67,7 +67,7 @@ class TaskCheckerControllerTest {
                         objectMapper.writeValueAsString(taskCheckerSaveResponse)
                 ));
 
-        verify(taskCheckerService).saveTask(any());
+        verify(taskCheckerService).saveTaskChecker(any());
     }
 
     @Test
@@ -81,7 +81,7 @@ class TaskCheckerControllerTest {
                         .content(objectMapper.writeValueAsString(taskCheckerDeleteRequest)))
                 .andExpect(status().isNoContent());
 
-        verify(taskCheckerService).deleteTask(any(), any());
+        verify(taskCheckerService).deleteTaskChecker(any(), any());
     }
 
     @Test
@@ -134,7 +134,7 @@ class TaskCheckerControllerTest {
     void 과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNameDuplicationException taskCheckerNameDuplicationException = new TaskCheckerNameDuplicationException();
-        given(taskCheckerService.saveTask(any()))
+        given(taskCheckerService.saveTaskChecker(any()))
                 .willThrow(taskCheckerNameDuplicationException);
 
         // when
@@ -148,7 +148,7 @@ class TaskCheckerControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(taskCheckerNameDuplicationException.getMessage()));
 
-        verify(taskCheckerService).saveTask(any());
+        verify(taskCheckerService).saveTaskChecker(any());
     }
 
     @Test

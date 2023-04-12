@@ -26,7 +26,7 @@ public class TaskCheckerController {
     @PostMapping("/dailyschedule/checklist/taskCheckers")
     @ResponseStatus(value = HttpStatus.CREATED)
     public TaskCheckerSaveResponse saveTask(@RequestBody @Valid TaskCheckerSaveRequest taskCheckerSaveRequest) {
-        Long taskId = taskCheckerService.saveTask(taskCheckerSaveRequest);
+        Long taskId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
         return new TaskCheckerSaveResponse(taskId, taskCheckerSaveRequest.getTaskCheckerName());
     }
 
@@ -34,7 +34,7 @@ public class TaskCheckerController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @NotBlank String taskName,
                            @RequestBody @Valid TaskCheckerDeleteRequest taskCheckerDeleteRequest) {
-        taskCheckerService.deleteTask(taskCheckerDeleteRequest.getDailyChecklistId(), taskName);
+        taskCheckerService.deleteTaskChecker(taskCheckerDeleteRequest.getDailyChecklistId(), taskName);
     }
 
     @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskName}/status")

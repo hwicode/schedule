@@ -20,7 +20,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public Long save(TaskSaveRequest taskSaveRequest) {
-        Long taskId = taskCheckerService.saveTask(
+        Long taskId = taskCheckerService.saveTaskChecker(
                 createTaskCheckerSaveRequest(taskSaveRequest)
         );
 
@@ -41,7 +41,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
-        taskCheckerService.deleteTask(
+        taskCheckerService.deleteTaskChecker(
                 taskDeleteRequest.getDailyChecklistId(),
                 taskName
         );

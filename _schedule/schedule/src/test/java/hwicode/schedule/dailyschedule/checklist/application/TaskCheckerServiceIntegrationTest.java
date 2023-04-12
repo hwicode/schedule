@@ -58,7 +58,7 @@ class TaskCheckerServiceIntegrationTest {
         TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL);
 
         // when
-        Long taskId = taskCheckerService.saveTask(taskCheckerSaveRequest);
+        Long taskId = taskCheckerService.saveTaskChecker(taskCheckerSaveRequest);
 
         // then
         assertThat(taskCheckerRepository.existsById(taskId)).isTrue();
@@ -71,10 +71,10 @@ class TaskCheckerServiceIntegrationTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
-        taskCheckerService.deleteTask(dailyChecklist.getId(), TASK_NAME2);
+        taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_NAME2);
 
         // then
-        assertThatThrownBy(() -> taskCheckerService.deleteTask(dailyChecklist.getId(), TASK_NAME2))
+        assertThatThrownBy(() -> taskCheckerService.deleteTaskChecker(dailyChecklist.getId(), TASK_NAME2))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 
@@ -90,7 +90,7 @@ class TaskCheckerServiceIntegrationTest {
         taskCheckerService.changeTaskDifficulty(TASK_NAME2, taskDifficultyModifyRequest);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
         assertThat(savedDailyChecklist.getTotalDifficultyScore()).isEqualTo(5);
     }
 
@@ -106,7 +106,7 @@ class TaskCheckerServiceIntegrationTest {
         taskCheckerService.changeTaskStatus(TASK_NAME, taskStatusModifyRequest);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
         assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
     }
 

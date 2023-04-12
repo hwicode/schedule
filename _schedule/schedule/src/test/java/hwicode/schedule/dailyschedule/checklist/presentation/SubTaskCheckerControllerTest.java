@@ -48,7 +48,7 @@ class SubTaskCheckerControllerTest {
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_NAME, NEW_SUB_TASK_NAME);
         SubTaskCheckerSaveResponse subTaskCheckerSaveResponse = createSubTaskSaveResponse(SUB_TASK_ID, NEW_SUB_TASK_NAME);
 
-        given(subTaskCheckerService.saveSubTask(any()))
+        given(subTaskCheckerService.saveSubTaskChecker(any()))
                 .willReturn(SUB_TASK_ID);
 
         // when
@@ -62,7 +62,7 @@ class SubTaskCheckerControllerTest {
                                 objectMapper.writeValueAsString(subTaskCheckerSaveResponse)
                         ));
 
-        verify(subTaskCheckerService).saveSubTask(any());
+        verify(subTaskCheckerService).saveSubTaskChecker(any());
     }
 
     @Test
@@ -76,7 +76,7 @@ class SubTaskCheckerControllerTest {
                         .content(objectMapper.writeValueAsString(subTaskCheckerDeleteRequest)))
                 .andExpect(status().isNoContent());
 
-        verify(subTaskCheckerService).deleteSubTask(any(), any());
+        verify(subTaskCheckerService).deleteSubTaskChecker(any(), any());
     }
 
     @Test
@@ -106,7 +106,7 @@ class SubTaskCheckerControllerTest {
     void 서브_과제_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
-        given(subTaskCheckerService.saveSubTask(any()))
+        given(subTaskCheckerService.saveSubTaskChecker(any()))
                 .willThrow(subTaskCheckerNameDuplicationException);
 
         // when
@@ -120,7 +120,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
-        verify(subTaskCheckerService).saveSubTask(any());
+        verify(subTaskCheckerService).saveSubTaskChecker(any());
     }
 
     @Test

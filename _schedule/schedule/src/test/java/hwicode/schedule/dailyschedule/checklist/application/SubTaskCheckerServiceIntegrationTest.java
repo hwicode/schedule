@@ -61,7 +61,7 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskSaveRequest(dailyChecklist.getId(), TASK_NAME2, NEW_SUB_TASK_NAME);
 
         // when
-        Long subTaskId = subTaskCheckerService.saveSubTask(subTaskCheckerSaveRequest);
+        Long subTaskId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
 
         // then
         assertThat(subTaskCheckerRepository.existsById(subTaskId)).isTrue();
@@ -76,10 +76,10 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = createSubTaskDeleteRequest(dailyChecklist.getId(), TASK_NAME);
 
         // when
-        subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskCheckerDeleteRequest);
+        subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_NAME, subTaskCheckerDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTask(SUB_TASK_NAME, subTaskCheckerDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_NAME, subTaskCheckerDeleteRequest))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
@@ -97,7 +97,7 @@ class SubTaskCheckerServiceIntegrationTest {
         subTaskCheckerService.changeSubTaskStatus(SUB_TASK_NAME, subTaskStatusModifyRequest);
 
         // then
-        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTasks(dailyChecklist.getId()).orElseThrow();
+        DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
         assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
     }
 

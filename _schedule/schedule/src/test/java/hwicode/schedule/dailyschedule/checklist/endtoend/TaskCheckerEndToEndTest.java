@@ -83,7 +83,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTask(
+        Long taskId = taskCheckerService.saveTaskChecker(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 
@@ -111,7 +111,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTask(
+        Long taskId = taskCheckerService.saveTaskChecker(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 
@@ -140,7 +140,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskId = taskCheckerService.saveTask(
+        Long taskId = taskCheckerService.saveTaskChecker(
                 createTaskSaveRequest(dailyChecklist.getId(), NEW_TASK_NAME, Difficulty.NORMAL)
         );
 

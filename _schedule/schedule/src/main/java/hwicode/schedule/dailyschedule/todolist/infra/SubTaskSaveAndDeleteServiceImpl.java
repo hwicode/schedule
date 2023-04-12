@@ -19,7 +19,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public Long save(SubTaskSaveRequest subTaskSaveRequest) {
-       return subTaskCheckerService.saveSubTask(
+       return subTaskCheckerService.saveSubTaskChecker(
                 new SubTaskCheckerSaveRequest(
                         subTaskSaveRequest.getDailyChecklistId(),
                         subTaskSaveRequest.getTaskName(),
@@ -31,7 +31,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public void delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskCheckerService.deleteSubTask(
+        subTaskCheckerService.deleteSubTaskChecker(
                 subTaskName,
                 new SubTaskCheckerDeleteRequest(
                         subTaskDeleteRequest.getDailyChecklistId(),

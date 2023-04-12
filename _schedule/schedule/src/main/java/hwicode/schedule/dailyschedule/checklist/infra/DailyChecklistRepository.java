@@ -12,5 +12,5 @@ public interface DailyChecklistRepository extends JpaRepository<DailyChecklist, 
     @Query("SELECT d FROM DailyChecklist d "
             + "LEFT JOIN FETCH d.taskCheckers "
             + "WHERE d.id = :id")
-    Optional<DailyChecklist> findDailyChecklistWithTasks(@Param("id") Long dailyCheckListId);
+    Optional<DailyChecklist> findDailyChecklistWithTaskCheckers(@Param("id") Long dailyCheckListId);
 }
