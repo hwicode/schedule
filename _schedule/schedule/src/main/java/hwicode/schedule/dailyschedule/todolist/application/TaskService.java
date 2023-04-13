@@ -16,12 +16,13 @@ public class TaskService {
     private final TaskRepository taskRepository;
 
     @Transactional
-    public void changeTaskInformation(Long taskId, TaskInformationModifyRequest taskInformationModifyRequest) {
+    public Long changeTaskInformation(Long taskId, TaskInformationModifyRequest taskInformationModifyRequest) {
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(TaskNotExistException::new);
 
         task.changePriority(taskInformationModifyRequest.getPriority());
         task.changeImportance(taskInformationModifyRequest.getImportance());
+        return taskId;
     }
 
     @Transactional

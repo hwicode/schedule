@@ -6,6 +6,10 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
+import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
+import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.dailytodolist.TaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.dailytodolist.TaskNotFoundException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
@@ -30,6 +34,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TaskController.class)
@@ -129,6 +134,91 @@ class TaskControllerTest {
                 ));
 
         verify(dailyToDoListService).changeTaskName(any(), any());
+    }
+
+    @Test
+    void 과제의_이름변경을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
+        // given
+        TaskNameDuplicationException taskNameDuplicationException = new TaskNameDuplicationException();
+        given(dailyToDoListService.changeTaskName(any(), any()))
+                .willThrow(taskNameDuplicationException);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/todolist/tasks/taskName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createTaskNameModifyRequest(DAILY_TO_DO_LIST_ID, NEW_TASK_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(taskNameDuplicationException.getMessage()));
+
+        verify(dailyToDoListService).changeTaskName(any(), any());
+    }
+
+    @Test
+    void 과제를_찾을_때_과제가_없으면_에러가_발생한다() throws Exception {
+        // given
+        TaskNotFoundException taskNotFoundException = new TaskNotFoundException();
+        given(dailyToDoListService.changeTaskName(any(), any()))
+                .willThrow(taskNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/todolist/tasks/taskName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createTaskNameModifyRequest(DAILY_TO_DO_LIST_ID, NEW_TASK_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(taskNotFoundException.getMessage()));
+
+        verify(dailyToDoListService).changeTaskName(any(), any());
+    }
+
+    @Test
+    void 투두리스트를_찾을_때_투두리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        DailyToDoListNotExistException dailyToDoListNotExistException = new DailyToDoListNotExistException();
+        given(dailyToDoListService.changeTaskName(any(), any()))
+                .willThrow(dailyToDoListNotExistException);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/todolist/tasks/taskName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createTaskNameModifyRequest(DAILY_TO_DO_LIST_ID, NEW_TASK_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyToDoListNotExistException.getMessage()));
+
+        verify(dailyToDoListService).changeTaskName(any(), any());
+    }
+
+    @Test
+    void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        TaskNotExistException taskNotExistException = new TaskNotExistException();
+        given(taskService.changeTaskInformation(any(), any()))
+                .willThrow(taskNotExistException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/todolist/tasks/%s/information", TASK_ID))
+                        .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createTaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(taskNotExistException.getMessage()));
+
+        verify(taskService).changeTaskInformation(any(), any());
     }
 
     @Test
