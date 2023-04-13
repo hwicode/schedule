@@ -2,9 +2,9 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import lombok.NoArgsConstructor;
 

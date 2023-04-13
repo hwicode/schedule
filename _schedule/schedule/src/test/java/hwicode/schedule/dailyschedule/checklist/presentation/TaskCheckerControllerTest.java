@@ -3,10 +3,10 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllDoneException;
-import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.TaskCheckerController;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;

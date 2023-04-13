@@ -2,9 +2,9 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllDoneException;
-import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

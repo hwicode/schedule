@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.exception.dailychecklist;
+package hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;

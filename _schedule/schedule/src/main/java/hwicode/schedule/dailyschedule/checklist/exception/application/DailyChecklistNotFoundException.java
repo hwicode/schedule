@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service;
+package hwicode.schedule.dailyschedule.checklist.exception.application;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
