@@ -11,7 +11,6 @@ import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
@@ -134,35 +133,6 @@ class TaskEndToEndTest {
         Task task = taskRepository.findById(taskId).orElseThrow();
         assertThat(task.changePriority(Priority.THIRD)).isFalse();
         assertThat(task.changeImportance(Importance.THIRD)).isFalse();
-    }
-
-    @Test
-    void 과제_이름_변경_요청() {
-        //given
-        DailyToDoList dailyToDoList = new DailyToDoList();
-        dailyToDoListRepository.save(dailyToDoList);
-
-        Long taskId = taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
-        );
-
-        TaskNameModifyRequest taskNameModifyRequest = createTaskNameModifyRequest(dailyToDoList.getId(), NEW_TASK_NAME);
-
-        RequestSpecification requestSpecification = given()
-                .pathParam("taskName", TASK_NAME)
-                .contentType(ContentType.JSON)
-                .body(taskNameModifyRequest);
-
-        //when
-        Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/todolist/tasks/{taskName}", port));
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.OK.value());
-
-        Task task = taskRepository.findById(taskId).orElseThrow();
-        assertThat(task.getName()).isEqualTo(NEW_TASK_NAME);
     }
 
     @Test

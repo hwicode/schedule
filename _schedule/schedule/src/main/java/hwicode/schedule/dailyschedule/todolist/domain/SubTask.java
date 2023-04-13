@@ -33,11 +33,6 @@ public class SubTask {
         this.subTaskStatus = SubTaskStatus.TODO;
     }
 
-    String changeSubTaskName(String name) {
-        this.name = name;
-        return name;
-    }
-
     boolean isSame(String name) {
         return this.name.equals(name);
     }
@@ -45,9 +40,4 @@ public class SubTask {
     public Long getId() {
         return id;
     }
-
-    public String getName() {
-        return name;
-    }
-
 }

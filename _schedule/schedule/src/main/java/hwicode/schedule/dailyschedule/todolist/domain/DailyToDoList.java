@@ -1,7 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.todolist.exception.domain.dailytodolist.TaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.dailytodolist.TaskNotFoundException;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -57,11 +56,6 @@ public class DailyToDoList {
         return task;
     }
 
-    public String changeTaskName(String taskName, String newTaskName) {
-        validateTaskName(newTaskName);
-        return findTaskBy(taskName).changeTaskName(newTaskName);
-    }
-
     private void validateTaskName(String name) {
         boolean duplication = tasks.stream()
                 .anyMatch(task -> task.isSame(name));
@@ -69,13 +63,6 @@ public class DailyToDoList {
         if (duplication) {
             throw new TaskNameDuplicationException();
         }
-    }
-
-    private Task findTaskBy(String name) {
-        return tasks.stream()
-                .filter(s -> s.isSame(name))
-                .findFirst()
-                .orElseThrow(TaskNotFoundException::new);
     }
 
     public Long getId() {

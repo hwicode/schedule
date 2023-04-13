@@ -3,7 +3,6 @@ package hwicode.schedule.dailyschedule.todolist.domain;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNameDuplicationException;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -61,11 +60,6 @@ public class Task {
         this.importance = importance;
     }
 
-    String changeTaskName(String name) {
-        this.name = name;
-        return this.name;
-    }
-
     public boolean changePriority(Priority priority) {
         if (this.priority == priority) {
             return false;
@@ -91,11 +85,6 @@ public class Task {
         return subTask;
     }
 
-    public String changeSubTaskName(String subTaskName, String newSubTaskName) {
-        validateSubTaskName(newSubTaskName);
-        return findSubTaskBy(subTaskName).changeSubTaskName(newSubTaskName);
-    }
-
     private void validateSubTaskName(String name) {
         boolean duplication = subTasks.stream()
                 .anyMatch(subTask -> subTask.isSame(name));
@@ -105,22 +94,11 @@ public class Task {
         }
     }
 
-    private SubTask findSubTaskBy(String name) {
-        return subTasks.stream()
-                .filter(s -> s.isSame(name))
-                .findFirst()
-                .orElseThrow(SubTaskNotFoundException::new);
-    }
-
     boolean isSame(String name) {
         return this.name.equals(name);
     }
 
     public Long getId() {
         return this.id;
-    }
-
-    public String getName() {
-        return name;
     }
 }
