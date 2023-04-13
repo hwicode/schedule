@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskChe
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -45,7 +46,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
     @Test
     void ToDo_리스트에_서브_과제를_추가할_수_있다() {
         // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
         taskRepository.save(new Task(dailyToDoList, TASK_NAME));
 
@@ -61,7 +62,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
     @Test
     void ToDo_리스트에_서브_과제를_삭제할_수_있다() {
         // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         Task task = new Task(dailyToDoList, TASK_NAME);
         SubTask subTask = new SubTask(task, SUB_TASK_NAME);
 

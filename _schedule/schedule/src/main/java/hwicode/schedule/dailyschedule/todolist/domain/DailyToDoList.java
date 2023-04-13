@@ -1,13 +1,12 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "daily_to_do_list")
 @Entity
 public class DailyToDoList {
@@ -22,9 +21,6 @@ public class DailyToDoList {
     @ColumnDefault(value = "NOT_BAD")
     @Enumerated(value = EnumType.STRING)
     private Emoji emoji;
-
-    @OneToMany(mappedBy = "dailyToDoList", cascade = CascadeType.ALL, orphanRemoval = true)
-    List<Task> tasks = new ArrayList<>();
 
     public DailyToDoList(Emoji emoji) {
         this.emoji = emoji;

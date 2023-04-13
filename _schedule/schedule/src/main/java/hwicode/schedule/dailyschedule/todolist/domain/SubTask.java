@@ -1,9 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -23,14 +21,9 @@ public class SubTask {
     @Column(nullable = false)
     private String name;
 
-    @ColumnDefault(value = "TODO")
-    @Enumerated(value = EnumType.STRING)
-    private SubTaskStatus subTaskStatus;
-
     public SubTask(Task task, String name) {
         this.task = task;
         this.name = name;
-        this.subTaskStatus = SubTaskStatus.TODO;
     }
 
     public Long getId() {

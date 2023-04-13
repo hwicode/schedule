@@ -2,10 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
-import hwicode.schedule.dailyschedule.todolist.domain.Importance;
-import hwicode.schedule.dailyschedule.todolist.domain.Priority;
-import hwicode.schedule.dailyschedule.todolist.domain.Task;
+import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
@@ -56,7 +53,7 @@ class TaskEndToEndTest {
     @Test
     void 과제_생성_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
         TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
@@ -80,7 +77,7 @@ class TaskEndToEndTest {
     @Test
     void 과제_삭제_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
         Long taskId = taskSaveAndDeleteService.save(
@@ -108,7 +105,7 @@ class TaskEndToEndTest {
     @Test
     void 과제_정보_변경_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
         Long taskId = taskSaveAndDeleteService.save(
@@ -138,7 +135,7 @@ class TaskEndToEndTest {
     @Test
     void 중복된_이름의_과제_생성_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
         taskSaveAndDeleteService.save(

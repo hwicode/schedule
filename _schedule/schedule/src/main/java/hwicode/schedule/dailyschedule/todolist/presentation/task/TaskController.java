@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task;
 
-import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -22,7 +21,6 @@ public class TaskController {
 
     private final TaskSaveAndDeleteService taskSaveAndDeleteService;
     private final TaskService taskService;
-    private final DailyToDoListService dailyToDoListService;
 
     @PostMapping("/dailyschedule/todolist/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)

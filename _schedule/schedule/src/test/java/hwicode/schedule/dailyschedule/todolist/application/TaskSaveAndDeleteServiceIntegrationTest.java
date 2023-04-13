@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
@@ -40,7 +41,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
     @Test
     void ToDo_리스트에_과제를_추가할_수_있다() {
         // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
         TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
@@ -55,7 +56,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
     @Test
     void ToDo_리스트에_과제를_삭제할_수_있다() {
         // given
-        DailyToDoList dailyToDoList = new DailyToDoList();
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
         taskRepository.save(new Task(dailyToDoList, TASK_NAME));
 
