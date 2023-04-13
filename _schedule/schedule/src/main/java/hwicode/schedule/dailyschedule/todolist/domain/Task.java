@@ -2,6 +2,8 @@ package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -99,7 +101,7 @@ public class Task {
                 .anyMatch(subTask -> subTask.isSame(name));
 
         if (duplication) {
-            throw new IllegalArgumentException();
+            throw new SubTaskNameDuplicationException();
         }
     }
 
@@ -107,7 +109,7 @@ public class Task {
         return subTasks.stream()
                 .filter(s -> s.isSame(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubTaskNotFoundException::new);
     }
 
     boolean isSame(String name) {

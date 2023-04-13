@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNameDuplicationException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
@@ -17,7 +19,7 @@ class TaskTest {
 
         // then
         assertThatThrownBy(() -> task.createSubTask(SUB_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 
     @Test
@@ -28,7 +30,7 @@ class TaskTest {
 
         // when then
         assertThatThrownBy(() -> task.createSubTask(SUB_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 
     @Test
@@ -42,7 +44,7 @@ class TaskTest {
 
         // then
         assertThatThrownBy(() -> task.createSubTask(NEW_SUB_TASK_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 
     @Test
@@ -54,7 +56,7 @@ class TaskTest {
 
         // when then
         assertThatThrownBy(() -> task.changeSubTaskName(SUB_TASK_NAME, SUB_TASK_NAME2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNameDuplicationException.class);
     }
 
     @Test
@@ -65,6 +67,6 @@ class TaskTest {
 
         // when then
         assertThatThrownBy(() -> task.changeSubTaskName(NEW_SUB_TASK_NAME, NEW_SUB_TASK_NAME2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubTaskNotFoundException.class);
     }
 }
