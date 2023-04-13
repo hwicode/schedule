@@ -1,6 +1,5 @@
 package hwicode.schedule.common.exception_handler;
 
-import hwicode.schedule.dailyschedule.checklist.exception.ChecklistBusinessException;
 import hwicode.schedule.common.exception_handler.ErrorResponse.ValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -25,8 +24,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     private static final String LOG_FORMAT = "Class : {}, Message : {}";
     private static final String CUSTOM_LOG_FORMAT = "Class : {}, Message : {}, CustomMessage : {}";
 
-    @ExceptionHandler(ChecklistBusinessException.class)
-    protected ResponseEntity<Object> handleChecklistBusinessException(ChecklistBusinessException ex) {
+    @ExceptionHandler(BusinessException.class)
+    protected ResponseEntity<Object> handleBusinessException(BusinessException ex) {
         log.info(CUSTOM_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 null,

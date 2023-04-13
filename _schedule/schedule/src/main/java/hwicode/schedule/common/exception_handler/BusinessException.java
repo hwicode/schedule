@@ -1,12 +1,12 @@
-package hwicode.schedule.dailyschedule.checklist.exception;
+package hwicode.schedule.common.exception_handler;
 
 import org.springframework.http.HttpStatus;
 
-public abstract class ChecklistBusinessException extends RuntimeException {
+public abstract class BusinessException extends RuntimeException {
 
     private final HttpStatus httpStatus;
 
-    protected ChecklistBusinessException(String message, HttpStatus httpStatus) {
+    protected BusinessException(String message, HttpStatus httpStatus) {
         super(message);
         this.httpStatus = httpStatus;
     }
