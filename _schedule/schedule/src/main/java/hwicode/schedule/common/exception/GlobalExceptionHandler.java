@@ -1,6 +1,6 @@
-package hwicode.schedule.common.exception_handler;
+package hwicode.schedule.common.exception;
 
-import hwicode.schedule.common.exception_handler.ErrorResponse.ValidationError;
+import hwicode.schedule.common.exception.ErrorResponse.ValidationError;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.exception.taskchecker;
 
-import hwicode.schedule.common.exception_handler.BusinessException;
+import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 
 public class SubTaskCheckerNotAllTodoException extends BusinessException {

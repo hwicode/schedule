@@ -1,4 +1,4 @@
-package hwicode.schedule.common.exception_handler;
+package hwicode.schedule.common.exception;
 
 import org.springframework.http.HttpStatus;
 

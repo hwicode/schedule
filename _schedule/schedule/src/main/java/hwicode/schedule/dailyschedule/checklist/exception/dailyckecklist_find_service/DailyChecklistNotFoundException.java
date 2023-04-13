@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.exception.dailyckecklist_find_service;
 
-import hwicode.schedule.common.exception_handler.BusinessException;
+import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 
 public class DailyChecklistNotFoundException extends BusinessException {

@@ -1,4 +1,4 @@
-package hwicode.schedule.common.exception_handler;
+package hwicode.schedule.common.exception;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
