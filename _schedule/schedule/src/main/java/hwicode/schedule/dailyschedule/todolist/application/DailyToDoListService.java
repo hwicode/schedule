@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -17,7 +18,7 @@ public class DailyToDoListService {
     @Transactional
     public void changeDailyToDoListInformation(Long dailyToDoListId, DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
         DailyToDoList dailyToDoList = dailyToDoListRepository.findById(dailyToDoListId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(DailyToDoListNotExistException::new);
 
         dailyToDoList.writeReview(dailyToDoListInformationChangeRequest.getReview());
         dailyToDoList.changeTodayEmoji(dailyToDoListInformationChangeRequest.getEmoji());
@@ -26,7 +27,7 @@ public class DailyToDoListService {
     @Transactional
     public String changeTaskName(String taskName, TaskNameModifyRequest taskNameModifyRequest) {
         DailyToDoList dailyToDoList = dailyToDoListRepository.findToDoListWithTasks(taskNameModifyRequest.getDailyToDoListId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(DailyToDoListNotExistException::new);
 
         return dailyToDoList.changeTaskName(taskName, taskNameModifyRequest.getNewTaskName());
     }

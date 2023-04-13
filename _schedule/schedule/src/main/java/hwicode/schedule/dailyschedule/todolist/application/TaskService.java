@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
+import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.SubTaskNameChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -17,7 +18,7 @@ public class TaskService {
     @Transactional
     public void changeTaskInformation(Long taskId, TaskInformationModifyRequest taskInformationModifyRequest) {
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TaskNotExistException::new);
 
         task.changePriority(taskInformationModifyRequest.getPriority());
         task.changeImportance(taskInformationModifyRequest.getImportance());
@@ -26,7 +27,7 @@ public class TaskService {
     @Transactional
     public String changeSubTaskName(String subTaskName, SubTaskNameChangeRequest subTaskNameChangeRequest) {
         Task task = taskRepository.findTaskWithSubtasks(subTaskNameChangeRequest.getTaskId())
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TaskNotExistException::new);
 
         return task.changeSubTaskName(subTaskName, subTaskNameChangeRequest.getNewSubTaskName());
     }

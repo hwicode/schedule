@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
@@ -25,7 +26,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
         );
 
         Task task = taskRepository.findById(taskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TaskNotExistException::new);
 
         task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
         return taskId;
