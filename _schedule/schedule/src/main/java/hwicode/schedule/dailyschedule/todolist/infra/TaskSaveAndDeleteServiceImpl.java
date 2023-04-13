@@ -1,7 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.infra;
 
+import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
@@ -21,15 +23,23 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public Long save(TaskSaveRequest taskSaveRequest) {
-        Long taskId = taskCheckerService.saveTaskChecker(
-                createTaskCheckerSaveRequest(taskSaveRequest)
-        );
+        Long taskId = saveTaskChecker(taskSaveRequest);
 
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(TaskNotExistException::new);
 
         task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
         return taskId;
+    }
+
+    private Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
+        try {
+            return taskCheckerService.saveTaskChecker(
+                    createTaskCheckerSaveRequest(taskSaveRequest)
+            );
+        } catch (BusinessException e) {
+            throw new NotValidExternalRequestException();
+        }
     }
 
     private TaskCheckerSaveRequest createTaskCheckerSaveRequest(TaskSaveRequest taskSaveRequest) {
