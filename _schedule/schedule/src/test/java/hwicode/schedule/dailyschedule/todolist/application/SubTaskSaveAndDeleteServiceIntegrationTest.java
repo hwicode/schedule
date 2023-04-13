@@ -5,9 +5,11 @@ import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskChe
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.SubTaskRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,9 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
     DailyToDoListRepository dailyToDoListRepository;
 
     @Autowired
+    TaskRepository taskRepository;
+
+    @Autowired
     SubTaskRepository subTaskRepository;
 
     @BeforeEach
@@ -41,8 +46,8 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
     void ToDo_리스트에_서브_과제를_추가할_수_있다() {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList();
-        dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
         dailyToDoListRepository.save(dailyToDoList);
+        taskRepository.save(new Task(dailyToDoList, TASK_NAME));
 
         SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
 
@@ -57,9 +62,12 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
     void ToDo_리스트에_서브_과제를_삭제할_수_있다() {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList();
-        Task task = dailyToDoList.createTask(createTaskCreateDto(TASK_NAME));
-        task.createSubTask(SUB_TASK_NAME);
+        Task task = new Task(dailyToDoList, TASK_NAME);
+        SubTask subTask = new SubTask(task, SUB_TASK_NAME);
+
         dailyToDoListRepository.save(dailyToDoList);
+        taskRepository.save(task);
+        subTaskRepository.save(subTask);
 
         SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
 

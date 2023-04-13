@@ -5,7 +5,6 @@ import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInfo
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
-import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,6 @@ class DailyToDoListServiceIntegrationTest {
 
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
-
-    @Autowired
-    TaskRepository taskRepository;
 
     @BeforeEach
     void clearDatabase() {

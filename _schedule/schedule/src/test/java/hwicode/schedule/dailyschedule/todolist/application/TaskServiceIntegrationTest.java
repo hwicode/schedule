@@ -6,7 +6,6 @@ import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
-import hwicode.schedule.dailyschedule.todolist.infra.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.createTaskInformationModifyRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -32,9 +32,6 @@ class TaskServiceIntegrationTest {
     @Autowired
     TaskRepository taskRepository;
 
-    @Autowired
-    SubTaskRepository subTaskRepository;
-
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -44,8 +41,9 @@ class TaskServiceIntegrationTest {
     void ToDo_리스트에_있는_과제의_정보를_변경할_수_있다() {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList();
-        Task task = dailyToDoList.createTask(createTaskCreateDto(TASK_NAME, Priority.SECOND, Importance.SECOND));
+        Task task = new Task(dailyToDoList, TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
+        taskRepository.save(task);
 
         TaskInformationModifyRequest taskInformationModifyRequest = createTaskInformationModifyRequest(Priority.FIRST, Importance.FIRST);
 

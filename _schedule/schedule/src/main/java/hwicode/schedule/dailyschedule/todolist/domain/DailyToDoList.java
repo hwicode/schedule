@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import hwicode.schedule.dailyschedule.todolist.exception.domain.dailytodolist.TaskNameDuplicationException;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -45,24 +44,6 @@ public class DailyToDoList {
         }
         this.emoji = emoji;
         return true;
-    }
-
-    public Task createTask(TaskCreateDto taskCreateDto) {
-        validateTaskName(taskCreateDto.getTaskName());
-
-        Task task = new Task(this, taskCreateDto);
-        tasks.add(task);
-
-        return task;
-    }
-
-    private void validateTaskName(String name) {
-        boolean duplication = tasks.stream()
-                .anyMatch(task -> task.isSame(name));
-
-        if (duplication) {
-            throw new TaskNameDuplicationException();
-        }
     }
 
     public Long getId() {

@@ -2,7 +2,6 @@ package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.task.SubTaskNameDuplicationException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -46,13 +45,9 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
-    Task(DailyToDoList dailyToDoList, TaskCreateDto taskCreateDto) {
+    public Task(DailyToDoList dailyToDoList, String name) {
         this.dailyToDoList = dailyToDoList;
-        this.name = taskCreateDto.getTaskName();
-        this.difficulty = taskCreateDto.getDifficulty();
-        this.priority = taskCreateDto.getPriority();
-        this.importance = taskCreateDto.getImportance();
-        this.taskStatus = TaskStatus.TODO;
+        this.name = name;
     }
 
     public void initialize(Priority priority, Importance importance) {
@@ -74,28 +69,6 @@ public class Task {
        }
        this.importance = importance;
        return true;
-    }
-
-    public SubTask createSubTask(String subTaskName) {
-        validateSubTaskName(subTaskName);
-
-        SubTask subTask = new SubTask(this, subTaskName);
-        subTasks.add(subTask);
-
-        return subTask;
-    }
-
-    private void validateSubTaskName(String name) {
-        boolean duplication = subTasks.stream()
-                .anyMatch(subTask -> subTask.isSame(name));
-
-        if (duplication) {
-            throw new SubTaskNameDuplicationException();
-        }
-    }
-
-    boolean isSame(String name) {
-        return this.name.equals(name);
     }
 
     public Long getId() {

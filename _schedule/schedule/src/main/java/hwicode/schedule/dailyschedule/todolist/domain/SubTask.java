@@ -27,14 +27,10 @@ public class SubTask {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    SubTask(Task task, String name) {
+    public SubTask(Task task, String name) {
         this.task = task;
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
-    }
-
-    boolean isSame(String name) {
-        return this.name.equals(name);
     }
 
     public Long getId() {
