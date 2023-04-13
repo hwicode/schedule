@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.application.dto;
+package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,14 +12,11 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class SubTaskSaveRequest {
+public class TaskNameModifyResponse {
 
     @NotNull @Positive
     private Long dailyToDoListId;
 
     @NotBlank
-    private String taskName;
-
-    @NotBlank
-    private String subTaskName;
+    private String newTaskName;
 }

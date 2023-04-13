@@ -1,10 +1,13 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task;
 
+import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +24,7 @@ public class TaskController {
 
     private final TaskSaveAndDeleteService taskSaveAndDeleteService;
     private final TaskService taskService;
+    private final DailyToDoListService dailyToDoListService;
 
     @PostMapping("/dailyschedule/todolist/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
@@ -46,6 +50,14 @@ public class TaskController {
                 taskInformationModifyRequest.getPriority(),
                 taskInformationModifyRequest.getImportance()
         );
+    }
+
+    @PatchMapping("/dailyschedule/todolist/tasks/{taskName}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public TaskNameModifyResponse changeTaskName(@PathVariable @NotBlank String taskName,
+                                                 @RequestBody @Valid TaskNameModifyRequest taskNameModifyRequest) {
+        String modifiedName = dailyToDoListService.changeTaskName(taskName, taskNameModifyRequest);
+        return new TaskNameModifyResponse(taskNameModifyRequest.getDailyToDoListId(), modifiedName);
     }
 
     @PatchMapping("/dailyschedule/todolist/subtasks/{subTaskName}")

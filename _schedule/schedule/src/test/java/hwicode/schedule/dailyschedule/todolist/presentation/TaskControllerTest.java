@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
@@ -11,6 +12,8 @@ import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,9 @@ class TaskControllerTest {
 
     @MockBean
     TaskService taskService;
+
+    @MockBean
+    DailyToDoListService dailyToDoListService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -100,6 +106,29 @@ class TaskControllerTest {
                 ));
 
         verify(taskService).changeTaskInformation(any(), any());
+    }
+
+    @Test
+    void 과제의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        TaskNameModifyRequest taskNameModifyRequest = createTaskNameModifyRequest(DAILY_TO_DO_LIST_ID, NEW_TASK_NAME);
+        TaskNameModifyResponse taskNameModifyResponse = createTaskNameModifyResponse(DAILY_TO_DO_LIST_ID, NEW_TASK_NAME);
+
+        given(dailyToDoListService.changeTaskName(any(), any()))
+                .willReturn(NEW_TASK_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/todolist/tasks/taskName")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskNameModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(taskNameModifyResponse)
+                ));
+
+        verify(dailyToDoListService).changeTaskName(any(), any());
     }
 
     @Test

@@ -21,7 +21,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     public Long save(SubTaskSaveRequest subTaskSaveRequest) {
        return subTaskCheckerService.saveSubTaskChecker(
                 new SubTaskCheckerSaveRequest(
-                        subTaskSaveRequest.getDailyChecklistId(),
+                        subTaskSaveRequest.getDailyToDoListId(),
                         subTaskSaveRequest.getTaskName(),
                         subTaskSaveRequest.getSubTaskName()
                 )
@@ -34,7 +34,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
         subTaskCheckerService.deleteSubTaskChecker(
                 subTaskName,
                 new SubTaskCheckerDeleteRequest(
-                        subTaskDeleteRequest.getDailyChecklistId(),
+                        subTaskDeleteRequest.getDailyToDoListId(),
                         subTaskDeleteRequest.getTaskName())
         );
     }

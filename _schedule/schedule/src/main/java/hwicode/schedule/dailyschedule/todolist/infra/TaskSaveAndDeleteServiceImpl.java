@@ -42,7 +42,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Transactional
     public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
         taskCheckerService.deleteTaskChecker(
-                taskDeleteRequest.getDailyChecklistId(),
+                taskDeleteRequest.getDailyToDoListId(),
                 taskName
         );
     }

@@ -14,5 +14,5 @@ import javax.validation.constraints.Positive;
 public class TaskDeleteRequest {
 
     @NotNull @Positive
-    private Long dailyChecklistId;
+    private Long dailyToDoListId;
 }

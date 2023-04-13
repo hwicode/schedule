@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.TaskNameChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.name_modify.TaskNameModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +24,10 @@ public class DailyToDoListService {
     }
 
     @Transactional
-    public String changeTaskName(String taskName, TaskNameChangeRequest taskNameChangeRequest) {
-        DailyToDoList dailyToDoList = dailyToDoListRepository.findToDoListWithTasks(taskNameChangeRequest.getDailyChecklistId())
+    public String changeTaskName(String taskName, TaskNameModifyRequest taskNameModifyRequest) {
+        DailyToDoList dailyToDoList = dailyToDoListRepository.findToDoListWithTasks(taskNameModifyRequest.getDailyToDoListId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        return dailyToDoList.changeTaskName(taskName, taskNameChangeRequest.getNewTaskName());
+        return dailyToDoList.changeTaskName(taskName, taskNameModifyRequest.getNewTaskName());
     }
 }

@@ -15,7 +15,7 @@ import javax.validation.constraints.Positive;
 public class SubTaskDeleteRequest {
 
     @NotNull @Positive
-    private Long dailyChecklistId;
+    private Long dailyToDoListId;
 
     @NotBlank
     private String taskName;
