@@ -4,16 +4,12 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.StatusNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.taskchecker.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.TaskCheckerController;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
@@ -31,7 +27,7 @@ import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -46,43 +42,6 @@ class TaskCheckerControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @Test
-    void 과제체커_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
-        // given
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
-        TaskCheckerSaveResponse taskCheckerSaveResponse = createTaskCheckerSaveResponse(TASK_CHECKER_ID, NEW_TASK_CHECKER_NAME);
-
-        given(taskCheckerService.saveTaskChecker(any()))
-                .willReturn(TASK_CHECKER_ID);
-
-        // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskCheckerSaveRequest)));
-
-        // then
-        perform.andExpect(status().isCreated())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        objectMapper.writeValueAsString(taskCheckerSaveResponse)
-                ));
-
-        verify(taskCheckerService).saveTaskChecker(any());
-    }
-
-    @Test
-    void 과제체커_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskCheckerDeleteRequest(DAILY_CHECKLIST_ID);
-
-        // when then
-        mockMvc.perform(delete("/dailyschedule/checklist/taskCheckers/taskCheckerName")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskCheckerDeleteRequest)))
-                .andExpect(status().isNoContent());
-
-        verify(taskCheckerService).deleteTaskChecker(any(), any());
-    }
 
     @Test
     void 과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
@@ -128,27 +87,6 @@ class TaskCheckerControllerTest {
                 ));
 
         verify(taskCheckerService).changeTaskDifficulty(any(), any());
-    }
-
-    @Test
-    void 과제체커_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {
-        // given
-        TaskCheckerNameDuplicationException taskCheckerNameDuplicationException = new TaskCheckerNameDuplicationException();
-        given(taskCheckerService.saveTaskChecker(any()))
-                .willThrow(taskCheckerNameDuplicationException);
-
-        // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/checklist/taskCheckers")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        createTaskCheckerSaveRequest(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
-                )));
-
-        // then
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(taskCheckerNameDuplicationException.getMessage()));
-
-        verify(taskCheckerService).saveTaskChecker(any());
     }
 
     @Test

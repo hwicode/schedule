@@ -6,9 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.common.domain.Difficulty;
 import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
@@ -22,8 +20,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static io.restassured.RestAssured.given;
@@ -51,58 +47,6 @@ class TaskCheckerEndToEndTest {
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
-    }
-
-    @Test
-    void 과제체커_생성_요청() {
-        //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklistRepository.save(dailyChecklist);
-
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
-
-        RequestSpecification requestSpecification = given()
-                .contentType(ContentType.JSON)
-                .body(taskCheckerSaveRequest);
-
-        //when
-        Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers", port));
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.CREATED.value());
-
-        List<TaskChecker> all = taskCheckerRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
-    }
-
-    @Test
-    void 과제체커_삭제_요청() {
-        //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklistRepository.save(dailyChecklist);
-
-        Long taskCheckerId = taskCheckerService.saveTaskChecker(
-                createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
-        );
-
-        TaskCheckerDeleteRequest taskCheckerDeleteRequest = createTaskCheckerDeleteRequest(dailyChecklist.getId());
-
-        RequestSpecification requestSpecification = given()
-                .pathParam("taskCheckerName", NEW_TASK_CHECKER_NAME)
-                .contentType(ContentType.JSON)
-                .body(taskCheckerDeleteRequest);
-
-        //when
-        Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/checklist/taskCheckers/{taskCheckerName}", port));
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-
-        assertThat(taskCheckerRepository.existsById(taskCheckerId)).isFalse();
     }
 
     @Test

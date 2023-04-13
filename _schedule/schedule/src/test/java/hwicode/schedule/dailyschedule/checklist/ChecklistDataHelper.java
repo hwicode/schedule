@@ -1,20 +1,19 @@
 package hwicode.schedule.dailyschedule.checklist;
 
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
-import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.delete.TaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
+import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
 
 public class ChecklistDataHelper {
 
@@ -49,10 +48,6 @@ public class ChecklistDataHelper {
 
     public static TaskDifficultyModifyRequest createTaskDifficultyModifyRequest(Long dailyChecklistId, Difficulty difficulty) {
         return new TaskDifficultyModifyRequest(dailyChecklistId, difficulty);
-    }
-
-    public static TaskCheckerDeleteRequest createTaskCheckerDeleteRequest(Long dailyChecklistId) {
-        return new TaskCheckerDeleteRequest(dailyChecklistId);
     }
 
 
