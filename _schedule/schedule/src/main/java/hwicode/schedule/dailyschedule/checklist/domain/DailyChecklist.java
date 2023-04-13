@@ -24,6 +24,11 @@ public class DailyChecklist {
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TaskChecker> taskCheckers = new ArrayList<>();
 
+    public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
+        validateTaskCheckerDuplication(newTaskCheckerName);
+        return findTaskCheckerBy(taskCheckerName).changeTaskName(newTaskCheckerName);
+    }
+
     public void addTaskChecker(TaskChecker taskChecker) {
         validateTaskCheckerDuplication(taskChecker.getName());
         taskCheckers.add(taskChecker);

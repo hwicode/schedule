@@ -40,12 +40,17 @@ public class SubTaskChecker {
         this.taskChecker = taskChecker;
     }
 
-    boolean isSame(String name) {
-        return this.name.equals(name);
+    String changeSubTaskCheckerName(String name) {
+        this.name = name;
+        return name;
     }
 
     void changeStatus(SubTaskStatus subTaskStatus) {
         this.subTaskStatus = subTaskStatus;
+    }
+
+    boolean isSame(String name) {
+        return this.name.equals(name);
     }
 
     String getName() {

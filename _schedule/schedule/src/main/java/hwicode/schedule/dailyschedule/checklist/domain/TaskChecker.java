@@ -53,6 +53,11 @@ public class TaskChecker {
         this.difficulty = difficulty;
     }
 
+    public String changeSubTaskCheckerName(String subTaskCheckerName, String newSubTaskCheckerName) {
+        validateSubTaskCheckerDuplication(newSubTaskCheckerName);
+        return findSubTaskCheckerBy(subTaskCheckerName).changeSubTaskCheckerName(newSubTaskCheckerName);
+    }
+
     TaskStatus addSubTaskChecker(SubTaskChecker subTaskChecker) {
         validateSubTaskCheckerDuplication(subTaskChecker.getName());
         subTaskCheckers.add(subTaskChecker);
@@ -141,6 +146,11 @@ public class TaskChecker {
 
     void savedInChecklist(DailyChecklist dailyChecklist) {
         this.dailyChecklist = dailyChecklist;
+    }
+
+    String changeTaskName(String name) {
+        this.name = name;
+        return this.name;
     }
 
     Difficulty changeDifficulty(Difficulty difficulty) {
