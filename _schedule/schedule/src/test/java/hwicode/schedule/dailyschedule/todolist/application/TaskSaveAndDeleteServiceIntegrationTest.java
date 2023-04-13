@@ -1,10 +1,10 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.exception.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
+import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -67,6 +67,6 @@ class TaskSaveAndDeleteServiceIntegrationTest {
 
         // then
         assertThatThrownBy(() -> taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest))
-                .isInstanceOf(TaskCheckerNotFoundException.class);
+                .isInstanceOf(NotValidExternalRequestException.class);
     }
 }

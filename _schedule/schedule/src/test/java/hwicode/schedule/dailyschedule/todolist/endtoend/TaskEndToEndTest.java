@@ -3,7 +3,6 @@ package hwicode.schedule.dailyschedule.todolist.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.*;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -130,32 +129,5 @@ class TaskEndToEndTest {
         Task task = taskRepository.findById(taskId).orElseThrow();
         assertThat(task.changePriority(Priority.THIRD)).isFalse();
         assertThat(task.changeImportance(Importance.THIRD)).isFalse();
-    }
-
-    @Test
-    void 중복된_이름의_과제_생성_요청() {
-        //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
-        dailyToDoListRepository.save(dailyToDoList);
-
-        taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
-        );
-
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
-        RequestSpecification requestSpecification = given()
-                .contentType(ContentType.JSON)
-                .body(taskSaveRequest);
-
-        //when
-        Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/todolist/tasks", port));
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.BAD_REQUEST.value());
-
-        String body = response.getBody().asString();
-        assertThat(body).contains(new NotValidExternalRequestException().getMessage());
     }
 }

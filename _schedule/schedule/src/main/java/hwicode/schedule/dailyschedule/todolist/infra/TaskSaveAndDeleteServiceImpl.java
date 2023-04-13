@@ -52,9 +52,13 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
-        taskCheckerService.deleteTaskChecker(
-                taskDeleteRequest.getDailyToDoListId(),
-                taskName
-        );
+        try {
+            taskCheckerService.deleteTaskChecker(
+                    taskDeleteRequest.getDailyToDoListId(),
+                    taskName
+            );
+        } catch (BusinessException e) {
+            throw new NotValidExternalRequestException();
+        }
     }
 }

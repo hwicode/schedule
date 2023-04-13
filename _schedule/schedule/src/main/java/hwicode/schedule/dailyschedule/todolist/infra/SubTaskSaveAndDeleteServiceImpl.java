@@ -1,11 +1,13 @@
 package hwicode.schedule.dailyschedule.todolist.infra;
 
+import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,23 +21,39 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public Long save(SubTaskSaveRequest subTaskSaveRequest) {
-       return subTaskCheckerService.saveSubTaskChecker(
-                new SubTaskCheckerSaveRequest(
-                        subTaskSaveRequest.getDailyToDoListId(),
-                        subTaskSaveRequest.getTaskName(),
-                        subTaskSaveRequest.getSubTaskName()
-                )
+       try {
+           return subTaskCheckerService.saveSubTaskChecker(
+                   createSubTaskCheckerSaveRequest(subTaskSaveRequest)
+           );
+       } catch (BusinessException e) {
+           throw new NotValidExternalRequestException();
+       }
+    }
+
+    private SubTaskCheckerSaveRequest createSubTaskCheckerSaveRequest(SubTaskSaveRequest subTaskSaveRequest) {
+        return new SubTaskCheckerSaveRequest(
+                subTaskSaveRequest.getDailyToDoListId(),
+                subTaskSaveRequest.getTaskName(),
+                subTaskSaveRequest.getSubTaskName()
         );
     }
 
     @Override
     @Transactional
     public void delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskCheckerService.deleteSubTaskChecker(
-                subTaskName,
-                new SubTaskCheckerDeleteRequest(
-                        subTaskDeleteRequest.getDailyToDoListId(),
-                        subTaskDeleteRequest.getTaskName())
-        );
+        try {
+            subTaskCheckerService.deleteSubTaskChecker(
+                    subTaskName,
+                    createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
+            );
+        } catch (BusinessException e) {
+            throw new NotValidExternalRequestException();
+        }
+    }
+
+    private SubTaskCheckerDeleteRequest createSubTaskCheckerDeleteRequest(SubTaskDeleteRequest subTaskDeleteRequest) {
+        return new SubTaskCheckerDeleteRequest(
+                subTaskDeleteRequest.getDailyToDoListId(),
+                subTaskDeleteRequest.getTaskName());
     }
 }
