@@ -1,6 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
@@ -26,6 +29,7 @@ import java.util.List;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
@@ -37,6 +41,9 @@ class SubTaskCheckerEndToEndTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
+
+    @Autowired
+    TaskCheckerService taskCheckerService;
 
     @Autowired
     SubTaskCheckerService subTaskCheckerService;
@@ -139,4 +146,39 @@ class SubTaskCheckerEndToEndTest {
         SubTaskChecker subTaskChecker = subTaskCheckerRepository.findById(subTaskCheckerId).orElseThrow();
         assertThat(subTaskChecker.isSameStatus(SubTaskStatus.DONE)).isTrue();
     }
+
+    @Test
+    void 서브_과제체커_이름_변경_요청() {
+        // given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
+
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(
+                createTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL)
+        );
+
+        subTaskCheckerService.saveSubTaskChecker(
+                createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+        );
+
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskCheckerId, NEW_SUB_TASK_CHECKER_NAME);
+
+        RequestSpecification requestSpecification = given()
+                .pathParam("subTaskCheckerName", SUB_TASK_CHECKER_NAME)
+                .contentType(ContentType.JSON)
+                .body(subTaskCheckerNameModifyRequest);
+
+        // when
+        Response response = requestSpecification.when()
+                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}/name", port));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
+        assertThatThrownBy(() -> subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest))
+                .isInstanceOf(SubTaskCheckerNameDuplicationException.class);
+    }
+
 }

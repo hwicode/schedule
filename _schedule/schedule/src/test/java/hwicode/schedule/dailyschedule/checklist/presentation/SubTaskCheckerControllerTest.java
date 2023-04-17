@@ -108,7 +108,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskNameModifyRequest(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
         given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))

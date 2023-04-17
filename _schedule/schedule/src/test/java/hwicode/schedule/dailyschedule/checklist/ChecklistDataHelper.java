@@ -72,8 +72,8 @@ public class ChecklistDataHelper {
         return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskCheckerName);
     }
 
-    public static SubTaskCheckerNameModifyRequest createSubTaskNameModifyRequest(Long taskCheckId, String newTaskCheckerName) {
-        return new SubTaskCheckerNameModifyRequest(taskCheckId, newTaskCheckerName);
+    public static SubTaskCheckerNameModifyRequest createSubTaskCheckerNameModifyRequest(Long taskCheckId, String newSubTaskCheckerName) {
+        return new SubTaskCheckerNameModifyRequest(taskCheckId, newSubTaskCheckerName);
     }
 
 

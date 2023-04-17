@@ -112,7 +112,7 @@ class SubTaskCheckerServiceIntegrationTest {
         dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, subTaskChecker);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskNameModifyRequest(taskChecker.getId(), NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskChecker.getId(), NEW_SUB_TASK_CHECKER_NAME);
 
         // when
         subTaskCheckerService.changeSubTaskCheckerName(SUB_TASK_CHECKER_NAME, subTaskCheckerNameModifyRequest);
