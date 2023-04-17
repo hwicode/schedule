@@ -27,7 +27,7 @@ public class DailyToDoList {
     }
 
     public boolean writeReview(String review) {
-        if (!review.equals(this.review)) {
+        if (review.equals(this.review)) {
             return false;
         }
         this.review = review;
