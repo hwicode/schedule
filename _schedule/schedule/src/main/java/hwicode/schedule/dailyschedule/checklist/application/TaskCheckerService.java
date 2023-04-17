@@ -54,4 +54,12 @@ public class TaskCheckerService {
         return dailyChecklist.changeDifficulty(taskCheckerName, taskDifficultyModifyRequest.getDifficulty());
     }
 
+    @Transactional
+    public String changeTaskName(Long dailyChecklistId, String taskName, String newTaskName) {
+        DailyChecklist dailyChecklist = findDailyChecklistWithTaskCheckers(
+                dailyChecklistRepository, dailyChecklistId);
+
+        return dailyChecklist.changeTaskCheckerName(taskName, newTaskName);
+    }
+
 }

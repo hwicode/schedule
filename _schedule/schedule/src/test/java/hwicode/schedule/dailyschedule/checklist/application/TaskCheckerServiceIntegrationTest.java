@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
@@ -108,6 +109,21 @@ class TaskCheckerServiceIntegrationTest {
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
         assertThat(savedDailyChecklist.getTodayDonePercent()).isEqualTo(50);
+    }
+
+    @Test
+    void 체크리스트내에_있는_과제체커의_이름을_수정할_수_있다() {
+        // given
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        dailyChecklistRepository.save(dailyChecklist);
+
+        // when
+        taskCheckerService.changeTaskName(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+
+        // then
+        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
+        assertThatThrownBy(() -> taskCheckerService.saveTaskChecker(taskCheckerSaveRequest))
+                .isInstanceOf(TaskCheckerNameDuplicationException.class);
     }
 
 }
