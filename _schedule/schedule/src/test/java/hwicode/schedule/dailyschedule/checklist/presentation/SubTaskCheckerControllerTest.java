@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerServic
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.application.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.SubTaskCheckerController;
@@ -193,4 +194,26 @@ class SubTaskCheckerControllerTest {
 
         verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
     }
+
+    @Test
+    void 과제체커를_조회할_때_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
+        given(subTaskCheckerService.changeSubTaskName(any(), any()))
+                .willThrow(taskCheckerNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskCheckers/subTaskCheckerName/name")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
+
+        verify(subTaskCheckerService).changeSubTaskName(any(), any());
+    }
+
 }
