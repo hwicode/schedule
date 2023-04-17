@@ -24,7 +24,7 @@ public class DailyChecklist {
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
         validateTaskCheckerDuplication(newTaskCheckerName);
-        return findTaskCheckerBy(taskCheckerName).changeTaskName(newTaskCheckerName);
+        return findTaskCheckerBy(taskCheckerName).changeName(newTaskCheckerName);
     }
 
     public void addTaskChecker(TaskChecker taskChecker) {

@@ -53,7 +53,7 @@ public class TaskChecker {
 
     public String changeSubTaskCheckerName(String subTaskCheckerName, String newSubTaskCheckerName) {
         validateSubTaskCheckerDuplication(newSubTaskCheckerName);
-        return findSubTaskCheckerBy(subTaskCheckerName).changeSubTaskCheckerName(newSubTaskCheckerName);
+        return findSubTaskCheckerBy(subTaskCheckerName).changeName(newSubTaskCheckerName);
     }
 
     TaskStatus addSubTaskChecker(SubTaskChecker subTaskChecker) {
@@ -146,7 +146,7 @@ public class TaskChecker {
         this.dailyChecklist = dailyChecklist;
     }
 
-    String changeTaskName(String name) {
+    String changeName(String name) {
         this.name = name;
         return this.name;
     }

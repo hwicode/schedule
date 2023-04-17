@@ -39,7 +39,7 @@ public class SubTaskChecker {
         this.taskChecker = taskChecker;
     }
 
-    String changeSubTaskCheckerName(String name) {
+    String changeName(String name) {
         this.name = name;
         return name;
     }
