@@ -4,6 +4,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import lombok.RequiredArgsConstructor;
@@ -52,10 +53,10 @@ public class SubTaskCheckerService {
     }
 
     @Transactional
-    public String changeSubTaskName(Long taskCheckerId, String subTaskName, String newSubTaskName) {
-        TaskChecker taskChecker = taskCheckerRepository.findTaskCheckerWithSubTaskCheckers(taskCheckerId)
+    public String changeSubTaskName(String subTaskName, SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
+        TaskChecker taskChecker = taskCheckerRepository.findTaskCheckerWithSubTaskCheckers(subTaskCheckerNameModifyRequest.getTaskCheckerId())
                 .orElseThrow(IllegalArgumentException::new);
 
-        return taskChecker.changeSubTaskCheckerName(subTaskName, newSubTaskName);
+        return taskChecker.changeSubTaskCheckerName(subTaskName, subTaskCheckerNameModifyRequest.getNewSubTaskCheckerName());
     }
 }

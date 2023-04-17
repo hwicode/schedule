@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist;
 
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
@@ -64,6 +66,10 @@ public class ChecklistDataHelper {
         return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskCheckerName);
     }
 
+    public static SubTaskCheckerNameModifyRequest createSubTaskNameModifyRequest(Long taskCheckId, String newTaskCheckerName) {
+        return new SubTaskCheckerNameModifyRequest(taskCheckId, newTaskCheckerName);
+    }
+
 
     // checklist TaskChecker response dto
     public static TaskCheckerSaveResponse createTaskCheckerSaveResponse(Long taskCheckerId, String taskCheckerName) {
@@ -86,5 +92,9 @@ public class ChecklistDataHelper {
 
     public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskCheckerName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
         return new SubTaskStatusModifyResponse(subTaskCheckerName, taskStatus, subTaskStatus);
+    }
+
+    public static SubTaskCheckerNameModifyResponse createSubTaskCheckerNameModifyResponse(Long TaskCheckerId, String newSubTaskCheckerName) {
+        return new SubTaskCheckerNameModifyResponse(TaskCheckerId, newSubTaskCheckerName);
     }
 }

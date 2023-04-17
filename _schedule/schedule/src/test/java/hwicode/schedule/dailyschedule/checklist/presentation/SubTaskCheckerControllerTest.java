@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
@@ -9,10 +10,13 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.Sub
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.SubTaskCheckerController;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
+import jdk.net.SocketFlow;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,6 +28,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.booleanThat;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -101,6 +106,30 @@ class SubTaskCheckerControllerTest {
 
         verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
     }
+
+    @Test
+    void 서브_과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskNameModifyRequest(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
+
+        given(subTaskCheckerService.changeSubTaskName(any(), any()))
+                .willReturn(NEW_SUB_TASK_CHECKER_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskCheckers/subTaskCheckerName/name")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subTaskCheckerNameModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subTaskCheckerNameModifyResponse)
+                ));
+
+        verify(subTaskCheckerService).changeSubTaskName(any(), any());
+    }
+
 
     @Test
     void 서브_과제체커_생성을_요청할_때_이름이_중복되면_에러가_발생한다() throws Exception {

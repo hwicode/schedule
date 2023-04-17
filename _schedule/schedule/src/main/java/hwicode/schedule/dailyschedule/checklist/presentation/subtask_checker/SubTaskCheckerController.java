@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
@@ -40,5 +42,13 @@ public class SubTaskCheckerController {
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
         TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(subTaskCheckerName, subTaskStatusModifyRequest);
         return new SubTaskStatusModifyResponse(subTaskCheckerName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
+    }
+
+    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}/name")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubTaskCheckerNameModifyResponse changeTaskName(@PathVariable @NotBlank String subTaskCheckerName,
+                               @RequestBody @Valid SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
+        String newSubTaskCheckerName = subTaskCheckerService.changeSubTaskName(subTaskCheckerName, subTaskCheckerNameModifyRequest);
+        return new SubTaskCheckerNameModifyResponse(subTaskCheckerNameModifyRequest.getTaskCheckerId(), newSubTaskCheckerName);
     }
 }
