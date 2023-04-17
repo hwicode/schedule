@@ -1,7 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
@@ -41,9 +40,6 @@ class TaskControllerTest {
 
     @MockBean
     TaskService taskService;
-
-    @MockBean
-    DailyToDoListService dailyToDoListService;
 
     @Autowired
     ObjectMapper objectMapper;
