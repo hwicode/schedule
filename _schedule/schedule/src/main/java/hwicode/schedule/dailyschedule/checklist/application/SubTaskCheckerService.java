@@ -54,7 +54,7 @@ public class SubTaskCheckerService {
     }
 
     @Transactional
-    public String changeSubTaskName(String subTaskName, SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
+    public String changeSubTaskCheckerName(String subTaskName, SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
         TaskChecker taskChecker = taskCheckerRepository.findTaskCheckerWithSubTaskCheckers(subTaskCheckerNameModifyRequest.getTaskCheckerId())
                 .orElseThrow(TaskCheckerNotFoundException::new);
 
