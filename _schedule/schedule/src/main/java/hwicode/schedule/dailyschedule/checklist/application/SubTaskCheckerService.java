@@ -1,10 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
-import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskCheckerSaveOnlyRepository;
-import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
@@ -19,6 +17,7 @@ import static hwicode.schedule.dailyschedule.checklist.application.DailyChecklis
 public class SubTaskCheckerService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
+    private final TaskCheckerRepository taskCheckerRepository;
     private final SubTaskCheckerSaveOnlyRepository subTaskCheckerSaveOnlyRepository;
 
     @Transactional
@@ -50,5 +49,13 @@ public class SubTaskCheckerService {
                 subTaskStatusModifyRequest.getTaskCheckerName(),
                 subTaskCheckerName,
                 subTaskStatusModifyRequest.getSubTaskStatus());
+    }
+
+    @Transactional
+    public String changeSubTaskName(Long taskCheckerId, String subTaskName, String newSubTaskName) {
+        TaskChecker taskChecker = taskCheckerRepository.findTaskCheckerWithSubTaskCheckers(taskCheckerId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return taskChecker.changeSubTaskCheckerName(subTaskName, newSubTaskName);
     }
 }
