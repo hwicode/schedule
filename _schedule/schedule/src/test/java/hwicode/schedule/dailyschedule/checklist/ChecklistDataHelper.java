@@ -9,6 +9,8 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
@@ -52,6 +54,10 @@ public class ChecklistDataHelper {
         return new TaskDifficultyModifyRequest(dailyChecklistId, difficulty);
     }
 
+    public static TaskCheckerNameModifyRequest createTaskCheckerNameModifyRequest(Long dailyChecklistId, String newTaskCheckerName) {
+        return new TaskCheckerNameModifyRequest(dailyChecklistId, newTaskCheckerName);
+    }
+
 
     // checklist SubTaskChecker request dto
     public static SubTaskCheckerSaveRequest createSubTaskCheckerSaveRequest(Long dailyChecklistId, String taskCheckerName, String subTaskCheckerName) {
@@ -82,6 +88,10 @@ public class ChecklistDataHelper {
 
     public static TaskDifficultyModifyResponse createTaskDifficultyModifyResponse(String taskCheckerName, Difficulty modifiedDifficulty) {
         return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
+    }
+
+    public static TaskCheckerNameModifyResponse createTaskCheckerNameModifyResponse(Long dailyChecklistId, String newTaskCheckerName) {
+        return new TaskCheckerNameModifyResponse(dailyChecklistId, newTaskCheckerName);
     }
 
 

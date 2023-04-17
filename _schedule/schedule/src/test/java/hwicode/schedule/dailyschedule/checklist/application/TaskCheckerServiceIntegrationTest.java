@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
@@ -117,8 +118,10 @@ class TaskCheckerServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
+        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = createTaskCheckerNameModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME);
+
         // when
-        taskCheckerService.changeTaskName(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+        taskCheckerService.changeTaskCheckerName(TASK_CHECKER_NAME, taskCheckerNameModifyRequest);
 
         // then
         TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);

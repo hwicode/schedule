@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.checklist.presentation.task_checker;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
@@ -34,5 +36,13 @@ public class TaskCheckerController {
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
         Difficulty modifiedDifficulty = taskCheckerService.changeTaskDifficulty(taskCheckerName, taskDifficultyModifyRequest);
         return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
+    }
+
+    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/name")
+    @ResponseStatus(value = HttpStatus.OK)
+    public TaskCheckerNameModifyResponse changeTaskCheckerName(@PathVariable @NotBlank String taskCheckerName,
+                                                               @RequestBody @Valid TaskCheckerNameModifyRequest taskCheckerNameModifyRequest) {
+        String newTaskCheckerName = taskCheckerService.changeTaskCheckerName(taskCheckerName, taskCheckerNameModifyRequest);
+        return new TaskCheckerNameModifyResponse(taskCheckerNameModifyRequest.getDailyChecklistId(), newTaskCheckerName);
     }
 }

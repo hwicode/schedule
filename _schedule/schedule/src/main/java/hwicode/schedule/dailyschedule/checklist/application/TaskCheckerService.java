@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
@@ -55,11 +56,11 @@ public class TaskCheckerService {
     }
 
     @Transactional
-    public String changeTaskName(Long dailyChecklistId, String taskName, String newTaskName) {
+    public String changeTaskCheckerName(String taskCheckerName, TaskCheckerNameModifyRequest taskCheckerNameModifyRequest) {
         DailyChecklist dailyChecklist = findDailyChecklistWithTaskCheckers(
-                dailyChecklistRepository, dailyChecklistId);
+                dailyChecklistRepository, taskCheckerNameModifyRequest.getDailyChecklistId());
 
-        return dailyChecklist.changeTaskCheckerName(taskName, newTaskName);
+        return dailyChecklist.changeTaskCheckerName(taskCheckerName, taskCheckerNameModifyRequest.getNewTaskCheckerName());
     }
 
 }
