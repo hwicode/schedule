@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist;
 
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;

@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify;
 
-import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

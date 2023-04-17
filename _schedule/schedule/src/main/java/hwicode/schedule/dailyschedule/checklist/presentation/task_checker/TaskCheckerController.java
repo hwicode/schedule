@@ -5,8 +5,8 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.di
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

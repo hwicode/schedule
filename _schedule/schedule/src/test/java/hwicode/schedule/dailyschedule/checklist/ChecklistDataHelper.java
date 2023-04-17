@@ -11,9 +11,9 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.sa
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
-import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
-import hwicode.schedule.dailyschedule.common.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 
 public class ChecklistDataHelper {
 

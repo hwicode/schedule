@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
-import hwicode.schedule.dailyschedule.common.domain.SubTaskStatus;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 

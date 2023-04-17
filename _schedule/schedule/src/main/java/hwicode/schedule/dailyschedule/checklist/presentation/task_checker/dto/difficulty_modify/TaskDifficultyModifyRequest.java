@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify;
 
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

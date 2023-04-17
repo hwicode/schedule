@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save;
 
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
-import hwicode.schedule.dailyschedule.common.domain.Difficulty;
+import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
