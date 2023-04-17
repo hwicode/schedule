@@ -10,7 +10,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

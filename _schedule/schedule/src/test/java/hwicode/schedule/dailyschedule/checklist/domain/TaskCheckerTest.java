@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.domain;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
-import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -4,7 +4,7 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.Sub
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 

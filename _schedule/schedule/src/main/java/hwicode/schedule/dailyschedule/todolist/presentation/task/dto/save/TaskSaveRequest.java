@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save;
 
-import hwicode.schedule.dailyschedule.dailyschedule_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import lombok.AccessLevel;
