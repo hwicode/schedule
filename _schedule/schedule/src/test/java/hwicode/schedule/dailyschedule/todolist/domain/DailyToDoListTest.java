@@ -37,4 +37,27 @@ class DailyToDoListTest {
         assertThat(isChange).isTrue();
     }
 
+    @Test
+    void 동일한_이모지로_변경하면_이모지에_변경이_없으므로_false가_리턴된다() {
+        // given
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+
+        // when
+        boolean isChange = dailyToDoList.changeTodayEmoji(Emoji.NOT_BAD);
+
+        // then
+        assertThat(isChange).isFalse();
+    }
+
+    @Test
+    void 새로운_이모지로_변경하면_이모지에_변경이_있으므로_true가_리턴된다() {
+        // given
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+
+        // when
+        boolean isChange = dailyToDoList.changeTodayEmoji(Emoji.GOOD);
+
+        // then
+        assertThat(isChange).isTrue();
+    }
 }
