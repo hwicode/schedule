@@ -2,8 +2,8 @@ package hwicode.schedule.dailyschedule.todolist;
 
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.application.dto.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
