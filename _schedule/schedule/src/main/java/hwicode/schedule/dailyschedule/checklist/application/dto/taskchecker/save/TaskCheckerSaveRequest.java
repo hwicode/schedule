@@ -1,5 +1,7 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete;
+package hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save;
 
+import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,11 +14,18 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class SubTaskCheckerDeleteRequest {
+public class TaskCheckerSaveRequest {
 
     @NotNull @Positive
     private Long dailyChecklistId;
 
     @NotBlank
     private String taskCheckerName;
+
+    @NotNull
+    private Difficulty difficulty;
+
+    public TaskChecker toEntity() {
+        return new TaskChecker(taskCheckerName, difficulty);
+    }
 }

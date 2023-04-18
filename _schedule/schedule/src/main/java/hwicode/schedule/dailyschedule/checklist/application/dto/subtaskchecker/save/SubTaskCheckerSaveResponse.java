@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save;
+package hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
