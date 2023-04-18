@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.subtask;
 
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.save.SubTaskSaveResponse;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation.subtask.save;
+package hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,10 +12,13 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class SubTaskSaveResponse {
+public class SubTaskSaveRequest {
 
     @NotNull @Positive
-    private Long subTaskId;
+    private Long dailyToDoListId;
+
+    @NotBlank
+    private String taskName;
 
     @NotBlank
     private String subTaskName;
