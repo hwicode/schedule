@@ -19,7 +19,7 @@ public class SubTaskCheckerController {
 
     private final SubTaskCheckerService subTaskCheckerService;
 
-    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}/status")
+    @PatchMapping("/dailyschedule/checklist/subtaskcheckers/{subTaskCheckerName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeSubTaskStatus(@PathVariable @NotBlank String subTaskCheckerName,
                                                         @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
@@ -27,7 +27,7 @@ public class SubTaskCheckerController {
         return new SubTaskStatusModifyResponse(subTaskCheckerName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 
-    @PatchMapping("/dailyschedule/checklist/subtaskCheckers/{subTaskCheckerName}/name")
+    @PatchMapping("/dailyschedule/checklist/subtaskcheckers/{subTaskCheckerName}/name")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskCheckerNameModifyResponse changeSubTaskCheckerName(@PathVariable @NotBlank String subTaskCheckerName,
                                @RequestBody @Valid SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {

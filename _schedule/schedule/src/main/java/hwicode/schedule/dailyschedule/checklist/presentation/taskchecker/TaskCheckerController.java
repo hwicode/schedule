@@ -22,7 +22,7 @@ public class TaskCheckerController {
 
     private final TaskCheckerService taskCheckerService;
 
-    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/status")
+    @PatchMapping("/dailyschedule/checklist/taskcheckers/{taskCheckerName}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable @NotBlank String taskCheckerName,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
@@ -30,7 +30,7 @@ public class TaskCheckerController {
         return new TaskStatusModifyResponse(taskCheckerName, modifiedTaskStatus);
     }
 
-    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/difficulty")
+    @PatchMapping("/dailyschedule/checklist/taskcheckers/{taskCheckerName}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable @NotBlank String taskCheckerName,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
@@ -38,7 +38,7 @@ public class TaskCheckerController {
         return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
     }
 
-    @PatchMapping("/dailyschedule/checklist/taskCheckers/{taskCheckerName}/name")
+    @PatchMapping("/dailyschedule/checklist/taskcheckers/{taskCheckerName}/name")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskCheckerNameModifyResponse changeTaskCheckerName(@PathVariable @NotBlank String taskCheckerName,
                                                                @RequestBody @Valid TaskCheckerNameModifyRequest taskCheckerNameModifyRequest) {
