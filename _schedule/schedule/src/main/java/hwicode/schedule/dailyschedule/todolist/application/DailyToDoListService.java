@@ -15,11 +15,12 @@ public class DailyToDoListService {
     private final DailyToDoListRepository dailyToDoListRepository;
 
     @Transactional
-    public void changeDailyToDoListInformation(Long dailyToDoListId, DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
+    public Long changeDailyToDoListInformation(Long dailyToDoListId, DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
         DailyToDoList dailyToDoList = dailyToDoListRepository.findById(dailyToDoListId)
                 .orElseThrow(DailyToDoListNotExistException::new);
 
         dailyToDoList.writeReview(dailyToDoListInformationChangeRequest.getReview());
         dailyToDoList.changeTodayEmoji(dailyToDoListInformationChangeRequest.getEmoji());
+        return dailyToDoListId;
     }
 }
