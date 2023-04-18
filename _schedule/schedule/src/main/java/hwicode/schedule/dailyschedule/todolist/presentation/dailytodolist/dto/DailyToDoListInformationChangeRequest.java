@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.application.dto;
+package hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto;
 
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import lombok.AccessLevel;

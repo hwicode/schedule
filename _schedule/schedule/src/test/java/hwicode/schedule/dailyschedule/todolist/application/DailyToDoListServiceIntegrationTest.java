@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationChangeRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
