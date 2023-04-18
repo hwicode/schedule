@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify;
+package hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify;
 
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import lombok.AccessLevel;

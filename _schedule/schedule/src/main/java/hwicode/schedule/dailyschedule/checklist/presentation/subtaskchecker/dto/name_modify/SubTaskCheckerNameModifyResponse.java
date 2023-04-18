@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,11 +12,11 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class TaskCheckerNameModifyResponse {
+public class SubTaskCheckerNameModifyResponse {
 
     @NotNull @Positive
-    private Long dailyChecklistId;
+    private Long taskCheckerId;
 
     @NotBlank
-    private String newTaskCheckerName;
+    private String newSubTaskCheckerName;
 }

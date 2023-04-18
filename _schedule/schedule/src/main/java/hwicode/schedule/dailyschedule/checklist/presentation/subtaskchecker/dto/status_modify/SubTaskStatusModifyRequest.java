@@ -1,5 +1,6 @@
-package hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify;
 
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,11 +13,14 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class SubTaskCheckerNameModifyRequest {
+public class SubTaskStatusModifyRequest {
 
     @NotNull @Positive
-    private Long taskCheckerId;
+    private Long dailyChecklistId;
 
     @NotBlank
-    private String newSubTaskCheckerName;
+    private String taskCheckerName;
+
+    @NotNull
+    private SubTaskStatus subTaskStatus;
 }
