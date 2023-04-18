@@ -1,10 +1,11 @@
 package hwicode.schedule.dailyschedule.checklist;
 
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.name_modify.SubTaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.save.SubTaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtask_checker.dto.status_modify.SubTaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.difficulty_modify.TaskDifficultyModifyRequest;
@@ -12,19 +13,15 @@ import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.di
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.name_modify.TaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.save.TaskCheckerSaveResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.task_checker.dto.status_modify.TaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
-import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 
 public class ChecklistDataHelper {
 
     // 단순히 id값으로 숫자가 필요할 때만 사용
     public static final Long DAILY_CHECKLIST_ID = 1L;
     public static final Long TASK_CHECKER_ID = 2L;
-    public static final Long SUB_TASK_CHECKER_ID = 3L;
 
 
     // 생성 메서드에서 사용됨. 테스트 중간에 사용되면 이미 존재하는 TaskChecker나 SubTaskChecker임
@@ -78,10 +75,6 @@ public class ChecklistDataHelper {
 
 
     // checklist TaskChecker response dto
-    public static TaskCheckerSaveResponse createTaskCheckerSaveResponse(Long taskCheckerId, String taskCheckerName) {
-        return new TaskCheckerSaveResponse(taskCheckerId, taskCheckerName);
-    }
-
     public static TaskStatusModifyResponse createTaskStatusModifyResponse(String taskCheckerName, TaskStatus taskStatus) {
         return new TaskStatusModifyResponse(taskCheckerName, taskStatus);
     }
@@ -96,10 +89,6 @@ public class ChecklistDataHelper {
 
 
     // checklist SubTaskChecker response dto
-    public static SubTaskCheckerSaveResponse createSubTaskCheckerSaveResponse(Long subTaskCheckerId, String subtaskCheckerName) {
-        return new SubTaskCheckerSaveResponse(subTaskCheckerId, subtaskCheckerName);
-    }
-
     public static SubTaskStatusModifyResponse createSubTaskStatusModifyResponse(String subTaskCheckerName, TaskStatus taskStatus, SubTaskStatus subTaskStatus) {
         return new SubTaskStatusModifyResponse(subTaskCheckerName, taskStatus, subTaskStatus);
     }
