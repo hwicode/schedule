@@ -52,7 +52,14 @@ public class LearningTime {
     }
 
     LocalTime changeEndTime(LocalTime endTime) {
+        validateEndTime(endTime);
         this.endTime = endTime;
         return this.endTime;
+    }
+
+    private void validateEndTime(LocalTime endTime) {
+        if (endTime.isBefore(startTime)) {
+            throw new IllegalArgumentException();
+        }
     }
 }
