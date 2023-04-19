@@ -44,4 +44,9 @@ public class LearningTime {
     boolean isSame(LocalTime startTime) {
         return this.startTime.equals(startTime);
     }
+
+    LocalTime changeStartTime(LocalTime newStartTime) {
+        this.startTime = newStartTime;
+        return this.startTime;
+    }
 }
