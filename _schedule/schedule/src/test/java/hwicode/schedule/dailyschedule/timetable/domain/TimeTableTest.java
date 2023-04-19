@@ -115,6 +115,58 @@ class TimeTableTest {
         assertThatThrownBy(() -> timeTable.deleteLearningTime(startTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간은_0이_된다() {
+        // given
+        TimeTable timeTable = new TimeTable();
+        timeTable.createLearningTime(startTime);
+
+        // when
+        int totalLearningTime = timeTable.getTotalLearningTime();
+
+        // then
+        assertThat(totalLearningTime).isZero();
+    }
+
+    @Test
+    void 타임테이블은_총_학습_시간을_계산할_수_있다() {
+        // given
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 1, 1, 1, 1);
+
+        LocalDateTime[] startTimes = {
+                localDateTime,
+                localDateTime.plusMinutes(45L),
+                localDateTime.plusMinutes(90L),
+                localDateTime.plusMinutes(140L)
+        };
+        LocalDateTime[] endTimes = {
+                localDateTime.plusMinutes(40L),
+                localDateTime.plusMinutes(80L),
+                localDateTime.plusMinutes(120L),
+                localDateTime.plusMinutes(200L)
+        };
+
+        TimeTable timeTable = createTimeTableWithLearningTimes(startTimes, endTimes);
+
+        // when
+        int totalLearningTime = timeTable.getTotalLearningTime();
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(165);
+    }
+
+    private TimeTable createTimeTableWithLearningTimes(LocalDateTime[] startTimes, LocalDateTime[] endTimes) {
+        TimeTable timeTable = new TimeTable();
+
+        for (int i = 0; i < 4; i++) {
+            timeTable.createLearningTime(startTimes[i]);
+            timeTable.changeLearningTimeEndTime(startTimes[i], endTimes[i]);
+        }
+
+        return timeTable;
+    }
+
 }
 
 class TimeTable {
@@ -158,4 +210,12 @@ class TimeTable {
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
+
+    public int getTotalLearningTime() {
+        return learningTimes.stream()
+                .filter(LearningTime::isEndTimeNotNull)
+                .mapToInt(LearningTime::getTime)
+                .sum();
+    }
+
 }
