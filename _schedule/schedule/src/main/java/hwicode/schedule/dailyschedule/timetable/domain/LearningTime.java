@@ -1,21 +1,16 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import java.time.LocalTime;
+
 public class LearningTime {
 
+    private LocalTime startTime;
     private String subject;
     private SubjectOfTask subjectOfTask;
     private SubjectOfSubTask subjectOfSubTask;
 
-    LearningTime(String subject) {
-        this.subject = subject;
-    }
-
-    LearningTime(SubjectOfTask subjectOfTask) {
-        this.subjectOfTask = subjectOfTask;
-    }
-
-    LearningTime(SubjectOfSubTask subjectOfSubTask) {
-        this.subjectOfSubTask = subjectOfSubTask;
+    LearningTime(LocalTime startTime) {
+        this.startTime = startTime;
     }
 
     public boolean deleteSubject() {
@@ -44,5 +39,9 @@ public class LearningTime {
         deleteSubject();
         this.subjectOfSubTask = subjectOfSubTask;
         return this.subjectOfSubTask.getName();
+    }
+
+    boolean isSame(LocalTime startTime) {
+        return this.startTime.equals(startTime);
     }
 }
