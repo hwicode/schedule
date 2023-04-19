@@ -5,6 +5,7 @@ import java.time.LocalTime;
 public class LearningTime {
 
     private LocalTime startTime;
+    private LocalTime endTime;
     private String subject;
     private SubjectOfTask subjectOfTask;
     private SubjectOfSubTask subjectOfSubTask;
@@ -48,5 +49,10 @@ public class LearningTime {
     LocalTime changeStartTime(LocalTime newStartTime) {
         this.startTime = newStartTime;
         return this.startTime;
+    }
+
+    LocalTime changeEndTime(LocalTime endTime) {
+        this.endTime = endTime;
+        return this.endTime;
     }
 }

@@ -7,11 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TimeTableTest {
 
     private final LocalTime startTime = LocalTime.of(5, 5);
     private final LocalTime newStartTime = LocalTime.of(6, 6);
+    private final LocalTime endTime = LocalTime.of(6, 6);
 
     @Test
     void 학습_시간을_생성할_때_시작_시간에_중복이_없으면_학습_시간은_생성된다() {
@@ -61,6 +63,31 @@ class TimeTableTest {
         assertThatThrownBy(() -> timeTable.changeLearningTimeStartTime(startTime, startTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
+
+    @Test
+    void 학습_시간의_끝나는_시간을_변경할_수_있다() {
+        // given
+        TimeTable timeTable = new TimeTable();
+        timeTable.createLearningTime(startTime);
+
+        // when
+        LocalTime changedEndTime = timeTable.changeLearningTimeEndTime(startTime, endTime);
+
+        // then
+        assertThat(changedEndTime).isEqualTo(endTime);
+    }
+
+    @Test
+    void 시작_시간에_해당하는_학습_시간이_없으면_에러가_발생한다() {
+        // given
+        TimeTable timeTable = new TimeTable();
+
+        // when then
+        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(startTime, endTime))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
 }
 
 class TimeTable {
@@ -88,6 +115,10 @@ class TimeTable {
         if (duplication) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public LocalTime changeLearningTimeEndTime(LocalTime startTime, LocalTime endTime) {
+        return findLearningTimeBy(startTime).changeEndTime(endTime);
     }
 
     private LearningTime findLearningTimeBy(LocalTime startTime) {
