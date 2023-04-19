@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class LearningTime {
@@ -61,5 +62,14 @@ public class LearningTime {
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException();
         }
+    }
+
+    boolean isEndTimeNotNull() {
+        return endTime != null;
+    }
+
+    int getTime() {
+        Duration duration = Duration.between(startTime, endTime);
+        return (int) duration.toMinutes();
     }
 }
