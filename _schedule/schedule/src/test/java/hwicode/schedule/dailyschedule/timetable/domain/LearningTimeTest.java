@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -12,7 +12,7 @@ class LearningTimeTest {
     private final String NEW_SUBJECT = "새로운 학습 주제";
 
     private LearningTime createLearningTime() {
-        return new LearningTime(LocalTime.now());
+        return new LearningTime(LocalDateTime.now());
     }
 
     @Test

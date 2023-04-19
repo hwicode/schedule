@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.domain;
 
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,9 +11,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TimeTableTest {
 
-    private final LocalTime startTime = LocalTime.of(5, 5);
-    private final LocalTime newStartTime = LocalTime.of(6, 6);
-    private final LocalTime endTime = LocalTime.of(6, 6);
+    private final LocalDateTime startTime = LocalDateTime.of(2023, 4, 19, 5, 5);
+    private final LocalDateTime newStartTime = LocalDateTime.of(2023, 4, 19, 6, 6);
+    private final LocalDateTime endTime = LocalDateTime.of(2023, 4, 19, 6, 6);
 
     @Test
     void 학습_시간을_생성할_때_시작_시간에_중복이_없으면_학습_시간은_생성된다() {
@@ -71,7 +71,7 @@ class TimeTableTest {
         timeTable.createLearningTime(startTime);
 
         // when
-        LocalTime changedEndTime = timeTable.changeLearningTimeEndTime(startTime, endTime);
+        LocalDateTime changedEndTime = timeTable.changeLearningTimeEndTime(startTime, endTime);
 
         // then
         assertThat(changedEndTime).isEqualTo(endTime);
@@ -82,8 +82,8 @@ class TimeTableTest {
         // given
         TimeTable timeTable = new TimeTable();
 
-        LocalTime startTime = LocalTime.of(3, 3);
-        LocalTime endTime = LocalTime.of(2, 2);
+        LocalDateTime startTime = LocalDateTime.of(2023, 4, 19, 3, 3);
+        LocalDateTime endTime = LocalDateTime.of(2023, 4, 19, 2, 2);
 
         timeTable.createLearningTime(startTime);
 
@@ -121,7 +121,7 @@ class TimeTable {
 
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
-    public LearningTime createLearningTime(LocalTime startTime) {
+    public LearningTime createLearningTime(LocalDateTime startTime) {
         validateLearningTime(startTime);
 
         LearningTime learningTime = new LearningTime(startTime);
@@ -130,12 +130,12 @@ class TimeTable {
         return learningTime;
     }
 
-    public LocalTime changeLearningTimeStartTime(LocalTime startTime, LocalTime newStartTime) {
+    public LocalDateTime changeLearningTimeStartTime(LocalDateTime startTime, LocalDateTime newStartTime) {
         validateLearningTime(newStartTime);
         return findLearningTimeBy(startTime).changeStartTime(newStartTime);
     }
 
-    private void validateLearningTime(LocalTime startTime) {
+    private void validateLearningTime(LocalDateTime startTime) {
         boolean duplication = learningTimes.stream()
                 .anyMatch(learningTime -> learningTime.isSame(startTime));
 
@@ -144,19 +144,18 @@ class TimeTable {
         }
     }
 
-    public LocalTime changeLearningTimeEndTime(LocalTime startTime, LocalTime endTime) {
+    public LocalDateTime changeLearningTimeEndTime(LocalDateTime startTime, LocalDateTime endTime) {
         return findLearningTimeBy(startTime).changeEndTime(endTime);
     }
 
-    public void deleteLearningTime(LocalTime startTime) {
+    public void deleteLearningTime(LocalDateTime startTime) {
         learningTimes.remove(findLearningTimeBy(startTime));
     }
 
-    private LearningTime findLearningTimeBy(LocalTime startTime) {
+    private LearningTime findLearningTimeBy(LocalDateTime startTime) {
         return learningTimes.stream()
                 .filter(learningTime -> learningTime.isSame(startTime))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
-
 }

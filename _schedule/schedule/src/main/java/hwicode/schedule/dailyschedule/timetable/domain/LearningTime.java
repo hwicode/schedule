@@ -1,16 +1,16 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
-import java.time.LocalTime;
+import java.time.LocalDateTime;
 
 public class LearningTime {
 
-    private LocalTime startTime;
-    private LocalTime endTime;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
     private String subject;
     private SubjectOfTask subjectOfTask;
     private SubjectOfSubTask subjectOfSubTask;
 
-    LearningTime(LocalTime startTime) {
+    LearningTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
 
@@ -42,22 +42,22 @@ public class LearningTime {
         return this.subjectOfSubTask.getName();
     }
 
-    boolean isSame(LocalTime startTime) {
+    boolean isSame(LocalDateTime startTime) {
         return this.startTime.equals(startTime);
     }
 
-    LocalTime changeStartTime(LocalTime newStartTime) {
+    LocalDateTime changeStartTime(LocalDateTime newStartTime) {
         this.startTime = newStartTime;
         return this.startTime;
     }
 
-    LocalTime changeEndTime(LocalTime endTime) {
+    LocalDateTime changeEndTime(LocalDateTime endTime) {
         validateEndTime(endTime);
         this.endTime = endTime;
         return this.endTime;
     }
 
-    private void validateEndTime(LocalTime endTime) {
+    private void validateEndTime(LocalDateTime endTime) {
         if (endTime.isBefore(startTime)) {
             throw new IllegalArgumentException();
         }
