@@ -107,6 +107,42 @@ class LearningTimeTest {
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
     }
+
+    @Test
+    void 학습_시간의_학습_주제를_Task_학습_주제로_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(SUBJECT);
+
+        // when
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제를_Task_학습_주제로_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfTask(SUBJECT));
+
+        // when
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제를_Task_학습_주제로_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfSubTask(SUBJECT));
+
+        // when
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
 }
 
 class LearningTime {
@@ -142,6 +178,12 @@ class LearningTime {
         this.subject = subject;
         return this.subject;
     }
+
+    public String changeSubjectOfTask(SubjectOfTask subjectOfTask) {
+        deleteSubject();
+        this.subjectOfTask = subjectOfTask;
+        return this.subjectOfTask.getName();
+    }
 }
 
 class SubjectOfTask {
@@ -150,6 +192,10 @@ class SubjectOfTask {
 
     SubjectOfTask(String name) {
         this.name = name;
+    }
+
+    String getName() {
+        return name;
     }
 }
 
