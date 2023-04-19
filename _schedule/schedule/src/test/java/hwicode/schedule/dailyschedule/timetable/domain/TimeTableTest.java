@@ -87,6 +87,19 @@ class TimeTableTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 학습_시간을_삭제할_수_있다() {
+        // given
+        TimeTable timeTable = new TimeTable();
+        timeTable.createLearningTime(startTime);
+
+        // when
+        timeTable.deleteLearningTime(startTime);
+
+        // then
+        assertThatThrownBy(() -> timeTable.deleteLearningTime(startTime))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
 
 }
 
@@ -119,6 +132,10 @@ class TimeTable {
 
     public LocalTime changeLearningTimeEndTime(LocalTime startTime, LocalTime endTime) {
         return findLearningTimeBy(startTime).changeEndTime(endTime);
+    }
+
+    public void deleteLearningTime(LocalTime startTime) {
+        learningTimes.remove(findLearningTimeBy(startTime));
     }
 
     private LearningTime findLearningTimeBy(LocalTime startTime) {
