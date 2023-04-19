@@ -130,6 +130,21 @@ class TimeTableTest {
     }
 
     @Test
+    void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간에_포함되지_않는다() {
+        // given
+        TimeTable timeTable = new TimeTable();
+        timeTable.createLearningTime(startTime);
+        timeTable.changeLearningTimeEndTime(startTime, startTime.plusMinutes(50));
+        timeTable.createLearningTime(newStartTime);
+
+        // when
+        int totalLearningTime = timeTable.getTotalLearningTime();
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(50);
+    }
+
+    @Test
     void 타임테이블은_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDateTime localDateTime = LocalDateTime.of(2023, 1, 1, 1, 1);

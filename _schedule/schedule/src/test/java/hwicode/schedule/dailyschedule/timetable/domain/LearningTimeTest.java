@@ -190,15 +190,16 @@ class LearningTimeTest {
 
     @ParameterizedTest
     @MethodSource("provideLocalDateTimesAndTotalTime")
-    void 학습_시간의_총_시간을_가져올_수_있다(LocalDateTime startTime, LocalDateTime endTime, int totalTime) {
+    void 학습_시간의_시간을_가져올_수_있다(LocalDateTime startTime, LocalDateTime endTime, int totalTime) {
         // given
         LearningTime learningTime = new LearningTime(startTime);
-
-        //when
         learningTime.changeEndTime(endTime);
 
+        //when
+        int time = learningTime.getTime();
+
         // then
-        assertThat(learningTime.getTime()).isEqualTo(totalTime);
+        assertThat(time).isEqualTo(totalTime);
     }
 
     private static Stream<Arguments> provideLocalDateTimesAndTotalTime() {
