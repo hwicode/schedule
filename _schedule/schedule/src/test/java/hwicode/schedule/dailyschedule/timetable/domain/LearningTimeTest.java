@@ -9,7 +9,16 @@ class LearningTimeTest {
     private final String subject = "학습 주제";
 
     @Test
-    void 학습_시간의_학습_주제를_삭제할_수_있다() {
+    void 학습_시간의_학습_주제가_삭제되면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = new LearningTime(subject);
+
+        // when then
+        assertThat(learningTime.deleteSubject()).isTrue();
+    }
+
+    @Test
+    void 학습_시간에_학습_주제가_없으면_삭제된게_없으므로_false가_리턴된다() {
         // given
         LearningTime learningTime = new LearningTime(subject);
 
@@ -21,7 +30,16 @@ class LearningTimeTest {
     }
 
     @Test
-    void 학습_시간에서_Task_학습_주제를_삭제할_수_있다() {
+    void 학습_시간에서_Task_학습_주제가_삭제되면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfTask(subject));
+
+        // when then
+        assertThat(learningTime.deleteSubject()).isTrue();
+    }
+
+    @Test
+    void 학습_시간에_Task_학습_주제가_없으면_삭제된게_없으므로_false가_리턴된다() {
         // given
         LearningTime learningTime = new LearningTime(new SubjectOfTask(subject));
 
@@ -33,7 +51,16 @@ class LearningTimeTest {
     }
 
     @Test
-    void 학습_시간에서_SubTask_학습_주제를_삭제할_수_있다() {
+    void 학습_시간에서_SubTask_학습_주제가_삭제되면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfSubTask(subject));
+
+        // when then
+        assertThat(learningTime.deleteSubject()).isTrue();
+    }
+
+    @Test
+    void 학습_시간에_SubTask_학습_주제가_없으면_삭제된게_없으므로_false가_리턴된다() {
         // given
         LearningTime learningTime = new LearningTime(new SubjectOfSubTask(subject));
 
@@ -43,7 +70,6 @@ class LearningTimeTest {
         // then
         assertThat(learningTime.deleteSubject()).isFalse();
     }
-
 }
 
 class LearningTime {
