@@ -7,6 +7,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class LearningTimeTest {
 
     private final String subject = "학습 주제";
+    private final String NEW_SUBJECT = "새로운 학습 주제";
 
     @Test
     void 학습_시간의_학습_주제가_삭제되면_true가_리턴된다() {
@@ -70,6 +71,42 @@ class LearningTimeTest {
         // then
         assertThat(learningTime.deleteSubject()).isFalse();
     }
+
+    @Test
+    void 학습_시간의_학습_주제를_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(subject);
+
+        // when
+        String changedSubject = learningTime.changeSubject(NEW_SUBJECT);
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제를_학습_주제로_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfTask(subject));
+
+        // when
+        String changedSubject = learningTime.changeSubject(NEW_SUBJECT);
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제를_학습_주제로_수정할_수_있다() {
+        // given
+        LearningTime learningTime = new LearningTime(new SubjectOfSubTask(subject));
+
+        // when
+        String changedSubject = learningTime.changeSubject(NEW_SUBJECT);
+
+        // then
+        assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
+    }
 }
 
 class LearningTime {
@@ -98,6 +135,12 @@ class LearningTime {
         this.subjectOfTask = null;
         this.subjectOfSubTask = null;
         return true;
+    }
+
+    public String changeSubject(String subject) {
+        deleteSubject();
+        this.subject = subject;
+        return this.subject;
     }
 }
 
