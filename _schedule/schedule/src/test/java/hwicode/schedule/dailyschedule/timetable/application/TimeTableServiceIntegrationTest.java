@@ -70,6 +70,25 @@ class TimeTableServiceIntegrationTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 타임_테이블에_존재하는_학습_시간의_끝나는_시간을_수정할_수_있다() {
+        // given
+        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
+        LocalDateTime endTime = startTime.plusMinutes(30);
+
+        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
+        timeTable.createLearningTime(startTime);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        timeTableService.changeLearningTimeEndTime(timeTable.getId(), startTime, endTime);
+
+        // then
+        TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
+        assertThat(savedTimeTable.getTotalLearningTime()).isEqualTo(30);
+    }
+
 }
 
 @Service
@@ -97,6 +116,13 @@ class TimeTableService {
         TimeTable timeTable = findTimeTableById(timeTableId);
 
         return timeTable.changeLearningTimeStartTime(startTime, newStartTime);
+    }
+
+    @Transactional
+    public LocalDateTime changeLearningTimeEndTime(Long timeTableId, LocalDateTime startTime, LocalDateTime endTime) {
+        TimeTable timeTable = findTimeTableById(timeTableId);
+
+        return timeTable.changeLearningTimeEndTime(startTime, endTime);
     }
 
     private TimeTable findTimeTableById(Long timeTableId) {
