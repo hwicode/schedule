@@ -19,7 +19,7 @@ create table sub_task (
    id bigint not null auto_increment,
    name varchar(255) not null,
    sub_task_status varchar(255) DEFAULT 'TODO',
-   task_id bigint not null,
+   task_id bigint,
    primary key (id)
 ) engine=InnoDB;
 

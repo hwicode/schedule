@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,9 @@ class LearningTimeServiceIntegrationTest {
 
     @Autowired
     SubjectOfTaskRepository subjectOfTaskRepository;
+
+    @Autowired
+    SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -91,6 +95,24 @@ class LearningTimeServiceIntegrationTest {
         assertThat(isDelete).isTrue();
     }
 
+    @Test
+    void 학습_시간의_SubTask_학습_주제를_수정할_수_있다() {
+        // given
+        TimeTable timeTable = new TimeTable(LocalDate.now());
+        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
+        timeTableRepository.save(timeTable);
+
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask("학습 주제"));
+
+        // when
+        learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask);
+
+        // then
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isTrue();
+    }
+
 }
 
 @Service
@@ -125,8 +147,17 @@ class LearningTimeService {
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
+
+    @Transactional
+    public String changeSubjectOfSubTask(Long learningTimeId, SubjectOfSubTask subjectOfSubTask) {
+        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
+    }
 }
 
 interface LearningTimeRepository extends JpaRepository<LearningTime, Long> {}
 interface TimeTableRepository extends JpaRepository<TimeTable, Long> {}
 interface SubjectOfTaskRepository extends JpaRepository<SubjectOfTask, Long> {}
+interface SubjectOfSubTaskRepository extends JpaRepository<SubjectOfSubTask, Long> {}

@@ -17,7 +17,7 @@ public class SubjectOfSubTask {
     @Column(nullable = false)
     private String name;
 
-    SubjectOfSubTask(String name) {
+    public SubjectOfSubTask(String name) {
         this.name = name;
     }
 
