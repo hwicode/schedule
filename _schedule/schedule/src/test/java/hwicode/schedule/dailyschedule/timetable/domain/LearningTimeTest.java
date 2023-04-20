@@ -245,5 +245,81 @@ class LearningTimeTest {
         );
     }
 
-}
+    @Test
+    void 학습_시간의_학습_주제가_같으면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubject(SUBJECT);
 
+        // when
+        boolean isSame = learningTime.isSameSubject(SUBJECT);
+
+        // then
+        assertThat(isSame).isTrue();
+    }
+
+    @Test
+    void 학습_시간의_학습_주제가_다르면_false가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubject(SUBJECT);
+
+        // when
+        boolean isSame = learningTime.isSameSubject(NEW_SUBJECT);
+
+        // then
+        assertThat(isSame).isFalse();
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제가_같으면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+
+        // when
+        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(SUBJECT));
+
+        // then
+        assertThat(isSame).isTrue();
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제가_다르면_false가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+
+        // when
+        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+
+        // then
+        assertThat(isSame).isFalse();
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제가_같으면_true가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+
+        // when
+        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+
+        // then
+        assertThat(isSame).isTrue();
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제가_다르면_false가_리턴된다() {
+        // given
+        LearningTime learningTime = createLearningTime();
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+
+        // when
+        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT));
+
+        // then
+        assertThat(isSame).isFalse();
+    }
+}

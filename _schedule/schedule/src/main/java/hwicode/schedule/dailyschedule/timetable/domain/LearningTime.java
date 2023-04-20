@@ -79,4 +79,18 @@ public class LearningTime {
         Duration duration = Duration.between(startTime, endTime);
         return (int) duration.toMinutes();
     }
+
+    boolean isSameSubject(String subject) {
+        return subject.equals(this.subject);
+    }
+
+    boolean isSameSubjectOfTask(SubjectOfTask subjectOfTask) {
+        return subjectOfTask.getName()
+                .equals(this.subjectOfTask.getName());
+    }
+
+    boolean isSameSubjectOfSubTask(SubjectOfSubTask subjectOfSubTask) {
+        return subjectOfSubTask.getName()
+                .equals(this.subjectOfSubTask.getName());
+    }
 }
