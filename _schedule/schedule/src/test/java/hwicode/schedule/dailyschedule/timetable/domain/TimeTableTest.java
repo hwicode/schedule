@@ -65,6 +65,21 @@ class TimeTableTest {
     }
 
     @Test
+    void 학습_시간이_다른_학습_시간과_겹치면_에러가_발생한다() {
+        // given
+        LocalDateTime time = LocalDateTime.of(2023, 1, 1, 1, 1, 1);
+
+        TimeTable timeTable = new TimeTable();
+        timeTable.createLearningTime(time);
+        timeTable.changeLearningTimeEndTime(time, time.plusMinutes(60));
+
+        // when then
+        LocalDateTime newTime = time.plusMinutes(30);
+        assertThatThrownBy(() -> timeTable.createLearningTime(newTime))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
     void 학습_시간의_끝나는_시간을_변경할_수_있다() {
         // given
         TimeTable timeTable = new TimeTable();
@@ -189,7 +204,7 @@ class TimeTable {
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
     public LearningTime createLearningTime(LocalDateTime startTime) {
-        validateLearningTime(startTime);
+        validateStartTime(startTime);
 
         LearningTime learningTime = new LearningTime(startTime);
         learningTimes.add(learningTime);
@@ -198,11 +213,12 @@ class TimeTable {
     }
 
     public LocalDateTime changeLearningTimeStartTime(LocalDateTime startTime, LocalDateTime newStartTime) {
-        validateLearningTime(newStartTime);
+        validateStartTime(newStartTime);
         return findLearningTimeBy(startTime).changeStartTime(newStartTime);
     }
 
-    private void validateLearningTime(LocalDateTime startTime) {
+    private void validateStartTime(LocalDateTime startTime) {
+        validateBetweenTime(startTime);
         boolean duplication = learningTimes.stream()
                 .anyMatch(learningTime -> learningTime.isSame(startTime));
 
@@ -212,7 +228,17 @@ class TimeTable {
     }
 
     public LocalDateTime changeLearningTimeEndTime(LocalDateTime startTime, LocalDateTime endTime) {
+        validateBetweenTime(endTime);
         return findLearningTimeBy(startTime).changeEndTime(endTime);
+    }
+
+    private void validateBetweenTime(LocalDateTime time) {
+        boolean duplication = learningTimes.stream()
+                .anyMatch(learningTime -> learningTime.isContain(time));
+
+        if (duplication) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void deleteLearningTime(LocalDateTime startTime) {

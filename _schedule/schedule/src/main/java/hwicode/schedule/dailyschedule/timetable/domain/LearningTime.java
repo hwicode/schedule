@@ -47,6 +47,13 @@ public class LearningTime {
         return this.startTime.equals(startTime);
     }
 
+    boolean isContain(LocalDateTime time) {
+        if (endTime == null) {
+            return false;
+        }
+        return startTime.isBefore(time) && endTime.isAfter(time);
+    }
+
     LocalDateTime changeStartTime(LocalDateTime newStartTime) {
         this.startTime = newStartTime;
         return this.startTime;
@@ -59,7 +66,7 @@ public class LearningTime {
     }
 
     private void validateEndTime(LocalDateTime endTime) {
-        if (endTime.isBefore(startTime)) {
+        if (startTime.isAfter(endTime)) {
             throw new IllegalArgumentException();
         }
     }
