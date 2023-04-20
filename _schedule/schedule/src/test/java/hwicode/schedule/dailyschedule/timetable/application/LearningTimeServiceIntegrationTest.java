@@ -53,6 +53,22 @@ class LearningTimeServiceIntegrationTest {
         assertThat(isDelete).isFalse();
     }
 
+    @Test
+    void 학습_시간의_학습_주제를_수정할_수_있다() {
+        // given
+        TimeTable timeTable = new TimeTable(LocalDate.now());
+        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
+        timeTableRepository.save(timeTable);
+
+        // when
+        learningTimeService.changeSubject(learningTime.getId(), "학습 주제");
+
+        // then
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isTrue();
+    }
+
 }
 
 @Service
@@ -72,6 +88,13 @@ class LearningTimeService {
         return learningTime.deleteSubject();
     }
 
+    @Transactional
+    public String changeSubject(Long learningTimeId, String subject) {
+        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        return learningTime.changeSubject(subject);
+    }
 }
 
 interface LearningTimeRepository extends JpaRepository<LearningTime, Long> {}
