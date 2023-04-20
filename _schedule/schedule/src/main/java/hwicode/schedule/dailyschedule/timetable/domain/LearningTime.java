@@ -38,6 +38,11 @@ public class LearningTime {
         this.startTime = startTime;
     }
 
+    LearningTime(TimeTable timeTable, LocalDateTime startTime) {
+        this.timeTable = timeTable;
+        this.startTime = startTime;
+    }
+
     public boolean deleteSubject() {
         if (this.subject == null && subjectOfTask == null && subjectOfSubTask == null) {
             return false;
@@ -124,5 +129,9 @@ public class LearningTime {
         }
         return this.subjectOfSubTask.getName()
                 .equals(subjectOfSubTask.getName());
+    }
+
+    public Long getId() {
+        return id;
     }
 }
