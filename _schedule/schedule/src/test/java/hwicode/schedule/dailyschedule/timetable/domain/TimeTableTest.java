@@ -193,40 +193,19 @@ class TimeTableTest {
     @Test
     void 타임_테이블은_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDate localDate = LocalDate.of(2023, 1, 1);
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.MIN);
+        LocalDate localDate = startTime.toLocalDate();
+        TimeTable timeTable = new TimeTable(localDate);
 
-        LocalDateTime[] startTimes = {
-                localDateTime,
-                localDateTime.plusMinutes(45L),
-                localDateTime.plusMinutes(90L),
-                localDateTime.plusMinutes(140L)
-        };
-        LocalDateTime[] endTimes = {
-                localDateTime.plusMinutes(40L),
-                localDateTime.plusMinutes(80L),
-                localDateTime.plusMinutes(120L),
-                localDateTime.plusMinutes(200L)
-        };
-
-        TimeTable timeTable = createTimeTableWithLearningTimes(localDate, startTimes, endTimes);
+        addLearningTime(timeTable, startTime, startTime.plusMinutes(40L));
+        addLearningTime(timeTable, startTime.plusMinutes(45L), startTime.plusMinutes(80L));
+        addLearningTime(timeTable, startTime.plusMinutes(90L), startTime.plusMinutes(120L));
+        addLearningTime(timeTable, startTime.plusMinutes(140L), startTime.plusMinutes(200L));
 
         // when
         int totalLearningTime = timeTable.getTotalLearningTime();
 
         // then
         assertThat(totalLearningTime).isEqualTo(165);
-    }
-
-    private TimeTable createTimeTableWithLearningTimes(LocalDate localDate, LocalDateTime[] startTimes, LocalDateTime[] endTimes) {
-        TimeTable timeTable = new TimeTable(localDate);
-
-        for (int i = 0; i < 4; i++) {
-            timeTable.createLearningTime(startTimes[i]);
-            timeTable.changeLearningTimeEndTime(startTimes[i], endTimes[i]);
-        }
-
-        return timeTable;
     }
 
     @Test
