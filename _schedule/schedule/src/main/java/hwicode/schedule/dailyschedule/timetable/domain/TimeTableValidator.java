@@ -1,9 +1,15 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Embeddable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Embeddable
 public class TimeTableValidator {
 
     private LocalDate today;

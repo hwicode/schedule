@@ -1,13 +1,27 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "daily_to_do_list")
+@Entity
 public class TimeTable {
 
-    private final TimeTableValidator validator;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Embedded
+    private TimeTableValidator validator;
+
+    @OneToMany(mappedBy = "timeTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
     public TimeTable(LocalDate today) {

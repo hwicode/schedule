@@ -1,14 +1,37 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class LearningTime {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JoinColumn(name = "daily_to_do_list_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private TimeTable timeTable;
+
+    @Column(nullable = false)
     private LocalDateTime startTime;
+
     private LocalDateTime endTime;
+
     private String subject;
+
+    @JoinColumn(name = "task_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private SubjectOfTask subjectOfTask;
+
+    @JoinColumn(name = "sub_task_id")
+    @OneToOne(fetch = FetchType.LAZY)
     private SubjectOfSubTask subjectOfSubTask;
 
     LearningTime(LocalDateTime startTime) {
