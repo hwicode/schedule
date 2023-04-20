@@ -20,24 +20,21 @@ class LearningTimeService {
 
     @Transactional
     public boolean deleteSubject(Long learningTimeId) {
-        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(IllegalArgumentException::new);
+        LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         return learningTime.deleteSubject();
     }
 
     @Transactional
     public String changeSubject(Long learningTimeId, String subject) {
-        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(IllegalArgumentException::new);
+        LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         return learningTime.changeSubject(subject);
     }
 
     @Transactional
     public String changeSubjectOfTask(Long learningTimeId, Long subjectOfTaskId) {
-        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(IllegalArgumentException::new);
+        LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.findById(subjectOfTaskId)
                 .orElseThrow(IllegalArgumentException::new);
@@ -47,12 +44,16 @@ class LearningTimeService {
 
     @Transactional
     public String changeSubjectOfSubTask(Long learningTimeId, Long subjectOfSubTaskId) {
-        LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(IllegalArgumentException::new);
+        LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.findById(subjectOfSubTaskId)
                 .orElseThrow(IllegalArgumentException::new);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
+    }
+
+    private LearningTime findLearningTimeById(Long learningTimeId) {
+        return learningTimeRepository.findById(learningTimeId)
+                .orElseThrow(IllegalArgumentException::new);
     }
 }
