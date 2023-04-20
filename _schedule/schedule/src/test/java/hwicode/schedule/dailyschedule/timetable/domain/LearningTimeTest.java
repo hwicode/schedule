@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class LearningTimeTest {
@@ -186,6 +187,18 @@ class LearningTimeTest {
 
         // then
         assertThat(isNotNull).isFalse();
+    }
+
+    @Test
+    void 학습_시간의_끝나는_시간이_시작_시간보다_이전_시간이면_에러가_발생한다() {
+        // given
+        LocalDateTime startTime = LocalDateTime.of(2023, 1, 1, 1, 1, 1);
+        LearningTime learningTime = new LearningTime(startTime);
+
+        // when then
+        LocalDateTime endTime = startTime.minusMinutes(10);
+        assertThatThrownBy(() -> learningTime.changeEndTime(endTime))
+                .isInstanceOf(IllegalArgumentException.class);
     }
 
     @ParameterizedTest

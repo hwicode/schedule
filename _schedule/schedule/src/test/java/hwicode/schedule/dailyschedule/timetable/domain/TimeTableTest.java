@@ -93,21 +93,6 @@ class TimeTableTest {
     }
 
     @Test
-    void 학습_시간의_끝나는_시간이_시작_시간보다_이전_시간이면_에러가_발생한다() {
-        // given
-        TimeTable timeTable = new TimeTable();
-
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 19, 3, 3);
-        LocalDateTime endTime = LocalDateTime.of(2023, 4, 19, 2, 2);
-
-        timeTable.createLearningTime(startTime);
-
-        // when then
-        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(startTime, endTime))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
-    @Test
     void 시작_시간에_해당하는_학습_시간이_없으면_에러가_발생한다() {
         // given
         TimeTable timeTable = new TimeTable();
