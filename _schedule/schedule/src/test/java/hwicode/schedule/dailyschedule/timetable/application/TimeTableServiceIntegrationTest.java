@@ -89,6 +89,26 @@ class TimeTableServiceIntegrationTest {
         assertThat(savedTimeTable.getTotalLearningTime()).isEqualTo(30);
     }
 
+    @Test
+    void 타임_테이블에_존재하는_학습_시간을_삭제할_수_있다() {
+        // given
+        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
+        LocalDateTime endTime = startTime.plusMinutes(30);
+
+        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
+        timeTable.createLearningTime(startTime);
+        timeTable.changeLearningTimeEndTime(startTime, endTime);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        timeTableService.deleteLearningTime(timeTable.getId(), startTime);
+
+        // then
+        TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
+        assertThat(savedTimeTable.getTotalLearningTime()).isZero();
+    }
+
 }
 
 @Service
@@ -123,6 +143,12 @@ class TimeTableService {
         TimeTable timeTable = findTimeTableById(timeTableId);
 
         return timeTable.changeLearningTimeEndTime(startTime, endTime);
+    }
+
+    @Transactional
+    public void deleteLearningTime(Long timeTableId, LocalDateTime startTime) {
+        TimeTable timeTable = findTimeTableById(timeTableId);
+        timeTable.deleteLearningTime(startTime);
     }
 
     private TimeTable findTimeTableById(Long timeTableId) {
