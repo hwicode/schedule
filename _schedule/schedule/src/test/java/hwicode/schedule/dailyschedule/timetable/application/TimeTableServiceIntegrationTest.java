@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
 class TimeTableServiceIntegrationTest {
@@ -51,6 +52,24 @@ class TimeTableServiceIntegrationTest {
         assertThat(learningTimeRepository.existsById(learningTimeId)).isTrue();
     }
 
+    @Test
+    void 타임_테이블에_존재하는_학습_시간의_시작_시간을_수정할_수_있다() {
+        // given
+        LocalDateTime localDateTime = LocalDateTime.of(2023, 4, 20, 0, 0);
+        TimeTable timeTable = new TimeTable(localDateTime.toLocalDate());
+        timeTable.createLearningTime(localDateTime);
+        timeTableRepository.save(timeTable);
+
+        // when
+        LocalDateTime newLocalDateTime = localDateTime.plusMinutes(30);
+        timeTableService.changeLearningTimeStartTime(timeTable.getId(), localDateTime, newLocalDateTime);
+
+        // then
+        TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
+        assertThatThrownBy(() -> savedTimeTable.createLearningTime(newLocalDateTime))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }
 
 @Service
@@ -66,11 +85,23 @@ class TimeTableService {
 
     @Transactional
     public Long createLearningTime(Long timeTableId, LocalDateTime startTime) {
-        TimeTable timeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTableId)
-                .orElseThrow(IllegalArgumentException::new);
+        TimeTable timeTable = findTimeTableById(timeTableId);
 
         LearningTime learningTime = timeTable.createLearningTime(startTime);
         return learningTimeSaveOnlyRepository.save(learningTime)
                 .getId();
     }
+
+    @Transactional
+    public LocalDateTime changeLearningTimeStartTime(Long timeTableId, LocalDateTime startTime, LocalDateTime newStartTime) {
+        TimeTable timeTable = findTimeTableById(timeTableId);
+
+        return timeTable.changeLearningTimeStartTime(startTime, newStartTime);
+    }
+
+    private TimeTable findTimeTableById(Long timeTableId) {
+        return timeTableRepository.findTimeTableWithLearningTimes(timeTableId)
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
 }
