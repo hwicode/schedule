@@ -88,4 +88,8 @@ public class TimeTable {
                 .mapToInt(LearningTime::getTime)
                 .sum();
     }
+
+    public Long getId() {
+        return id;
+    }
 }
