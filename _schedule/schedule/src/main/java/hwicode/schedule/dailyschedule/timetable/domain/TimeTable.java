@@ -7,15 +7,15 @@ import java.util.List;
 
 public class TimeTable {
 
-    private LocalDate today;
+    private final TimeTableValidator validator;
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
     public TimeTable(LocalDate today) {
-        this.today = today;
+        validator = new TimeTableValidator(today);
     }
 
     public LearningTime createLearningTime(LocalDateTime startTime) {
-        validateStartTime(startTime);
+        validator.validateStartTime(learningTimes, startTime);
 
         LearningTime learningTime = new LearningTime(startTime);
         learningTimes.add(learningTime);
@@ -24,52 +24,13 @@ public class TimeTable {
     }
 
     public LocalDateTime changeLearningTimeStartTime(LocalDateTime startTime, LocalDateTime newStartTime) {
-        validateStartTime(newStartTime);
+        validator.validateStartTime(learningTimes, newStartTime);
         return findLearningTimeBy(startTime).changeStartTime(newStartTime);
     }
 
-    private void validateStartTime(LocalDateTime startTime) {
-        validateDate(startTime);
-        validateBetweenTime(startTime);
-        validateSameStartTime(startTime);
-    }
-
-    private void validateSameStartTime(LocalDateTime startTime) {
-        boolean duplication = learningTimes.stream()
-                .anyMatch(learningTime -> learningTime.isSame(startTime));
-
-        if (duplication) {
-            throw new IllegalArgumentException();
-        }
-    }
-
     public LocalDateTime changeLearningTimeEndTime(LocalDateTime startTime, LocalDateTime endTime) {
-        validateEndTime(endTime);
+        validator.validateEndTime(learningTimes, endTime);
         return findLearningTimeBy(startTime).changeEndTime(endTime);
-    }
-
-    private void validateEndTime(LocalDateTime endTime) {
-        validateDate(endTime);
-        validateBetweenTime(endTime);
-    }
-
-    private void validateDate(LocalDateTime localDateTime) {
-        LocalDate localDate = localDateTime.toLocalDate();
-        LocalDate tomorrow = today.plusDays(1);
-
-        if (today.isEqual(localDate) || tomorrow.isEqual(localDate)) {
-            return;
-        }
-        throw new IllegalArgumentException();
-    }
-
-    private void validateBetweenTime(LocalDateTime time) {
-        boolean duplication = learningTimes.stream()
-                .anyMatch(learningTime -> learningTime.isContain(time));
-
-        if (duplication) {
-            throw new IllegalArgumentException();
-        }
     }
 
     public void deleteLearningTime(LocalDateTime startTime) {
