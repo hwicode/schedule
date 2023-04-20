@@ -16,6 +16,7 @@ class TimeTableTest {
     private final LocalDateTime startTime = LocalDateTime.of(2023, 4, 19, 5, 5);
     private final LocalDateTime newStartTime = LocalDateTime.of(2023, 4, 19, 6, 6);
     private final LocalDateTime endTime = LocalDateTime.of(2023, 4, 19, 6, 6);
+    private final String SUBJECT = "학습 주제";
 
     private TimeTable createTimeTable() {
         LocalDate localDate = startTime.toLocalDate();
@@ -180,11 +181,10 @@ class TimeTableTest {
     }
 
     @Test
-    void 타임테이블은_총_학습_시간을_계산할_수_있다() {
+    void 타임_테이블은_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate localDate = LocalDate.of(2023, 1, 1);
-        LocalTime localTime = LocalTime.of(1, 1);
-        LocalDateTime localDateTime = LocalDateTime.of(localDate, localTime);
+        LocalDateTime localDateTime = LocalDateTime.of(localDate, LocalTime.MIN);
 
         LocalDateTime[] startTimes = {
                 localDateTime,
@@ -219,6 +219,77 @@ class TimeTableTest {
         return timeTable;
     }
 
+    @Test
+    void 같은_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
+        // given
+        TimeTable timeTable = createTimeTable();
+
+        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+
+        learningTime1.changeSubject(SUBJECT);
+        learningTime2.changeSubject(SUBJECT);
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime4.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+
+        // when
+        int totalLearningTime = timeTable.getSubjectTotalLearningTime(SUBJECT);
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(70);
+    }
+
+    @Test
+    void 같은_Task_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
+        // given
+        TimeTable timeTable = createTimeTable();
+
+        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+
+        learningTime1.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime2.changeSubject(SUBJECT);
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime4.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+
+        // when
+        int totalLearningTime = timeTable.getSubjectOfTaskTotalLearningTime(new SubjectOfTask(SUBJECT));
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(120);
+    }
+
+    @Test
+    void 같은_SubTask_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
+        // given
+        TimeTable timeTable = createTimeTable();
+
+        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+
+        learningTime1.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime2.changeSubject(SUBJECT);
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime4.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+
+        // when
+        int totalLearningTime = timeTable.getSubjectOfSubTaskTotalLearningTime(new SubjectOfSubTask(SUBJECT));
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(150);
+    }
+
+    private LearningTime addLearningTime(TimeTable timeTable, LocalDateTime startTime, LocalDateTime endTime) {
+        LearningTime learningTime = timeTable.createLearningTime(startTime);
+        timeTable.changeLearningTimeEndTime(startTime, endTime);
+        return learningTime;
+    }
 }
 
 class TimeTable {
@@ -306,4 +377,27 @@ class TimeTable {
                 .sum();
     }
 
+    public int getSubjectTotalLearningTime(String subject) {
+        return learningTimes.stream()
+                .filter(learningTime -> learningTime.isSameSubject(subject))
+                .filter(LearningTime::isEndTimeNotNull)
+                .mapToInt(LearningTime::getTime)
+                .sum();
+    }
+
+    public int getSubjectOfTaskTotalLearningTime(SubjectOfTask subjectOfTask) {
+        return learningTimes.stream()
+                .filter(learningTime -> learningTime.isSameSubjectOfTask(subjectOfTask))
+                .filter(LearningTime::isEndTimeNotNull)
+                .mapToInt(LearningTime::getTime)
+                .sum();
+    }
+
+    public int getSubjectOfSubTaskTotalLearningTime(SubjectOfSubTask subjectOfSubTask) {
+        return learningTimes.stream()
+                .filter(learningTime -> learningTime.isSameSubjectOfSubTask(subjectOfSubTask))
+                .filter(LearningTime::isEndTimeNotNull)
+                .mapToInt(LearningTime::getTime)
+                .sum();
+    }
 }
