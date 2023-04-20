@@ -30,7 +30,7 @@ create table task (
    importance varchar(255) DEFAULT 'SECOND',
    difficulty varchar(255) DEFAULT 'NORMAL',
    task_status varchar(255) DEFAULT 'TODO',
-   daily_to_do_list_id bigint not null,
+   daily_to_do_list_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
