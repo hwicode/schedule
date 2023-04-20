@@ -81,16 +81,25 @@ public class LearningTime {
     }
 
     boolean isSameSubject(String subject) {
-        return subject.equals(this.subject);
+        if(this.subject == null) {
+            return false;
+        }
+        return this.subject.equals(subject);
     }
 
     boolean isSameSubjectOfTask(SubjectOfTask subjectOfTask) {
-        return subjectOfTask.getName()
-                .equals(this.subjectOfTask.getName());
+        if (this.subjectOfTask == null) {
+            return false;
+        }
+        return this.subjectOfTask.getName()
+                .equals(subjectOfTask.getName());
     }
 
     boolean isSameSubjectOfSubTask(SubjectOfSubTask subjectOfSubTask) {
-        return subjectOfSubTask.getName()
-                .equals(this.subjectOfSubTask.getName());
+        if (this.subjectOfSubTask == null) {
+            return false;
+        }
+        return this.subjectOfSubTask.getName()
+                .equals(subjectOfSubTask.getName());
     }
 }
