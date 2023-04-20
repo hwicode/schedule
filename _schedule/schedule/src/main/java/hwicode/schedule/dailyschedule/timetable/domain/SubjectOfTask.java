@@ -24,4 +24,8 @@ public class SubjectOfTask {
     String getName() {
         return name;
     }
+
+    public Long getId() {
+        return id;
+    }
 }

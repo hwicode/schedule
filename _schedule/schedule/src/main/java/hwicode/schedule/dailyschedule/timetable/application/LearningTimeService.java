@@ -4,6 +4,8 @@ import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,6 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 class LearningTimeService {
 
     private final LearningTimeRepository learningTimeRepository;
+    private final SubjectOfTaskRepository subjectOfTaskRepository;
+    private final SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
     @Transactional
     public boolean deleteSubject(Long learningTimeId) {
@@ -31,16 +35,22 @@ class LearningTimeService {
     }
 
     @Transactional
-    public String changeSubjectOfTask(Long learningTimeId, SubjectOfTask subjectOfTask) {
+    public String changeSubjectOfTask(Long learningTimeId, Long subjectOfTaskId) {
         LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.findById(subjectOfTaskId)
                 .orElseThrow(IllegalArgumentException::new);
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
 
     @Transactional
-    public String changeSubjectOfSubTask(Long learningTimeId, SubjectOfSubTask subjectOfSubTask) {
+    public String changeSubjectOfSubTask(Long learningTimeId, Long subjectOfSubTaskId) {
         LearningTime learningTime = learningTimeRepository.findById(learningTimeId)
+                .orElseThrow(IllegalArgumentException::new);
+
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.findById(subjectOfSubTaskId)
                 .orElseThrow(IllegalArgumentException::new);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);

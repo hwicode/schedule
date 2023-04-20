@@ -88,7 +88,7 @@ class LearningTimeServiceIntegrationTest {
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask("학습 주제"));
 
         // when
-        learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTask);
+        learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTask.getId());
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -106,7 +106,7 @@ class LearningTimeServiceIntegrationTest {
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask("학습 주제"));
 
         // when
-        learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask);
+        learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask.getId());
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
