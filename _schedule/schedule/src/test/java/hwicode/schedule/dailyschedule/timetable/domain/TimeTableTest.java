@@ -4,86 +4,81 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TimeTableTest {
 
-    private final LocalDateTime startTime = LocalDateTime.of(2023, 4, 19, 5, 5);
-    private final LocalDateTime newStartTime = LocalDateTime.of(2023, 4, 19, 6, 6);
-    private final LocalDateTime endTime = LocalDateTime.of(2023, 4, 19, 6, 6);
-
-    private final String SUBJECT = "학습 주제";
-
     @Test
     void 학습_시간을_생성할_때_시작_시간에_중복이_없으면_학습_시간은_생성된다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
         // when
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // then
-        assertThatThrownBy(() -> timeTable.createLearningTime(startTime))
+        assertThatThrownBy(() -> timeTable.createLearningTime(START_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간을_생성할_때_시작_시간이_중복되면_에러가_발생한다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // when then
-        assertThatThrownBy(() -> timeTable.createLearningTime(startTime))
+        assertThatThrownBy(() -> timeTable.createLearningTime(START_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간의_시작_시간을_변경할_때_중복이_없으면_시작_시간이_변경된다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // when
-        timeTable.changeLearningTimeStartTime(startTime, newStartTime);
+        timeTable.changeLearningTimeStartTime(START_TIME, NEW_START_TIME);
 
         // then
-        assertThatThrownBy(() -> timeTable.createLearningTime(newStartTime))
+        assertThatThrownBy(() -> timeTable.createLearningTime(NEW_START_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간의_시작_시간을_변경할_때_시작_시간이_중복되면_에러가_발생한다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
+        timeTable.createLearningTime(NEW_START_TIME);
 
         // when then
-        assertThatThrownBy(() -> timeTable.changeLearningTimeStartTime(startTime, startTime))
+        assertThatThrownBy(() -> timeTable.changeLearningTimeStartTime(START_TIME, NEW_START_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간이_다른_학습_시간과_겹치면_에러가_발생한다() {
         // given
-        LocalDateTime time = LocalDateTime.of(2023, 1, 1, 1, 1, 1);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        TimeTable timeTable = new TimeTable(time.toLocalDate());
-        timeTable.createLearningTime(time);
-        timeTable.changeLearningTimeEndTime(time, time.plusMinutes(60));
+        timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(60));
 
         // when then
-        LocalDateTime newTime = time.plusMinutes(30);
+        LocalDateTime newTime = START_TIME.plusMinutes(30);
         assertThatThrownBy(() -> timeTable.createLearningTime(newTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
@@ -91,80 +86,78 @@ class TimeTableTest {
     @Test
     void 학습_시간의_끝나는_시간을_변경할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // when
-        LocalDateTime changedEndTime = timeTable.changeLearningTimeEndTime(startTime, endTime);
+        LocalDateTime changedEndTime = timeTable.changeLearningTimeEndTime(START_TIME, END_TIME);
 
         // then
-        assertThat(changedEndTime).isEqualTo(endTime);
+        assertThat(changedEndTime).isEqualTo(END_TIME);
     }
 
     @Test
     void 타임_테이블의_날짜보다_이전의_날짜를_가진_학습_시간을_추가하면_에러가_발생한다() {
         // given
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        TimeTable timeTable = new TimeTable(date);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
-        LocalDateTime beforeDateTime = dateTime.minusDays(3);
+        LocalDateTime beforeStartTime = START_TIME.minusDays(3);
 
         // when then
-        assertThatThrownBy(() -> timeTable.createLearningTime(beforeDateTime))
+        assertThatThrownBy(() -> timeTable.createLearningTime(beforeStartTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 타임_테이블의_날짜보다_2일_이후의_날짜를_가진_학습_시간을_추가하면_에러가_발생한다() {
         // given
-        LocalDate date = LocalDate.of(2023, 1, 1);
-        TimeTable timeTable = new TimeTable(date);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        LocalDateTime dateTime = LocalDateTime.of(date, LocalTime.MIN);
-        LocalDateTime afterDateTime = dateTime.plusDays(3);
+        LocalDateTime afterStartTime = START_TIME.plusDays(3);
 
         // when then
-        assertThatThrownBy(() -> timeTable.createLearningTime(afterDateTime))
+        assertThatThrownBy(() -> timeTable.createLearningTime(afterStartTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 시작_시간에_해당하는_학습_시간이_없으면_에러가_발생한다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
         // when then
-        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(startTime, endTime))
+        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(START_TIME, END_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간을_삭제할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // when
-        timeTable.deleteLearningTime(startTime);
+        timeTable.deleteLearningTime(START_TIME);
 
         // then
-        assertThatThrownBy(() -> timeTable.deleteLearningTime(startTime))
+        assertThatThrownBy(() -> timeTable.deleteLearningTime(START_TIME))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간은_0이_된다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
+        timeTable.createLearningTime(START_TIME);
 
         // when
         int totalLearningTime = timeTable.getTotalLearningTime();
@@ -176,12 +169,12 @@ class TimeTableTest {
     @Test
     void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간에_포함되지_않는다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        timeTable.createLearningTime(startTime);
-        timeTable.changeLearningTimeEndTime(startTime, startTime.plusMinutes(50));
-        timeTable.createLearningTime(newStartTime);
+        timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(50));
+        timeTable.createLearningTime(NEW_START_TIME);
 
         // when
         int totalLearningTime = timeTable.getTotalLearningTime();
@@ -193,13 +186,13 @@ class TimeTableTest {
     @Test
     void 타임_테이블은_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        addLearningTime(timeTable, startTime, startTime.plusMinutes(40L));
-        addLearningTime(timeTable, startTime.plusMinutes(45L), startTime.plusMinutes(80L));
-        addLearningTime(timeTable, startTime.plusMinutes(90L), startTime.plusMinutes(120L));
-        addLearningTime(timeTable, startTime.plusMinutes(140L), startTime.plusMinutes(200L));
+        addLearningTime(timeTable, START_TIME, START_TIME.plusMinutes(40L));
+        addLearningTime(timeTable, START_TIME.plusMinutes(45L), START_TIME.plusMinutes(80L));
+        addLearningTime(timeTable, START_TIME.plusMinutes(90L), START_TIME.plusMinutes(120L));
+        addLearningTime(timeTable, START_TIME.plusMinutes(140L), START_TIME.plusMinutes(200L));
 
         // when
         int totalLearningTime = timeTable.getTotalLearningTime();
@@ -211,13 +204,13 @@ class TimeTableTest {
     @Test
     void 같은_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
-        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
-        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
-        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+        LearningTime learningTime1 = addLearningTime(timeTable, START_TIME, START_TIME.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, START_TIME.plusMinutes(40), START_TIME.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, START_TIME.plusMinutes(100), START_TIME.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, START_TIME.plusMinutes(140), START_TIME.plusMinutes(230));
 
         learningTime1.changeSubject(SUBJECT);
         learningTime2.changeSubject(SUBJECT);
@@ -234,13 +227,13 @@ class TimeTableTest {
     @Test
     void 같은_Task_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
-        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
-        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
-        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+        LearningTime learningTime1 = addLearningTime(timeTable, START_TIME, START_TIME.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, START_TIME.plusMinutes(40), START_TIME.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, START_TIME.plusMinutes(100), START_TIME.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, START_TIME.plusMinutes(140), START_TIME.plusMinutes(230));
 
         learningTime1.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
         learningTime2.changeSubject(SUBJECT);
@@ -257,13 +250,13 @@ class TimeTableTest {
     @Test
     void 같은_SubTask_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDate localDate = startTime.toLocalDate();
-        TimeTable timeTable = new TimeTable(localDate);
+        LocalDate startTimeDate = START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
 
-        LearningTime learningTime1 = addLearningTime(timeTable, startTime, startTime.plusMinutes(30));
-        LearningTime learningTime2 = addLearningTime(timeTable, startTime.plusMinutes(40), startTime.plusMinutes(80));
-        LearningTime learningTime3 = addLearningTime(timeTable, startTime.plusMinutes(100), startTime.plusMinutes(130));
-        LearningTime learningTime4 = addLearningTime(timeTable, startTime.plusMinutes(140), startTime.plusMinutes(230));
+        LearningTime learningTime1 = addLearningTime(timeTable, START_TIME, START_TIME.plusMinutes(30));
+        LearningTime learningTime2 = addLearningTime(timeTable, START_TIME.plusMinutes(40), START_TIME.plusMinutes(80));
+        LearningTime learningTime3 = addLearningTime(timeTable, START_TIME.plusMinutes(100), START_TIME.plusMinutes(130));
+        LearningTime learningTime4 = addLearningTime(timeTable, START_TIME.plusMinutes(140), START_TIME.plusMinutes(230));
 
         learningTime1.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
         learningTime2.changeSubject(SUBJECT);

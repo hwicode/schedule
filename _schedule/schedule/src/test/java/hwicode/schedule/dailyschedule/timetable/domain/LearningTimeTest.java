@@ -8,17 +8,15 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.time.LocalDateTime;
 import java.util.stream.Stream;
 
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class LearningTimeTest {
 
-    private final String SUBJECT = "학습 주제";
-    private final String NEW_SUBJECT = "새로운 학습 주제";
-
     private LearningTime createLearningTime() {
-        return new LearningTime(LocalDateTime.now());
+        return new LearningTime(START_TIME);
     }
 
     @Test

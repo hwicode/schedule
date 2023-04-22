@@ -16,6 +16,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDateTime;
 
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.SUBJECT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -48,12 +50,11 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_학습_시간을_추가할_수_있다() {
         // given
-        LocalDateTime localDateTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        TimeTable timeTable = new TimeTable(localDateTime.toLocalDate());
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
         timeTableRepository.save(timeTable);
 
         // when
-        Long learningTimeId = timeTableService.createLearningTime(timeTable.getId(), localDateTime);
+        Long learningTimeId = timeTableService.createLearningTime(timeTable.getId(), START_TIME);
 
         // then
         assertThat(learningTimeRepository.existsById(learningTimeId)).isTrue();
@@ -62,34 +63,31 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_존재하는_학습_시간의_시작_시간을_수정할_수_있다() {
         // given
-        LocalDateTime localDateTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        TimeTable timeTable = new TimeTable(localDateTime.toLocalDate());
-        timeTable.createLearningTime(localDateTime);
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
         // when
-        LocalDateTime newLocalDateTime = localDateTime.plusMinutes(30);
-        timeTableService.changeLearningTimeStartTime(timeTable.getId(), localDateTime, newLocalDateTime);
+        LocalDateTime newStartTime = START_TIME.plusMinutes(30);
+        timeTableService.changeLearningTimeStartTime(timeTable.getId(), START_TIME, newStartTime);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
-        assertThatThrownBy(() -> savedTimeTable.createLearningTime(newLocalDateTime))
+        assertThatThrownBy(() -> savedTimeTable.createLearningTime(newStartTime))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void 타임_테이블에_존재하는_학습_시간의_끝나는_시간을_수정할_수_있다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        LocalDateTime endTime = startTime.plusMinutes(30);
-
-        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
-        timeTable.createLearningTime(startTime);
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        timeTable.createLearningTime(START_TIME);
 
         timeTableRepository.save(timeTable);
 
         // when
-        timeTableService.changeLearningTimeEndTime(timeTable.getId(), startTime, endTime);
+        LocalDateTime endTime = START_TIME.plusMinutes(30);
+        timeTableService.changeLearningTimeEndTime(timeTable.getId(), START_TIME, endTime);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
@@ -99,17 +97,15 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_존재하는_학습_시간을_삭제할_수_있다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        LocalDateTime endTime = startTime.plusMinutes(30);
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
 
-        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
-        timeTable.createLearningTime(startTime);
-        timeTable.changeLearningTimeEndTime(startTime, endTime);
+        timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
 
         timeTableRepository.save(timeTable);
 
         // when
-        timeTableService.deleteLearningTime(timeTable.getId(), startTime);
+        timeTableService.deleteLearningTime(timeTable.getId(), START_TIME);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
@@ -119,18 +115,16 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_존재하는_특정_학습_주제의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        LocalDateTime endTime = startTime.plusMinutes(30);
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
 
-        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
-        LearningTime learningTime = timeTable.createLearningTime(startTime);
-        timeTable.changeLearningTimeEndTime(startTime, endTime);
-        learningTime.changeSubject("subject");
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubject(SUBJECT);
 
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTable.getId(), "subject");
+        int totalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
 
         // then
         assertThat(totalLearningTime).isEqualTo(30);
@@ -139,14 +133,12 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_존재하는_특정_Task_학습_주제의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        LocalDateTime endTime = startTime.plusMinutes(30);
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask("학습 주제"));
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
 
-        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
-        LearningTime learningTime = timeTable.createLearningTime(startTime);
-        timeTable.changeLearningTimeEndTime(startTime, endTime);
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         learningTime.changeSubjectOfTask(subjectOfTask);
 
         timeTableRepository.save(timeTable);
@@ -161,14 +153,12 @@ class TimeTableServiceIntegrationTest {
     @Test
     void 타임_테이블에_존재하는_특정_SubTask_학습_주제의_총_학습_시간을_계산할_수_있다() {
         // given
-        LocalDateTime startTime = LocalDateTime.of(2023, 4, 20, 0, 0);
-        LocalDateTime endTime = startTime.plusMinutes(30);
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask("학습 주제"));
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
 
-        TimeTable timeTable = new TimeTable(startTime.toLocalDate());
-        LearningTime learningTime = timeTable.createLearningTime(startTime);
-        timeTable.changeLearningTimeEndTime(startTime, endTime);
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         learningTime.changeSubjectOfSubTask(subjectOfSubTask);
 
         timeTableRepository.save(timeTable);

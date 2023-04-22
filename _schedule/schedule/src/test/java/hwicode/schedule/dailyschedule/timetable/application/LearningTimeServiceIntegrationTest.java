@@ -14,9 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.SUBJECT;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -48,9 +47,9 @@ class LearningTimeServiceIntegrationTest {
     @Test
     void 학습_시간의_학습_주제를_삭제할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(LocalDate.now());
-        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
-        learningTime.changeSubject("학습 주제");
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        learningTime.changeSubject(SUBJECT);
         timeTableRepository.save(timeTable);
 
         // when
@@ -65,12 +64,12 @@ class LearningTimeServiceIntegrationTest {
     @Test
     void 학습_시간의_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(LocalDate.now());
-        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
         // when
-        learningTimeService.changeSubject(learningTime.getId(), "학습 주제");
+        learningTimeService.changeSubject(learningTime.getId(), SUBJECT);
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -81,11 +80,11 @@ class LearningTimeServiceIntegrationTest {
     @Test
     void 학습_시간의_Task_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(LocalDate.now());
-        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask("학습 주제"));
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
         // when
         learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTask.getId());
@@ -99,11 +98,11 @@ class LearningTimeServiceIntegrationTest {
     @Test
     void 학습_시간의_SubTask_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(LocalDate.now());
-        LearningTime learningTime = timeTable.createLearningTime(LocalDateTime.now());
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask("학습 주제"));
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
         // when
         learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask.getId());
