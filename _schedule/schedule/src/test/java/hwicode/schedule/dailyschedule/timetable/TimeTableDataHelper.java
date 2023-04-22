@@ -2,6 +2,8 @@ package hwicode.schedule.dailyschedule.timetable;
 
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
 
 import java.time.LocalDateTime;
 
@@ -14,13 +16,23 @@ public class TimeTableDataHelper {
     public static final String SUBJECT = "subject";
     public static final String NEW_SUBJECT = "newSubject";
 
+
     // LearningTime request dto
     public static LearningTimeSubjectModifyRequest createLearningTimeSubjectModifyRequest(String newSubject) {
         return new LearningTimeSubjectModifyRequest(newSubject);
     }
 
+    public static LearningTimeSubjectOfTaskModifyRequest createLearningTimeSubjectOfTaskModifyRequest(Long subjectOfTaskId) {
+        return new LearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
+    }
+
+
     // LearningTime response dto
     public static LearningTimeSubjectModifyResponse createLearningTimeSubjectModifyResponse(Long learningTimeId, String newSubject) {
         return new LearningTimeSubjectModifyResponse(learningTimeId, newSubject);
+    }
+
+    public static LearningTimeSubjectOfTaskModifyResponse createLearningTimeSubjectOfTaskModifyResponse(Long learningTimeId, String newSubject) {
+        return new LearningTimeSubjectOfTaskModifyResponse(learningTimeId, newSubject);
     }
 }

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -75,6 +77,35 @@ class LearningTImeControllerTest {
                 ));
 
         verify(learningTimeService).changeSubject(any(), any());
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        Long learningTimeId = 1L;
+        Long subjectOfTaskId = 1L;
+
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
+        LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = createLearningTimeSubjectOfTaskModifyResponse(learningTimeId, NEW_SUBJECT);
+
+        given(learningTimeService.changeSubjectOfTask(any(), any()))
+                .willReturn(NEW_SUBJECT);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", learningTimeId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
+                        ));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyResponse)
+                ));
+
+        verify(learningTimeService).changeSubjectOfTask(any(), any());
     }
 
 }
