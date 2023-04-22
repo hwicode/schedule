@@ -1,6 +1,9 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.dailyschedule.timetable.domain.*;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfSubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
@@ -59,7 +62,7 @@ public class TimeTableService {
     public int calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
         TimeTable timeTable = findTimeTableById(timeTableId);
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.findById(subjectOfTaskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubjectOfTaskNotFoundException::new);
 
         return timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
     }
@@ -68,7 +71,7 @@ public class TimeTableService {
     public int calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
         TimeTable timeTable = findTimeTableById(timeTableId);
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.findById(subjectOfSubTaskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubjectOfSubTaskNotFoundException::new);
 
         return timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
     }
@@ -76,7 +79,7 @@ public class TimeTableService {
 
     private TimeTable findTimeTableById(Long timeTableId) {
         return timeTableRepository.findTimeTableWithLearningTimes(timeTableId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TimeTableNotFoundException::new);
     }
 
 }

@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
@@ -74,7 +75,7 @@ class TimeTableServiceIntegrationTest {
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
         assertThatThrownBy(() -> savedTimeTable.createLearningTime(newStartTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test

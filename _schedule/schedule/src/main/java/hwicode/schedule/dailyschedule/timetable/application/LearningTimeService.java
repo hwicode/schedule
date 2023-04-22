@@ -3,6 +3,9 @@ package hwicode.schedule.dailyschedule.timetable.application;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfSubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
@@ -37,7 +40,7 @@ public class LearningTimeService {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.findById(subjectOfTaskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubjectOfTaskNotFoundException::new);
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
@@ -47,13 +50,13 @@ public class LearningTimeService {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
 
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.findById(subjectOfSubTaskId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubjectOfSubTaskNotFoundException::new);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
     }
 
     private LearningTime findLearningTimeById(Long learningTimeId) {
         return learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(TimeTableNotFoundException::new);
     }
 }

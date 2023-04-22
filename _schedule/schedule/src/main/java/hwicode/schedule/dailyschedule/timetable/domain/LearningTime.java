@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -95,7 +96,7 @@ public class LearningTime {
 
     private void validateEndTime(LocalDateTime endTime) {
         if (startTime.isAfter(endTime)) {
-            throw new IllegalArgumentException();
+            throw new EndTimeNotValidException();
         }
     }
 

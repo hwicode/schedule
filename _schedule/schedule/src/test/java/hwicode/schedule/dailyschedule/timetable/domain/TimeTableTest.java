@@ -1,5 +1,10 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -22,7 +27,7 @@ class TimeTableTest {
 
         // then
         assertThatThrownBy(() -> timeTable.createLearningTime(START_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
@@ -35,7 +40,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(START_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
@@ -51,7 +56,7 @@ class TimeTableTest {
 
         // then
         assertThatThrownBy(() -> timeTable.createLearningTime(NEW_START_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
@@ -65,7 +70,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.changeLearningTimeStartTime(START_TIME, NEW_START_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
@@ -80,7 +85,7 @@ class TimeTableTest {
         // when then
         LocalDateTime newTime = START_TIME.plusMinutes(30);
         assertThatThrownBy(() -> timeTable.createLearningTime(newTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ContainOtherTimeException.class);
     }
 
     @Test
@@ -108,7 +113,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(beforeStartTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DateNotValidException.class);
     }
 
     @Test
@@ -121,7 +126,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(afterStartTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(DateNotValidException.class);
     }
 
     @Test
@@ -132,7 +137,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(START_TIME, END_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(LearningTimeNotFoundException.class);
     }
 
     @Test
@@ -148,7 +153,7 @@ class TimeTableTest {
 
         // then
         assertThatThrownBy(() -> timeTable.deleteLearningTime(START_TIME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(LearningTimeNotFoundException.class);
     }
 
     @Test

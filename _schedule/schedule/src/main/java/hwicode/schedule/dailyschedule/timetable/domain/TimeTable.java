@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -55,7 +56,7 @@ public class TimeTable {
         return learningTimes.stream()
                 .filter(learningTime -> learningTime.isSame(startTime))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(LearningTimeNotFoundException::new);
     }
 
     public int getTotalLearningTime() {

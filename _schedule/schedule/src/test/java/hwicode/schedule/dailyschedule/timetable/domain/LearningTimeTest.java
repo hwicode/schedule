@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
+import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -196,7 +197,7 @@ class LearningTimeTest {
         // when then
         LocalDateTime endTime = startTime.minusMinutes(10);
         assertThatThrownBy(() -> learningTime.changeEndTime(endTime))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(EndTimeNotValidException.class);
     }
 
     @ParameterizedTest
