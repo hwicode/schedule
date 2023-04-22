@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-class LearningTimeService {
+public class LearningTimeService {
 
     private final LearningTimeRepository learningTimeRepository;
     private final SubjectOfTaskRepository subjectOfTaskRepository;

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
-class TimeTableService {
+public class TimeTableService {
 
     private final TimeTableRepository timeTableRepository;
     private final LearningTimeSaveOnlyRepository learningTimeSaveOnlyRepository;
