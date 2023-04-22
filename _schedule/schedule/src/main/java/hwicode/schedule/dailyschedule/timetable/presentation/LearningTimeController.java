@@ -1,13 +1,13 @@
 package hwicode.schedule.dailyschedule.timetable.presentation;
 
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
@@ -20,5 +20,16 @@ class LearningTimeController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubject(@PathVariable @NotBlank Long learningTimeId) {
         learningTimeService.deleteSubject(learningTimeId);
+    }
+
+    @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subject")
+    @ResponseStatus(value = HttpStatus.OK)
+    public LearningTimeSubjectModifyResponse changeSubject(@PathVariable @NotBlank Long learningTimeId,
+                                                           @RequestBody @Valid LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest) {
+        String newSubject = learningTimeService.changeSubject(
+                learningTimeId, learningTimeSubjectModifyRequest.getNewSubject()
+        );
+
+        return new LearningTimeSubjectModifyResponse(learningTimeId, newSubject);
     }
 }
