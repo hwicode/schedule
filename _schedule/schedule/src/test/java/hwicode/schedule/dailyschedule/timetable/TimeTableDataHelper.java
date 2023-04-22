@@ -2,6 +2,8 @@ package hwicode.schedule.dailyschedule.timetable;
 
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
 
@@ -26,6 +28,10 @@ public class TimeTableDataHelper {
         return new LearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
     }
 
+    public static LearningTimeSubjectOfSubTaskModifyRequest createLearningTimeSubjectOfSubTaskModifyRequest(Long subjectOfSubTaskId) {
+        return new LearningTimeSubjectOfSubTaskModifyRequest(subjectOfSubTaskId);
+    }
+
 
     // LearningTime response dto
     public static LearningTimeSubjectModifyResponse createLearningTimeSubjectModifyResponse(Long learningTimeId, String newSubject) {
@@ -34,5 +40,9 @@ public class TimeTableDataHelper {
 
     public static LearningTimeSubjectOfTaskModifyResponse createLearningTimeSubjectOfTaskModifyResponse(Long learningTimeId, String newSubject) {
         return new LearningTimeSubjectOfTaskModifyResponse(learningTimeId, newSubject);
+    }
+
+    public static LearningTimeSubjectOfSubTaskModifyResponse createLearningTimeSubjectOfSubTaskModifyResponse(Long learningTimeId, String newSubject) {
+        return new LearningTimeSubjectOfSubTaskModifyResponse(learningTimeId, newSubject);
     }
 }

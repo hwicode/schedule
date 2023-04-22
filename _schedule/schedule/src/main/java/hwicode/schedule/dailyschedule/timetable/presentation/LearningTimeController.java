@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import lombok.RequiredArgsConstructor;
@@ -38,11 +40,22 @@ class LearningTimeController {
     @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subjectoftask")
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectOfTaskModifyResponse changeTaskOfSubject(@PathVariable @NotBlank Long learningTimeId,
-                                                                 @RequestBody @Valid LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest) {
+                                                                       @RequestBody @Valid LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest) {
         String newSubject = learningTimeService.changeSubjectOfTask(
                 learningTimeId, learningTimeSubjectOfTaskModifyRequest.getSubjectOfTaskId()
         );
 
         return new LearningTimeSubjectOfTaskModifyResponse(learningTimeId, newSubject);
+    }
+
+    @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subjectofsubtask")
+    @ResponseStatus(value = HttpStatus.OK)
+    public LearningTimeSubjectOfSubTaskModifyResponse changeSubTaskOfSubject(@PathVariable @NotBlank Long learningTimeId,
+                                                                             @RequestBody @Valid LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest) {
+        String newSubject = learningTimeService.changeSubjectOfSubTask(
+                learningTimeId, learningTimeSubjectOfSubTaskModifyRequest.getSubjectOfSubTaskId()
+        );
+
+        return new LearningTimeSubjectOfSubTaskModifyResponse(learningTimeId, newSubject);
     }
 }
