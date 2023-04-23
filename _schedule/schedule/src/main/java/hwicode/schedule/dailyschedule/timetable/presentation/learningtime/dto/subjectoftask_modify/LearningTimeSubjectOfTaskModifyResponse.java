@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify;
+package hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,7 +12,7 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class LearningTimeSubjectModifyResponse {
+public class LearningTimeSubjectOfTaskModifyResponse {
 
     @NotNull @Positive
     private Long learningTimeId;

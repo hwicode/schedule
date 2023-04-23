@@ -1,12 +1,12 @@
-package hwicode.schedule.dailyschedule.timetable.presentation;
+package hwicode.schedule.dailyschedule.timetable.presentation.learningtime;
 
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +16,7 @@ import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
-class LearningTimeController {
+public class LearningTimeController {
 
     private final LearningTimeService learningTimeService;
 

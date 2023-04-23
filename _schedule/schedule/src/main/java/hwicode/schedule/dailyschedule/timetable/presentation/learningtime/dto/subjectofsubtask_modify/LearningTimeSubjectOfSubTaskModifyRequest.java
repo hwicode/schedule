@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify;
+package hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
