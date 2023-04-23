@@ -24,7 +24,7 @@ public class TimeTableService {
     private final SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
     @Transactional
-    public Long createLearningTime(Long timeTableId, LocalDateTime startTime) {
+    public Long saveLearningTime(Long timeTableId, LocalDateTime startTime) {
         TimeTable timeTable = findTimeTableById(timeTableId);
 
         LearningTime learningTime = timeTable.createLearningTime(startTime);

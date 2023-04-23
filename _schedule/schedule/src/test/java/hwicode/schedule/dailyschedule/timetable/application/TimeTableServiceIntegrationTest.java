@@ -55,7 +55,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        Long learningTimeId = timeTableService.createLearningTime(timeTable.getId(), START_TIME);
+        Long learningTimeId = timeTableService.saveLearningTime(timeTable.getId(), START_TIME);
 
         // then
         assertThat(learningTimeRepository.existsById(learningTimeId)).isTrue();
