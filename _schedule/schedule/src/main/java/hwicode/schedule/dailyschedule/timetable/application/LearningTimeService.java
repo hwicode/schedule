@@ -5,7 +5,7 @@ import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfSubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
@@ -57,6 +57,6 @@ public class LearningTimeService {
 
     private LearningTime findLearningTimeById(Long learningTimeId) {
         return learningTimeRepository.findById(learningTimeId)
-                .orElseThrow(TimeTableNotFoundException::new);
+                .orElseThrow(LearningTimeNotFoundException::new);
     }
 }

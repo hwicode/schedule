@@ -2,6 +2,9 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfSubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subject_modify.LearningTimeSubjectModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
@@ -23,6 +26,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -135,6 +139,81 @@ class LearningTImeControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(
                         objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyResponse)
                 ));
+
+        verify(learningTimeService).changeSubjectOfSubTask(any(), any());
+    }
+
+    @Test
+    void 학습_시간의_학습_주제_삭제을_요청할_때_학습_시간이_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
+        Long learningTimeId = 1L;
+
+        given(learningTimeService.deleteSubject(any()))
+                .willThrow(learningTimeNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete(String.format("/dailyschedule/timetable/%s/subject", learningTimeId))
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(learningTimeNotFoundException.getMessage()));
+
+        verify(learningTimeService).deleteSubject(any());
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제_변경을_요청할_때_Task_학습_주제가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        SubjectOfTaskNotFoundException subjectOfTaskNotFoundException = new SubjectOfTaskNotFoundException();
+        Long learningTimeId = 1L;
+        Long subjectOfTaskId = 1L;
+
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
+
+        given(learningTimeService.changeSubjectOfTask(any(), any()))
+                .willThrow(subjectOfTaskNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", learningTimeId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
+                        ));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(subjectOfTaskNotFoundException.getMessage()));
+
+        verify(learningTimeService).changeSubjectOfTask(any(), any());
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제_변경을_요청할_때_SubTask_학습_주제가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        SubjectOfSubTaskNotFoundException subjectOfSubTaskNotFoundException = new SubjectOfSubTaskNotFoundException();
+        Long learningTimeId = 1L;
+        Long subjectOfSubTaskId = 1L;
+
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(subjectOfSubTaskId);
+
+        given(learningTimeService.changeSubjectOfSubTask(any(), any()))
+                .willThrow(subjectOfSubTaskNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", learningTimeId))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
+                        ));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(subjectOfSubTaskNotFoundException.getMessage()));
 
         verify(learningTimeService).changeSubjectOfSubTask(any(), any());
     }
