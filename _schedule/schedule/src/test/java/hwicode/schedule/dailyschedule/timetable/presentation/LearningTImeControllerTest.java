@@ -45,12 +45,9 @@ class LearningTImeControllerTest {
 
     @Test
     void 학습_시간의_학습_주제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        Long learningTimeId = 1L;
-
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/timetable/%s/subject", learningTimeId))
+                delete(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
         );
 
         // then
@@ -62,20 +59,20 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        Long learningTimeId = 1L;
         LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = createLearningTimeSubjectModifyRequest(NEW_SUBJECT);
-        LearningTimeSubjectModifyResponse learningTimeSubjectModifyResponse = createLearningTimeSubjectModifyResponse(learningTimeId, NEW_SUBJECT);
+        LearningTimeSubjectModifyResponse learningTimeSubjectModifyResponse = createLearningTimeSubjectModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubject(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subject", learningTimeId))
+                patch(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectModifyRequest)
-                        ));
+                        )
+        );
 
         // then
         perform.andExpect(status().isOk())
@@ -89,22 +86,20 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_Task_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        Long learningTimeId = 1L;
-        Long subjectOfTaskId = 1L;
-
-        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
-        LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = createLearningTimeSubjectOfTaskModifyResponse(learningTimeId, NEW_SUBJECT);
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
+        LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = createLearningTimeSubjectOfTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubjectOfTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", learningTimeId))
+                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
-                        ));
+                        )
+        );
 
         // then
         perform.andExpect(status().isOk())
@@ -118,22 +113,20 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_SubTask_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        Long learningTimeId = 1L;
-        Long subjectOfSubTaskId = 1L;
-
-        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(subjectOfSubTaskId);
-        LearningTimeSubjectOfSubTaskModifyResponse learningTimeSubjectOfSubTaskModifyResponse = createLearningTimeSubjectOfSubTaskModifyResponse(learningTimeId, NEW_SUBJECT);
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
+        LearningTimeSubjectOfSubTaskModifyResponse learningTimeSubjectOfSubTaskModifyResponse = createLearningTimeSubjectOfSubTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubjectOfSubTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", learningTimeId))
+                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
-                        ));
+                        )
+        );
 
         // then
         perform.andExpect(status().isOk())
@@ -148,14 +141,13 @@ class LearningTImeControllerTest {
     void 학습_시간의_학습_주제_삭제을_요청할_때_학습_시간이_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
-        Long learningTimeId = 1L;
 
         given(learningTimeService.deleteSubject(any()))
                 .willThrow(learningTimeNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/timetable/%s/subject", learningTimeId))
+                delete(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
         );
 
         // then
@@ -169,21 +161,20 @@ class LearningTImeControllerTest {
     void 학습_시간의_Task_학습_주제_변경을_요청할_때_Task_학습_주제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubjectOfTaskNotFoundException subjectOfTaskNotFoundException = new SubjectOfTaskNotFoundException();
-        Long learningTimeId = 1L;
-        Long subjectOfTaskId = 1L;
 
-        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(subjectOfTaskId);
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
 
         given(learningTimeService.changeSubjectOfTask(any(), any()))
                 .willThrow(subjectOfTaskNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", learningTimeId))
+                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
-                        ));
+                        )
+        );
 
         // then
         perform.andExpect(status().isNotFound())
@@ -196,21 +187,20 @@ class LearningTImeControllerTest {
     void 학습_시간의_Task_학습_주제_변경을_요청할_때_SubTask_학습_주제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubjectOfSubTaskNotFoundException subjectOfSubTaskNotFoundException = new SubjectOfSubTaskNotFoundException();
-        Long learningTimeId = 1L;
-        Long subjectOfSubTaskId = 1L;
 
-        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(subjectOfSubTaskId);
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
 
         given(learningTimeService.changeSubjectOfSubTask(any(), any()))
                 .willThrow(subjectOfSubTaskNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", learningTimeId))
+                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
-                        ));
+                        )
+        );
 
         // then
         perform.andExpect(status().isNotFound())

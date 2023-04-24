@@ -14,7 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -36,17 +36,15 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        Long timeTableId = 1L;
-        Long learningTimeId = 1L;
         LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
-        LearningTimeSaveResponse learningTimeSaveResponse = new LearningTimeSaveResponse(learningTimeId, START_TIME);
+        LearningTimeSaveResponse learningTimeSaveResponse = new LearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
 
         given(timeTableService.saveLearningTime(any(), any()))
-                .willReturn(learningTimeId);
+                .willReturn(LEARNING_TIME_ID);
 
         // when
         ResultActions perform = mockMvc.perform(
-                post(String.format("/dailyschedule/timetables/%s", timeTableId))
+                post(String.format("/dailyschedule/timetables/%s", TIME_TABLE_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
