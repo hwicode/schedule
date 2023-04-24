@@ -8,7 +8,8 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime.SubjectTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -71,4 +72,11 @@ public class TimeTableController {
         return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
     }
 
+    @GetMapping("/dailyschedule/timetables/{timeTableId}/subjectoftask/{subjectOfTaskId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubjectOfTaskTotalLearningTimeResponse getSubjectOfTaskTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
+                                                                                    @PathVariable @NotBlank Long subjectOfTaskId) {
+        int totalLearningTime = timeTableService.calculateSubjectOfTaskTotalLearningTime(timeTableId, subjectOfTaskId);
+        return new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
+    }
 }

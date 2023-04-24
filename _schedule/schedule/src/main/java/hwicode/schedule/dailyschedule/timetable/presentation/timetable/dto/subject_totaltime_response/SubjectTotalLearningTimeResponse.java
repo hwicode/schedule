@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime;
+package hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

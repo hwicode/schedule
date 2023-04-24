@@ -10,7 +10,8 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime.SubjectTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -161,6 +162,29 @@ class TimeTableControllerTest {
                 ));
 
         verify(timeTableService).calculateSubjectTotalLearningTime(any(), any());
+    }
+
+    @Test
+    void Task_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        int totalLearningTime = 100;
+        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
+
+        given(timeTableService.calculateSubjectOfTaskTotalLearningTime(any(), any()))
+                .willReturn(totalLearningTime);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                get(String.format("/dailyschedule/timetables/%s/subjectoftask/%s", TIME_TABLE_ID, SUBJECT_OF_TASK_ID))
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subjectOfTaskTotalLearningTimeResponse)
+                ));
+
+        verify(timeTableService).calculateSubjectOfTaskTotalLearningTime(any(), any());
     }
 
 }
