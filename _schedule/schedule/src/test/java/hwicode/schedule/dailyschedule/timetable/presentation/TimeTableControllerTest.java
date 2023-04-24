@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -27,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TimeTableController.class)
@@ -210,4 +212,30 @@ class TimeTableControllerTest {
 
         verify(timeTableService).calculateSubjectOfSubTaskTotalLearningTime(any(), any());
     }
+
+    @Test
+    void 학습_시간_생성을_요청할_때_타임_테이블이_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        TimeTableNotFoundException timeTableNotFoundException = new TimeTableNotFoundException();
+        LearningTimeSaveRequest learningTimeSaveRequest = createLearningTimeSaveRequest(START_TIME);
+
+        given(timeTableService.saveLearningTime(any(), any()))
+                .willThrow(timeTableNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post(String.format("/dailyschedule/timetables/%s", TIME_TABLE_ID))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(learningTimeSaveRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(timeTableNotFoundException.getMessage()));
+
+        verify(timeTableService).saveLearningTime(any(), any());
+    }
+
 }
