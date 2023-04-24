@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -63,4 +64,29 @@ class LearningTimeEndToEndTest {
         assertThat(isDelete).isFalse();
     }
 
+    @Test
+    void 학습_주제_수정_요청() {
+        // given
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTableRepository.save(timeTable);
+
+        LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = createLearningTimeSubjectModifyRequest(NEW_SUBJECT);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON)
+                .body(learningTimeSubjectModifyRequest);
+
+        // when
+        Response response = requestSpecification.when()
+                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, LEARNING_TIME_ID));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isTrue();
+    }
 }
