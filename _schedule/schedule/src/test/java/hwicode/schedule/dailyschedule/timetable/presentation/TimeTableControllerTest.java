@@ -10,6 +10,7 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime.SubjectTotalLearningTimeResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -138,4 +139,28 @@ class TimeTableControllerTest {
 
         verify(timeTableService).deleteLearningTime(any(), any());
     }
+
+    @Test
+    void 특정_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        int totalLearningTime = 100;
+        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = new SubjectTotalLearningTimeResponse(totalLearningTime);
+
+        given(timeTableService.calculateSubjectTotalLearningTime(any(), any()))
+                .willReturn(totalLearningTime);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                get(String.format("/dailyschedule/timetables/%s/%s", TIME_TABLE_ID, SUBJECT))
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subjectTotalLearningTimeResponse)
+                ));
+
+        verify(timeTableService).calculateSubjectTotalLearningTime(any(), any());
+    }
+
 }

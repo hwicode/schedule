@@ -8,6 +8,7 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime.SubjectTotalLearningTimeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -61,4 +62,13 @@ public class TimeTableController {
                 learningTimeDeleteRequest.getTimeTableId(), startTime
         );
     }
+
+    @GetMapping("/dailyschedule/timetables/{timeTableId}/{subject}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubjectTotalLearningTimeResponse getSubjectTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
+                                                                        @PathVariable @NotBlank String subject) {
+        int subjectTotalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTableId, subject);
+        return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
+    }
+
 }
