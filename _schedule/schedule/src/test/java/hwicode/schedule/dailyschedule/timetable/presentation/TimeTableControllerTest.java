@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.application.Tim
 import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -312,6 +313,31 @@ class TimeTableControllerTest {
         // then
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(containOtherTimeException.getMessage()));
+
+        verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
+    }
+
+    @Test
+    void 학습_시간의_시작시간_변경을_요청할_때_요청_날짜가_타임_테이블의_날짜_또는_그_다음날이_아닌_경우_에러가_발생한다() throws Exception {
+        // given
+        DateNotValidException dateNotValidException = new DateNotValidException();
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+
+        given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
+                .willThrow(dateNotValidException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(startTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(dateNotValidException.getMessage()));
 
         verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
     }
