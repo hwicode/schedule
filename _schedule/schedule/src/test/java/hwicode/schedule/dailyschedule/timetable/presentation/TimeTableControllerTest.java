@@ -44,8 +44,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
-        LearningTimeSaveResponse learningTimeSaveResponse = new LearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
+        LearningTimeSaveRequest learningTimeSaveRequest = createLearningTimeSaveRequest(START_TIME);
+        LearningTimeSaveResponse learningTimeSaveResponse = createLearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
 
         given(timeTableService.saveLearningTime(any(), any()))
                 .willReturn(LEARNING_TIME_ID);
@@ -71,8 +71,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_시작시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
-        StartTimeModifyResponse startTimeModifyResponse = new StartTimeModifyResponse(NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+        StartTimeModifyResponse startTimeModifyResponse = createStartTimeModifyResponse(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willReturn(NEW_START_TIME);
@@ -98,8 +98,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_끝나는_시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
-        EndTimeModifyResponse endTimeModifyResponse = new EndTimeModifyResponse(END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+        EndTimeModifyResponse endTimeModifyResponse = createEndTimeModifyResponse(END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willReturn(END_TIME);
@@ -125,7 +125,7 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeDeleteRequest learningTimeDeleteRequest = new LearningTimeDeleteRequest(TIME_TABLE_ID);
+        LearningTimeDeleteRequest learningTimeDeleteRequest = createLearningTimeDeleteRequest(TIME_TABLE_ID);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -146,7 +146,7 @@ class TimeTableControllerTest {
     void 특정_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = new SubjectTotalLearningTimeResponse(totalLearningTime);
+        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = createSubjectTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);
@@ -169,7 +169,7 @@ class TimeTableControllerTest {
     void Task_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
+        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = createSubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectOfTaskTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);
@@ -192,7 +192,7 @@ class TimeTableControllerTest {
     void SubTask_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
+        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = createSubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectOfSubTaskTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);

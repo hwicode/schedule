@@ -6,6 +6,16 @@ import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.su
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 
 import java.time.LocalDateTime;
 
@@ -26,7 +36,7 @@ public class TimeTableDataHelper {
     public static final String NEW_SUBJECT = "newSubject";
 
 
-    // LearningTime request dto
+    // learningtime package request dto
     public static LearningTimeSubjectModifyRequest createLearningTimeSubjectModifyRequest(String newSubject) {
         return new LearningTimeSubjectModifyRequest(newSubject);
     }
@@ -40,7 +50,7 @@ public class TimeTableDataHelper {
     }
 
 
-    // LearningTime response dto
+    // learningtime package response dto
     public static LearningTimeSubjectModifyResponse createLearningTimeSubjectModifyResponse(Long learningTimeId, String newSubject) {
         return new LearningTimeSubjectModifyResponse(learningTimeId, newSubject);
     }
@@ -52,4 +62,49 @@ public class TimeTableDataHelper {
     public static LearningTimeSubjectOfSubTaskModifyResponse createLearningTimeSubjectOfSubTaskModifyResponse(Long learningTimeId, String newSubject) {
         return new LearningTimeSubjectOfSubTaskModifyResponse(learningTimeId, newSubject);
     }
+
+
+    // timetable package request dto
+    public static LearningTimeSaveRequest createLearningTimeSaveRequest(LocalDateTime startTime) {
+        return new LearningTimeSaveRequest(startTime);
+    }
+
+    public static StartTimeModifyRequest createStartTimeModifyRequest(Long timeTableId, LocalDateTime newStartTime) {
+        return new StartTimeModifyRequest(timeTableId, newStartTime);
+    }
+
+    public static EndTimeModifyRequest createEndTimeModifyRequest(Long timeTableId, LocalDateTime endTime) {
+        return new EndTimeModifyRequest(timeTableId, endTime);
+    }
+
+    public static LearningTimeDeleteRequest createLearningTimeDeleteRequest(Long timeTableId) {
+        return new LearningTimeDeleteRequest(timeTableId);
+    }
+
+
+    // timetalbe package response dto
+    public static LearningTimeSaveResponse createLearningTimeSaveResponse(Long learningTimeId, LocalDateTime startTime) {
+        return new LearningTimeSaveResponse(learningTimeId, startTime);
+    }
+
+    public static StartTimeModifyResponse createStartTimeModifyResponse(LocalDateTime newStartTime) {
+        return new StartTimeModifyResponse(newStartTime);
+    }
+
+    public static EndTimeModifyResponse createEndTimeModifyResponse(LocalDateTime endTime) {
+        return new EndTimeModifyResponse(endTime);
+    }
+
+    public static SubjectTotalLearningTimeResponse createSubjectTotalLearningTimeResponse(int subjectTotalLearningTime) {
+        return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
+    }
+
+    public static SubjectOfTaskTotalLearningTimeResponse createSubjectOfTaskTotalLearningTimeResponse(int subjectOfTaskTotalLearningTIme) {
+        return new SubjectOfTaskTotalLearningTimeResponse(subjectOfTaskTotalLearningTIme);
+    }
+
+    public static SubjectOfSubTaskTotalLearningTimeResponse createSubjectOfSubTaskTotalLearningTimeResponse(int sujectOfSubTaskTotalLearningTime) {
+        return new SubjectOfSubTaskTotalLearningTimeResponse(sujectOfSubTaskTotalLearningTime);
+    }
+
 }
