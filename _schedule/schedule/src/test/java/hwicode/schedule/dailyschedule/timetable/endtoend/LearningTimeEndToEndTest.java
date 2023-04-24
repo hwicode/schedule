@@ -2,10 +2,13 @@ package hwicode.schedule.dailyschedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -35,6 +38,9 @@ class LearningTimeEndToEndTest {
     @Autowired
     LearningTimeRepository learningTimeRepository;
 
+    @Autowired
+    SubjectOfTaskRepository subjectOfTaskRepository;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -53,7 +59,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, LEARNING_TIME_ID));
+                .delete(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, learningTime.getId()));
 
         // then
         response.then()
@@ -79,7 +85,36 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, LEARNING_TIME_ID));
+                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, learningTime.getId()));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    void Task_학습_주제_수정_요청() {
+        // given
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTableRepository.save(timeTable);
+
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
+
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(
+                subjectOfTask.getId());
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON)
+                .body(learningTimeSubjectOfTaskModifyRequest);
+
+        // when
+        Response response = requestSpecification.when()
+                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subjectoftask", port, learningTime.getId()));
 
         // then
         response.then()
