@@ -1,10 +1,12 @@
 package hwicode.schedule.dailyschedule.timetable.presentation.timetable;
 
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -30,7 +32,7 @@ public class TimeTableController {
         return new LearningTimeSaveResponse(learningTimeId, learningTimeSaveRequest.getStartTime());
     }
 
-    @PatchMapping("dailyschedule/timetable/{startTime}")
+    @PatchMapping("dailyschedule/timetable/{startTime}/starttime")
     @ResponseStatus(value = HttpStatus.OK)
     public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                                @RequestBody @Valid StartTimeModifyRequest startTimeModifyRequest) {
@@ -38,5 +40,15 @@ public class TimeTableController {
                 startTimeModifyRequest.getTimeTableId(), startTime, startTimeModifyRequest.getNewStartTime()
         );
         return new StartTimeModifyResponse(newStartTime);
+    }
+
+    @PatchMapping("dailyschedule/timetable/{startTime}/endtime")
+    @ResponseStatus(value = HttpStatus.OK)
+    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+                                                           @RequestBody @Valid EndTimeModifyRequest endTimeModifyRequest) {
+        LocalDateTime endTime = timeTableService.changeLearningTimeEndTime(
+                endTimeModifyRequest.getTimeTableId(), startTime, endTimeModifyRequest.getEndTime()
+        );
+        return new EndTimeModifyResponse(endTime);
     }
 }

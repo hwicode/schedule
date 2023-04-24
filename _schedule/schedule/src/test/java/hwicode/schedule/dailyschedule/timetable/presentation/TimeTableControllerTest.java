@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
@@ -74,7 +76,7 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s", START_TIME))
+                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -88,6 +90,33 @@ class TimeTableControllerTest {
                 ));
 
         verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
+    }
+
+    @Test
+    void 학습_시간의_끝나는_시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+        EndTimeModifyResponse endTimeModifyResponse = new EndTimeModifyResponse(END_TIME);
+
+        given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
+                .willReturn(END_TIME);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(endTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(endTimeModifyResponse)
+                ));
+
+        verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
     }
 
 }
