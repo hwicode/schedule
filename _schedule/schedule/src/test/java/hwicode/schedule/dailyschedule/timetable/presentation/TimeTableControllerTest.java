@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -238,4 +239,28 @@ class TimeTableControllerTest {
         verify(timeTableService).saveLearningTime(any(), any());
     }
 
+    @Test
+    void 학습_시간의_끝나는_시간_변경을_요청할_때_끝나는_시간이_시작_시간보다_앞서면_에러가_발생한다() throws Exception {
+        // given
+        EndTimeNotValidException endTimeNotValidException = new EndTimeNotValidException();
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+
+        given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
+                .willThrow(endTimeNotValidException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(endTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(endTimeNotValidException.getMessage()));
+
+        verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
+    }
 }
