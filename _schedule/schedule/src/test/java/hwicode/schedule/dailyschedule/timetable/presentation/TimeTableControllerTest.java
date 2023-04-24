@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -288,5 +289,30 @@ class TimeTableControllerTest {
                 .andExpect(jsonPath("$.message").value(learningTimeNotFoundException.getMessage()));
 
         verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
+    }
+
+    @Test
+    void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_다른_학습_시간의_시간대에_포함되면_에러가_발생한다() throws Exception {
+        // given
+        ContainOtherTimeException containOtherTimeException = new ContainOtherTimeException();
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+
+        given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
+                .willThrow(containOtherTimeException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(startTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(containOtherTimeException.getMessage()));
+
+        verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
     }
 }
