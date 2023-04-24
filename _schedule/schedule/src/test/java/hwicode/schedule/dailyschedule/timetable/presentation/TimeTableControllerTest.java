@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -22,8 +23,7 @@ import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TimeTableController.class)
@@ -119,6 +119,23 @@ class TimeTableControllerTest {
         verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
     }
 
+    @Test
+    void 학습_시간_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        LearningTimeDeleteRequest learningTimeDeleteRequest = new LearningTimeDeleteRequest(TIME_TABLE_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete(String.format("/dailyschedule/timetable/%s", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(learningTimeDeleteRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(timeTableService).deleteLearningTime(any(), any());
+    }
 }
-
-
