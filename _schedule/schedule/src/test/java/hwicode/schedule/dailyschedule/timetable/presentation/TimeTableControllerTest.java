@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -260,6 +261,31 @@ class TimeTableControllerTest {
         // then
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(endTimeNotValidException.getMessage()));
+
+        verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
+    }
+
+    @Test
+    void 학습_시간의_끝나는_시간을_수정할_때_학습_시간이_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+
+        given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
+                .willThrow(learningTimeNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(endTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(learningTimeNotFoundException.getMessage()));
 
         verify(timeTableService).changeLearningTimeEndTime(any(), any(), any());
     }
