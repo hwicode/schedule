@@ -10,6 +10,7 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import org.junit.jupiter.api.Test;
@@ -187,4 +188,26 @@ class TimeTableControllerTest {
         verify(timeTableService).calculateSubjectOfTaskTotalLearningTime(any(), any());
     }
 
+    @Test
+    void SubTask_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        int totalLearningTime = 100;
+        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
+
+        given(timeTableService.calculateSubjectOfSubTaskTotalLearningTime(any(), any()))
+                .willReturn(totalLearningTime);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                get(String.format("/dailyschedule/timetables/%s/subjectofsubtask/%s", TIME_TABLE_ID, SUBJECT_OF_SUBTASK_ID))
+                        .contentType(MediaType.APPLICATION_JSON));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subjectOfSubTaskTotalLearningTimeResponse)
+                ));
+
+        verify(timeTableService).calculateSubjectOfSubTaskTotalLearningTime(any(), any());
+    }
 }
