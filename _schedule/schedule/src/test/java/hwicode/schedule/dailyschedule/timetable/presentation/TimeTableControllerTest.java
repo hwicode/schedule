@@ -7,6 +7,7 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.En
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -338,6 +339,31 @@ class TimeTableControllerTest {
         // then
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(dateNotValidException.getMessage()));
+
+        verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
+    }
+
+    @Test
+    void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_중복되는_경우_에러가_발생한다() throws Exception {
+        // given
+        StartTimeDuplicateException startTimeDuplicateException = new StartTimeDuplicateException();
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+
+        given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
+                .willThrow(startTimeDuplicateException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(
+                                objectMapper.writeValueAsString(startTimeModifyRequest)
+                        )
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(startTimeDuplicateException.getMessage()));
 
         verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
     }
