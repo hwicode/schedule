@@ -3,8 +3,10 @@ package hwicode.schedule.dailyschedule.timetable.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
@@ -41,6 +43,9 @@ class TimeTableEndToEndTest {
 
     @Autowired
     TimeTableRepository timeTableRepository;
+
+    @Autowired
+    SubjectOfTaskRepository subjectOfTaskRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -150,7 +155,7 @@ class TimeTableEndToEndTest {
     }
 
     @Test
-    void 특정_주제_총_학습_시간_요청() {
+    void 특정_학습_주제_총_학습_시간_요청() {
         // given
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
 
@@ -171,8 +176,31 @@ class TimeTableEndToEndTest {
         // then
         response.then()
                 .statusCode(HttpStatus.OK.value());
+    }
 
-        TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
-        assertThat(savedTimeTable.getTotalLearningTime()).isEqualTo(30);
+    @Test
+    void Task_학습_주제_총_학습_시간_요청() {
+        // given
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubjectOfTask(subjectOfTask);
+
+        timeTableRepository.save(timeTable);
+
+        RequestSpecification requestSpecification = given()
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("subjectOfTaskId", subjectOfTask.getId());
+
+        // when
+        Response response = requestSpecification.when()
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subjectoftask/{subjectOfTaskId}", port));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
     }
 }
