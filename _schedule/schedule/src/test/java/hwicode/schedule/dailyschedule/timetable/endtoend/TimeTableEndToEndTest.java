@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
+import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
@@ -146,5 +147,32 @@ class TimeTableEndToEndTest {
 
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
         assertThat(savedTimeTable.getTotalLearningTime()).isZero();
+    }
+
+    @Test
+    void 특정_주제_총_학습_시간_요청() {
+        // given
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubject(SUBJECT);
+
+        timeTableRepository.save(timeTable);
+
+        RequestSpecification requestSpecification = given()
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("subject", SUBJECT);
+
+        // when
+        Response response = requestSpecification.when()
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/{subject}", port));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
+        assertThat(savedTimeTable.getTotalLearningTime()).isEqualTo(30);
     }
 }
