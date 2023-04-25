@@ -20,13 +20,13 @@ public class LearningTimeController {
 
     private final LearningTimeService learningTimeService;
 
-    @DeleteMapping("/dailyschedule/timetable/{learningTimeId}/subject")
+    @DeleteMapping("/dailyschedule/learning-times/{learningTimeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubject(@PathVariable @NotBlank Long learningTimeId) {
         learningTimeService.deleteSubject(learningTimeId);
     }
 
-    @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subject")
+    @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject")
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectModifyResponse changeSubject(@PathVariable @NotBlank Long learningTimeId,
                                                            @RequestBody @Valid LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest) {
@@ -37,7 +37,7 @@ public class LearningTimeController {
         return new LearningTimeSubjectModifyResponse(learningTimeId, newSubject);
     }
 
-    @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subjectoftask")
+    @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject-of-task")
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectOfTaskModifyResponse changeTaskOfSubject(@PathVariable @NotBlank Long learningTimeId,
                                                                        @RequestBody @Valid LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest) {
@@ -48,7 +48,7 @@ public class LearningTimeController {
         return new LearningTimeSubjectOfTaskModifyResponse(learningTimeId, newSubject);
     }
 
-    @PatchMapping("/dailyschedule/timetable/{learningTimeId}/subjectofsubtask")
+    @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject-of-subtask")
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectOfSubTaskModifyResponse changeSubTaskOfSubject(@PathVariable @NotBlank Long learningTimeId,
                                                                              @RequestBody @Valid LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest) {

@@ -65,7 +65,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, learningTime.getId()));
+                .delete(String.format("http://localhost:%s/dailyschedule/learning-times/%s", port, learningTime.getId()));
 
         // then
         response.then()
@@ -91,7 +91,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subject", port, learningTime.getId()));
+                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject", port, learningTime.getId()));
 
         // then
         response.then()
@@ -120,7 +120,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subjectoftask", port, learningTime.getId()));
+                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject-of-task", port, learningTime.getId()));
 
         // then
         response.then()
@@ -149,7 +149,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/subjectofsubtask", port, learningTime.getId()));
+                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject-of-subtask", port, learningTime.getId()));
 
         // then
         response.then()

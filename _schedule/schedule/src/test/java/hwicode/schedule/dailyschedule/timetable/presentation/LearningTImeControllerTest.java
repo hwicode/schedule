@@ -47,7 +47,7 @@ class LearningTImeControllerTest {
     void 학습_시간의_학습_주제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
+                delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
         );
 
         // then
@@ -67,7 +67,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
+                patch(String.format("/dailyschedule/learning-times/%s/subject", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectModifyRequest)
@@ -94,7 +94,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", LEARNING_TIME_ID))
+                patch(String.format("/dailyschedule/learning-times/%s/subject-of-task", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
@@ -121,7 +121,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", LEARNING_TIME_ID))
+                patch(String.format("/dailyschedule/learning-times/%s/subject-of-subtask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
@@ -147,7 +147,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/timetable/%s/subject", LEARNING_TIME_ID))
+                delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
         );
 
         // then
@@ -169,7 +169,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectoftask", LEARNING_TIME_ID))
+                patch(String.format("/dailyschedule/learning-times/%s/subject-of-task", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
@@ -195,7 +195,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/subjectofsubtask", LEARNING_TIME_ID))
+                patch(String.format("/dailyschedule/learning-times/%s/subject-of-subtask", LEARNING_TIME_ID))
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
