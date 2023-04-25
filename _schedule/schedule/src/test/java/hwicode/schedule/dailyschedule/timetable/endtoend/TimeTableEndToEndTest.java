@@ -3,9 +3,11 @@ package hwicode.schedule.dailyschedule.timetable.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
@@ -46,6 +48,9 @@ class TimeTableEndToEndTest {
 
     @Autowired
     SubjectOfTaskRepository subjectOfTaskRepository;
+
+    @Autowired
+    SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -198,6 +203,32 @@ class TimeTableEndToEndTest {
         // when
         Response response = requestSpecification.when()
                 .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subjectoftask/{subjectOfTaskId}", port));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void SubTask_학습_주제_총_학습_시간_요청() {
+        // given
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
+
+        timeTableRepository.save(timeTable);
+
+        RequestSpecification requestSpecification = given()
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("subjectOfSubTaskId", subjectOfSubTask.getId());
+
+        // when
+        Response response = requestSpecification.when()
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subjectofsubtask/{subjectOfSubTaskId}", port));
 
         // then
         response.then()
