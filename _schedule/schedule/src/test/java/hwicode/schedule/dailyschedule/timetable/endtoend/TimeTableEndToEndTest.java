@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -16,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.createLearningTimeSaveRequest;
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
@@ -66,4 +66,28 @@ class TimeTableEndToEndTest {
                 .isInstanceOf(StartTimeDuplicateException.class);
     }
 
+    @Test
+    void 학습_시간_시작_시간_변경_요청() {
+        // given
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        timeTable.createLearningTime(START_TIME);
+        timeTableRepository.save(timeTable);
+
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(timeTable.getId(), NEW_START_TIME);
+
+        RequestSpecification requestSpecification = given()
+                .contentType(ContentType.JSON)
+                .body(startTimeModifyRequest);
+
+        // when
+        Response response = requestSpecification.when()
+                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/starttime", port, START_TIME));
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        assertThatThrownBy(() -> timeTableService.saveLearningTime(timeTable.getId(), NEW_START_TIME))
+                .isInstanceOf(StartTimeDuplicateException.class);
+    }
 }
