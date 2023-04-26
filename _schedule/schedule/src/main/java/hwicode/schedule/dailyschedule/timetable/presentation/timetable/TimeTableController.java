@@ -1,13 +1,12 @@
 package hwicode.schedule.dailyschedule.timetable.presentation.timetable;
 
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
@@ -26,7 +25,7 @@ public class TimeTableController {
 
     private final TimeTableService timeTableService;
 
-    @PostMapping("/dailyschedule/timetables/{timeTableId}")
+    @PostMapping("/dailyschedule/timetables/{timeTableId}/learning-times")
     @ResponseStatus(value = HttpStatus.CREATED)
     public LearningTimeSaveResponse saveLearningTime(@PathVariable @NotBlank Long timeTableId,
                                                      @RequestBody @Valid LearningTimeSaveRequest learningTimeSaveRequest) {
@@ -36,55 +35,55 @@ public class TimeTableController {
         return new LearningTimeSaveResponse(learningTimeId, learningTimeSaveRequest.getStartTime());
     }
 
-    @PatchMapping("/dailyschedule/timetable/{startTime}/starttime")
+    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+    public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable Long timeTableId,
+                                                               @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                                @RequestBody @Valid StartTimeModifyRequest startTimeModifyRequest) {
         LocalDateTime newStartTime = timeTableService.changeLearningTimeStartTime(
-                startTimeModifyRequest.getTimeTableId(), startTime, startTimeModifyRequest.getNewStartTime()
+                timeTableId, startTime, startTimeModifyRequest.getNewStartTime()
         );
         return new StartTimeModifyResponse(newStartTime);
     }
 
-    @PatchMapping("/dailyschedule/timetable/{startTime}/endtime")
+    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable Long timeTableId,
+                                                           @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                            @RequestBody @Valid EndTimeModifyRequest endTimeModifyRequest) {
         LocalDateTime endTime = timeTableService.changeLearningTimeEndTime(
-                endTimeModifyRequest.getTimeTableId(), startTime, endTimeModifyRequest.getEndTime()
+                timeTableId, startTime, endTimeModifyRequest.getEndTime()
         );
         return new EndTimeModifyResponse(endTime);
     }
 
-    @DeleteMapping("/dailyschedule/timetable/{startTime}")
+    @DeleteMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteLearningTime(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
-                                   @RequestBody @Valid LearningTimeDeleteRequest learningTimeDeleteRequest) {
-        timeTableService.deleteLearningTime(
-                learningTimeDeleteRequest.getTimeTableId(), startTime
-        );
+    public void deleteLearningTime(@PathVariable Long timeTableId,
+                                   @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime) {
+        timeTableService.deleteLearningTime(timeTableId, startTime);
     }
 
-    @GetMapping("/dailyschedule/timetables/{timeTableId}/{subject}")
+    @GetMapping("/dailyschedule/timetables/{timeTableId}/subject-total-time")
     @ResponseStatus(value = HttpStatus.OK)
     public SubjectTotalLearningTimeResponse getSubjectTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                        @PathVariable @NotBlank String subject) {
+                                                                        @RequestParam String subject) {
         int subjectTotalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTableId, subject);
         return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
     }
 
-    @GetMapping("/dailyschedule/timetables/{timeTableId}/subjectoftask/{subjectOfTaskId}")
+    @GetMapping("/dailyschedule/timetables/{timeTableId}/task-total-time")
     @ResponseStatus(value = HttpStatus.OK)
     public SubjectOfTaskTotalLearningTimeResponse getSubjectOfTaskTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                                    @PathVariable @NotBlank Long subjectOfTaskId) {
+                                                                                    @RequestParam("subject_of_task_id") Long subjectOfTaskId) {
         int totalLearningTime = timeTableService.calculateSubjectOfTaskTotalLearningTime(timeTableId, subjectOfTaskId);
         return new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
     }
 
-    @GetMapping("/dailyschedule/timetables/{timeTableId}/subjectofsubtask/{subjectOfSubTaskId}")
+    @GetMapping("/dailyschedule/timetables/{timeTableId}/subtask-total-time")
     @ResponseStatus(value = HttpStatus.OK)
     public SubjectOfSubTaskTotalLearningTimeResponse getSubjectOfSubTaskTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                                          @PathVariable @NotBlank Long subjectOfSubTaskId) {
+                                                                                          @RequestParam("subject_of_subtask_id") Long subjectOfSubTaskId) {
         int totalLearningTime = timeTableService.calculateSubjectOfSubTaskTotalLearningTime(timeTableId, subjectOfSubTaskId);
         return new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
     }

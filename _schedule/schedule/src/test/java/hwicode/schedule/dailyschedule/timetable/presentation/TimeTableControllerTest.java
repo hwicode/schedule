@@ -9,7 +9,6 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalida
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -59,7 +58,7 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                post(String.format("/dailyschedule/timetables/%s", TIME_TABLE_ID))
+                post("/dailyschedule/timetables/{timeTableId}/learning-times", TIME_TABLE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -78,7 +77,7 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_시작시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
         StartTimeModifyResponse startTimeModifyResponse = createStartTimeModifyResponse(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
@@ -86,7 +85,7 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -105,7 +104,7 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_끝나는_시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(END_TIME);
         EndTimeModifyResponse endTimeModifyResponse = createEndTimeModifyResponse(END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
@@ -113,7 +112,7 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -131,17 +130,9 @@ class TimeTableControllerTest {
 
     @Test
     void 학습_시간_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        LearningTimeDeleteRequest learningTimeDeleteRequest = createLearningTimeDeleteRequest(TIME_TABLE_ID);
-
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/timetable/%s", START_TIME))
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(
-                                objectMapper.writeValueAsString(learningTimeDeleteRequest)
-                        )
-        );
+                delete("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}", TIME_TABLE_ID, START_TIME));
 
         // then
         perform.andExpect(status().isNoContent());
@@ -160,8 +151,8 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                get(String.format("/dailyschedule/timetables/%s/%s", TIME_TABLE_ID, SUBJECT))
-                        .contentType(MediaType.APPLICATION_JSON));
+                get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
+                        .queryParam("subject", SUBJECT));
 
         // then
         perform.andExpect(status().isOk())
@@ -183,8 +174,8 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                get(String.format("/dailyschedule/timetables/%s/subjectoftask/%s", TIME_TABLE_ID, SUBJECT_OF_TASK_ID))
-                        .contentType(MediaType.APPLICATION_JSON));
+                get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
+                        .queryParam("subject_of_task_id", String.valueOf(SUBJECT_OF_TASK_ID)));
 
         // then
         perform.andExpect(status().isOk())
@@ -206,8 +197,8 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                get(String.format("/dailyschedule/timetables/%s/subjectofsubtask/%s", TIME_TABLE_ID, SUBJECT_OF_SUBTASK_ID))
-                        .contentType(MediaType.APPLICATION_JSON));
+                get("/dailyschedule/timetables/{timeTableId}/subtask-total-time", TIME_TABLE_ID)
+                        .queryParam("subject_of_subtask_id", String.valueOf(SUBJECT_OF_SUBTASK_ID)));
 
         // then
         perform.andExpect(status().isOk())
@@ -229,7 +220,7 @@ class TimeTableControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                post(String.format("/dailyschedule/timetables/%s", TIME_TABLE_ID))
+                post("/dailyschedule/timetables/{timeTableId}/learning-times", TIME_TABLE_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -247,14 +238,14 @@ class TimeTableControllerTest {
     void 학습_시간의_끝나는_시간_변경을_요청할_때_끝나는_시간이_시작_시간보다_앞서면_에러가_발생한다() throws Exception {
         // given
         EndTimeNotValidException endTimeNotValidException = new EndTimeNotValidException();
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willThrow(endTimeNotValidException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -272,14 +263,14 @@ class TimeTableControllerTest {
     void 학습_시간의_끝나는_시간을_수정할_때_학습_시간이_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(TIME_TABLE_ID, END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willThrow(learningTimeNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/endtime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -297,14 +288,14 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_다른_학습_시간의_시간대에_포함되면_에러가_발생한다() throws Exception {
         // given
         ContainOtherTimeException containOtherTimeException = new ContainOtherTimeException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(containOtherTimeException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -322,14 +313,14 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_요청_날짜가_타임_테이블의_날짜_또는_그_다음날이_아닌_경우_에러가_발생한다() throws Exception {
         // given
         DateNotValidException dateNotValidException = new DateNotValidException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(dateNotValidException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -347,14 +338,14 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_중복되는_경우_에러가_발생한다() throws Exception {
         // given
         StartTimeDuplicateException startTimeDuplicateException = new StartTimeDuplicateException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(TIME_TABLE_ID, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(startTimeDuplicateException);
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/timetable/%s/starttime", START_TIME))
+                patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", TIME_TABLE_ID, START_TIME)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)

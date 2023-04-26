@@ -10,7 +10,6 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalida
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
@@ -72,7 +71,7 @@ class TimeTableEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}", port));
+                .post(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times", port));
 
         // then
         response.then()
@@ -89,15 +88,17 @@ class TimeTableEndToEndTest {
         timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(timeTable.getId(), NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
 
         RequestSpecification requestSpecification = given()
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("startTime", START_TIME.toString())
                 .contentType(ContentType.JSON)
                 .body(startTimeModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/starttime", port, START_TIME));
+                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", port));
 
         // then
         response.then()
@@ -115,15 +116,17 @@ class TimeTableEndToEndTest {
         timeTableRepository.save(timeTable);
 
         LocalDateTime endTime = START_TIME.plusMinutes(30);
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(timeTable.getId(), endTime);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(endTime);
 
         RequestSpecification requestSpecification = given()
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("startTime", START_TIME.toString())
                 .contentType(ContentType.JSON)
                 .body(endTimeModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetable/%s/endtime", port, START_TIME));
+                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", port));
 
         // then
         response.then()
@@ -141,15 +144,14 @@ class TimeTableEndToEndTest {
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         timeTableRepository.save(timeTable);
 
-        LearningTimeDeleteRequest learningTimeDeleteRequest = createLearningTimeDeleteRequest(timeTable.getId());
-
         RequestSpecification requestSpecification = given()
-                .contentType(ContentType.JSON)
-                .body(learningTimeDeleteRequest);
+                .pathParam("timeTableId", timeTable.getId())
+                .pathParam("startTime", START_TIME.toString())
+                .contentType(ContentType.JSON);
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/timetable/%s", port, START_TIME));
+                .delete(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}", port));
 
         // then
         response.then()
@@ -172,11 +174,11 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("subject", SUBJECT);
+                .queryParam("subject", SUBJECT);
 
         // when
         Response response = requestSpecification.when()
-                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/{subject}", port));
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subject-total-time", port));
 
         // then
         response.then()
@@ -198,11 +200,11 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("subjectOfTaskId", subjectOfTask.getId());
+                .queryParam("subject_of_task_id", subjectOfTask.getId());
 
         // when
         Response response = requestSpecification.when()
-                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subjectoftask/{subjectOfTaskId}", port));
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/task-total-time", port));
 
         // then
         response.then()
@@ -224,11 +226,11 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("subjectOfSubTaskId", subjectOfSubTask.getId());
+                .queryParam("subject_of_subtask_id", subjectOfSubTask.getId());
 
         // when
         Response response = requestSpecification.when()
-                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subjectofsubtask/{subjectOfSubTaskId}", port));
+                .get(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/subtask-total-time", port));
 
         // then
         response.then()

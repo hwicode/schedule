@@ -6,7 +6,6 @@ import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.su
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -69,17 +68,14 @@ public class TimeTableDataHelper {
         return new LearningTimeSaveRequest(startTime);
     }
 
-    public static StartTimeModifyRequest createStartTimeModifyRequest(Long timeTableId, LocalDateTime newStartTime) {
-        return new StartTimeModifyRequest(timeTableId, newStartTime);
+    public static StartTimeModifyRequest createStartTimeModifyRequest(LocalDateTime newStartTime) {
+        return new StartTimeModifyRequest(newStartTime);
     }
 
-    public static EndTimeModifyRequest createEndTimeModifyRequest(Long timeTableId, LocalDateTime endTime) {
-        return new EndTimeModifyRequest(timeTableId, endTime);
+    public static EndTimeModifyRequest createEndTimeModifyRequest(LocalDateTime endTime) {
+        return new EndTimeModifyRequest(endTime);
     }
 
-    public static LearningTimeDeleteRequest createLearningTimeDeleteRequest(Long timeTableId) {
-        return new LearningTimeDeleteRequest(timeTableId);
-    }
 
 
     // timetalbe package response dto
