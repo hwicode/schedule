@@ -44,7 +44,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private TaskCheckerSaveRequest createTaskCheckerSaveRequest(TaskSaveRequest taskSaveRequest) {
         return new TaskCheckerSaveRequest(
-                taskSaveRequest.getDailyChecklistId(),
+                taskSaveRequest.getDailyToDoListId(),
                 taskSaveRequest.getTaskName(),
                 taskSaveRequest.getDifficulty());
     }

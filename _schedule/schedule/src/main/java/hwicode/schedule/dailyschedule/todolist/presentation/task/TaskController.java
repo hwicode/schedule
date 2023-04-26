@@ -22,24 +22,25 @@ public class TaskController {
     private final TaskSaveAndDeleteService taskSaveAndDeleteService;
     private final TaskService taskService;
 
-    @PostMapping("/dailyschedule/todolist/tasks")
+    @PostMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@RequestBody @Valid TaskSaveRequest taskSaveRequest) {
+    public TaskSaveResponse saveTask(@PathVariable Long dailyToDoListId,
+                                     @RequestBody @Valid TaskSaveRequest taskSaveRequest) {
         Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
-    @DeleteMapping("/dailyschedule/todolist/tasks/{taskName}")
+    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable @NotBlank String taskName,
-                                  @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
-        taskSaveAndDeleteService.delete(taskName, taskDeleteRequest);
+    public void deleteTask(@PathVariable Long dailyToDoListId,
+                           @PathVariable @NotBlank String taskName) {
+        taskSaveAndDeleteService.delete(taskName, new TaskDeleteRequest(dailyToDoListId));
     }
 
-    @PatchMapping("/dailyschedule/todolist/tasks/{taskId}/information")
+    @PatchMapping("/dailyschedule/tasks/{taskId}/information")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskInformationModifyResponse changeTaskInformation(@PathVariable @NotNull Long taskId,
-                                                     @RequestBody @Valid TaskInformationModifyRequest taskInformationModifyRequest) {
+                                                               @RequestBody @Valid TaskInformationModifyRequest taskInformationModifyRequest) {
         taskService.changeTaskInformation(taskId, taskInformationModifyRequest);
         return new TaskInformationModifyResponse(
                 taskId,

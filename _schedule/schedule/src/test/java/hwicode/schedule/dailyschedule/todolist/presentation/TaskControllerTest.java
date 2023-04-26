@@ -7,7 +7,6 @@ import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
@@ -54,7 +53,7 @@ class TaskControllerTest {
                 .willReturn(TASK_ID);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/todolist/tasks")
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -69,13 +68,8 @@ class TaskControllerTest {
 
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID);
-
         // when then
-        mockMvc.perform(delete("/dailyschedule/todolist/tasks/taskName")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskDeleteRequest)))
+        mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", DAILY_TO_DO_LIST_ID, TASK_NAME))
                 .andExpect(status().isNoContent());
 
         verify(taskSaveAndDeleteService).delete(any(), any());
@@ -89,9 +83,9 @@ class TaskControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/todolist/tasks/%s/information", TASK_ID))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskInformationModifyRequest)));
+                patch("/dailyschedule/tasks/{taskId}/information", TASK_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskInformationModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -111,11 +105,11 @@ class TaskControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/todolist/tasks/%s/information", TASK_ID))
+                patch("/dailyschedule/tasks/{taskId}/information", TASK_ID)
                         .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        createTaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
-                )));
+                        .content(objectMapper.writeValueAsString(
+                                createTaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())

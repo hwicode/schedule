@@ -5,7 +5,6 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
@@ -58,12 +57,13 @@ class TaskEndToEndTest {
         TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
+                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
                 .contentType(ContentType.JSON)
                 .body(taskSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/todolist/tasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", port));
 
         //then
         response.then()
@@ -83,16 +83,13 @@ class TaskEndToEndTest {
                 createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
         );
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId());
-
         RequestSpecification requestSpecification = given()
-                .pathParam("taskName", TASK_NAME)
-                .contentType(ContentType.JSON)
-                .body(taskDeleteRequest);
+                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
+                .pathParam("taskName", TASK_NAME);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/todolist/tasks/{taskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", port));
 
         //then
         response.then()
@@ -120,7 +117,7 @@ class TaskEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/todolist/tasks/{taskId}/information", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/information", port));
 
         //then
         response.then()
