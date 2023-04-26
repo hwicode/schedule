@@ -3,7 +3,6 @@ package hwicode.schedule.dailyschedule.todolist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.SubTaskController;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -45,10 +44,11 @@ class SubTaskControllerTest {
                 .willReturn(SUB_TASK_ID);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/todolist/subtasks")
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks",
+                        DAILY_TO_DO_LIST_ID, TASK_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
-
         // then
         perform.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string(
@@ -60,13 +60,10 @@ class SubTaskControllerTest {
 
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME);
-
         // when then
-        mockMvc.perform(delete("/dailyschedule/todolist/subtasks/subTaskName")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(subTaskDeleteRequest)))
+        mockMvc.perform(
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}",
+                        DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME))
                 .andExpect(status().isNoContent());
 
         verify(subTaskSaveAndDeleteService).delete(any(), any());

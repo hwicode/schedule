@@ -67,12 +67,14 @@ class SubTaskEndToEndTest {
         SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
+                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
+                .pathParam("taskName", TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/todolist/subtasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks", port));
 
         //then
         response.then()
@@ -99,13 +101,15 @@ class SubTaskEndToEndTest {
         SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
 
         RequestSpecification requestSpecification = given()
+                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
+                .pathParam("taskName", TASK_NAME)
                 .pathParam("subTaskName", SUB_TASK_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/todolist/subtasks/{subTaskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}", port));
 
         //then
         response.then()

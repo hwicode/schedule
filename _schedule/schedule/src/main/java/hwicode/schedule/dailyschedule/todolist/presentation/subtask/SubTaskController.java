@@ -17,17 +17,21 @@ public class SubTaskController {
 
     private final SubTaskSaveAndDeleteService subTaskSaveAndDeleteService;
 
-    @PostMapping("/dailyschedule/todolist/subtasks")
+    @PostMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public SubTaskSaveResponse saveSubTask(@RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
+    public SubTaskSaveResponse saveSubTask(@PathVariable Long dailyToDoListId,
+                                           @PathVariable String taskName,
+                                           @RequestBody @Valid SubTaskSaveRequest subTaskSaveRequest) {
         Long subTaskId = subTaskSaveAndDeleteService.save(subTaskSaveRequest);
         return new SubTaskSaveResponse(subTaskId, subTaskSaveRequest.getSubTaskName());
     }
 
-    @DeleteMapping("/dailyschedule/todolist/subtasks/{subTaskName}")
+    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteSubTask(@PathVariable @NotBlank String subTaskName,
-                              @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
+    public void deleteSubTask(@PathVariable Long dailyToDoListId,
+                              @PathVariable String taskName,
+                              @PathVariable @NotBlank String subTaskName) {
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoListId, taskName);
         subTaskSaveAndDeleteService.delete(subTaskName, subTaskDeleteRequest);
     }
 }
