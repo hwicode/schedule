@@ -109,15 +109,14 @@ class SubTaskCheckerEndToEndTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskCheckerId, NEW_SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
+                .pathParam("taskId", taskCheckerId)
                 .pathParam("subTaskName", SUB_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/name", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/subtasks/{subTaskName}/name", port));
 
         // then
         response.then()
