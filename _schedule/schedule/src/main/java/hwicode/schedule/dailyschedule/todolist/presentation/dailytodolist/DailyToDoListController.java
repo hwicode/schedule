@@ -16,10 +16,10 @@ public class DailyToDoListController {
 
     private final DailyToDoListService dailyToDoListService;
 
-    @PatchMapping("/dailyschedule/todolist/dailytodolists/{dailyToDoListId}/information")
+    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information")
     @ResponseStatus(value = HttpStatus.OK)
     public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@PathVariable @NotNull Long dailyToDoListId,
-                                                                        @RequestBody @Valid DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
+                                                                                 @RequestBody @Valid DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
         dailyToDoListService.changeDailyToDoListInformation(dailyToDoListId, dailyToDoListInformationChangeRequest);
         return new DailyToDoListInformationChangeResponse(
                 dailyToDoListId,

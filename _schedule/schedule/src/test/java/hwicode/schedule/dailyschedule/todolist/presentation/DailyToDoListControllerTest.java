@@ -62,7 +62,7 @@ class DailyToDoListControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/todolist/dailytodolists/%s/information", DAILY_TO_DO_LIST_ID))
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", DAILY_TO_DO_LIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dailyToDoListInformationChangeRequest)));
 
@@ -84,7 +84,7 @@ class DailyToDoListControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch(String.format("/dailyschedule/todolist/dailytodolists/%s/information", DAILY_TO_DO_LIST_ID))
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", DAILY_TO_DO_LIST_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createDailyToDoListInformationChangeRequest("좋은데!", Emoji.GOOD)

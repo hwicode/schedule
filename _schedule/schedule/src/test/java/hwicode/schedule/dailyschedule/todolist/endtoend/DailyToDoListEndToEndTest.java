@@ -60,7 +60,7 @@ class DailyToDoListEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/todolist/dailytodolists/{dailyToDoListId}/information", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", port));
 
         //then
         response.then()
