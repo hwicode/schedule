@@ -51,7 +51,9 @@ class SubTaskCheckerControllerTest {
                 .willReturn(TaskStatus.PROGRESS);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskcheckers/subTaskCheckerName/status")
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
 
@@ -74,7 +76,9 @@ class SubTaskCheckerControllerTest {
                 .willReturn(NEW_SUB_TASK_CHECKER_NAME);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskcheckers/subTaskCheckerName/name")
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/name",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskCheckerNameModifyRequest)));
 
@@ -95,7 +99,9 @@ class SubTaskCheckerControllerTest {
                 .willThrow(subTaskCheckerNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskcheckers/subTaskCheckerName/status")
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE)
@@ -116,7 +122,9 @@ class SubTaskCheckerControllerTest {
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskcheckers/subTaskCheckerName/status")
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE)
@@ -137,7 +145,9 @@ class SubTaskCheckerControllerTest {
                 .willThrow(taskCheckerNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/dailyschedule/checklist/subtaskcheckers/subTaskCheckerName/name")
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/name",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME)

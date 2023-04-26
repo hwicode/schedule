@@ -74,13 +74,15 @@ class SubTaskCheckerEndToEndTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("subTaskCheckerName", NEW_SUB_TASK_CHECKER_NAME)
+                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
+                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
+                .pathParam("subTaskName", NEW_SUB_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtaskcheckers/{subTaskCheckerName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status", port));
 
         //then
         response.then()
@@ -107,13 +109,15 @@ class SubTaskCheckerEndToEndTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskCheckerId, NEW_SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("subTaskCheckerName", SUB_TASK_CHECKER_NAME)
+                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
+                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
+                .pathParam("subTaskName", SUB_TASK_CHECKER_NAME)
                 .contentType(ContentType.JSON)
                 .body(subTaskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/checklist/subtaskcheckers/{subTaskCheckerName}/name", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/name", port));
 
         // then
         response.then()
