@@ -85,7 +85,7 @@ class SubTaskEndToEndTest {
     }
 
     @Test
-    void 과제_삭제_요청() {
+    void 서브_과제_삭제_요청() {
         //given
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
