@@ -130,13 +130,35 @@ class LearningTimeServiceIntegrationTest {
         learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTask.getId());
 
         // then
-        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
-        boolean isDelete = savedLearningTime.deleteSubject();
-        assertThat(isDelete).isFalse();
-
-        LearningTime savedLearningTime2 = learningTimeRepository.findById(learningTime2.getId()).orElseThrow();
-        boolean isDelete2 = savedLearningTime2.deleteSubject();
-        assertThat(isDelete2).isFalse();
+        checkSubjectIsDelete(learningTime.getId());
+        checkSubjectIsDelete(learningTime2.getId());
     }
 
+    @Test
+    void 학습_시간들에_연관된_SubTask_학습_주제를_삭제할_수_있다() {
+        // given
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
+        LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
+        learningTime2.changeSubjectOfSubTask(subjectOfSubTask);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        learningTimeService.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTask.getId());
+
+        // then
+        checkSubjectIsDelete(learningTime.getId());
+        checkSubjectIsDelete(learningTime2.getId());
+    }
+
+    private void checkSubjectIsDelete(Long learningTimeId) {
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTimeId).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isFalse();
+    }
 }

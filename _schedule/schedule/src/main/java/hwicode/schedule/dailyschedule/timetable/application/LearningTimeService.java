@@ -64,4 +64,9 @@ public class LearningTimeService {
     public void deleteSubjectOfTaskBelongingToLearningTime(Long subjectOfTaskId) {
         learningTimeRepository.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTaskId);
     }
+
+    @Transactional
+    public void deleteSubjectOfSubTaskBelongingToLearningTime(Long subjectOfSubTaskId) {
+        learningTimeRepository.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTaskId);
+    }
 }
