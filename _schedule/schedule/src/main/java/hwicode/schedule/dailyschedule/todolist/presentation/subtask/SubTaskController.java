@@ -30,8 +30,8 @@ public class SubTaskController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubTask(@PathVariable Long dailyToDoListId,
                               @PathVariable String taskName,
-                              @PathVariable @NotBlank String subTaskName) {
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoListId, taskName);
+                              @PathVariable @NotBlank String subTaskName,
+                              @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
         subTaskSaveAndDeleteService.delete(subTaskName, subTaskDeleteRequest);
     }
 }

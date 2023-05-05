@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.SubTaskController;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -60,11 +61,18 @@ class SubTaskControllerTest {
 
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // when then
-        mockMvc.perform(
+        // given
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}",
-                        DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME))
-                .andExpect(status().isNoContent());
+                        DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskDeleteRequest)));
+
+        // then
+        perform.andExpect(status().isNoContent());
 
         verify(subTaskSaveAndDeleteService).delete(any(), any());
     }

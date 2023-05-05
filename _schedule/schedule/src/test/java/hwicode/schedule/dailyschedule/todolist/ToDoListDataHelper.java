@@ -51,8 +51,8 @@ public class ToDoListDataHelper {
         return new SubTaskSaveRequest(dailyToDoListId, taskName, subTaskName);
     }
 
-    public static SubTaskDeleteRequest createSubTaskDeleteRequest(Long dailyToDoListId, String taskName) {
-        return new SubTaskDeleteRequest(dailyToDoListId, taskName);
+    public static SubTaskDeleteRequest createSubTaskDeleteRequest(Long dailyToDoListId, String taskName, Long subTaskId) {
+        return new SubTaskDeleteRequest(dailyToDoListId, taskName, subTaskId);
     }
 
 

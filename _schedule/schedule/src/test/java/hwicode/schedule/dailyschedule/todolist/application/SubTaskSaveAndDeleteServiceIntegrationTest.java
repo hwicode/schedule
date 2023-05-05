@@ -70,7 +70,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         taskRepository.save(task);
         subTaskRepository.save(subTask);
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, subTask.getId());
 
         // when
         subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);

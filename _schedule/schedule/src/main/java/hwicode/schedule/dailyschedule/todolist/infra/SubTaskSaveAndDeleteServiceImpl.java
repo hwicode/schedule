@@ -4,6 +4,7 @@ import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
@@ -17,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteService {
 
     private final SubTaskCheckerService subTaskCheckerService;
+    private final LearningTimeService learningTimeService;
 
     @Override
     @Transactional
@@ -41,6 +43,11 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public void delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
+        learningTimeService.deleteSubjectOfSubTaskBelongingToLearningTime(subTaskDeleteRequest.getSubTaskId());
+        deleteSubTaskChecker(subTaskName, subTaskDeleteRequest);
+    }
+
+    private void deleteSubTaskChecker(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
         try {
             subTaskCheckerService.deleteSubTaskChecker(
                     subTaskName,

@@ -98,7 +98,7 @@ class SubTaskEndToEndTest {
                 createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME)
         );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
