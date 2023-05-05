@@ -58,9 +58,9 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
-        taskRepository.save(new Task(dailyToDoList, TASK_NAME));
+        Task savedTask = taskRepository.save(new Task(dailyToDoList, TASK_NAME));
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId());
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId(), savedTask.getId());
 
         // when
         taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);

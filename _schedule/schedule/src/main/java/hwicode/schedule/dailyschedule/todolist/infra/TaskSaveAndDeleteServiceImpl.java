@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -19,6 +20,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private final TaskCheckerService taskCheckerService;
     private final TaskRepository taskRepository;
+    private final LearningTimeService learningTimeService;
 
     @Override
     @Transactional
@@ -52,6 +54,11 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
+        learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(taskDeleteRequest.getTaskId());
+        deleteTaskChecker(taskName, taskDeleteRequest);
+    }
+
+    private void deleteTaskChecker(String taskName, TaskDeleteRequest taskDeleteRequest) {
         try {
             taskCheckerService.deleteTaskChecker(
                     taskDeleteRequest.getDailyToDoListId(),

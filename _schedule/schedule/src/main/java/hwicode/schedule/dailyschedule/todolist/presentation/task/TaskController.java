@@ -33,8 +33,9 @@ public class TaskController {
     @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable Long dailyToDoListId,
-                           @PathVariable @NotBlank String taskName) {
-        taskSaveAndDeleteService.delete(taskName, new TaskDeleteRequest(dailyToDoListId));
+                           @PathVariable @NotBlank String taskName,
+                           @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
+        taskSaveAndDeleteService.delete(taskName, taskDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/tasks/{taskId}/information")

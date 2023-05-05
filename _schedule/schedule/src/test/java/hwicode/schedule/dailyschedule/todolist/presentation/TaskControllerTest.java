@@ -7,6 +7,7 @@ import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
@@ -68,9 +69,16 @@ class TaskControllerTest {
 
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // when then
-        mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", DAILY_TO_DO_LIST_ID, TASK_NAME))
-                .andExpect(status().isNoContent());
+        // given
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", DAILY_TO_DO_LIST_ID, TASK_NAME)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskDeleteRequest)));
+
+        // then
+        perform.andExpect(status().isNoContent());
 
         verify(taskSaveAndDeleteService).delete(any(), any());
     }

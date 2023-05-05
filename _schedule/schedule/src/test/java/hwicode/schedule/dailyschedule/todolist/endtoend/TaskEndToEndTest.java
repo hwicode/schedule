@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
@@ -83,9 +84,13 @@ class TaskEndToEndTest {
                 createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
         );
 
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId(), taskId);
+
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskName", TASK_NAME);
+                .pathParam("taskName", TASK_NAME)
+                .contentType(ContentType.JSON)
+                .body(taskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
