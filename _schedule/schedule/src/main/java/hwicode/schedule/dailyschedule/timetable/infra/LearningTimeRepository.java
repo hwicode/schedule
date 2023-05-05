@@ -3,7 +3,15 @@ package hwicode.schedule.dailyschedule.timetable.infra;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTimeSaveOnlyRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface LearningTimeRepository extends JpaRepository<LearningTime, Long>, LearningTimeSaveOnlyRepository {
 
+    @Query("UPDATE LearningTime l "
+            + "SET l.subjectOfTask = null "
+            + "WHERE l.subjectOfTask.id = :id")
+    @Modifying(clearAutomatically = true)
+    void deleteSubjectOfTaskBelongingToLearningTime(@Param("id") Long subjectOfTaskId);
 }

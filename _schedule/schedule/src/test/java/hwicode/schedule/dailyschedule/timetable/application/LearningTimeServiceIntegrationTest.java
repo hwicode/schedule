@@ -14,8 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.SUBJECT;
+import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -111,6 +110,33 @@ class LearningTimeServiceIntegrationTest {
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
         boolean isDelete = savedLearningTime.deleteSubject();
         assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    void 학습_시간들에_연관된_Task_학습_주제를_삭제할_수_있다() {
+        // given
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        learningTime.changeSubjectOfTask(subjectOfTask);
+        LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
+        learningTime2.changeSubjectOfTask(subjectOfTask);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTask.getId());
+
+        // then
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isFalse();
+
+        LearningTime savedLearningTime2 = learningTimeRepository.findById(learningTime2.getId()).orElseThrow();
+        boolean isDelete2 = savedLearningTime2.deleteSubject();
+        assertThat(isDelete2).isFalse();
     }
 
 }

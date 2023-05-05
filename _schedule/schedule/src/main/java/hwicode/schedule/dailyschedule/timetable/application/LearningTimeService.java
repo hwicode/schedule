@@ -59,4 +59,9 @@ public class LearningTimeService {
         return learningTimeRepository.findById(learningTimeId)
                 .orElseThrow(LearningTimeNotFoundException::new);
     }
+
+    @Transactional
+    public void deleteSubjectOfTaskBelongingToLearningTime(Long subjectOfTaskId) {
+        learningTimeRepository.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTaskId);
+    }
 }
