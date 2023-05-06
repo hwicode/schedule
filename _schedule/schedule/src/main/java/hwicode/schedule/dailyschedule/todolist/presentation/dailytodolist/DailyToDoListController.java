@@ -5,12 +5,14 @@ import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.Da
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class DailyToDoListController {
 
@@ -18,7 +20,7 @@ public class DailyToDoListController {
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information")
     @ResponseStatus(value = HttpStatus.OK)
-    public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@PathVariable @NotNull Long dailyToDoListId,
+    public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@PathVariable @Positive Long dailyToDoListId,
                                                                                  @RequestBody @Valid DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
         dailyToDoListService.changeDailyToDoListInformation(dailyToDoListId, dailyToDoListInformationChangeRequest);
         return new DailyToDoListInformationChangeResponse(

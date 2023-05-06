@@ -9,13 +9,14 @@ import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSa
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class TaskController {
 
@@ -24,7 +25,7 @@ public class TaskController {
 
     @PostMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@PathVariable Long dailyToDoListId,
+    public TaskSaveResponse saveTask(@PathVariable @Positive Long dailyToDoListId,
                                      @RequestBody @Valid TaskSaveRequest taskSaveRequest) {
         Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
@@ -32,15 +33,15 @@ public class TaskController {
 
     @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable Long dailyToDoListId,
-                           @PathVariable @NotBlank String taskName,
+    public void deleteTask(@PathVariable @Positive Long dailyToDoListId,
+                           @PathVariable String taskName,
                            @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
         taskSaveAndDeleteService.delete(taskName, taskDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/tasks/{taskId}/information")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskInformationModifyResponse changeTaskInformation(@PathVariable @NotNull Long taskId,
+    public TaskInformationModifyResponse changeTaskInformation(@PathVariable @Positive Long taskId,
                                                                @RequestBody @Valid TaskInformationModifyRequest taskInformationModifyRequest) {
         taskService.changeTaskInformation(taskId, taskInformationModifyRequest);
         return new TaskInformationModifyResponse(
