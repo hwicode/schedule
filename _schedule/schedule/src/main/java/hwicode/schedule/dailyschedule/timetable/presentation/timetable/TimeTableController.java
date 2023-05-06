@@ -13,13 +13,16 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subje
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class TimeTableController {
 
@@ -27,7 +30,7 @@ public class TimeTableController {
 
     @PostMapping("/dailyschedule/timetables/{timeTableId}/learning-times")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public LearningTimeSaveResponse saveLearningTime(@PathVariable @NotBlank Long timeTableId,
+    public LearningTimeSaveResponse saveLearningTime(@PathVariable @Positive Long timeTableId,
                                                      @RequestBody @Valid LearningTimeSaveRequest learningTimeSaveRequest) {
         Long learningTimeId = timeTableService.saveLearningTime(
                 timeTableId, learningTimeSaveRequest.getStartTime()
@@ -37,7 +40,7 @@ public class TimeTableController {
 
     @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable Long timeTableId,
+    public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @Positive Long timeTableId,
                                                                @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                                @RequestBody @Valid StartTimeModifyRequest startTimeModifyRequest) {
         LocalDateTime newStartTime = timeTableService.changeLearningTimeStartTime(
@@ -48,7 +51,7 @@ public class TimeTableController {
 
     @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable Long timeTableId,
+    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @Positive Long timeTableId,
                                                            @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
                                                            @RequestBody @Valid EndTimeModifyRequest endTimeModifyRequest) {
         LocalDateTime endTime = timeTableService.changeLearningTimeEndTime(
@@ -59,32 +62,33 @@ public class TimeTableController {
 
     @DeleteMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteLearningTime(@PathVariable Long timeTableId,
+    public void deleteLearningTime(@PathVariable @Positive Long timeTableId,
                                    @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime) {
         timeTableService.deleteLearningTime(timeTableId, startTime);
     }
 
     @GetMapping("/dailyschedule/timetables/{timeTableId}/subject-total-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public SubjectTotalLearningTimeResponse getSubjectTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                        @RequestParam String subject) {
+    public SubjectTotalLearningTimeResponse getSubjectTotalLearningTime(@PathVariable @Positive Long timeTableId,
+                                                                        @RequestParam @NotBlank String subject) {
         int subjectTotalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTableId, subject);
         return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
     }
 
     @GetMapping("/dailyschedule/timetables/{timeTableId}/task-total-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public SubjectOfTaskTotalLearningTimeResponse getSubjectOfTaskTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                                    @RequestParam("subject_of_task_id") Long subjectOfTaskId) {
+    public SubjectOfTaskTotalLearningTimeResponse getSubjectOfTaskTotalLearningTime(@PathVariable @Positive Long timeTableId,
+                                                                                    @RequestParam("subject_of_task_id") @Positive Long subjectOfTaskId) {
         int totalLearningTime = timeTableService.calculateSubjectOfTaskTotalLearningTime(timeTableId, subjectOfTaskId);
         return new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
     }
 
     @GetMapping("/dailyschedule/timetables/{timeTableId}/subtask-total-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public SubjectOfSubTaskTotalLearningTimeResponse getSubjectOfSubTaskTotalLearningTime(@PathVariable @NotBlank Long timeTableId,
-                                                                                          @RequestParam("subject_of_subtask_id") Long subjectOfSubTaskId) {
+    public SubjectOfSubTaskTotalLearningTimeResponse getSubjectOfSubTaskTotalLearningTime(@PathVariable @Positive Long timeTableId,
+                                                                                          @RequestParam("subject_of_subtask_id") @Positive Long subjectOfSubTaskId) {
         int totalLearningTime = timeTableService.calculateSubjectOfSubTaskTotalLearningTime(timeTableId, subjectOfSubTaskId);
         return new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
     }
+
 }
