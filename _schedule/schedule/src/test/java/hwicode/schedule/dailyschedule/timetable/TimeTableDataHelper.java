@@ -68,12 +68,12 @@ public class TimeTableDataHelper {
         return new LearningTimeSaveRequest(startTime);
     }
 
-    public static StartTimeModifyRequest createStartTimeModifyRequest(LocalDateTime newStartTime) {
-        return new StartTimeModifyRequest(newStartTime);
+    public static StartTimeModifyRequest createStartTimeModifyRequest(LocalDateTime startTime, LocalDateTime newStartTime) {
+        return new StartTimeModifyRequest(startTime, newStartTime);
     }
 
-    public static EndTimeModifyRequest createEndTimeModifyRequest(LocalDateTime endTime) {
-        return new EndTimeModifyRequest(endTime);
+    public static EndTimeModifyRequest createEndTimeModifyRequest(LocalDateTime startTime, LocalDateTime endTime) {
+        return new EndTimeModifyRequest(startTime, endTime);
     }
 
 

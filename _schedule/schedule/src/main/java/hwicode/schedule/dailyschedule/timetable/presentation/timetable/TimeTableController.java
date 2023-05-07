@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.timetable.presentation.timetable;
 
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -11,7 +12,6 @@ import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subje
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -38,33 +38,34 @@ public class TimeTableController {
         return new LearningTimeSaveResponse(learningTimeId, learningTimeSaveRequest.getStartTime());
     }
 
-    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time")
+    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time")
     @ResponseStatus(value = HttpStatus.OK)
     public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @Positive Long timeTableId,
-                                                               @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+                                                               @PathVariable @Positive Long learningTimeId,
                                                                @RequestBody @Valid StartTimeModifyRequest startTimeModifyRequest) {
         LocalDateTime newStartTime = timeTableService.changeLearningTimeStartTime(
-                timeTableId, startTime, startTimeModifyRequest.getNewStartTime()
+                timeTableId, startTimeModifyRequest.getStartTime(), startTimeModifyRequest.getNewStartTime()
         );
         return new StartTimeModifyResponse(newStartTime);
     }
 
-    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time")
+    @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/end-time")
     @ResponseStatus(value = HttpStatus.OK)
     public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @Positive Long timeTableId,
-                                                           @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime,
+                                                           @PathVariable @Positive Long learningTimeId,
                                                            @RequestBody @Valid EndTimeModifyRequest endTimeModifyRequest) {
         LocalDateTime endTime = timeTableService.changeLearningTimeEndTime(
-                timeTableId, startTime, endTimeModifyRequest.getEndTime()
+                timeTableId, endTimeModifyRequest.getStartTime(), endTimeModifyRequest.getEndTime()
         );
         return new EndTimeModifyResponse(endTime);
     }
 
-    @DeleteMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}")
+    @DeleteMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteLearningTime(@PathVariable @Positive Long timeTableId,
-                                   @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") LocalDateTime startTime) {
-        timeTableService.deleteLearningTime(timeTableId, startTime);
+                                   @PathVariable @Positive Long learningTimeId,
+                                   @RequestBody @Valid LearningTimeDeleteRequest learningTimeDeleteRequest) {
+        timeTableService.deleteLearningTime(timeTableId, learningTimeDeleteRequest.getStartTime());
     }
 
     @GetMapping("/dailyschedule/timetables/{timeTableId}/subject-total-time")

@@ -14,5 +14,8 @@ import java.time.LocalDateTime;
 public class EndTimeModifyRequest {
 
     @NotNull
+    private LocalDateTime startTime;
+
+    @NotNull
     private LocalDateTime endTime;
 }

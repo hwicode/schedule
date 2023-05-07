@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify;
+package hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -11,11 +11,8 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class StartTimeModifyRequest {
+public class LearningTimeDeleteRequest {
 
     @NotNull
     private LocalDateTime startTime;
-
-    @NotNull
-    private LocalDateTime newStartTime;
 }

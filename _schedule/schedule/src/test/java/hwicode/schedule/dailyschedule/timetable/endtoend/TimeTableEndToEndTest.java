@@ -10,6 +10,7 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalida
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
@@ -85,20 +86,20 @@ class TimeTableEndToEndTest {
     void 학습_시간_시작_시간_변경_요청() {
         // given
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-        timeTable.createLearningTime(START_TIME);
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("startTime", START_TIME.toString())
+                .pathParam("learningTimeId", learningTime.getId())
                 .contentType(ContentType.JSON)
                 .body(startTimeModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/start-time", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time", port));
 
         // then
         response.then()
@@ -112,21 +113,21 @@ class TimeTableEndToEndTest {
     void 학습_시간_끝나는_시간_변경_요청() {
         // given
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-        timeTable.createLearningTime(START_TIME);
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
         LocalDateTime endTime = START_TIME.plusMinutes(30);
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(endTime);
+        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(START_TIME, endTime);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("startTime", START_TIME.toString())
+                .pathParam("learningTimeId", learningTime.getId())
                 .contentType(ContentType.JSON)
                 .body(endTimeModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/end-time", port));
 
         // then
         response.then()
@@ -140,18 +141,21 @@ class TimeTableEndToEndTest {
     void 학습_시간_삭제_요청() {
         // given
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-        timeTable.createLearningTime(START_TIME);
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         timeTableRepository.save(timeTable);
 
+        LearningTimeDeleteRequest learningTimeDeleteRequest = new LearningTimeDeleteRequest(START_TIME);
+
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
-                .pathParam("startTime", START_TIME.toString())
-                .contentType(ContentType.JSON);
+                .pathParam("learningTimeId", learningTime.getId())
+                .contentType(ContentType.JSON)
+                .body(learningTimeDeleteRequest);
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}", port));
 
         // then
         response.then()
