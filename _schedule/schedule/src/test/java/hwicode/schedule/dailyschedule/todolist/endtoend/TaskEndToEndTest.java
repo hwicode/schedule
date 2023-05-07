@@ -84,17 +84,17 @@ class TaskEndToEndTest {
                 createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
         );
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId(), taskId);
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId(), taskId, TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskName", TASK_NAME)
+                .pathParam("taskId", TASK_ID)
                 .contentType(ContentType.JSON)
                 .body(taskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", port));
 
         //then
         response.then()

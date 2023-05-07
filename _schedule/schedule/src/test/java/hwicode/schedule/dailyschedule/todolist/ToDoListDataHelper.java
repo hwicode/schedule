@@ -41,8 +41,8 @@ public class ToDoListDataHelper {
         return new TaskInformationModifyRequest(priority, importance);
     }
 
-    public static TaskDeleteRequest createTaskDeleteRequest(Long dailyToDoListId, Long taskId) {
-        return new TaskDeleteRequest(dailyToDoListId, taskId);
+    public static TaskDeleteRequest createTaskDeleteRequest(Long dailyToDoListId, Long taskId, String taskName) {
+        return new TaskDeleteRequest(dailyToDoListId, taskId, taskName);
     }
 
 

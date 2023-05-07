@@ -70,10 +70,10 @@ class TaskControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID);
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID, TASK_NAME);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}", DAILY_TO_DO_LIST_ID, TASK_NAME)
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_TO_DO_LIST_ID, TASK_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskDeleteRequest)));
 

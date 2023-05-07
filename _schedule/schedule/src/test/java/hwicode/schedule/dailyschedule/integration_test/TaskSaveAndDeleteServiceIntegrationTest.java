@@ -77,7 +77,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
 
         Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId());
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId);
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 
         // when
         taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);
@@ -104,7 +104,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
         learningTimeService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId);
+        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 
         // when
         taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);

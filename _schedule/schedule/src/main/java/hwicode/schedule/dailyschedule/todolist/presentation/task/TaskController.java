@@ -31,12 +31,12 @@ public class TaskController {
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
-    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}")
+    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @Positive Long dailyToDoListId,
-                           @PathVariable String taskName,
+                           @PathVariable @Positive Long taskId,
                            @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
-        taskSaveAndDeleteService.delete(taskName, taskDeleteRequest);
+        taskSaveAndDeleteService.delete(taskDeleteRequest.getTaskName(), taskDeleteRequest);
     }
 
     @PatchMapping("/dailyschedule/tasks/{taskId}/information")
