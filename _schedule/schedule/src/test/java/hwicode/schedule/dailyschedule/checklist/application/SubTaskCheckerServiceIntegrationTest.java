@@ -91,7 +91,7 @@ class SubTaskCheckerServiceIntegrationTest {
         dailyChecklist.makeTaskCheckerToDone(TASK_CHECKER_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         // when
         subTaskCheckerService.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, subTaskStatusModifyRequest);
@@ -112,7 +112,7 @@ class SubTaskCheckerServiceIntegrationTest {
         dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, subTaskChecker);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskChecker.getId(), NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskChecker.getId(), SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
         subTaskCheckerService.changeSubTaskCheckerName(SUB_TASK_CHECKER_NAME, subTaskCheckerNameModifyRequest);

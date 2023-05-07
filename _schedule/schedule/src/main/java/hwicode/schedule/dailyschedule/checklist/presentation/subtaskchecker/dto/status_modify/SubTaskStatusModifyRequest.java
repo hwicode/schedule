@@ -21,6 +21,9 @@ public class SubTaskStatusModifyRequest {
     @NotBlank
     private String taskCheckerName;
 
+    @NotBlank
+    private String subTaskCheckerName;
+
     @NotNull
     private SubTaskStatus subTaskStatus;
 }

@@ -44,7 +44,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
         given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
@@ -52,8 +52,8 @@ class SubTaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
-                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
 
@@ -69,7 +69,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
         given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
@@ -77,8 +77,8 @@ class SubTaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskName}/name",
-                        TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME)
+                patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
+                        TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskCheckerNameModifyRequest)));
 
@@ -100,11 +100,11 @@ class SubTaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
-                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                 )));
 
         // then
@@ -123,11 +123,11 @@ class SubTaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status",
-                        DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                 )));
 
         // then
@@ -146,11 +146,11 @@ class SubTaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskName}/name",
-                        TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME)
+                patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
+                        TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME)
+                        createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
                 )));
 
         // then

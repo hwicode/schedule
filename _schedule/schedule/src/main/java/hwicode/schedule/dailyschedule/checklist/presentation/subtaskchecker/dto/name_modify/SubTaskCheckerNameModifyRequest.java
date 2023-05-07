@@ -18,5 +18,8 @@ public class SubTaskCheckerNameModifyRequest {
     private Long taskCheckerId;
 
     @NotBlank
+    private String subTaskCheckerName;
+
+    @NotBlank
     private String newSubTaskCheckerName;
 }

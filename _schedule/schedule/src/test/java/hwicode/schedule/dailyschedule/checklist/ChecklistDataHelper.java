@@ -22,6 +22,7 @@ public class ChecklistDataHelper {
     // 단순히 id값으로 숫자가 필요할 때만 사용
     public static final Long DAILY_CHECKLIST_ID = 1L;
     public static final Long TASK_CHECKER_ID = 2L;
+    public static final Long SUB_TASK_CHECKER_ID = 3L;
 
 
     // 생성 메서드에서 사용됨. 테스트 중간에 사용되면 이미 존재하는 TaskChecker나 SubTaskChecker임
@@ -61,16 +62,16 @@ public class ChecklistDataHelper {
         return new SubTaskCheckerSaveRequest(dailyChecklistId, taskCheckerName, subTaskCheckerName);
     }
 
-    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskCheckerName, SubTaskStatus subTaskStatus) {
-        return new SubTaskStatusModifyRequest(dailyChecklistId, taskCheckerName, subTaskStatus);
+    public static SubTaskStatusModifyRequest createSubTaskStatusModifyRequest(Long dailyChecklistId, String taskCheckerName, String subTaskCheckerName, SubTaskStatus subTaskStatus) {
+        return new SubTaskStatusModifyRequest(dailyChecklistId, taskCheckerName, subTaskCheckerName, subTaskStatus);
     }
 
     public static SubTaskCheckerDeleteRequest createSubTaskCheckerDeleteRequest(Long dailyChecklistId, String taskCheckerName) {
         return new SubTaskCheckerDeleteRequest(dailyChecklistId, taskCheckerName);
     }
 
-    public static SubTaskCheckerNameModifyRequest createSubTaskCheckerNameModifyRequest(Long taskCheckId, String newSubTaskCheckerName) {
-        return new SubTaskCheckerNameModifyRequest(taskCheckId, newSubTaskCheckerName);
+    public static SubTaskCheckerNameModifyRequest createSubTaskCheckerNameModifyRequest(Long taskCheckId, String subTaskCheckerName, String newSubTaskCheckerName) {
+        return new SubTaskCheckerNameModifyRequest(taskCheckId, subTaskCheckerName, newSubTaskCheckerName);
     }
 
 

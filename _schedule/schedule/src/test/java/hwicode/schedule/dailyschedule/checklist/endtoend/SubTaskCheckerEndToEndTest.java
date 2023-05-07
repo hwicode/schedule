@@ -54,35 +54,30 @@ class SubTaskCheckerEndToEndTest {
         databaseCleanUp.execute();
     }
 
-    private DailyChecklist createDailyChecklistWithTaskChecker() {
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        dailyChecklist.addTaskChecker(new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL));
-
-        return dailyChecklist;
-    }
-
     @Test
     void 서브_과제체커_진행_상태_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTaskChecker();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        TaskChecker taskChecker = new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL);
+        dailyChecklist.addTaskChecker(taskChecker);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
         );
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
-                .pathParam("subTaskName", NEW_SUB_TASK_CHECKER_NAME)
+                .pathParam("dailyToDoListId", dailyChecklist.getId())
+                .pathParam("taskId", taskChecker.getId())
+                .pathParam("subTaskId", subTaskCheckerId)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status", port));
 
         //then
         response.then()
@@ -102,21 +97,21 @@ class SubTaskCheckerEndToEndTest {
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
-        subTaskCheckerService.saveSubTaskChecker(
+        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(
                 createSubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
         );
 
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskCheckerId, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(taskCheckerId, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskId", taskCheckerId)
-                .pathParam("subTaskName", SUB_TASK_CHECKER_NAME)
+                .pathParam("subTaskId", subTaskCheckerId)
                 .contentType(ContentType.JSON)
                 .body(subTaskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/subtasks/{subTaskName}/name", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name", port));
 
         // then
         response.then()

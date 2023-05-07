@@ -21,22 +21,26 @@ public class SubTaskCheckerController {
 
     private final SubTaskCheckerService subTaskCheckerService;
 
-    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}/status")
+    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskStatusModifyResponse changeSubTaskStatus(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
-                                                           @PathVariable("taskName") String taskCheckerName,
-                                                           @PathVariable("subTaskName") String subTaskCheckerName,
+                                                           @PathVariable("taskId") @Positive Long taskCheckerId,
+                                                           @PathVariable("subTaskId") @Positive Long subTaskCheckerId,
                                                            @RequestBody @Valid SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(subTaskCheckerName, subTaskStatusModifyRequest);
-        return new SubTaskStatusModifyResponse(subTaskCheckerName, modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
+        TaskStatus modifiedTaskStatus = subTaskCheckerService.changeSubTaskStatus(
+                subTaskStatusModifyRequest.getSubTaskCheckerName(), subTaskStatusModifyRequest
+        );
+        return new SubTaskStatusModifyResponse(subTaskStatusModifyRequest.getSubTaskCheckerName(), modifiedTaskStatus, subTaskStatusModifyRequest.getSubTaskStatus());
     }
 
-    @PatchMapping("/dailyschedule/tasks/{taskId}/subtasks/{subTaskName}/name")
+    @PatchMapping("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name")
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskCheckerNameModifyResponse changeSubTaskCheckerName(@PathVariable("taskId") @Positive Long taskCheckerId,
-                                                                     @PathVariable("subTaskName") String subTaskCheckerName,
+                                                                     @PathVariable("subTaskId") @Positive Long subTaskCheckerId,
                                                                      @RequestBody @Valid SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
-        String newSubTaskCheckerName = subTaskCheckerService.changeSubTaskCheckerName(subTaskCheckerName, subTaskCheckerNameModifyRequest);
+        String newSubTaskCheckerName = subTaskCheckerService.changeSubTaskCheckerName(
+                subTaskCheckerNameModifyRequest.getSubTaskCheckerName(), subTaskCheckerNameModifyRequest
+        );
         return new SubTaskCheckerNameModifyResponse(subTaskCheckerNameModifyRequest.getTaskCheckerId(), newSubTaskCheckerName);
     }
 }
