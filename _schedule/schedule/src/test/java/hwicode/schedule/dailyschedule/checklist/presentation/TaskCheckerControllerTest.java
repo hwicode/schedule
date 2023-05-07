@@ -48,8 +48,8 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE);
-        TaskStatusModifyResponse taskStatusModifyResponse = createTaskStatusModifyResponse(TASK_CHECKER_NAME, TaskStatus.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE);
+        TaskStatusModifyResponse taskStatusModifyResponse = new TaskStatusModifyResponse(TASK_CHECKER_NAME, TaskStatus.DONE);
 
         given(taskCheckerService.changeTaskStatus(any(), any()))
                 .willReturn(TaskStatus.DONE);
@@ -73,8 +73,8 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.HARD);
-        TaskDifficultyModifyResponse taskDifficultyModifyResponse = createTaskDifficultyModifyResponse(TASK_CHECKER_NAME, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.HARD);
+        TaskDifficultyModifyResponse taskDifficultyModifyResponse = new TaskDifficultyModifyResponse(TASK_CHECKER_NAME, Difficulty.HARD);
 
         given(taskCheckerService.changeTaskDifficulty(any(), any()))
                 .willReturn(Difficulty.HARD);
@@ -98,8 +98,8 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = createTaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
-        TaskCheckerNameModifyResponse taskCheckerNameModifyResponse = createTaskCheckerNameModifyResponse(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME);
+        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+        TaskCheckerNameModifyResponse taskCheckerNameModifyResponse = new TaskCheckerNameModifyResponse(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME);
 
         given(taskCheckerService.changeTaskCheckerName(any(), any()))
                 .willReturn(NEW_TASK_CHECKER_NAME);
@@ -134,7 +134,7 @@ class TaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
                 )));
 
         // then
@@ -157,7 +157,7 @@ class TaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
                 )));
 
         // then
@@ -180,7 +180,7 @@ class TaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
                 )));
 
         // then
@@ -203,7 +203,7 @@ class TaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
                 )));
 
         // then

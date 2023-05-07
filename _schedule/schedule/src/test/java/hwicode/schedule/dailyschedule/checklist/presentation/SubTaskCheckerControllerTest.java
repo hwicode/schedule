@@ -44,8 +44,8 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
-        SubTaskStatusModifyResponse subTaskStatusModifyResponse = createSubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyResponse subTaskStatusModifyResponse = new SubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
         given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
                 .willReturn(TaskStatus.PROGRESS);
@@ -69,8 +69,8 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
-        SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = createSubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = new SubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
         given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
                 .willReturn(NEW_SUB_TASK_CHECKER_NAME);
@@ -104,7 +104,7 @@ class SubTaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                 )));
 
         // then
@@ -127,7 +127,7 @@ class SubTaskCheckerControllerTest {
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                 )));
 
         // then
@@ -150,7 +150,7 @@ class SubTaskCheckerControllerTest {
                         TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createSubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                        new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
                 )));
 
         // then
