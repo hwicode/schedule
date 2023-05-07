@@ -24,30 +24,36 @@ public class TaskCheckerController {
 
     private final TaskCheckerService taskCheckerService;
 
-    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/status")
+    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskStatusModifyResponse changeTaskStatus(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
-                                                     @PathVariable("taskName") String taskCheckerName,
+                                                     @PathVariable("taskId") @Positive Long taskCheckerId,
                                                      @RequestBody @Valid TaskStatusModifyRequest taskStatusModifyRequest) {
-        TaskStatus modifiedTaskStatus = taskCheckerService.changeTaskStatus(taskCheckerName, taskStatusModifyRequest);
-        return new TaskStatusModifyResponse(taskCheckerName, modifiedTaskStatus);
+        TaskStatus modifiedTaskStatus = taskCheckerService.changeTaskStatus(
+                taskStatusModifyRequest.getTaskCheckerName(), taskStatusModifyRequest
+        );
+        return new TaskStatusModifyResponse(taskStatusModifyRequest.getTaskCheckerName(), modifiedTaskStatus);
     }
 
-    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/difficulty")
+    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
-                                                             @PathVariable("taskName") String taskCheckerName,
+                                                             @PathVariable("taskId") @Positive Long taskCheckerId,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest taskDifficultyModifyRequest) {
-        Difficulty modifiedDifficulty = taskCheckerService.changeTaskDifficulty(taskCheckerName, taskDifficultyModifyRequest);
-        return new TaskDifficultyModifyResponse(taskCheckerName, modifiedDifficulty);
+        Difficulty modifiedDifficulty = taskCheckerService.changeTaskDifficulty(
+                taskDifficultyModifyRequest.getTaskCheckerName(), taskDifficultyModifyRequest
+        );
+        return new TaskDifficultyModifyResponse(taskDifficultyModifyRequest.getTaskCheckerName(), modifiedDifficulty);
     }
 
-    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/name")
+    @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskCheckerNameModifyResponse changeTaskCheckerName(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
-                                                               @PathVariable("taskName") String taskCheckerName,
+                                                               @PathVariable("taskId") @Positive Long taskCheckerId,
                                                                @RequestBody @Valid TaskCheckerNameModifyRequest taskCheckerNameModifyRequest) {
-        String newTaskCheckerName = taskCheckerService.changeTaskCheckerName(taskCheckerName, taskCheckerNameModifyRequest);
+        String newTaskCheckerName = taskCheckerService.changeTaskCheckerName(
+                taskCheckerNameModifyRequest.getTaskCheckerName(), taskCheckerNameModifyRequest
+        );
         return new TaskCheckerNameModifyResponse(taskCheckerNameModifyRequest.getDailyChecklistId(), newTaskCheckerName);
     }
 }

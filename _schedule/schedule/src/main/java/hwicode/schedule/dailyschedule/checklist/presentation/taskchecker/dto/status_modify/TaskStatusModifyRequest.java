@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
@@ -16,6 +17,9 @@ public class TaskStatusModifyRequest {
 
     @NotNull @Positive
     private Long dailyChecklistId;
+
+    @NotBlank
+    private String taskCheckerName;
 
     @NotNull
     private TaskStatus taskStatus;

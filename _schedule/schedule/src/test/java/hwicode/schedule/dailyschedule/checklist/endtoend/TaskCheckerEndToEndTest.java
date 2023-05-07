@@ -63,17 +63,17 @@ class TaskCheckerEndToEndTest {
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
-        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), TaskStatus.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = createTaskStatusModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, TaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
+                .pathParam("taskId", taskCheckerId)
                 .contentType(ContentType.JSON)
                 .body(taskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/status", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status", port));
 
         //then
         response.then()
@@ -93,17 +93,17 @@ class TaskCheckerEndToEndTest {
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = createTaskDifficultyModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskName", NEW_TASK_CHECKER_NAME)
+                .pathParam("taskId", taskCheckerId)
                 .contentType(ContentType.JSON)
                 .body(taskDifficultyModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/difficulty", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty", port));
 
         //then
         response.then()
@@ -119,21 +119,21 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerService.saveTaskChecker(
                 createTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
-        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = createTaskCheckerNameModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME);
+        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = createTaskCheckerNameModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskName", TASK_CHECKER_NAME)
+                .pathParam("taskId", taskCheckerId)
                 .contentType(ContentType.JSON)
                 .body(taskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/name", port));
+                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name", port));
 
         // then
         response.then()

@@ -18,5 +18,8 @@ public class TaskCheckerNameModifyRequest {
     private Long dailyChecklistId;
 
     @NotBlank
+    private String taskCheckerName;
+
+    @NotBlank
     private String newTaskCheckerName;
 }

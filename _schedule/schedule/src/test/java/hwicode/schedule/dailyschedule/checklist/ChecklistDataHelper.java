@@ -43,16 +43,16 @@ public class ChecklistDataHelper {
         return new TaskCheckerSaveRequest(dailyChecklistId, taskCheckerName, difficulty);
     }
 
-    public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, TaskStatus taskStatus) {
-        return new TaskStatusModifyRequest(dailyChecklistId, taskStatus);
+    public static TaskStatusModifyRequest createTaskStatusModifyRequest(Long dailyChecklistId, String taskCheckerName, TaskStatus taskStatus) {
+        return new TaskStatusModifyRequest(dailyChecklistId, taskCheckerName, taskStatus);
     }
 
-    public static TaskDifficultyModifyRequest createTaskDifficultyModifyRequest(Long dailyChecklistId, Difficulty difficulty) {
-        return new TaskDifficultyModifyRequest(dailyChecklistId, difficulty);
+    public static TaskDifficultyModifyRequest createTaskDifficultyModifyRequest(Long dailyChecklistId, String taskCheckerName, Difficulty difficulty) {
+        return new TaskDifficultyModifyRequest(dailyChecklistId, taskCheckerName, difficulty);
     }
 
-    public static TaskCheckerNameModifyRequest createTaskCheckerNameModifyRequest(Long dailyChecklistId, String newTaskCheckerName) {
-        return new TaskCheckerNameModifyRequest(dailyChecklistId, newTaskCheckerName);
+    public static TaskCheckerNameModifyRequest createTaskCheckerNameModifyRequest(Long dailyChecklistId, String taskCheckerName, String newTaskCheckerName) {
+        return new TaskCheckerNameModifyRequest(dailyChecklistId, taskCheckerName, newTaskCheckerName);
     }
 
 
