@@ -90,7 +90,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
 
         Long subjectOfSubTaskId = saveSubjectOfSubTask(timeTable.getId());
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(timeTable.getId(), TASK_NAME, subjectOfSubTaskId);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(timeTable.getId(), TASK_NAME, subjectOfSubTaskId, SUB_TASK_NAME);
 
         // when
         subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);
@@ -117,7 +117,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTaskId);
         learningTimeService.changeSubjectOfSubTask(learningTime2.getId(), subjectOfSubTaskId);
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(timeTable.getId(), TASK_NAME, subjectOfSubTaskId);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(timeTable.getId(), TASK_NAME, subjectOfSubTaskId, SUB_TASK_NAME);
 
         // when
         subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);

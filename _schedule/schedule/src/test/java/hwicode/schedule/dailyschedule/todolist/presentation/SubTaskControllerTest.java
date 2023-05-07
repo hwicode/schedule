@@ -46,8 +46,8 @@ class SubTaskControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks",
-                        DAILY_TO_DO_LIST_ID, TASK_NAME)
+                post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks",
+                        DAILY_TO_DO_LIST_ID, TASK_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
         // then
@@ -62,12 +62,12 @@ class SubTaskControllerTest {
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
 
         // when
         ResultActions perform = mockMvc.perform(
-                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}",
-                        DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME)
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
+                        DAILY_TO_DO_LIST_ID, TASK_ID, SUB_TASK_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subTaskDeleteRequest)));
 

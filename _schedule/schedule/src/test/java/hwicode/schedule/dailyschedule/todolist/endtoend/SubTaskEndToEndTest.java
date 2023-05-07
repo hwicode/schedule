@@ -68,13 +68,13 @@ class SubTaskEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskName", TASK_NAME)
+                .pathParam("taskId", TASK_ID)
                 .contentType(ContentType.JSON)
                 .body(subTaskSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks", port));
+                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks", port));
 
         //then
         response.then()
@@ -98,18 +98,18 @@ class SubTaskEndToEndTest {
                 createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME)
         );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID);
+        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskName", TASK_NAME)
-                .pathParam("subTaskName", SUB_TASK_NAME)
+                .pathParam("taskId", TASK_ID)
+                .pathParam("subTaskId", SUB_TASK_ID)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskName}/subtasks/{subTaskName}", port));
+                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}", port));
 
         //then
         response.then()

@@ -22,4 +22,7 @@ public class SubTaskDeleteRequest {
 
     @NotNull @Positive
     private Long subTaskId;
+
+    @NotBlank
+    private String subTaskName;
 }
