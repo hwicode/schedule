@@ -14,6 +14,7 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,6 +47,25 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
                 .body(new ErrorResponse(globalErrorCode.getMessage()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorResponse> constraintViolationException(ConstraintViolationException ex) {
+        GlobalErrorCode globalErrorCode = GlobalErrorCode.INVALID_PARAMETER;
+
+        log.info(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                globalErrorCode.getMessage());
+
+        List<ValidationError> validationErrors = ex.getConstraintViolations()
+                .stream()
+                .map(ValidationError::new)
+                .collect(Collectors.toList());
+
+        ErrorResponse errorResponse = new ErrorResponse(globalErrorCode.getMessage(), validationErrors);
+        return ResponseEntity.status(globalErrorCode.getHttpStatus())
+                .body(errorResponse);
     }
 
     @Override
@@ -120,22 +140,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 ex.getMessage(),
                 globalErrorCode.getMessage());
 
-        return handleExceptionInternal(ex, globalErrorCode);
-    }
-
-    private ResponseEntity<Object> handleExceptionInternal(MethodArgumentNotValidException ex, GlobalErrorCode globalErrorCode) {
-        return ResponseEntity.status(globalErrorCode.getHttpStatus())
-                .body(makeErrorResponse(ex, globalErrorCode));
-    }
-
-    private ErrorResponse makeErrorResponse(MethodArgumentNotValidException ex, GlobalErrorCode globalErrorCode) {
         List<ValidationError> validationErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
                 .map(ValidationError::new)
                 .collect(Collectors.toList());
 
-        return new ErrorResponse(globalErrorCode.getMessage(), validationErrors);
+        ErrorResponse errorResponse = new ErrorResponse(globalErrorCode.getMessage(), validationErrors);
+        return ResponseEntity.status(globalErrorCode.getHttpStatus())
+                .body(errorResponse);
     }
 
 }

@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 import org.springframework.validation.FieldError;
 
+import javax.validation.ConstraintViolation;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -32,5 +33,11 @@ public class ErrorResponse {
             this.field = fieldError.getField();
             this.message = fieldError.getDefaultMessage();
         }
+
+        public ValidationError(final ConstraintViolation<?> constraintViolation) {
+            this.field = constraintViolation.getPropertyPath().toString();
+            this.message = constraintViolation.getMessage();
+        }
     }
+
 }
