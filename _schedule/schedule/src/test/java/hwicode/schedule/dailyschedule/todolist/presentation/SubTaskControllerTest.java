@@ -38,8 +38,8 @@ class SubTaskControllerTest {
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME);
-        SubTaskSaveResponse subTaskSaveResponse = createSubTaskSaveResponse(SUB_TASK_ID, SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_NAME);
+        SubTaskSaveResponse subTaskSaveResponse = new SubTaskSaveResponse(SUB_TASK_ID, SUB_TASK_NAME);
 
         given(subTaskSaveAndDeleteService.save(any()))
                 .willReturn(SUB_TASK_ID);
@@ -62,7 +62,7 @@ class SubTaskControllerTest {
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
 
         // when
         ResultActions perform = mockMvc.perform(

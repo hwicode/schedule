@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
@@ -47,8 +48,8 @@ class TaskControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME);
-        TaskSaveResponse taskSaveResponse = createTaskSaveResponse(TASK_ID, TASK_NAME);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveResponse taskSaveResponse = new TaskSaveResponse(TASK_ID, TASK_NAME);
 
         given(taskSaveAndDeleteService.save(any()))
                 .willReturn(TASK_ID);
@@ -70,7 +71,7 @@ class TaskControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID, TASK_NAME);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID, TASK_NAME);
 
         // when
         ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_TO_DO_LIST_ID, TASK_ID)
@@ -86,8 +87,8 @@ class TaskControllerTest {
     @Test
     void 과제의_정보_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskInformationModifyRequest taskInformationModifyRequest = createTaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
-        TaskInformationModifyResponse taskInformationModifyResponse = createTaskInformationModifyResponse(TASK_ID, Priority.THIRD, Importance.THIRD);
+        TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
+        TaskInformationModifyResponse taskInformationModifyResponse = new TaskInformationModifyResponse(TASK_ID, Priority.THIRD, Importance.THIRD);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -116,7 +117,7 @@ class TaskControllerTest {
                 patch("/dailyschedule/tasks/{taskId}/information", TASK_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                createTaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
+                                new TaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
                         )));
 
         // then

@@ -1,15 +1,15 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
-import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
-import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
+import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -61,10 +61,10 @@ class SubTaskEndToEndTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
+                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        SubTaskSaveRequest subTaskSaveRequest = createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
@@ -91,14 +91,14 @@ class SubTaskEndToEndTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
+                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         Long subTaskId = subTaskSaveAndDeleteService.save(
-                createSubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME)
+                new SubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME)
         );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = createSubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)

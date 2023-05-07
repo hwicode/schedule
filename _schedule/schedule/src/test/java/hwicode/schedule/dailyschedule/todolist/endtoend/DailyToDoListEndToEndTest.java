@@ -1,14 +1,10 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.*;
+import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
-import hwicode.schedule.dailyschedule.todolist.infra.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -20,9 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -51,7 +44,7 @@ class DailyToDoListEndToEndTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         String review = "좋은데!";
-        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = createDailyToDoListInformationChangeRequest(review, Emoji.GOOD);
+        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", dailyToDoList.getId())

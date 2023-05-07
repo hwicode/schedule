@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.createTaskInformationModifyRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -42,7 +41,7 @@ class TaskServiceIntegrationTest {
         dailyToDoListRepository.save(dailyToDoList);
         taskRepository.save(task);
 
-        TaskInformationModifyRequest taskInformationModifyRequest = createTaskInformationModifyRequest(Priority.FIRST, Importance.FIRST);
+        TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.FIRST, Importance.FIRST);
 
         // when
         taskService.changeTaskInformation(task.getId(), taskInformationModifyRequest);

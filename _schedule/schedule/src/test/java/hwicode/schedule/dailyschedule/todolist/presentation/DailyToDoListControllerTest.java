@@ -21,7 +21,6 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.createDailyToDoListInformationChangeRequest;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -57,7 +56,7 @@ class DailyToDoListControllerTest {
     void 투두리스트의_정보_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         String review = "좋은데!";
-        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = createDailyToDoListInformationChangeRequest(review, Emoji.GOOD);
+        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
         DailyToDoListInformationChangeResponse dailyToDoListInformationChangeResponse = new DailyToDoListInformationChangeResponse(DAILY_TO_DO_LIST_ID, review, Emoji.GOOD);
 
         // when
@@ -87,7 +86,7 @@ class DailyToDoListControllerTest {
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", DAILY_TO_DO_LIST_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        createDailyToDoListInformationChangeRequest("좋은데!", Emoji.GOOD)
+                        new DailyToDoListInformationChangeRequest("좋은데!", Emoji.GOOD)
                 )));
 
         // then

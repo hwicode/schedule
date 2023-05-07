@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.integration_test;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
@@ -8,6 +9,8 @@ import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Importance;
+import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -60,7 +63,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
         timeTableRepository.save(timeTable);
 
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(timeTable.getId(), TASK_NAME);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(timeTable.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
         Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
@@ -77,7 +80,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
 
         Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId());
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 
         // when
         taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);
@@ -104,7 +107,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
         learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
         learningTimeService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 
         // when
         taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);

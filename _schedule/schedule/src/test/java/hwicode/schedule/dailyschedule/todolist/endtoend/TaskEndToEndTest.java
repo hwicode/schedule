@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.*;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
@@ -55,10 +56,10 @@ class TaskEndToEndTest {
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
-        TaskSaveRequest taskSaveRequest = createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
+                .pathParam("dailyToDoListId", dailyToDoList.getId())
                 .contentType(ContentType.JSON)
                 .body(taskSaveRequest);
 
@@ -81,10 +82,10 @@ class TaskEndToEndTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         Long taskId = taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
+                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskDeleteRequest taskDeleteRequest = createTaskDeleteRequest(dailyToDoList.getId(), taskId, TASK_NAME);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyToDoList.getId(), taskId, TASK_NAME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
@@ -110,10 +111,10 @@ class TaskEndToEndTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         Long taskId = taskSaveAndDeleteService.save(
-                createTaskSaveRequest(dailyToDoList.getId(), TASK_NAME)
+                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskInformationModifyRequest taskInformationModifyRequest = createTaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
+        TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("taskId", taskId)

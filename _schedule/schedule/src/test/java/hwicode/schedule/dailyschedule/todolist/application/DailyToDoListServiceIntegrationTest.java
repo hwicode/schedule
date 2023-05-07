@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.createDailyToDoListInformationChangeRequest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -37,7 +36,7 @@ class DailyToDoListServiceIntegrationTest {
         dailyToDoListRepository.save(dailyToDoList);
 
         String review = "좋았다!";
-        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = createDailyToDoListInformationChangeRequest(review, Emoji.GOOD);
+        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         // when
         dailyToDoListService.changeDailyToDoListInformation(dailyToDoList.getId(), dailyToDoListInformationChangeRequest);
