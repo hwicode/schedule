@@ -51,8 +51,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeSaveRequest learningTimeSaveRequest = createLearningTimeSaveRequest(START_TIME);
-        LearningTimeSaveResponse learningTimeSaveResponse = createLearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
+        LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
+        LearningTimeSaveResponse learningTimeSaveResponse = new LearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
 
         given(timeTableService.saveLearningTime(any(), any()))
                 .willReturn(LEARNING_TIME_ID);
@@ -78,8 +78,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_시작시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
-        StartTimeModifyResponse startTimeModifyResponse = createStartTimeModifyResponse(NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
+        StartTimeModifyResponse startTimeModifyResponse = new StartTimeModifyResponse(NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willReturn(NEW_START_TIME);
@@ -105,8 +105,8 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_끝나는_시간_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(START_TIME, END_TIME);
-        EndTimeModifyResponse endTimeModifyResponse = createEndTimeModifyResponse(END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
+        EndTimeModifyResponse endTimeModifyResponse = new EndTimeModifyResponse(END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willReturn(END_TIME);
@@ -153,7 +153,7 @@ class TimeTableControllerTest {
     void 특정_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = createSubjectTotalLearningTimeResponse(totalLearningTime);
+        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = new SubjectTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);
@@ -176,7 +176,7 @@ class TimeTableControllerTest {
     void Task_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = createSubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
+        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectOfTaskTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);
@@ -199,7 +199,7 @@ class TimeTableControllerTest {
     void SubTask_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         int totalLearningTime = 100;
-        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = createSubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
+        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
 
         given(timeTableService.calculateSubjectOfSubTaskTotalLearningTime(any(), any()))
                 .willReturn(totalLearningTime);
@@ -222,7 +222,7 @@ class TimeTableControllerTest {
     void 학습_시간_생성을_요청할_때_타임_테이블이_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TimeTableNotFoundException timeTableNotFoundException = new TimeTableNotFoundException();
-        LearningTimeSaveRequest learningTimeSaveRequest = createLearningTimeSaveRequest(START_TIME);
+        LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
 
         given(timeTableService.saveLearningTime(any(), any()))
                 .willThrow(timeTableNotFoundException);
@@ -247,7 +247,7 @@ class TimeTableControllerTest {
     void 학습_시간의_끝나는_시간_변경을_요청할_때_끝나는_시간이_시작_시간보다_앞서면_에러가_발생한다() throws Exception {
         // given
         EndTimeNotValidException endTimeNotValidException = new EndTimeNotValidException();
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(START_TIME, END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willThrow(endTimeNotValidException);
@@ -272,7 +272,7 @@ class TimeTableControllerTest {
     void 학습_시간의_끝나는_시간을_수정할_때_학습_시간이_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(START_TIME, END_TIME);
+        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
 
         given(timeTableService.changeLearningTimeEndTime(any(), any(), any()))
                 .willThrow(learningTimeNotFoundException);
@@ -297,7 +297,7 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_다른_학습_시간의_시간대에_포함되면_에러가_발생한다() throws Exception {
         // given
         ContainOtherTimeException containOtherTimeException = new ContainOtherTimeException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(containOtherTimeException);
@@ -322,7 +322,7 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_요청_날짜가_타임_테이블의_날짜_또는_그_다음날이_아닌_경우_에러가_발생한다() throws Exception {
         // given
         DateNotValidException dateNotValidException = new DateNotValidException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(dateNotValidException);
@@ -347,7 +347,7 @@ class TimeTableControllerTest {
     void 학습_시간의_시작시간_변경을_요청할_때_시작시간이_중복되는_경우_에러가_발생한다() throws Exception {
         // given
         StartTimeDuplicateException startTimeDuplicateException = new StartTimeDuplicateException();
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
                 .willThrow(startTimeDuplicateException);

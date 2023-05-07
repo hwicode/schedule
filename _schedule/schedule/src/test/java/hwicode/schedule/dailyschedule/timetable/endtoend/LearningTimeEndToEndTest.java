@@ -83,7 +83,7 @@ class LearningTimeEndToEndTest {
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = createLearningTimeSubjectModifyRequest(NEW_SUBJECT);
+        LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = new LearningTimeSubjectModifyRequest(NEW_SUBJECT);
 
         RequestSpecification requestSpecification = given()
                 .contentType(ContentType.JSON)
@@ -111,7 +111,7 @@ class LearningTimeEndToEndTest {
 
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
-        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(
                 subjectOfTask.getId());
 
         RequestSpecification requestSpecification = given()
@@ -140,7 +140,7 @@ class LearningTimeEndToEndTest {
 
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
-        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(
                 subjectOfSubTask.getId());
 
         RequestSpecification requestSpecification = given()

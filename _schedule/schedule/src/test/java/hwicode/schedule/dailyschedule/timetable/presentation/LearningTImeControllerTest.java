@@ -59,8 +59,8 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = createLearningTimeSubjectModifyRequest(NEW_SUBJECT);
-        LearningTimeSubjectModifyResponse learningTimeSubjectModifyResponse = createLearningTimeSubjectModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
+        LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = new LearningTimeSubjectModifyRequest(NEW_SUBJECT);
+        LearningTimeSubjectModifyResponse learningTimeSubjectModifyResponse = new LearningTimeSubjectModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubject(any(), any()))
                 .willReturn(NEW_SUBJECT);
@@ -86,8 +86,8 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_Task_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
-        LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = createLearningTimeSubjectOfTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
+        LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = new LearningTimeSubjectOfTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubjectOfTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
@@ -113,8 +113,8 @@ class LearningTImeControllerTest {
     @Test
     void 학습_시간의_SubTask_학습_주제_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
-        LearningTimeSubjectOfSubTaskModifyResponse learningTimeSubjectOfSubTaskModifyResponse = createLearningTimeSubjectOfSubTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
+        LearningTimeSubjectOfSubTaskModifyResponse learningTimeSubjectOfSubTaskModifyResponse = new LearningTimeSubjectOfSubTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
         given(learningTimeService.changeSubjectOfSubTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
@@ -162,7 +162,7 @@ class LearningTImeControllerTest {
         // given
         SubjectOfTaskNotFoundException subjectOfTaskNotFoundException = new SubjectOfTaskNotFoundException();
 
-        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = createLearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
+        LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
 
         given(learningTimeService.changeSubjectOfTask(any(), any()))
                 .willThrow(subjectOfTaskNotFoundException);
@@ -188,7 +188,7 @@ class LearningTImeControllerTest {
         // given
         SubjectOfSubTaskNotFoundException subjectOfSubTaskNotFoundException = new SubjectOfSubTaskNotFoundException();
 
-        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = createLearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
+        LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
 
         given(learningTimeService.changeSubjectOfSubTask(any(), any()))
                 .willThrow(subjectOfSubTaskNotFoundException);

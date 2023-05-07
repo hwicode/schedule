@@ -63,7 +63,7 @@ class TimeTableEndToEndTest {
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
         timeTableRepository.save(timeTable);
 
-        LearningTimeSaveRequest learningTimeSaveRequest = createLearningTimeSaveRequest(START_TIME);
+        LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
@@ -89,7 +89,7 @@ class TimeTableEndToEndTest {
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
-        StartTimeModifyRequest startTimeModifyRequest = createStartTimeModifyRequest(START_TIME, NEW_START_TIME);
+        StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
@@ -117,7 +117,7 @@ class TimeTableEndToEndTest {
         timeTableRepository.save(timeTable);
 
         LocalDateTime endTime = START_TIME.plusMinutes(30);
-        EndTimeModifyRequest endTimeModifyRequest = createEndTimeModifyRequest(START_TIME, endTime);
+        EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, endTime);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("timeTableId", timeTable.getId())
