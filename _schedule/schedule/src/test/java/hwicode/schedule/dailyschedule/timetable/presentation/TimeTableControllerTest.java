@@ -6,7 +6,7 @@ import hwicode.schedule.dailyschedule.timetable.exception.domain.application.Tim
 import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.InvalidDateValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
@@ -321,11 +321,11 @@ class TimeTableControllerTest {
     @Test
     void 학습_시간의_시작시간_변경을_요청할_때_요청_날짜가_타임_테이블의_날짜_또는_그_다음날이_아닌_경우_에러가_발생한다() throws Exception {
         // given
-        DateNotValidException dateNotValidException = new DateNotValidException();
+        InvalidDateValidException invalidDateValidException = new InvalidDateValidException();
         StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
         given(timeTableService.changeLearningTimeStartTime(any(), any(), any()))
-                .willThrow(dateNotValidException);
+                .willThrow(invalidDateValidException);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -338,7 +338,7 @@ class TimeTableControllerTest {
 
         // then
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(dateNotValidException.getMessage()));
+                .andExpect(jsonPath("$.message").value(invalidDateValidException.getMessage()));
 
         verify(timeTableService).changeLearningTimeStartTime(any(), any(), any());
     }

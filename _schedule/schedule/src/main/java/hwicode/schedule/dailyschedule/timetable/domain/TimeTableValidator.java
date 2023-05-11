@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.InvalidDateValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -32,14 +32,14 @@ public class TimeTableValidator {
         validateBetweenTime(learningTimes, endTime);
     }
 
-    private void validateDate(LocalDateTime localDateTime) {
-        LocalDate localDate = localDateTime.toLocalDate();
+    private void validateDate(LocalDateTime time) {
+        LocalDate date = time.toLocalDate();
         LocalDate tomorrow = today.plusDays(1);
 
-        if (today.isEqual(localDate) || tomorrow.isEqual(localDate)) {
+        if (today.isEqual(date) || tomorrow.isEqual(date)) {
             return;
         }
-        throw new DateNotValidException();
+        throw new InvalidDateValidException();
     }
 
     private void validateBetweenTime(List<LearningTime> learningTimes, LocalDateTime time) {

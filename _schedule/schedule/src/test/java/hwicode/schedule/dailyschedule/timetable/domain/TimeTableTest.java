@@ -1,9 +1,8 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
-import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.DateNotValidException;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.InvalidDateValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import org.junit.jupiter.api.Test;
 
@@ -113,7 +112,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(beforeStartTime))
-                .isInstanceOf(DateNotValidException.class);
+                .isInstanceOf(InvalidDateValidException.class);
     }
 
     @Test
@@ -126,7 +125,7 @@ class TimeTableTest {
 
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(afterStartTime))
-                .isInstanceOf(DateNotValidException.class);
+                .isInstanceOf(InvalidDateValidException.class);
     }
 
     @Test
