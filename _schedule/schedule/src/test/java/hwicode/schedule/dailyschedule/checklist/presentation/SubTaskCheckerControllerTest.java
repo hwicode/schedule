@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.application.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.SubTaskCheckerController;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyRequest;
@@ -156,6 +157,29 @@ class SubTaskCheckerControllerTest {
         // then
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
+
+        verify(subTaskCheckerService).changeSubTaskCheckerName(any(), any());
+    }
+
+    @Test
+    void 서브_과제체커의_이름_변경을_요청할_때_서브_과제체커의_이름이_중복되면_에러가_발생한다() throws Exception {
+        // given
+        SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
+        given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
+                .willThrow(subTaskCheckerNameDuplicationException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
+                        TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
         verify(subTaskCheckerService).changeSubTaskCheckerName(any(), any());
     }
