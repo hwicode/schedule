@@ -40,7 +40,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
                     createTaskCheckerSaveRequest(taskSaveRequest)
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException();
+            throw new NotValidExternalRequestException(e);
         }
     }
 
@@ -65,7 +65,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
                     taskName
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException();
+            throw new NotValidExternalRequestException(e);
         }
     }
 }

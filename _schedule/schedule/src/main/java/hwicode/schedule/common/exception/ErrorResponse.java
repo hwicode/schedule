@@ -29,6 +29,11 @@ public class ErrorResponse {
         private final String field;
         private final String message;
 
+        public ValidationError(String field, String message) {
+            this.field = field;
+            this.message = message;
+        }
+
         public ValidationError(final FieldError fieldError) {
             this.field = fieldError.getField();
             this.message = fieldError.getDefaultMessage();

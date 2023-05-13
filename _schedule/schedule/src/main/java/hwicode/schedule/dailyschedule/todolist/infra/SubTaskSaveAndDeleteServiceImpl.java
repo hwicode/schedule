@@ -28,7 +28,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
                    createSubTaskCheckerSaveRequest(subTaskSaveRequest)
            );
        } catch (BusinessException e) {
-           throw new NotValidExternalRequestException();
+           throw new NotValidExternalRequestException(e);
        }
     }
 
@@ -54,7 +54,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
                     createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException();
+            throw new NotValidExternalRequestException(e);
         }
     }
 
