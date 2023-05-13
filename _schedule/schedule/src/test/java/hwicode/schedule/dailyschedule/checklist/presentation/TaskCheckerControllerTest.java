@@ -3,7 +3,9 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
@@ -15,7 +17,6 @@ import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.nam
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyResponse;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -120,7 +121,6 @@ class TaskCheckerControllerTest {
         verify(taskCheckerService).changeTaskCheckerName(any(), any());
     }
 
-
     @Test
     void 과제체커의_진행_상태_변경을_요청할_때_진행_상태가_존재하지_않는다면_에러가_발생한다() throws Exception {
         // given
@@ -211,6 +211,29 @@ class TaskCheckerControllerTest {
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNotAllTodoException.getMessage()));
 
         verify(taskCheckerService).changeTaskStatus(any(), any());
+    }
+
+    @Test
+    void 과제체커의_이름_변경을_요청할_때_과제체커의_이름이_중복되면_에러가_발생한다() throws Exception {
+        // given
+        TaskCheckerNameDuplicationException taskCheckerNameDuplicationException = new TaskCheckerNameDuplicationException();
+        given(taskCheckerService.changeTaskCheckerName(any(), any()))
+                .willThrow(taskCheckerNameDuplicationException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME)
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(taskCheckerNameDuplicationException.getMessage()));
+
+        verify(taskCheckerService).changeTaskCheckerName(any(), any());
     }
 
 }
