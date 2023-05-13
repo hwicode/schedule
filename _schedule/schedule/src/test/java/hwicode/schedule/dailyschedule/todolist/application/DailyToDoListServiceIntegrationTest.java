@@ -1,15 +1,17 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
+import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
 import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
+import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -45,5 +47,18 @@ class DailyToDoListServiceIntegrationTest {
         DailyToDoList savedDailyToDoList = dailyToDoListRepository.findById(dailyToDoList.getId()).orElseThrow();
         assertThat(savedDailyToDoList.writeReview(review)).isFalse();
         assertThat(savedDailyToDoList.changeTodayEmoji(Emoji.GOOD)).isFalse();
+    }
+
+    @Test
+    void 존재하지_않는_투두리스트를_조회하면_에러가_발생한다() {
+        //given
+        Long noneExistId = 1L;
+
+        String review = "좋았다!";
+        DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
+
+        // when then
+        assertThatThrownBy(() -> dailyToDoListService.changeDailyToDoListInformation(noneExistId, dailyToDoListInformationChangeRequest))
+                .isInstanceOf(DailyToDoListNotExistException.class);
     }
 }
