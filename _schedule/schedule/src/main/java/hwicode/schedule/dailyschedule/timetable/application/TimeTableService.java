@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.dailyschedule.timetable.domain.*;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfSubTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.application.SubjectOfTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfTaskNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;

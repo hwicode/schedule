@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.application.TimeTableNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
