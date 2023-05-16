@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
+import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
@@ -110,6 +112,16 @@ class LearningTimeServiceIntegrationTest {
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
         boolean isDelete = savedLearningTime.deleteSubject();
         assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    void 존재하지_않는_학습_시간를_조회하면_에러가_발생한다() {
+        //given
+        Long noneExistId = 1L;
+
+        // when then
+        assertThatThrownBy(() -> learningTimeService.deleteSubject(noneExistId))
+                .isInstanceOf(LearningTimeNotFoundException.class);
     }
 
     @Test
