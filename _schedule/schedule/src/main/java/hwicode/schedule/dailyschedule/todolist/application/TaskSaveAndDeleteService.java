@@ -5,5 +5,5 @@ import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSa
 
 public interface TaskSaveAndDeleteService {
     Long save(TaskSaveRequest taskSaveRequest);
-    void delete(String taskName, TaskDeleteRequest taskDeleteRequest);
+    Long delete(String taskName, TaskDeleteRequest taskDeleteRequest);
 }

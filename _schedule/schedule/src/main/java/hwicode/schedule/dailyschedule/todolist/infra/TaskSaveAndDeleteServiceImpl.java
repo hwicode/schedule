@@ -53,9 +53,10 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     @Override
     @Transactional
-    public void delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
+    public Long delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
         learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(taskDeleteRequest.getTaskId());
         deleteTaskChecker(taskName, taskDeleteRequest);
+        return taskDeleteRequest.getTaskId();
     }
 
     private void deleteTaskChecker(String taskName, TaskDeleteRequest taskDeleteRequest) {

@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.application.TaskService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
+import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -23,6 +24,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
+import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -126,4 +128,57 @@ class TaskControllerTest {
 
         verify(taskService).changeTaskInformation(any(), any());
     }
+
+    @Test
+    void 과제를_저장할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
+        // given
+        // TaskNotExistException 클래스를 외부 예외로 가정함
+        TaskNotExistException externalException = new TaskNotExistException();
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+
+        given(taskSaveAndDeleteService.save(any()))
+                .willThrow(notValidExternalRequestException);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        new TaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+
+        verify(taskSaveAndDeleteService).save(any());
+    }
+
+    @Test
+    void 과제를_삭제할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
+        // given
+        // TaskNotExistException 클래스를 외부 예외로 가정함
+        TaskNotExistException externalException = new TaskNotExistException();
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+
+        given(taskSaveAndDeleteService.delete(any(), any()))
+                .willThrow(notValidExternalRequestException);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_TO_DO_LIST_ID, TASK_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        new TaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_ID, TASK_NAME)
+                )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
+                .andExpect(jsonPath("$.errors", hasSize(1)))
+                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+
+        verify(taskSaveAndDeleteService).delete(any(), any());
+    }
+
 }
