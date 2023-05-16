@@ -3,8 +3,6 @@ package hwicode.schedule.dailyschedule.timetable.application;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
-import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
@@ -38,9 +36,7 @@ public class LearningTimeService {
     @Transactional
     public String changeSubjectOfTask(Long learningTimeId, Long subjectOfTaskId) {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
-
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.findById(subjectOfTaskId)
-                .orElseThrow(SubjectOfTaskNotFoundException::new);
+        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskRepository, subjectOfTaskId);
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
@@ -48,9 +44,7 @@ public class LearningTimeService {
     @Transactional
     public String changeSubjectOfSubTask(Long learningTimeId, Long subjectOfSubTaskId) {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
-
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.findById(subjectOfSubTaskId)
-                .orElseThrow(SubjectOfSubTaskNotFoundException::new);
+        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskRepository, subjectOfSubTaskId);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
     }
