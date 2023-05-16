@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,6 +12,5 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class StartTimeModifyResponse {
 
-    @NotNull
     private LocalDateTime newStartTime;
 }
