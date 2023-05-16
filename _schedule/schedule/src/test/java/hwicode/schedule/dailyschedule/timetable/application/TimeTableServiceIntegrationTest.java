@@ -5,11 +5,13 @@ import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
+import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +171,16 @@ class TimeTableServiceIntegrationTest {
 
         // then
         assertThat(totalLearningTime).isEqualTo(30);
+    }
+
+    @Test
+    void 존재하지_않는_타임_테이블을_조회하면_에러가_발생한다() {
+        //given
+        Long noneExistId = 1L;
+
+        // when then
+        Assertions.assertThatThrownBy(() -> timeTableService.saveLearningTime(noneExistId, START_TIME))
+                .isInstanceOf(TimeTableNotFoundException.class);
     }
 
 }
