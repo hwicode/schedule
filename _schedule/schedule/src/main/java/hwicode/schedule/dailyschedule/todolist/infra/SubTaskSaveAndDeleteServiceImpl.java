@@ -42,9 +42,10 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
 
     @Override
     @Transactional
-    public void delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
+    public Long delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
         learningTimeService.deleteSubjectOfSubTaskBelongingToLearningTime(subTaskDeleteRequest.getSubTaskId());
         deleteSubTaskChecker(subTaskName, subTaskDeleteRequest);
+        return subTaskDeleteRequest.getSubTaskId();
     }
 
     private void deleteSubTaskChecker(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {

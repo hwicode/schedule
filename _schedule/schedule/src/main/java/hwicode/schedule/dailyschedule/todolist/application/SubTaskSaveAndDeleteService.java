@@ -5,5 +5,5 @@ import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.Sub
 
 public interface SubTaskSaveAndDeleteService {
     Long save(SubTaskSaveRequest subTaskSaveRequest);
-    void delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest);
+    Long delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest);
 }
