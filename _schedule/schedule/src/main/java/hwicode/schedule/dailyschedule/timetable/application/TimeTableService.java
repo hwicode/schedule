@@ -2,9 +2,10 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.dailyschedule.timetable.domain.*;
 import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeSaveRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.TimeTableFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,18 +16,18 @@ import java.time.LocalDateTime;
 @Service
 public class TimeTableService {
 
-    private final TimeTableRepository timeTableRepository;
-    private final LearningTimeSaveOnlyRepository learningTimeSaveOnlyRepository;
+    private final TimeTableFindRepository timeTableFindRepository;
+    private final SubjectOfTaskFindRepository subjectOfTaskFindRepository;
+    private final SubjectOfSubTaskFindRepository subjectOfSubTaskFindRepository;
 
-    private final SubjectOfTaskRepository subjectOfTaskRepository;
-    private final SubjectOfSubTaskRepository subjectOfSubTaskRepository;
+    private final LearningTimeSaveRepository learningTimeSaveRepository;
 
     @Transactional
     public Long saveLearningTime(Long timeTableId, LocalDateTime startTime) {
         TimeTable timeTable = findTimeTableById(timeTableId);
 
         LearningTime learningTime = timeTable.createLearningTime(startTime);
-        return learningTimeSaveOnlyRepository.save(learningTime)
+        return learningTimeSaveRepository.save(learningTime)
                 .getId();
     }
 
@@ -59,7 +60,7 @@ public class TimeTableService {
     @Transactional
     public int calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
         TimeTable timeTable = findTimeTableById(timeTableId);
-        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskRepository, subjectOfTaskId);
+        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, subjectOfTaskId);
 
         return timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
     }
@@ -67,15 +68,13 @@ public class TimeTableService {
     @Transactional
     public int calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
         TimeTable timeTable = findTimeTableById(timeTableId);
-        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskRepository, subjectOfSubTaskId);
+        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, subjectOfSubTaskId);
 
         return timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
     }
 
-
     private TimeTable findTimeTableById(Long timeTableId) {
-        return timeTableRepository.findTimeTableWithLearningTimes(timeTableId)
+        return timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId)
                 .orElseThrow(TimeTableNotFoundException::new);
     }
-
 }

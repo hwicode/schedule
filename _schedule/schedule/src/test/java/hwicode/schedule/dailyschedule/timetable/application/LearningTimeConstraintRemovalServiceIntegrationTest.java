@@ -40,7 +40,6 @@ class LearningTimeConstraintRemovalServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-
     @Test
     void 학습_시간들에_연관된_Task_학습_주제를_삭제할_수_있다() {
         // given
@@ -81,7 +80,6 @@ class LearningTimeConstraintRemovalServiceIntegrationTest {
         learningTimeConstraintRemovalService.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTask.getId());
 
         // then
-        learningTimeRepository.save(learningTime);
         checkSubjectIsDelete(learningTime.getId());
         checkSubjectIsDelete(learningTime2.getId());
     }

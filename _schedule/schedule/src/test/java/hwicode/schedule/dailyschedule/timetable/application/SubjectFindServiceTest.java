@@ -3,8 +3,8 @@ package hwicode.schedule.dailyschedule.timetable.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,10 +19,10 @@ class SubjectFindServiceTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    SubjectOfTaskRepository subjectOfTaskRepository;
+    SubjectOfTaskFindRepository subjectOfTaskFindRepository;
 
     @Autowired
-    SubjectOfSubTaskRepository subjectOfSubTaskRepository;
+    SubjectOfSubTaskFindRepository subjectOfSubTaskFindRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -35,7 +35,7 @@ class SubjectFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> SubjectFindService.findSubjectOfTask(subjectOfTaskRepository, noneExistId))
+        assertThatThrownBy(() -> SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, noneExistId))
                 .isInstanceOf(SubjectOfTaskNotFoundException.class);
     }
 
@@ -45,7 +45,7 @@ class SubjectFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskRepository, noneExistId))
+        assertThatThrownBy(() -> SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, noneExistId))
                 .isInstanceOf(SubjectOfSubTaskNotFoundException.class);
     }
 }

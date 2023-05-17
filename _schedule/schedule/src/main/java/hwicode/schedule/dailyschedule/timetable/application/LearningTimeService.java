@@ -1,12 +1,10 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
-import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
-import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
-import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
+import hwicode.schedule.dailyschedule.timetable.domain.*;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +13,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class LearningTimeService {
 
-    private final LearningTimeRepository learningTimeRepository;
-    private final SubjectOfTaskRepository subjectOfTaskRepository;
-    private final SubjectOfSubTaskRepository subjectOfSubTaskRepository;
+    private final LearningTimeFindRepository learningTimeFindRepository;
+    private final SubjectOfTaskFindRepository subjectOfTaskFindRepository;
+    private final SubjectOfSubTaskFindRepository subjectOfSubTaskFindRepository;
 
     @Transactional
     public boolean deleteSubject(Long learningTimeId) {
@@ -36,7 +34,7 @@ public class LearningTimeService {
     @Transactional
     public String changeSubjectOfTask(Long learningTimeId, Long subjectOfTaskId) {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
-        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskRepository, subjectOfTaskId);
+        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, subjectOfTaskId);
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
@@ -44,23 +42,13 @@ public class LearningTimeService {
     @Transactional
     public String changeSubjectOfSubTask(Long learningTimeId, Long subjectOfSubTaskId) {
         LearningTime learningTime = findLearningTimeById(learningTimeId);
-        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskRepository, subjectOfSubTaskId);
+        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, subjectOfSubTaskId);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
     }
 
     private LearningTime findLearningTimeById(Long learningTimeId) {
-        return learningTimeRepository.findById(learningTimeId)
+        return learningTimeFindRepository.findById(learningTimeId)
                 .orElseThrow(LearningTimeNotFoundException::new);
-    }
-
-    @Transactional
-    public void deleteSubjectOfTaskBelongingToLearningTime(Long subjectOfTaskId) {
-        learningTimeRepository.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTaskId);
-    }
-
-    @Transactional
-    public void deleteSubjectOfSubTaskBelongingToLearningTime(Long subjectOfSubTaskId) {
-        learningTimeRepository.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTaskId);
     }
 }
