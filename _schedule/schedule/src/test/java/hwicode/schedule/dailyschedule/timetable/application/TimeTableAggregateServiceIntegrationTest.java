@@ -25,13 +25,13 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 @SpringBootTest
-class TimeTableServiceIntegrationTest {
+class TimeTableAggregateServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TimeTableService timeTableService;
+    TimeTableAggregateService timeTableAggregateService;
 
     @Autowired
     TimeTableRepository timeTableRepository;
@@ -57,7 +57,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        Long learningTimeId = timeTableService.saveLearningTime(timeTable.getId(), START_TIME);
+        Long learningTimeId = timeTableAggregateService.saveLearningTime(timeTable.getId(), START_TIME);
 
         // then
         assertThat(learningTimeRepository.existsById(learningTimeId)).isTrue();
@@ -72,7 +72,7 @@ class TimeTableServiceIntegrationTest {
 
         // when
         LocalDateTime newStartTime = START_TIME.plusMinutes(30);
-        timeTableService.changeLearningTimeStartTime(timeTable.getId(), START_TIME, newStartTime);
+        timeTableAggregateService.changeLearningTimeStartTime(timeTable.getId(), START_TIME, newStartTime);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
@@ -90,7 +90,7 @@ class TimeTableServiceIntegrationTest {
 
         // when
         LocalDateTime endTime = START_TIME.plusMinutes(30);
-        timeTableService.changeLearningTimeEndTime(timeTable.getId(), START_TIME, endTime);
+        timeTableAggregateService.changeLearningTimeEndTime(timeTable.getId(), START_TIME, endTime);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
@@ -108,7 +108,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        timeTableService.deleteLearningTime(timeTable.getId(), START_TIME);
+        timeTableAggregateService.deleteLearningTime(timeTable.getId(), START_TIME);
 
         // then
         TimeTable savedTimeTable = timeTableRepository.findTimeTableWithLearningTimes(timeTable.getId()).orElseThrow();
@@ -127,7 +127,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
+        int totalLearningTime = timeTableAggregateService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
 
         // then
         assertThat(totalLearningTime).isEqualTo(30);
@@ -147,7 +147,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
+        int totalLearningTime = timeTableAggregateService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
 
         // then
         assertThat(totalLearningTime).isEqualTo(30);
@@ -167,7 +167,7 @@ class TimeTableServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
+        int totalLearningTime = timeTableAggregateService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
 
         // then
         assertThat(totalLearningTime).isEqualTo(30);
@@ -179,7 +179,7 @@ class TimeTableServiceIntegrationTest {
         Long noneExistId = 1L;
 
         // when then
-        Assertions.assertThatThrownBy(() -> timeTableService.saveLearningTime(noneExistId, START_TIME))
+        Assertions.assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(noneExistId, START_TIME))
                 .isInstanceOf(TimeTableNotFoundException.class);
     }
 

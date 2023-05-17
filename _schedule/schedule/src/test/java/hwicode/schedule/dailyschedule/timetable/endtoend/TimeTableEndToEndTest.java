@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.timetable.application.TimeTableService;
+import hwicode.schedule.dailyschedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
@@ -41,7 +41,7 @@ class TimeTableEndToEndTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TimeTableService timeTableService;
+    TimeTableAggregateService timeTableAggregateService;
 
     @Autowired
     TimeTableRepository timeTableRepository;
@@ -78,7 +78,7 @@ class TimeTableEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        assertThatThrownBy(() -> timeTableService.saveLearningTime(timeTable.getId(), START_TIME))
+        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(timeTable.getId(), START_TIME))
                 .isInstanceOf(StartTimeDuplicateException.class);
     }
 
@@ -105,7 +105,7 @@ class TimeTableEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        assertThatThrownBy(() -> timeTableService.saveLearningTime(timeTable.getId(), NEW_START_TIME))
+        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(timeTable.getId(), NEW_START_TIME))
                 .isInstanceOf(StartTimeDuplicateException.class);
     }
 

@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
@@ -38,7 +38,7 @@ class LearningTImeControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    LearningTimeService learningTimeService;
+    LearningTimeAggregateService learningTimeAggregateService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -53,7 +53,7 @@ class LearningTImeControllerTest {
         // then
         perform.andExpect(status().isNoContent());
 
-        verify(learningTimeService).deleteSubject(any());
+        verify(learningTimeAggregateService).deleteSubject(any());
     }
 
     @Test
@@ -62,7 +62,7 @@ class LearningTImeControllerTest {
         LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = new LearningTimeSubjectModifyRequest(NEW_SUBJECT);
         LearningTimeSubjectModifyResponse learningTimeSubjectModifyResponse = new LearningTimeSubjectModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
-        given(learningTimeService.changeSubject(any(), any()))
+        given(learningTimeAggregateService.changeSubject(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
@@ -80,7 +80,7 @@ class LearningTImeControllerTest {
                         objectMapper.writeValueAsString(learningTimeSubjectModifyResponse)
                 ));
 
-        verify(learningTimeService).changeSubject(any(), any());
+        verify(learningTimeAggregateService).changeSubject(any(), any());
     }
 
     @Test
@@ -89,7 +89,7 @@ class LearningTImeControllerTest {
         LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
         LearningTimeSubjectOfTaskModifyResponse learningTimeSubjectOfTaskModifyResponse = new LearningTimeSubjectOfTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
-        given(learningTimeService.changeSubjectOfTask(any(), any()))
+        given(learningTimeAggregateService.changeSubjectOfTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
@@ -107,7 +107,7 @@ class LearningTImeControllerTest {
                         objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyResponse)
                 ));
 
-        verify(learningTimeService).changeSubjectOfTask(any(), any());
+        verify(learningTimeAggregateService).changeSubjectOfTask(any(), any());
     }
 
     @Test
@@ -116,7 +116,7 @@ class LearningTImeControllerTest {
         LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
         LearningTimeSubjectOfSubTaskModifyResponse learningTimeSubjectOfSubTaskModifyResponse = new LearningTimeSubjectOfSubTaskModifyResponse(LEARNING_TIME_ID, NEW_SUBJECT);
 
-        given(learningTimeService.changeSubjectOfSubTask(any(), any()))
+        given(learningTimeAggregateService.changeSubjectOfSubTask(any(), any()))
                 .willReturn(NEW_SUBJECT);
 
         // when
@@ -134,7 +134,7 @@ class LearningTImeControllerTest {
                         objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyResponse)
                 ));
 
-        verify(learningTimeService).changeSubjectOfSubTask(any(), any());
+        verify(learningTimeAggregateService).changeSubjectOfSubTask(any(), any());
     }
 
     @Test
@@ -142,7 +142,7 @@ class LearningTImeControllerTest {
         // given
         LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
 
-        given(learningTimeService.deleteSubject(any()))
+        given(learningTimeAggregateService.deleteSubject(any()))
                 .willThrow(learningTimeNotFoundException);
 
         // when
@@ -154,7 +154,7 @@ class LearningTImeControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(learningTimeNotFoundException.getMessage()));
 
-        verify(learningTimeService).deleteSubject(any());
+        verify(learningTimeAggregateService).deleteSubject(any());
     }
 
     @Test
@@ -164,7 +164,7 @@ class LearningTImeControllerTest {
 
         LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(SUBJECT_OF_TASK_ID);
 
-        given(learningTimeService.changeSubjectOfTask(any(), any()))
+        given(learningTimeAggregateService.changeSubjectOfTask(any(), any()))
                 .willThrow(subjectOfTaskNotFoundException);
 
         // when
@@ -180,7 +180,7 @@ class LearningTImeControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subjectOfTaskNotFoundException.getMessage()));
 
-        verify(learningTimeService).changeSubjectOfTask(any(), any());
+        verify(learningTimeAggregateService).changeSubjectOfTask(any(), any());
     }
 
     @Test
@@ -190,7 +190,7 @@ class LearningTImeControllerTest {
 
         LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(SUBJECT_OF_SUBTASK_ID);
 
-        given(learningTimeService.changeSubjectOfSubTask(any(), any()))
+        given(learningTimeAggregateService.changeSubjectOfSubTask(any(), any()))
                 .willThrow(subjectOfSubTaskNotFoundException);
 
         // when
@@ -206,7 +206,7 @@ class LearningTImeControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subjectOfSubTaskNotFoundException.getMessage()));
 
-        verify(learningTimeService).changeSubjectOfSubTask(any(), any());
+        verify(learningTimeAggregateService).changeSubjectOfSubTask(any(), any());
     }
 
 }

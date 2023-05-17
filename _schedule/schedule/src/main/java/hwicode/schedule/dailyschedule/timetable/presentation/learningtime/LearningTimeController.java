@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.presentation.learningtime;
 
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyRequest;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subject_modify.LearningTimeSubjectModifyResponse;
 import hwicode.schedule.dailyschedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyRequest;
@@ -20,19 +20,19 @@ import javax.validation.constraints.Positive;
 @RestController
 public class LearningTimeController {
 
-    private final LearningTimeService learningTimeService;
+    private final LearningTimeAggregateService learningTimeAggregateService;
 
     @DeleteMapping("/dailyschedule/learning-times/{learningTimeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubject(@PathVariable @Positive Long learningTimeId) {
-        learningTimeService.deleteSubject(learningTimeId);
+        learningTimeAggregateService.deleteSubject(learningTimeId);
     }
 
     @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject")
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectModifyResponse changeSubject(@PathVariable @Positive Long learningTimeId,
                                                            @RequestBody @Valid LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest) {
-        String newSubject = learningTimeService.changeSubject(
+        String newSubject = learningTimeAggregateService.changeSubject(
                 learningTimeId, learningTimeSubjectModifyRequest.getNewSubject()
         );
 
@@ -43,7 +43,7 @@ public class LearningTimeController {
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectOfTaskModifyResponse changeTaskOfSubject(@PathVariable @Positive Long learningTimeId,
                                                                        @RequestBody @Valid LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest) {
-        String newSubject = learningTimeService.changeSubjectOfTask(
+        String newSubject = learningTimeAggregateService.changeSubjectOfTask(
                 learningTimeId, learningTimeSubjectOfTaskModifyRequest.getSubjectOfTaskId()
         );
 
@@ -54,7 +54,7 @@ public class LearningTimeController {
     @ResponseStatus(value = HttpStatus.OK)
     public LearningTimeSubjectOfSubTaskModifyResponse changeSubTaskOfSubject(@PathVariable @Positive Long learningTimeId,
                                                                              @RequestBody @Valid LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest) {
-        String newSubject = learningTimeService.changeSubjectOfSubTask(
+        String newSubject = learningTimeAggregateService.changeSubjectOfSubTask(
                 learningTimeId, learningTimeSubjectOfSubTaskModifyRequest.getSubjectOfSubTaskId()
         );
 

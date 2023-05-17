@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.integration_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
@@ -38,7 +38,7 @@ class TaskSaveAndDeleteServiceIntegrationTest {
     TaskSaveAndDeleteService taskSaveAndDeleteService;
 
     @Autowired
-    LearningTimeService learningTimeService;
+    LearningTimeAggregateService learningTimeAggregateService;
 
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
@@ -104,8 +104,8 @@ class TaskSaveAndDeleteServiceIntegrationTest {
 
         Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId());
 
-        learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
-        learningTimeService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
+        learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
+        learningTimeAggregateService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
         TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 

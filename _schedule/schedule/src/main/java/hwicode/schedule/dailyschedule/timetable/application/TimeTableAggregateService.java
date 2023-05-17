@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 
 @RequiredArgsConstructor
 @Service
-public class TimeTableService {
+public class TimeTableAggregateService {
 
     private final TimeTableFindRepository timeTableFindRepository;
     private final SubjectOfTaskFindRepository subjectOfTaskFindRepository;

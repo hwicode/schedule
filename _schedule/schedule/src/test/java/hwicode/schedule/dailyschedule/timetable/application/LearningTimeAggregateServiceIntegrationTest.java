@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class LearningTimeServiceIntegrationTest {
+class LearningTimeAggregateServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    LearningTimeService learningTimeService;
+    LearningTimeAggregateService learningTimeAggregateService;
 
     @Autowired
     TimeTableRepository timeTableRepository;
@@ -51,7 +51,7 @@ class LearningTimeServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        learningTimeService.deleteSubject(learningTime.getId());
+        learningTimeAggregateService.deleteSubject(learningTime.getId());
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -67,7 +67,7 @@ class LearningTimeServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        learningTimeService.changeSubject(learningTime.getId(), SUBJECT);
+        learningTimeAggregateService.changeSubject(learningTime.getId(), SUBJECT);
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -85,7 +85,7 @@ class LearningTimeServiceIntegrationTest {
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
         // when
-        learningTimeService.changeSubjectOfTask(learningTime.getId(), subjectOfTask.getId());
+        learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTask.getId());
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -103,7 +103,7 @@ class LearningTimeServiceIntegrationTest {
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
         // when
-        learningTimeService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask.getId());
+        learningTimeAggregateService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTask.getId());
 
         // then
         LearningTime savedLearningTime = learningTimeRepository.findById(learningTime.getId()).orElseThrow();
@@ -117,7 +117,7 @@ class LearningTimeServiceIntegrationTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> learningTimeService.deleteSubject(noneExistId))
+        assertThatThrownBy(() -> learningTimeAggregateService.deleteSubject(noneExistId))
                 .isInstanceOf(LearningTimeNotFoundException.class);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class LearningTimeService {
+public class LearningTimeAggregateService {
 
     private final LearningTimeFindRepository learningTimeFindRepository;
     private final SubjectOfTaskFindRepository subjectOfTaskFindRepository;
