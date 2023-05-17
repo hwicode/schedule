@@ -13,7 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class SubjectFindServiceTest {
+class SubjectFindRepositoryTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -35,7 +35,7 @@ class SubjectFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, noneExistId))
+        assertThatThrownBy(() -> subjectOfTaskFindRepository.findById(noneExistId))
                 .isInstanceOf(SubjectOfTaskNotFoundException.class);
     }
 
@@ -45,7 +45,7 @@ class SubjectFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, noneExistId))
+        assertThatThrownBy(() -> subjectOfSubTaskFindRepository.findById(noneExistId))
                 .isInstanceOf(SubjectOfSubTaskNotFoundException.class);
     }
 }

@@ -1,7 +1,8 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
-import hwicode.schedule.dailyschedule.timetable.domain.*;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.LearningTimeFindRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
@@ -19,36 +20,31 @@ public class LearningTimeAggregateService {
 
     @Transactional
     public boolean deleteSubject(Long learningTimeId) {
-        LearningTime learningTime = findLearningTimeById(learningTimeId);
+        LearningTime learningTime = learningTimeFindRepository.findById(learningTimeId);
 
         return learningTime.deleteSubject();
     }
 
     @Transactional
     public String changeSubject(Long learningTimeId, String subject) {
-        LearningTime learningTime = findLearningTimeById(learningTimeId);
+        LearningTime learningTime = learningTimeFindRepository.findById(learningTimeId);
 
         return learningTime.changeSubject(subject);
     }
 
     @Transactional
     public String changeSubjectOfTask(Long learningTimeId, Long subjectOfTaskId) {
-        LearningTime learningTime = findLearningTimeById(learningTimeId);
-        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, subjectOfTaskId);
+        LearningTime learningTime = learningTimeFindRepository.findById(learningTimeId);
+        SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(subjectOfTaskId);
 
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
 
     @Transactional
     public String changeSubjectOfSubTask(Long learningTimeId, Long subjectOfSubTaskId) {
-        LearningTime learningTime = findLearningTimeById(learningTimeId);
-        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, subjectOfSubTaskId);
+        LearningTime learningTime = learningTimeFindRepository.findById(learningTimeId);
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(subjectOfSubTaskId);
 
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
-    }
-
-    private LearningTime findLearningTimeById(Long learningTimeId) {
-        return learningTimeFindRepository.findById(learningTimeId)
-                .orElseThrow(LearningTimeNotFoundException::new);
     }
 }

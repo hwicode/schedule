@@ -1,7 +1,9 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
-import hwicode.schedule.dailyschedule.timetable.domain.*;
-import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
+import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
+import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.LearningTimeSaveRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
@@ -24,7 +26,7 @@ public class TimeTableAggregateService {
 
     @Transactional
     public Long saveLearningTime(Long timeTableId, LocalDateTime startTime) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
 
         LearningTime learningTime = timeTable.createLearningTime(startTime);
         return learningTimeSaveRepository.save(learningTime)
@@ -33,48 +35,43 @@ public class TimeTableAggregateService {
 
     @Transactional
     public LocalDateTime changeLearningTimeStartTime(Long timeTableId, LocalDateTime startTime, LocalDateTime newStartTime) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
 
         return timeTable.changeLearningTimeStartTime(startTime, newStartTime);
     }
 
     @Transactional
     public LocalDateTime changeLearningTimeEndTime(Long timeTableId, LocalDateTime startTime, LocalDateTime endTime) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
 
         return timeTable.changeLearningTimeEndTime(startTime, endTime);
     }
 
     @Transactional
     public void deleteLearningTime(Long timeTableId, LocalDateTime startTime) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
         timeTable.deleteLearningTime(startTime);
     }
 
     @Transactional
     public int calculateSubjectTotalLearningTime(Long timeTableId, String subject) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
         return timeTable.getSubjectTotalLearningTime(subject);
     }
 
     @Transactional
     public int calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
-        SubjectOfTask subjectOfTask = SubjectFindService.findSubjectOfTask(subjectOfTaskFindRepository, subjectOfTaskId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
+        SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(subjectOfTaskId);
 
         return timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
     }
 
     @Transactional
     public int calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
-        TimeTable timeTable = findTimeTableById(timeTableId);
-        SubjectOfSubTask subjectOfSubTask = SubjectFindService.findSubjectOfSubTask(subjectOfSubTaskFindRepository, subjectOfSubTaskId);
+        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(subjectOfSubTaskId);
 
         return timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
-    }
-
-    private TimeTable findTimeTableById(Long timeTableId) {
-        return timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId)
-                .orElseThrow(TimeTableNotFoundException::new);
     }
 }
