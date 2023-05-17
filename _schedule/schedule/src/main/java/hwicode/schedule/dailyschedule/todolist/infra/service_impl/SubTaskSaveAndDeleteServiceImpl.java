@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
 import hwicode.schedule.common.exception.BusinessException;
-import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
-import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
@@ -17,14 +17,14 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteService {
 
-    private final SubTaskCheckerService subTaskCheckerService;
+    private final SubTaskCheckerSubService subTaskCheckerSubService;
     private final LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
 
     @Override
     @Transactional
     public Long save(SubTaskSaveRequest subTaskSaveRequest) {
        try {
-           return subTaskCheckerService.saveSubTaskChecker(
+           return subTaskCheckerSubService.saveSubTaskChecker(
                    createSubTaskCheckerSaveRequest(subTaskSaveRequest)
            );
        } catch (BusinessException e) {
@@ -50,7 +50,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
 
     private void deleteSubTaskChecker(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
         try {
-            subTaskCheckerService.deleteSubTaskChecker(
+            subTaskCheckerSubService.deleteSubTaskChecker(
                     subTaskName,
                     createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
             );

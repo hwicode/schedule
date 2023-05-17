@@ -1,8 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
 import hwicode.schedule.common.exception.BusinessException;
-import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
-import hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.taskchecker.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
-    private final TaskCheckerService taskCheckerService;
+    private final TaskCheckerSubService taskCheckerSubService;
     private final TaskRepository taskRepository;
     private final LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
 
@@ -37,7 +37,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
         try {
-            return taskCheckerService.saveTaskChecker(
+            return taskCheckerSubService.saveTaskChecker(
                     createTaskCheckerSaveRequest(taskSaveRequest)
             );
         } catch (BusinessException e) {
@@ -62,7 +62,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private void deleteTaskChecker(String taskName, TaskDeleteRequest taskDeleteRequest) {
         try {
-            taskCheckerService.deleteTaskChecker(
+            taskCheckerSubService.deleteTaskChecker(
                     taskDeleteRequest.getDailyToDoListId(),
                     taskName
             );

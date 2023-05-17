@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
@@ -37,7 +37,7 @@ class SubTaskCheckerControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    SubTaskCheckerService subTaskCheckerService;
+    SubTaskCheckerSubService subTaskCheckerSubService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -48,7 +48,7 @@ class SubTaskCheckerControllerTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         SubTaskStatusModifyResponse subTaskStatusModifyResponse = new SubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
-        given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
                 .willReturn(TaskStatus.PROGRESS);
 
         // when
@@ -64,7 +64,7 @@ class SubTaskCheckerControllerTest {
                         objectMapper.writeValueAsString(subTaskStatusModifyResponse)
                 ));
 
-        verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
     }
 
     @Test
@@ -73,7 +73,7 @@ class SubTaskCheckerControllerTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = new SubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
-        given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
                 .willReturn(NEW_SUB_TASK_CHECKER_NAME);
 
         // when
@@ -89,14 +89,14 @@ class SubTaskCheckerControllerTest {
                         objectMapper.writeValueAsString(subTaskCheckerNameModifyResponse)
                 ));
 
-        verify(subTaskCheckerService).changeSubTaskCheckerName(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
     }
 
     @Test
     void 서브_과제체커를_찾을_때_서브_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNotFoundException subTaskCheckerNotFoundException = new SubTaskCheckerNotFoundException();
-        given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
                 .willThrow(subTaskCheckerNotFoundException);
 
         // when
@@ -112,14 +112,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNotFoundException.getMessage()));
 
-        verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
     }
 
     @Test
     void 체크리스트를_조회할_때_체크리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
-        given(subTaskCheckerService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
@@ -135,14 +135,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
-        verify(subTaskCheckerService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
     }
 
     @Test
     void 과제체커를_조회할_때_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
-        given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
                 .willThrow(taskCheckerNotFoundException);
 
         // when
@@ -158,14 +158,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
 
-        verify(subTaskCheckerService).changeSubTaskCheckerName(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
     }
 
     @Test
     void 서브_과제체커의_이름_변경을_요청할_때_서브_과제체커의_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
-        given(subTaskCheckerService.changeSubTaskCheckerName(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
                 .willThrow(subTaskCheckerNameDuplicationException);
 
         // when
@@ -181,7 +181,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
-        verify(subTaskCheckerService).changeSubTaskCheckerName(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
     }
 
 }

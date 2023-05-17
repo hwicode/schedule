@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
@@ -9,7 +9,7 @@ import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.name_modify.TaskCheckerNameModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.taskchecker.save.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
@@ -40,7 +40,7 @@ class TaskCheckerEndToEndTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TaskCheckerService taskCheckerService;
+    TaskCheckerSubService taskCheckerSubService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -59,7 +59,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskCheckerId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
                 new TaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -89,7 +89,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskCheckerId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
                 new TaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -119,7 +119,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist();
         dailyChecklistRepository.save(dailyChecklist);
 
-        Long taskCheckerId = taskCheckerService.saveTaskChecker(
+        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
                 new TaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL)
         );
 
@@ -140,7 +140,7 @@ class TaskCheckerEndToEndTest {
                 .statusCode(HttpStatus.OK.value());
 
         TaskCheckerSaveRequest taskCheckerSaveRequest = new TaskCheckerSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
-        assertThatThrownBy(() -> taskCheckerService.saveTaskChecker(taskCheckerSaveRequest))
+        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(taskCheckerSaveRequest))
                 .isInstanceOf(TaskCheckerNameDuplicationException.class);
     }
 

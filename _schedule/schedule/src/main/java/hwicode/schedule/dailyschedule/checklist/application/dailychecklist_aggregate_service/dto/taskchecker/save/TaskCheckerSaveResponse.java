@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save;
+package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.taskchecker.save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.application;
+package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;

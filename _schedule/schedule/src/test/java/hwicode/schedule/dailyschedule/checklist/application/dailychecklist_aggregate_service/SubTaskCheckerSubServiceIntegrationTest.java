@@ -1,14 +1,14 @@
-package hwicode.schedule.dailyschedule.checklist.application;
+package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.SubTaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import org.junit.jupiter.api.BeforeEach;
@@ -21,13 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class SubTaskCheckerServiceIntegrationTest {
+class SubTaskCheckerSubServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    SubTaskCheckerService subTaskCheckerService;
+    SubTaskCheckerSubService subTaskCheckerSubService;
 
     @Autowired
     DailyChecklistRepository dailyChecklistRepository;
@@ -61,7 +61,7 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
-        Long subTaskCheckerId = subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest);
+        Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(subTaskCheckerSaveRequest);
 
         // then
         assertThat(subTaskCheckerRepository.existsById(subTaskCheckerId)).isTrue();
@@ -76,10 +76,10 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = new SubTaskCheckerDeleteRequest(dailyChecklist.getId(), TASK_CHECKER_NAME);
 
         // when
-        subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest);
+        subTaskCheckerSubService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
@@ -94,7 +94,7 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.PROGRESS);
 
         // when
-        subTaskCheckerService.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, subTaskStatusModifyRequest);
+        subTaskCheckerSubService.changeSubTaskStatus(SUB_TASK_CHECKER_NAME, subTaskStatusModifyRequest);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
@@ -115,11 +115,11 @@ class SubTaskCheckerServiceIntegrationTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(taskChecker.getId(), SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
-        subTaskCheckerService.changeSubTaskCheckerName(SUB_TASK_CHECKER_NAME, subTaskCheckerNameModifyRequest);
+        subTaskCheckerSubService.changeSubTaskCheckerName(SUB_TASK_CHECKER_NAME, subTaskCheckerNameModifyRequest);
 
         // then
         SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
-        assertThatThrownBy(() -> subTaskCheckerService.saveSubTaskChecker(subTaskCheckerSaveRequest))
+        assertThatThrownBy(() -> subTaskCheckerSubService.saveSubTaskChecker(subTaskCheckerSaveRequest))
                 .isInstanceOf(SubTaskCheckerNameDuplicationException.class);
     }
 
