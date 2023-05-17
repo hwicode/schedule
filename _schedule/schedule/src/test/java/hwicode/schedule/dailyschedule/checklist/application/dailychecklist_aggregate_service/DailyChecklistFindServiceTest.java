@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggr
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistFindRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +17,7 @@ class DailyChecklistFindServiceTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    DailyChecklistRepository dailyChecklistRepository;
+    DailyChecklistFindRepository dailyChecklistFindRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -30,7 +30,7 @@ class DailyChecklistFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> DailyChecklistFindService.findDailyChecklistWithTaskCheckers(dailyChecklistRepository, noneExistId))
+        assertThatThrownBy(() -> DailyChecklistFindService.findDailyChecklistWithTaskCheckers(dailyChecklistFindRepository, noneExistId))
                 .isInstanceOf(DailyChecklistNotFoundException.class);
     }
 }
