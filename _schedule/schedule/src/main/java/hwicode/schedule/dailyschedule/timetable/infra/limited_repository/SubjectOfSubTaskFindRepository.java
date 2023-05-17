@@ -1,6 +1,7 @@
-package hwicode.schedule.dailyschedule.timetable.infra;
+package hwicode.schedule.dailyschedule.timetable.infra.limited_repository;
 
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

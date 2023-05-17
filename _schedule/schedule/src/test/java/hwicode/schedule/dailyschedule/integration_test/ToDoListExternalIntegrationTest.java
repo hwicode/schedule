@@ -4,7 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
-import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.TimeTableRepository;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;

@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
-import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

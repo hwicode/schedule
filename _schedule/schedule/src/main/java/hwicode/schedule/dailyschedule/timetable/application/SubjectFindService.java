@@ -4,8 +4,8 @@ import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.application.SubjectOfTaskNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

@@ -2,10 +2,10 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.domain.*;
-import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.TimeTableRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.LearningTimeRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.TimeTableRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

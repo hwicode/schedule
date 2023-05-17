@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.infra;
+package hwicode.schedule.dailyschedule.timetable.infra.jpa_repository;
 
 import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
 import org.springframework.data.jpa.repository.JpaRepository;

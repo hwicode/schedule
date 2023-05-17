@@ -2,9 +2,9 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.dailyschedule.timetable.domain.*;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeFindRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.LearningTimeFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

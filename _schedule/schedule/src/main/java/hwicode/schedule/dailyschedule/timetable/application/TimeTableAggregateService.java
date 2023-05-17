@@ -2,10 +2,10 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.dailyschedule.timetable.domain.*;
 import hwicode.schedule.dailyschedule.timetable.exception.application.TimeTableNotFoundException;
-import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeSaveRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskFindRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfTaskFindRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.TimeTableFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.LearningTimeSaveRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
+import hwicode.schedule.dailyschedule.timetable.infra.limited_repository.TimeTableFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
