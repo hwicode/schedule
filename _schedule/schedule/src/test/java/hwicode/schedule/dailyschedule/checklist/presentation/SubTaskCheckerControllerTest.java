@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerAggregateService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
@@ -39,6 +40,9 @@ class SubTaskCheckerControllerTest {
     @MockBean
     SubTaskCheckerSubService subTaskCheckerSubService;
 
+    @MockBean
+    TaskCheckerAggregateService taskCheckerAggregateService;
+
     @Autowired
     ObjectMapper objectMapper;
 
@@ -73,7 +77,7 @@ class SubTaskCheckerControllerTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = new SubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
-        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
                 .willReturn(NEW_SUB_TASK_CHECKER_NAME);
 
         // when
@@ -89,7 +93,7 @@ class SubTaskCheckerControllerTest {
                         objectMapper.writeValueAsString(subTaskCheckerNameModifyResponse)
                 ));
 
-        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
     }
 
     @Test
@@ -142,7 +146,7 @@ class SubTaskCheckerControllerTest {
     void 과제체커를_조회할_때_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
-        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
                 .willThrow(taskCheckerNotFoundException);
 
         // when
@@ -158,14 +162,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
 
-        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
     }
 
     @Test
     void 서브_과제체커의_이름_변경을_요청할_때_서브_과제체커의_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
-        given(subTaskCheckerSubService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
                 .willThrow(subTaskCheckerNameDuplicationException);
 
         // when
@@ -181,7 +185,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
-        verify(subTaskCheckerSubService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
     }
 
 }

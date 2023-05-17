@@ -1,12 +1,12 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
-import hwicode.schedule.dailyschedule.checklist.domain.*;
-import hwicode.schedule.dailyschedule.checklist.exception.application.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.infra.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskCheckerSaveOnlyRepository;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,6 @@ import static hwicode.schedule.dailyschedule.checklist.application.dailychecklis
 public class SubTaskCheckerSubService {
 
     private final DailyChecklistRepository dailyChecklistRepository;
-    private final TaskCheckerRepository taskCheckerRepository;
     private final SubTaskCheckerSaveOnlyRepository subTaskCheckerSaveOnlyRepository;
 
     @Transactional
@@ -53,11 +52,4 @@ public class SubTaskCheckerSubService {
                 subTaskStatusModifyRequest.getSubTaskStatus());
     }
 
-    @Transactional
-    public String changeSubTaskCheckerName(String subTaskName, SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
-        TaskChecker taskChecker = taskCheckerRepository.findTaskCheckerWithSubTaskCheckers(subTaskCheckerNameModifyRequest.getTaskCheckerId())
-                .orElseThrow(TaskCheckerNotFoundException::new);
-
-        return taskChecker.changeSubTaskCheckerName(subTaskName, subTaskCheckerNameModifyRequest.getNewSubTaskCheckerName());
-    }
 }
