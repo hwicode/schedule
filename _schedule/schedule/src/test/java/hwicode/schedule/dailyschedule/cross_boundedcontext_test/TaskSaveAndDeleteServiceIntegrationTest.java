@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.integration_test;
+package hwicode.schedule.dailyschedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
