@@ -11,7 +11,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class DailyChecklistFindServiceTest {
+class DailyChecklistFindRepositoryTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -30,7 +30,7 @@ class DailyChecklistFindServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> DailyChecklistFindService.findDailyChecklistWithTaskCheckers(dailyChecklistFindRepository, noneExistId))
+        assertThatThrownBy(() -> dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(noneExistId))
                 .isInstanceOf(DailyChecklistNotFoundException.class);
     }
 }

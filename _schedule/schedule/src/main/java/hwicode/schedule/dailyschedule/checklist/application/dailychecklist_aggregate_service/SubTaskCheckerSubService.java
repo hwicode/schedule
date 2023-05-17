@@ -12,8 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.DailyChecklistFindService.findDailyChecklistWithTaskCheckers;
-
 @RequiredArgsConstructor
 @Service
 public class SubTaskCheckerSubService {
@@ -23,8 +21,7 @@ public class SubTaskCheckerSubService {
 
     @Transactional
     public Long saveSubTaskChecker(SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTaskCheckers(
-                dailyChecklistFindRepository, subTaskCheckerSaveRequest.getDailyChecklistId());
+        DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(subTaskCheckerSaveRequest.getDailyChecklistId());
 
         SubTaskChecker subTaskChecker = subTaskCheckerSaveRequest.toEntity();
         dailyChecklist.addSubTaskChecker(subTaskCheckerSaveRequest.getTaskCheckerName(), subTaskChecker);
@@ -35,16 +32,16 @@ public class SubTaskCheckerSubService {
 
     @Transactional
     public void deleteSubTaskChecker(String subTaskCheckerName, SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTaskCheckers(
-                dailyChecklistFindRepository, subTaskCheckerDeleteRequest.getDailyChecklistId());
+        DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
+                subTaskCheckerDeleteRequest.getDailyChecklistId());
 
         dailyChecklist.deleteSubTaskChecker(subTaskCheckerDeleteRequest.getTaskCheckerName(), subTaskCheckerName);
     }
 
     @Transactional
     public TaskStatus changeSubTaskStatus(String subTaskCheckerName, SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
-        DailyChecklist dailyChecklist = findDailyChecklistWithTaskCheckers(
-                dailyChecklistFindRepository, subTaskStatusModifyRequest.getDailyChecklistId());
+        DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
+                subTaskStatusModifyRequest.getDailyChecklistId());
 
         return dailyChecklist.changeSubTaskStatus(
                 subTaskStatusModifyRequest.getTaskCheckerName(),
