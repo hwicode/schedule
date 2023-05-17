@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggr
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistFindRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

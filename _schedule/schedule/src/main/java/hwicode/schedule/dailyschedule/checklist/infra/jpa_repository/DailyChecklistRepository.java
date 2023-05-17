@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.infra;
+package hwicode.schedule.dailyschedule.checklist.infra.jpa_repository;
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import org.springframework.data.jpa.repository.JpaRepository;

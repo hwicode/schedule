@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggr
 
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.infra.DailyChecklistFindRepository;
+import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
