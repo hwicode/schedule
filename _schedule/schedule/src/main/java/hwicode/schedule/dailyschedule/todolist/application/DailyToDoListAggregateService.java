@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class DailyToDoListService {
+public class DailyToDoListAggregateService {
 
     private final DailyToDoListFindRepository dailyToDoListFindRepository;
 

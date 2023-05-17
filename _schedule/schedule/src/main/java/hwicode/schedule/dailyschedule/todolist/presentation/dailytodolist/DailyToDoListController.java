@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist;
 
-import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
+import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +16,13 @@ import javax.validation.constraints.Positive;
 @RestController
 public class DailyToDoListController {
 
-    private final DailyToDoListService dailyToDoListService;
+    private final DailyToDoListAggregateService dailyToDoListAggregateService;
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information")
     @ResponseStatus(value = HttpStatus.OK)
     public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@PathVariable @Positive Long dailyToDoListId,
                                                                                  @RequestBody @Valid DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
-        dailyToDoListService.changeDailyToDoListInformation(dailyToDoListId, dailyToDoListInformationChangeRequest);
+        dailyToDoListAggregateService.changeDailyToDoListInformation(dailyToDoListId, dailyToDoListInformationChangeRequest);
         return new DailyToDoListInformationChangeResponse(
                 dailyToDoListId,
                 dailyToDoListInformationChangeRequest.getReview(),

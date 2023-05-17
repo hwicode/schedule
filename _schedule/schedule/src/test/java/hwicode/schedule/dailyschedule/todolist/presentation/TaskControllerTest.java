@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.application.TaskService;
+import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
@@ -42,7 +42,7 @@ class TaskControllerTest {
     TaskSaveAndDeleteService taskSaveAndDeleteService;
 
     @MockBean
-    TaskService taskService;
+    TaskAggregateService taskAggregateService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -104,14 +104,14 @@ class TaskControllerTest {
                         objectMapper.writeValueAsString(taskInformationModifyResponse)
                 ));
 
-        verify(taskService).changeTaskInformation(any(), any());
+        verify(taskAggregateService).changeTaskInformation(any(), any());
     }
 
     @Test
     void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskNotExistException taskNotExistException = new TaskNotExistException();
-        given(taskService.changeTaskInformation(any(), any()))
+        given(taskAggregateService.changeTaskInformation(any(), any()))
                 .willThrow(taskNotExistException);
 
         // when
@@ -126,7 +126,7 @@ class TaskControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskNotExistException.getMessage()));
 
-        verify(taskService).changeTaskInformation(any(), any());
+        verify(taskAggregateService).changeTaskInformation(any(), any());
     }
 
     @Test

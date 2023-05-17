@@ -15,13 +15,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class DailyToDoListServiceIntegrationTest {
+class DailyToDoListAggregateServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    DailyToDoListService dailyToDoListService;
+    DailyToDoListAggregateService dailyToDoListAggregateService;
 
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
@@ -41,7 +41,7 @@ class DailyToDoListServiceIntegrationTest {
         DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         // when
-        dailyToDoListService.changeDailyToDoListInformation(dailyToDoList.getId(), dailyToDoListInformationChangeRequest);
+        dailyToDoListAggregateService.changeDailyToDoListInformation(dailyToDoList.getId(), dailyToDoListInformationChangeRequest);
 
         // then
         DailyToDoList savedDailyToDoList = dailyToDoListRepository.findById(dailyToDoList.getId()).orElseThrow();
@@ -58,7 +58,7 @@ class DailyToDoListServiceIntegrationTest {
         DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         // when then
-        assertThatThrownBy(() -> dailyToDoListService.changeDailyToDoListInformation(noneExistId, dailyToDoListInformationChangeRequest))
+        assertThatThrownBy(() -> dailyToDoListAggregateService.changeDailyToDoListInformation(noneExistId, dailyToDoListInformationChangeRequest))
                 .isInstanceOf(DailyToDoListNotExistException.class);
     }
 }

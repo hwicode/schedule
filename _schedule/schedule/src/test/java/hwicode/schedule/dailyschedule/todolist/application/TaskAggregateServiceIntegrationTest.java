@@ -16,13 +16,13 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class TaskServiceIntegrationTest {
+class TaskAggregateServiceIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    TaskService taskService;
+    TaskAggregateService taskAggregateService;
 
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
@@ -46,7 +46,7 @@ class TaskServiceIntegrationTest {
         TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.FIRST, Importance.FIRST);
 
         // when
-        taskService.changeTaskInformation(task.getId(), taskInformationModifyRequest);
+        taskAggregateService.changeTaskInformation(task.getId(), taskInformationModifyRequest);
 
         // then
         Task savedTask = taskRepository.findById(task.getId()).orElseThrow();
@@ -62,7 +62,7 @@ class TaskServiceIntegrationTest {
         TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.FIRST, Importance.FIRST);
 
         // when then
-        assertThatThrownBy(() -> taskService.changeTaskInformation(noneExistId, taskInformationModifyRequest))
+        assertThatThrownBy(() -> taskAggregateService.changeTaskInformation(noneExistId, taskInformationModifyRequest))
                 .isInstanceOf(TaskNotExistException.class);
     }
 }

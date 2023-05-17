@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListService;
+import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.DailyToDoListController;
@@ -35,7 +35,7 @@ class DailyToDoListControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    DailyToDoListService dailyToDoListService;
+    DailyToDoListAggregateService dailyToDoListAggregateService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -69,14 +69,14 @@ class DailyToDoListControllerTest {
                         objectMapper.writeValueAsString(dailyToDoListInformationChangeResponse)
                 ));
 
-        verify(dailyToDoListService).changeDailyToDoListInformation(any(), any());
+        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any(), any());
     }
 
     @Test
     void 투두리스트를_찾을_때_투두리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         DailyToDoListNotExistException dailyToDoListNotExistException = new DailyToDoListNotExistException();
-        given(dailyToDoListService.changeDailyToDoListInformation(any(), any()))
+        given(dailyToDoListAggregateService.changeDailyToDoListInformation(any(), any()))
                 .willThrow(dailyToDoListNotExistException);
 
         // when
@@ -91,6 +91,6 @@ class DailyToDoListControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyToDoListNotExistException.getMessage()));
 
-        verify(dailyToDoListService).changeDailyToDoListInformation(any(), any());
+        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any(), any());
     }
 }
