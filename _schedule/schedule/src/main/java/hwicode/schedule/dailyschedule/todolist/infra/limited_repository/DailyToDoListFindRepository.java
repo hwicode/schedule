@@ -1,6 +1,7 @@
-package hwicode.schedule.dailyschedule.todolist.infra;
+package hwicode.schedule.dailyschedule.todolist.infra.limited_repository;
 
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

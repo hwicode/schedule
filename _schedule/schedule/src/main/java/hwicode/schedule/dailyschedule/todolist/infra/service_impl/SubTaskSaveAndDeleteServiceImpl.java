@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.infra;
+package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;

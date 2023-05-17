@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
-import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;

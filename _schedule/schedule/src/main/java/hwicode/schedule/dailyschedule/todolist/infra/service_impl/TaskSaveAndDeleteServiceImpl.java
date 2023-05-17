@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.infra;
+package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
@@ -8,6 +8,7 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
+import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import lombok.RequiredArgsConstructor;

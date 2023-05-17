@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
-import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListFindRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.limited_repository.DailyToDoListFindRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
