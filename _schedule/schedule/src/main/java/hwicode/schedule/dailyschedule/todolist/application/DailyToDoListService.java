@@ -1,9 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
-import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
-import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.DailyToDoListFindRepository;
+import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DailyToDoListService {
 
-    private final DailyToDoListRepository dailyToDoListRepository;
+    private final DailyToDoListFindRepository dailyToDoListFindRepository;
 
     @Transactional
     public Long changeDailyToDoListInformation(Long dailyToDoListId, DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest) {
-        DailyToDoList dailyToDoList = dailyToDoListRepository.findById(dailyToDoListId)
+        DailyToDoList dailyToDoList = dailyToDoListFindRepository.findById(dailyToDoListId)
                 .orElseThrow(DailyToDoListNotExistException::new);
 
         dailyToDoList.writeReview(dailyToDoListInformationChangeRequest.getReview());
