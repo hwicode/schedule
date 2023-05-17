@@ -1,10 +1,7 @@
 package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
-import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfSubTask;
-import hwicode.schedule.dailyschedule.timetable.domain.SubjectOfTask;
-import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
+import hwicode.schedule.dailyschedule.timetable.domain.*;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.SubjectOfSubTaskRepository;
@@ -124,53 +121,4 @@ class LearningTimeServiceIntegrationTest {
                 .isInstanceOf(LearningTimeNotFoundException.class);
     }
 
-    @Test
-    void 학습_시간들에_연관된_Task_학습_주제를_삭제할_수_있다() {
-        // given
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        learningTime.changeSubjectOfTask(subjectOfTask);
-        LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
-        learningTime2.changeSubjectOfTask(subjectOfTask);
-
-        timeTableRepository.save(timeTable);
-
-        // when
-        learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTask.getId());
-
-        // then
-        checkSubjectIsDelete(learningTime.getId());
-        checkSubjectIsDelete(learningTime2.getId());
-    }
-
-    @Test
-    void 학습_시간들에_연관된_SubTask_학습_주제를_삭제할_수_있다() {
-        // given
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
-        LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
-        learningTime2.changeSubjectOfSubTask(subjectOfSubTask);
-
-        timeTableRepository.save(timeTable);
-
-        // when
-        learningTimeService.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTask.getId());
-
-        // then
-        checkSubjectIsDelete(learningTime.getId());
-        checkSubjectIsDelete(learningTime2.getId());
-    }
-
-    private void checkSubjectIsDelete(Long learningTimeId) {
-        LearningTime savedLearningTime = learningTimeRepository.findById(learningTimeId).orElseThrow();
-        boolean isDelete = savedLearningTime.deleteSubject();
-        assertThat(isDelete).isFalse();
-    }
 }

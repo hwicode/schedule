@@ -4,11 +4,11 @@ import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.SubTaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.delete.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.application.dto.subtaskchecker.save.SubTaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteService {
 
     private final SubTaskCheckerService subTaskCheckerService;
-    private final LearningTimeService learningTimeService;
+    private final LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
 
     @Override
     @Transactional
@@ -43,7 +43,7 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public Long delete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        learningTimeService.deleteSubjectOfSubTaskBelongingToLearningTime(subTaskDeleteRequest.getSubTaskId());
+        learningTimeConstraintRemovalService.deleteSubjectOfSubTaskBelongingToLearningTime(subTaskDeleteRequest.getSubTaskId());
         deleteSubTaskChecker(subTaskName, subTaskDeleteRequest);
         return subTaskDeleteRequest.getSubTaskId();
     }

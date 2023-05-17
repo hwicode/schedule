@@ -3,13 +3,13 @@ package hwicode.schedule.dailyschedule.todolist.infra;
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerService;
 import hwicode.schedule.dailyschedule.checklist.application.dto.taskchecker.save.TaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeService;
+import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
+import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
+import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +20,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private final TaskCheckerService taskCheckerService;
     private final TaskRepository taskRepository;
-    private final LearningTimeService learningTimeService;
+    private final LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
 
     @Override
     @Transactional
@@ -54,7 +54,7 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public Long delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
-        learningTimeService.deleteSubjectOfTaskBelongingToLearningTime(taskDeleteRequest.getTaskId());
+        learningTimeConstraintRemovalService.deleteSubjectOfTaskBelongingToLearningTime(taskDeleteRequest.getTaskId());
         deleteTaskChecker(taskName, taskDeleteRequest);
         return taskDeleteRequest.getTaskId();
     }
