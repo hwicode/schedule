@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.InvalidDateValidException;
 import hwicode.schedule.dailyschedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;

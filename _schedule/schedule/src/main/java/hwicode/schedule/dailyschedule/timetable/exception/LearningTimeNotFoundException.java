@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.timetable.exception.domain.timetable;
+package hwicode.schedule.dailyschedule.timetable.exception;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;

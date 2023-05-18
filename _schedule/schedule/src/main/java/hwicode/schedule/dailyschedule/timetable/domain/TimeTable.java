@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.timetable.domain;
 
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.LearningTimeNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

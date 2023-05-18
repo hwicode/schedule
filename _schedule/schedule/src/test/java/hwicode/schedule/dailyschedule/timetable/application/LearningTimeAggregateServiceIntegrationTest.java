@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.timetable.domain.*;
-import hwicode.schedule.dailyschedule.timetable.exception.domain.timetable.LearningTimeNotFoundException;
+import hwicode.schedule.dailyschedule.timetable.exception.LearningTimeNotFoundException;
 import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
