@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteService {
@@ -28,7 +30,9 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
                    createSubTaskCheckerSaveRequest(subTaskSaveRequest)
            );
        } catch (BusinessException e) {
-           throw new NotValidExternalRequestException(e);
+           throw new NotValidExternalRequestException(
+                   List.of(e.getMessage())
+           );
        }
     }
 
@@ -55,7 +59,9 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
                     createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException(e);
+            throw new NotValidExternalRequestException(
+                    List.of(e.getMessage())
+            );
         }
     }
 

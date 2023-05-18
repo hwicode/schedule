@@ -3,8 +3,6 @@ package hwicode.schedule.dailyschedule.cross_boundedcontext_test;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
-import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.TimeTableRepository;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Importance;
 import hwicode.schedule.dailyschedule.todolist.domain.Priority;
@@ -15,7 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.START_TIME;
+import java.util.List;
+
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -28,9 +27,6 @@ class ToDoListExternalIntegrationTest {
     @Autowired
     TaskSaveAndDeleteService taskSaveAndDeleteService;
 
-    @Autowired
-    TimeTableRepository timeTableRepository;
-
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -40,12 +36,11 @@ class ToDoListExternalIntegrationTest {
     void todolist_외부의_서비스를_호출할_때_외부에서_에러가_발생한다면_에러가_무엇인지_알_수_있다() {
         // given
         DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(dailyChecklistNotFoundException);
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
+                List.of(dailyChecklistNotFoundException.getMessage())
+        );
 
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-        timeTableRepository.save(timeTable);
-
-        Long noneExistId = timeTable.getId() + 1;
+        Long noneExistId = 1L;
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(noneExistId, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when then
@@ -53,7 +48,8 @@ class ToDoListExternalIntegrationTest {
             taskSaveAndDeleteService.save(taskSaveRequest);
         } catch (NotValidExternalRequestException e) {
             assertThat(e.getMessage()).isEqualTo(notValidExternalRequestException.getMessage());
-            assertThat(e.getExternalException().getMessage()).isEqualTo(notValidExternalRequestException.getExternalException().getMessage());
+            assertThat(e.getExternalErrorMessages().get(0))
+                    .isEqualTo(notValidExternalRequestException.getExternalErrorMessages().get(0));
         }
     }
 

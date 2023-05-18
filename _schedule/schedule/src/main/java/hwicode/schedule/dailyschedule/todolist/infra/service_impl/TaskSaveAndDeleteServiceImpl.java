@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @Service
 public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
@@ -41,7 +43,9 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
                     createTaskCheckerSaveRequest(taskSaveRequest)
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException(e);
+            throw new NotValidExternalRequestException(
+                    List.of(e.getMessage())
+            );
         }
     }
 
@@ -67,7 +71,9 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
                     taskName
             );
         } catch (BusinessException e) {
-            throw new NotValidExternalRequestException(e);
+            throw new NotValidExternalRequestException(
+                    List.of(e.getMessage())
+            );
         }
     }
 }

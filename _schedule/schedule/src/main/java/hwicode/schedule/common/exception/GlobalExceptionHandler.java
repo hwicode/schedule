@@ -25,7 +25,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String LOG_FORMAT = "Class : {}, Message : {}";
     private static final String CUSTOM_LOG_FORMAT = "Class : {}, Message : {}, CustomMessage : {}";
-    private static final String EXTERNAL_ERROR_LOG_FORMAT = "Class : {}, Message : {}, ExternalMessage : {}";
+    private static final String EXTERNAL_ERROR_LOG_FORMAT = "Class : {}, Message : {}, ExternalErrorMessage : {}";
     private static final String EXTERNAL_ERROR = "externalError";
 
     @ExceptionHandler(BusinessException.class)
@@ -76,11 +76,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.info(EXTERNAL_ERROR_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
                 ex.getMessage(),
-                ex.getExternalException().getMessage());
+                ex.getExternalErrorMessages());
 
-        List<ValidationError> validationErrors = List.of(
-                new ValidationError(EXTERNAL_ERROR, ex.getExternalException().getMessage())
-        );
+        List<ValidationError> validationErrors = ex.getExternalErrorMessages().stream()
+                .map(s -> new ValidationError(EXTERNAL_ERROR, s))
+                .collect(Collectors.toList());
+
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), validationErrors);
         return ResponseEntity.status(ex.getHttpStatus())
                 .body(errorResponse);

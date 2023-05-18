@@ -1,17 +1,12 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.Importance;
-import hwicode.schedule.dailyschedule.todolist.domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
-import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.SubTaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveResponse;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -20,6 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.hamcrest.Matchers.hasSize;
@@ -88,9 +85,9 @@ class SubTaskControllerTest {
     @Test
     void 서브_과제를_저장할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
         // given
-        // TaskNotExistException 클래스를 외부 예외로 가정함
-        TaskNotExistException externalException = new TaskNotExistException();
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
+                List.of(EXTERNAL_MESSAGE)
+        );
 
         given(subTaskSaveAndDeleteService.save(any()))
                 .willThrow(notValidExternalRequestException);
@@ -108,7 +105,7 @@ class SubTaskControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
 
         verify(subTaskSaveAndDeleteService).save(any());
     }
@@ -116,9 +113,9 @@ class SubTaskControllerTest {
     @Test
     void 서브_과제를_삭제할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
         // given
-        // TaskNotExistException 클래스를 외부 예외로 가정함
-        TaskNotExistException externalException = new TaskNotExistException();
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
+                List.of(EXTERNAL_MESSAGE)
+        );
 
         given(subTaskSaveAndDeleteService.delete(any(), any()))
                 .willThrow(notValidExternalRequestException);
@@ -136,7 +133,7 @@ class SubTaskControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
 
         verify(subTaskSaveAndDeleteService).delete(any(), any());
     }

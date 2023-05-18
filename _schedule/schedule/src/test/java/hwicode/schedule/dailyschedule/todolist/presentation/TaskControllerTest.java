@@ -23,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
@@ -132,9 +134,9 @@ class TaskControllerTest {
     @Test
     void 과제를_저장할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
         // given
-        // TaskNotExistException 클래스를 외부 예외로 가정함
-        TaskNotExistException externalException = new TaskNotExistException();
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
+                List.of(EXTERNAL_MESSAGE)
+        );
 
         given(taskSaveAndDeleteService.save(any()))
                 .willThrow(notValidExternalRequestException);
@@ -150,7 +152,7 @@ class TaskControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
 
         verify(taskSaveAndDeleteService).save(any());
     }
@@ -158,9 +160,9 @@ class TaskControllerTest {
     @Test
     void 과제를_삭제할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
         // given
-        // TaskNotExistException 클래스를 외부 예외로 가정함
-        TaskNotExistException externalException = new TaskNotExistException();
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(externalException);
+        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
+                List.of(EXTERNAL_MESSAGE)
+        );
 
         given(taskSaveAndDeleteService.delete(any(), any()))
                 .willThrow(notValidExternalRequestException);
@@ -176,7 +178,7 @@ class TaskControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
                 .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(externalException.getMessage()));
+                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
 
         verify(taskSaveAndDeleteService).delete(any(), any());
     }
