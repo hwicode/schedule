@@ -16,7 +16,7 @@ public class LearningTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JoinColumn(name = "daily_to_do_list_id")
+    @JoinColumn(name = "daily_schedule_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private TimeTable timeTable;
 

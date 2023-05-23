@@ -3,11 +3,11 @@ SET foreign_key_checks = 0;
 drop table if exists learning_time cascade;
 drop table if exists sub_task cascade;
 drop table if exists task cascade;
-drop table if exists daily_to_do_list cascade;
+drop table if exists daily_schedule cascade;
 
 SET foreign_key_checks = 1;
 
-create table daily_to_do_list (
+create table daily_schedule (
    id bigint not null auto_increment,
    today timestamp,
    review text,
@@ -30,7 +30,7 @@ create table task (
    importance varchar(255) DEFAULT 'SECOND',
    difficulty varchar(255) DEFAULT 'NORMAL',
    task_status varchar(255) DEFAULT 'TODO',
-   daily_to_do_list_id bigint,
+   daily_schedule_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
@@ -41,7 +41,7 @@ create table learning_time (
    subject varchar(255),
    task_id bigint,
    sub_task_id bigint,
-   daily_to_do_list_id bigint not null,
+   daily_schedule_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
@@ -52,8 +52,8 @@ alter table sub_task
 
 alter table task
    add constraint
-   foreign key (daily_to_do_list_id)
-   references daily_to_do_list (id);
+   foreign key (daily_schedule_id)
+   references daily_schedule (id);
 
 alter table learning_time
    add constraint
@@ -67,5 +67,5 @@ alter table learning_time
 
 alter table learning_time
    add constraint
-   foreign key (daily_to_do_list_id)
-   references daily_to_do_list (id);
+   foreign key (daily_schedule_id)
+   references daily_schedule (id);

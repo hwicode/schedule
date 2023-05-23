@@ -7,7 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@Table(name = "daily_to_do_list")
+@Table(name = "daily_schedule")
 @Entity
 public class DailyToDoList {
 

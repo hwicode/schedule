@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor
-@Table(name = "daily_to_do_list")
+@Table(name = "daily_schedule")
 @Entity
 public class DailyChecklist {
 
