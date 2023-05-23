@@ -82,7 +82,8 @@ public class TaskChecker {
         if (this.taskStatus == TaskStatus.DONE && subTaskStatus != SubTaskStatus.DONE) {
             changeToProgress();
         }
-        else if (this.taskStatus == TaskStatus.TODO && subTaskStatus != SubTaskStatus.TODO) {
+
+        if (this.taskStatus == TaskStatus.TODO && subTaskStatus != SubTaskStatus.TODO) {
             changeToProgress();
         }
     }
