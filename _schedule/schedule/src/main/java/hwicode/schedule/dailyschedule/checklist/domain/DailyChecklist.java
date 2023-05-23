@@ -27,10 +27,11 @@ public class DailyChecklist {
         return findTaskCheckerBy(taskCheckerName).changeName(newTaskCheckerName);
     }
 
-    public void addTaskChecker(TaskChecker taskChecker) {
-        validateTaskCheckerDuplication(taskChecker.getName());
+    public TaskChecker createTaskChecker(String taskName, Difficulty difficulty) {
+        validateTaskCheckerDuplication(taskName);
+        TaskChecker taskChecker = new TaskChecker(this, taskName, difficulty);
         taskCheckers.add(taskChecker);
-        taskChecker.savedInChecklist(this);
+        return taskChecker;
     }
 
     private void validateTaskCheckerDuplication(String name) {
@@ -74,8 +75,8 @@ public class DailyChecklist {
                 .orElseThrow(TaskCheckerNotFoundException::new);
     }
 
-    public void addSubTaskChecker(String taskCheckerName, SubTaskChecker subTaskChecker) {
-        findTaskCheckerBy(taskCheckerName).addSubTaskChecker(subTaskChecker);
+    public SubTaskChecker createSubTaskChecker(String taskCheckerName, String subTaskCheckerName) {
+        return findTaskCheckerBy(taskCheckerName).createSubTaskChecker(subTaskCheckerName);
     }
 
     public TaskStatus changeSubTaskStatus(String taskCheckerName, String subTaskCheckerName, SubTaskStatus subTaskStatus) {

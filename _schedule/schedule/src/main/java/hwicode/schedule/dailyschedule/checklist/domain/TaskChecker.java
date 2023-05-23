@@ -39,15 +39,10 @@ public class TaskChecker {
     @OneToMany(mappedBy = "taskChecker", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTaskChecker> subTaskCheckers = new ArrayList<>();
 
-    public TaskChecker(String name, Difficulty difficulty) {
+    public TaskChecker(DailyChecklist dailyChecklist, String name, Difficulty difficulty) {
+        this.dailyChecklist = dailyChecklist;
         this.name = name;
         this.taskStatus = TaskStatus.TODO;
-        this.difficulty = difficulty;
-    }
-
-    public TaskChecker(String name, TaskStatus taskStatus, Difficulty difficulty) {
-        this.name = name;
-        this.taskStatus = taskStatus;
         this.difficulty = difficulty;
     }
 
@@ -56,15 +51,15 @@ public class TaskChecker {
         return findSubTaskCheckerBy(subTaskCheckerName).changeName(newSubTaskCheckerName);
     }
 
-    TaskStatus addSubTaskChecker(SubTaskChecker subTaskChecker) {
-        validateSubTaskCheckerDuplication(subTaskChecker.getName());
+    SubTaskChecker createSubTaskChecker(String subTaskCheckerName) {
+        validateSubTaskCheckerDuplication(subTaskCheckerName);
+        SubTaskChecker subTaskChecker = new SubTaskChecker(this, subTaskCheckerName);
         subTaskCheckers.add(subTaskChecker);
-        subTaskChecker.savedInTaskChecker(this);
 
         if (this.taskStatus == TaskStatus.DONE) {
             changeToProgress();
         }
-        return this.taskStatus;
+        return subTaskChecker;
     }
 
     private void validateSubTaskCheckerDuplication(String name) {
@@ -142,10 +137,6 @@ public class TaskChecker {
         return this.taskStatus;
     }
 
-    void savedInChecklist(DailyChecklist dailyChecklist) {
-        this.dailyChecklist = dailyChecklist;
-    }
-
     String changeName(String name) {
         this.name = name;
         return this.name;
@@ -156,12 +147,12 @@ public class TaskChecker {
         return this.difficulty;
     }
 
-    boolean isSame(String name) {
-        return this.name.equals(name);
+    TaskStatus getTaskStatus() {
+        return this.taskStatus;
     }
 
-    String getName() {
-        return this.name;
+    boolean isSame(String name) {
+        return this.name.equals(name);
     }
 
     public Long getId() {

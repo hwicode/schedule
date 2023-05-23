@@ -25,18 +25,10 @@ public class SubTaskChecker {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    public SubTaskChecker(String name) {
+    public SubTaskChecker(TaskChecker taskChecker, String name) {
+        this.taskChecker = taskChecker;
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
-    }
-
-    public SubTaskChecker(String name, SubTaskStatus subTaskStatus) {
-        this.name = name;
-        this.subTaskStatus = subTaskStatus;
-    }
-
-    void savedInTaskChecker(TaskChecker taskChecker) {
-        this.taskChecker = taskChecker;
     }
 
     String changeName(String name) {
@@ -50,10 +42,6 @@ public class SubTaskChecker {
 
     boolean isSame(String name) {
         return this.name.equals(name);
-    }
-
-    String getName() {
-        return this.name;
     }
 
     public Long getId() {

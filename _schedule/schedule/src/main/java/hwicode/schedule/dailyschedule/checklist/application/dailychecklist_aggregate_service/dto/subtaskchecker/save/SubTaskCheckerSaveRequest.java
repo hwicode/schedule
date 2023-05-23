@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.subtaskchecker.save;
 
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +22,4 @@ public class SubTaskCheckerSaveRequest {
 
     @NotBlank
     private String subTaskCheckerName;
-
-    public SubTaskChecker toEntity() {
-        return new SubTaskChecker(subTaskCheckerName);
-    }
 }

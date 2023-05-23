@@ -37,13 +37,10 @@ class TaskCheckerAggregateServiceIntegrationTest {
     void 과제체커내에_있는_서브_과제체커의_이름을_변경할_수_있다() {
         // given
         DailyChecklist dailyChecklist = new DailyChecklist();
-        TaskChecker taskChecker = new TaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
-        SubTaskChecker subTaskChecker = new SubTaskChecker(SUB_TASK_CHECKER_NAME);
-        SubTaskChecker subTaskChecker2 = new SubTaskChecker(SUB_TASK_CHECKER_NAME2);
+        TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+        dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME2);
 
-        dailyChecklist.addTaskChecker(taskChecker);
-        dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, subTaskChecker);
-        dailyChecklist.addSubTaskChecker(TASK_CHECKER_NAME, subTaskChecker2);
         dailyChecklistRepository.save(dailyChecklist);
 
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(taskChecker.getId(), SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);

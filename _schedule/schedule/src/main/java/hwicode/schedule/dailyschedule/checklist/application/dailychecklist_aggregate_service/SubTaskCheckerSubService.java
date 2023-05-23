@@ -23,8 +23,9 @@ public class SubTaskCheckerSubService {
     public Long saveSubTaskChecker(SubTaskCheckerSaveRequest subTaskCheckerSaveRequest) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(subTaskCheckerSaveRequest.getDailyChecklistId());
 
-        SubTaskChecker subTaskChecker = subTaskCheckerSaveRequest.toEntity();
-        dailyChecklist.addSubTaskChecker(subTaskCheckerSaveRequest.getTaskCheckerName(), subTaskChecker);
+        SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(
+                subTaskCheckerSaveRequest.getTaskCheckerName(), subTaskCheckerSaveRequest.getSubTaskCheckerName()
+        );
 
         return subTaskCheckerSaveRepository.save(subTaskChecker)
                 .getId();

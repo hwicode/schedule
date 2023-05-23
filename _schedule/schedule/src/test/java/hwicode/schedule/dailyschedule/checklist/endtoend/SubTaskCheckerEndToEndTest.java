@@ -59,8 +59,7 @@ class SubTaskCheckerEndToEndTest {
     void 서브_과제체커_진행_상태_변경_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
-        TaskChecker taskChecker = new TaskChecker(TASK_CHECKER_NAME, TaskStatus.TODO, Difficulty.NORMAL);
-        dailyChecklist.addTaskChecker(taskChecker);
+        TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(

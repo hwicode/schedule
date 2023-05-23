@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.taskchecker.save;
 
-import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -24,8 +23,4 @@ public class TaskCheckerSaveRequest {
 
     @NotNull
     private Difficulty difficulty;
-
-    public TaskChecker toEntity() {
-        return new TaskChecker(taskCheckerName, difficulty);
-    }
 }
