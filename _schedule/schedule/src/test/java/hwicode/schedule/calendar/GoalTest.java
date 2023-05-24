@@ -119,6 +119,48 @@ class GoalTest {
         assertThat(goal.getGoalStatus()).isEqualTo(GoalStatus.DONE);
     }
 
+    @Test
+    void 목표의_상태가_TODO_일_때_서브_목표가_DONE_상태로_변하면_목표는_PROGRESS_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표의_상태가_PROGRESS_일_때_서브_목표가_DONE_상태로_변하면_목표는_PROGRESS_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeToProgress();
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표의_상태가_DONE_일_때_서브_목표가_DONE_상태로_변하면_목표는_DONE_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+        goal.changeToDone();
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.DONE);
+    }
+
 }
 
 class Goal {
