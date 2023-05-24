@@ -250,6 +250,32 @@ class GoalTest {
         assertThat(goalStatus).isEqualTo(GoalStatus.DONE);
     }
 
+    @Test
+    void 목표가_TODO로_변할_때_서브_목표가_모두_TODO가_아니면_에러가_발생한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
+
+        // when then
+        assertThatThrownBy(goal::changeToTodo)
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 목표가_DONE로_변할_때_서브_목표가_모두_DONE이_아니면_에러가_발생한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
+
+        // when then
+        assertThatThrownBy(goal::changeToDone)
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }
 
 class Goal {
@@ -286,14 +312,12 @@ class Goal {
         return this.goalStatus;
     }
 
-    private SubGoal findSubGoalBy(String text) {
-        return subGoals.stream()
-                .filter(subGoal -> subGoal.isSame(text))
-                .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
-    }
-
     public GoalStatus changeToTodo() {
+        boolean isAllToDo = isAllSameStatus(SubGoalStatus.TODO);
+        if (!isAllToDo) {
+            throw new IllegalArgumentException();
+        }
+
         this.goalStatus = GoalStatus.TODO;
         return getGoalStatus();
     }
@@ -304,8 +328,21 @@ class Goal {
     }
 
     public GoalStatus changeToDone() {
+        boolean isAllDone = isAllSameStatus(SubGoalStatus.DONE);
+        if (!isAllDone) {
+            throw new IllegalArgumentException();
+        }
+
         this.goalStatus = GoalStatus.DONE;
         return getGoalStatus();
+    }
+
+    private boolean isAllSameStatus(SubGoalStatus subGoalStatus) {
+        int count = (int) subGoals.stream()
+                .filter(s -> s.isSameStatus(subGoalStatus))
+                .count();
+
+        return count == subGoals.size();
     }
 
     public GoalStatus changeSubGoalStatus(String subGoalText, SubGoalStatus subGoalStatus) {
@@ -313,6 +350,13 @@ class Goal {
         checkGoalStatusConditions(subGoalStatus);
 
         return getGoalStatus();
+    }
+
+    private SubGoal findSubGoalBy(String text) {
+        return subGoals.stream()
+                .filter(subGoal -> subGoal.isSame(text))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
     }
 
     private void checkGoalStatusConditions(SubGoalStatus subGoalStatus) {
@@ -347,6 +391,10 @@ class SubGoal {
 
     boolean isSame(String text) {
         return this.text.equals(text);
+    }
+
+    boolean isSameStatus(SubGoalStatus subGoalStatus) {
+        return this.subGoalStatus == subGoalStatus;
     }
 
 }
