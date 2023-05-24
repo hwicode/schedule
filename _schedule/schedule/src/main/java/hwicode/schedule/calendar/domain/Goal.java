@@ -101,7 +101,20 @@ public class Goal {
         }
     }
 
+    String changeName(String name) {
+        this.name = name;
+        return name;
+    }
+
+    boolean isSame(String name) {
+        return this.name.equals(name);
+    }
+
     GoalStatus getGoalStatus() {
         return this.goalStatus;
+    }
+
+    String getName() {
+        return this.name;
     }
 }
