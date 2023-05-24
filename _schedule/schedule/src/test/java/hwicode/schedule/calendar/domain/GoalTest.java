@@ -2,14 +2,11 @@ package hwicode.schedule.calendar.domain;
 
 import org.junit.jupiter.api.Test;
 
+import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GoalTest {
-
-    private static final String GOAL_NAME = "goalName";
-    private static final String SUB_GOAL_NAME ="subGoalName";
-    private static final String SUB_GOAL_NAME2 ="subGoalName2";
 
     private Goal createGoal() {
         return new Goal(GOAL_NAME);
