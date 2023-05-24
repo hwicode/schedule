@@ -161,6 +161,49 @@ class GoalTest {
         assertThat(goalStatus).isEqualTo(GoalStatus.DONE);
     }
 
+    @Test
+    void 목표의_상태가_TODO_일_때_서브_목표가_TODO_상태로_변하면_목표는_TODO_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.TODO);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.TODO);
+    }
+
+    @Test
+    void 목표의_상태가_PROGRESS_일_때_서브_목표가_TODO_상태로_변하면_목표는_PROGRESS_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+        goal.changeToProgress();
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.TODO);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표의_상태가_DONE_일_때_서브_목표가_TODO_상태로_변하면_목표는_PROGRESS_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+        goal.changeToDone();
+
+        // when
+        GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.TODO);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
+    }
+
 }
 
 class Goal {
@@ -216,10 +259,19 @@ class Goal {
 
     public GoalStatus changeSubGoalStatus(String subGoalText, SubGoalStatus subGoalStatus) {
         findSubGoalBy(subGoalText).changeStatus(subGoalStatus);
+        checkGoalStatusConditions(subGoalStatus);
+
+        return getGoalStatus();
+    }
+
+    private void checkGoalStatusConditions(SubGoalStatus subGoalStatus) {
         if (this.goalStatus == GoalStatus.TODO && subGoalStatus != SubGoalStatus.TODO) {
             changeToProgress();
         }
-        return getGoalStatus();
+
+        if (this.goalStatus == GoalStatus.DONE && subGoalStatus != SubGoalStatus.DONE) {
+            changeToProgress();
+        }
     }
 
     GoalStatus getGoalStatus() {
