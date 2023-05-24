@@ -10,13 +10,18 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class GoalTest {
 
+    private static final String GOAL_NAME = "goalName";
     private static final String SUB_GOAL_NAME ="subGoalName";
     private static final String SUB_GOAL_NAME2 ="subGoalName2";
+
+    private Goal createGoal() {
+        return new Goal(GOAL_NAME);
+    }
 
     @Test
     void 목표에_서브_목표를_추가할_수_있다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
 
         // when
         goal.createSubGoal(SUB_GOAL_NAME);
@@ -29,7 +34,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_TODO_일_때_서브_목표_추가시_목표는_TODO_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
 
         // when
         goal.createSubGoal(SUB_GOAL_NAME);
@@ -41,7 +46,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_PROGRESS_일_때_서브_목표_추가시_목표는_PROGRESS_상태를_유지한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.changeToProgress();
 
         // when
@@ -54,7 +59,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_DONE_일_때_서브_목표_추가시_목표는_PROGRESS_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.changeToDone();
 
         // when
@@ -67,7 +72,7 @@ class GoalTest {
     @Test
     void 목표에_서브_목표를_삭제할_수_있다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
 
         // when
@@ -81,7 +86,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_TODO_일_때_서브_목표_삭제시_목표는_TODO_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
 
         // when
@@ -94,7 +99,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_PROGRESS_일_때_서브_목표_삭제시_목표는_PROGRESS_상태를_유지한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
 
@@ -108,7 +113,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_DONE_일_때_서브_목표_삭제시_목표는_DONE_상태를_유지한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goal.changeToDone();
@@ -123,7 +128,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_TODO_일_때_서브_목표가_DONE_상태로_변하면_목표는_PROGRESS_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
 
         // when
@@ -136,7 +141,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_PROGRESS_일_때_서브_목표가_DONE_상태로_변하면_목표는_PROGRESS_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeToProgress();
 
@@ -150,7 +155,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_DONE_일_때_서브_목표가_DONE_상태로_변하면_목표는_DONE_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goal.changeToDone();
@@ -165,7 +170,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_TODO_일_때_서브_목표가_TODO_상태로_변하면_목표는_TODO_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
 
         // when
@@ -178,7 +183,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_PROGRESS_일_때_서브_목표가_TODO_상태로_변하면_목표는_PROGRESS_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goal.changeToProgress();
@@ -193,7 +198,7 @@ class GoalTest {
     @Test
     void 목표의_상태가_DONE_일_때_서브_목표가_TODO_상태로_변하면_목표는_PROGRESS_상태가_된다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goal.changeToDone();
@@ -208,7 +213,7 @@ class GoalTest {
     @Test
     void 목표가_TODO로_변할_때_서브_목표가_모두_TODO면_목표는_TODO_로_변한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.createSubGoal(SUB_GOAL_NAME2);
 
@@ -222,7 +227,7 @@ class GoalTest {
     @Test
     void 목표가_PROGRESS로_변할_때_서브_목표의_진행_상태에_상관_없이_목표는_PROGRESS_로_변한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.createSubGoal(SUB_GOAL_NAME2);
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
@@ -237,7 +242,7 @@ class GoalTest {
     @Test
     void 목표가_DONE으로_변할_때_서브_목표가_모두_DONE이면_목표는_DONE으로_변한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.createSubGoal(SUB_GOAL_NAME2);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
@@ -253,7 +258,7 @@ class GoalTest {
     @Test
     void 목표가_TODO로_변할_때_서브_목표가_모두_TODO가_아니면_에러가_발생한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.createSubGoal(SUB_GOAL_NAME2);
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
@@ -266,7 +271,7 @@ class GoalTest {
     @Test
     void 목표가_DONE로_변할_때_서브_목표가_모두_DONE이_아니면_에러가_발생한다() {
         // given
-        Goal goal = new Goal();
+        Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.createSubGoal(SUB_GOAL_NAME2);
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
@@ -280,10 +285,12 @@ class GoalTest {
 
 class Goal {
 
+    private String text;
     private GoalStatus goalStatus;
     private final List<SubGoal> subGoals = new ArrayList<>();
 
-    public Goal() {
+    public Goal(String text) {
+        this.text = text;
         this.goalStatus = GoalStatus.TODO;
     }
 
