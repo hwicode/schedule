@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class GoalTest {
 
     private static final String SUB_GOAL_NAME ="subGoalName";
+    private static final String SUB_GOAL_NAME2 ="subGoalName2";
 
     @Test
     void 목표에_서브_목표를_추가할_수_있다() {
@@ -204,6 +205,51 @@ class GoalTest {
         assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
     }
 
+    @Test
+    void 목표가_TODO로_변할_때_서브_목표가_모두_TODO면_목표는_TODO_로_변한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+
+        // when
+        GoalStatus goalStatus = goal.changeToTodo();
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.TODO);
+    }
+
+    @Test
+    void 목표가_PROGRESS로_변할_때_서브_목표의_진행_상태에_상관_없이_목표는_PROGRESS_로_변한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
+
+        // when
+        GoalStatus goalStatus = goal.changeToProgress();
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표가_DONE으로_변할_때_서브_목표가_모두_DONE이면_목표는_DONE으로_변한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
+
+        // when
+        GoalStatus goalStatus = goal.changeToDone();
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.DONE);
+    }
+
 }
 
 class Goal {
@@ -245,6 +291,11 @@ class Goal {
                 .filter(subGoal -> subGoal.isSame(text))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public GoalStatus changeToTodo() {
+        this.goalStatus = GoalStatus.TODO;
+        return getGoalStatus();
     }
 
     public GoalStatus changeToProgress() {
