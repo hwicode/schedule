@@ -281,6 +281,32 @@ class GoalTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 목표는_서브_목표의_이름을_변경할_수_있다() {
+        // given
+        Goal goal = createGoal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+
+        // when
+        String changedName = goal.changeSubGoalName(SUB_GOAL_NAME, SUB_GOAL_NAME2);
+
+        // then
+        assertThatThrownBy(() -> goal.createSubGoal(changedName))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 목표는_서브_목표의_이름을_변경할_때_이미_존재하는_이름이면_애러가_발생한다() {
+        // given
+        Goal goal = createGoal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME2);
+
+        // when then
+        assertThatThrownBy(() -> goal.changeSubGoalName(SUB_GOAL_NAME, SUB_GOAL_NAME2))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
 }
 
 class Goal {
@@ -292,6 +318,11 @@ class Goal {
     public Goal(String name) {
         this.name = name;
         this.goalStatus = GoalStatus.TODO;
+    }
+
+    public String changeSubGoalName(String subGoalName, String newSubGoalName) {
+        validateSubGoal(newSubGoalName);
+        return findSubGoalBy(subGoalName).changeName(newSubGoalName);
     }
 
     public SubGoal createSubGoal(String name) {
@@ -394,6 +425,11 @@ class SubGoal {
     SubGoalStatus changeStatus(SubGoalStatus subGoalStatus) {
         this.subGoalStatus = subGoalStatus;
         return this.subGoalStatus;
+    }
+
+    String changeName(String newName) {
+        this.name = newName;
+        return newName;
     }
 
     boolean isSame(String name) {
