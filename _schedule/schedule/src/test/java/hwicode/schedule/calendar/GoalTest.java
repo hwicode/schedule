@@ -285,18 +285,18 @@ class GoalTest {
 
 class Goal {
 
-    private String text;
+    private String name;
     private GoalStatus goalStatus;
     private final List<SubGoal> subGoals = new ArrayList<>();
 
-    public Goal(String text) {
-        this.text = text;
+    public Goal(String name) {
+        this.name = name;
         this.goalStatus = GoalStatus.TODO;
     }
 
-    public SubGoal createSubGoal(String text) {
-        validateSubGoal(text);
-        SubGoal subGoal = new SubGoal(text);
+    public SubGoal createSubGoal(String name) {
+        validateSubGoal(name);
+        SubGoal subGoal = new SubGoal(name);
         subGoals.add(subGoal);
 
         if (this.goalStatus == GoalStatus.DONE) {
@@ -305,17 +305,17 @@ class Goal {
         return subGoal;
     }
 
-    private void validateSubGoal(String text) {
+    private void validateSubGoal(String name) {
         boolean duplication = subGoals.stream()
-                .anyMatch(subGoal -> subGoal.isSame(text));
+                .anyMatch(subGoal -> subGoal.isSame(name));
 
         if (duplication) {
             throw new IllegalArgumentException();
         }
     }
 
-    public GoalStatus deleteSubGoal(String text) {
-        subGoals.remove(findSubGoalBy(text));
+    public GoalStatus deleteSubGoal(String name) {
+        subGoals.remove(findSubGoalBy(name));
         return this.goalStatus;
     }
 
@@ -352,16 +352,16 @@ class Goal {
         return count == subGoals.size();
     }
 
-    public GoalStatus changeSubGoalStatus(String subGoalText, SubGoalStatus subGoalStatus) {
-        findSubGoalBy(subGoalText).changeStatus(subGoalStatus);
+    public GoalStatus changeSubGoalStatus(String subGoalName, SubGoalStatus subGoalStatus) {
+        findSubGoalBy(subGoalName).changeStatus(subGoalStatus);
         checkGoalStatusConditions(subGoalStatus);
 
         return getGoalStatus();
     }
 
-    private SubGoal findSubGoalBy(String text) {
+    private SubGoal findSubGoalBy(String name) {
         return subGoals.stream()
-                .filter(subGoal -> subGoal.isSame(text))
+                .filter(subGoal -> subGoal.isSame(name))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
     }
@@ -383,11 +383,11 @@ class Goal {
 
 class SubGoal {
 
-    private String text;
+    private String name;
     private SubGoalStatus subGoalStatus;
 
-    SubGoal(String text) {
-        this.text = text;
+    SubGoal(String name) {
+        this.name = name;
         this.subGoalStatus = SubGoalStatus.TODO;
     }
 
@@ -396,8 +396,8 @@ class SubGoal {
         return this.subGoalStatus;
     }
 
-    boolean isSame(String text) {
-        return this.text.equals(text);
+    boolean isSame(String name) {
+        return this.name.equals(name);
     }
 
     boolean isSameStatus(SubGoalStatus subGoalStatus) {
