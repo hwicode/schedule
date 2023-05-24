@@ -63,6 +63,62 @@ class GoalTest {
         assertThat(goal.getGoalStatus()).isEqualTo(GoalStatus.PROGRESS);
     }
 
+    @Test
+    void 목표에_서브_목표를_삭제할_수_있다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+
+        // when
+        goal.deleteSubGoal(SUB_GOAL_NAME);
+
+        // then
+        assertThatThrownBy(() -> goal.deleteSubGoal(SUB_GOAL_NAME))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 목표의_상태가_TODO_일_때_서브_목표_삭제시_목표는_TODO_상태가_된다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+
+        // when
+        GoalStatus goalStatus = goal.deleteSubGoal(SUB_GOAL_NAME);
+
+        // then
+        assertThat(goalStatus).isEqualTo(GoalStatus.TODO);
+    }
+
+    @Test
+    void 목표의_상태가_PROGRESS_일_때_서브_목표_삭제시_목표는_PROGRESS_상태를_유지한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+
+        // when
+        goal.deleteSubGoal(SUB_GOAL_NAME);
+
+        // then
+        assertThat(goal.getGoalStatus()).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표의_상태가_DONE_일_때_서브_목표_삭제시_목표는_DONE_상태를_유지한다() {
+        // given
+        Goal goal = new Goal();
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
+        goal.changeToDone();
+
+        // when
+        goal.deleteSubGoal(SUB_GOAL_NAME);
+
+        // then
+        assertThat(goal.getGoalStatus()).isEqualTo(GoalStatus.DONE);
+    }
+
 }
 
 class Goal {
@@ -94,6 +150,18 @@ class Goal {
         }
     }
 
+    public GoalStatus deleteSubGoal(String text) {
+        subGoals.remove(findSubGoalBy(text));
+        return this.goalStatus;
+    }
+
+    private SubGoal findSubGoalBy(String text) {
+        return subGoals.stream()
+                .filter(subGoal -> subGoal.isSame(text))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     public GoalStatus changeToProgress() {
         this.goalStatus = GoalStatus.PROGRESS;
         return getGoalStatus();
@@ -101,6 +169,14 @@ class Goal {
 
     public GoalStatus changeToDone() {
         this.goalStatus = GoalStatus.DONE;
+        return getGoalStatus();
+    }
+
+    public GoalStatus changeSubGoalStatus(String subGoalText, SubGoalStatus subGoalStatus) {
+        findSubGoalBy(subGoalText).changeStatus(subGoalStatus);
+        if (this.goalStatus == GoalStatus.TODO && subGoalStatus != SubGoalStatus.TODO) {
+            changeToProgress();
+        }
         return getGoalStatus();
     }
 
@@ -119,9 +195,15 @@ class SubGoal {
         this.subGoalStatus = SubGoalStatus.TODO;
     }
 
+    SubGoalStatus changeStatus(SubGoalStatus subGoalStatus) {
+        this.subGoalStatus = subGoalStatus;
+        return this.subGoalStatus;
+    }
+
     boolean isSame(String text) {
         return this.text.equals(text);
     }
+
 }
 
 enum GoalStatus {
@@ -129,5 +211,5 @@ enum GoalStatus {
 }
 
 enum SubGoalStatus {
-    TODO
+    TODO, DONE
 }
