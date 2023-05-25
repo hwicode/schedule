@@ -2,6 +2,9 @@ package hwicode.schedule.calendar.domain;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.YearMonth;
+import java.util.List;
+
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -298,6 +301,44 @@ class GoalTest {
 
         // when then
         assertThatThrownBy(() -> goal.changeSubGoalName(SUB_GOAL_NAME, SUB_GOAL_NAME2))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 목표는_캘린더와_연결된_목표를_제거할_수_있다() {
+        // given
+        YearMonth first = YEAR_MONTH;
+        YearMonth second = YEAR_MONTH.plusMonths(1);
+        YearMonth third = YEAR_MONTH.plusMonths(2);
+
+        Goal goal = new Goal(List.of(
+                new Calendar(first),
+                new Calendar(second),
+                new Calendar(third)
+        ));
+
+        // when
+        goal.deleteCalendarGoal(first);
+        goal.deleteCalendarGoal(second);
+        goal.deleteCalendarGoal(third);
+
+        // then
+        assertThatThrownBy(() -> goal.deleteCalendarGoal(first))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> goal.deleteCalendarGoal(second))
+                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> goal.deleteCalendarGoal(third))
+                .isInstanceOf(IllegalArgumentException.class);
+    }
+
+
+    @Test
+    void 목표에_존재하지_않는_캘린더를_조회하면_에러가_발생한다() {
+        // given
+        Goal goal = createGoal();
+
+        // when then
+        assertThatThrownBy(() -> goal.deleteCalendarGoal(YEAR_MONTH))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 

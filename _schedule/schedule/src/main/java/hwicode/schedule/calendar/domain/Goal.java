@@ -1,5 +1,6 @@
 package hwicode.schedule.calendar.domain;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,11 +8,19 @@ public class Goal {
 
     private String name;
     private GoalStatus goalStatus;
+    private final List<CalendarGoal> calendarGoals = new ArrayList<>();
     private final List<SubGoal> subGoals = new ArrayList<>();
 
     public Goal(String name) {
         this.name = name;
         this.goalStatus = GoalStatus.TODO;
+    }
+
+    // 테스트 코드에서만 사용되는 생성자!
+    Goal(List<Calendar> calendars) {
+        for (Calendar calendar : calendars) {
+            calendarGoals.add(new CalendarGoal(calendar, this));
+        }
     }
 
     public String changeSubGoalName(String subGoalName, String newSubGoalName) {
@@ -101,6 +110,17 @@ public class Goal {
         }
     }
 
+    public void deleteCalendarGoal(YearMonth yearMonth) {
+        calendarGoals.remove(findCalendarGoalBy(yearMonth));
+    }
+
+    private CalendarGoal findCalendarGoalBy(YearMonth yearMonth) {
+        return calendarGoals.stream()
+                .filter(calendarGoal -> calendarGoal.isSameCalendar(yearMonth))
+                .findFirst()
+                .orElseThrow(IllegalArgumentException::new);
+    }
+
     String changeName(String name) {
         this.name = name;
         return name;
@@ -117,4 +137,5 @@ public class Goal {
     String getName() {
         return this.name;
     }
+
 }
