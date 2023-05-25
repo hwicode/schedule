@@ -121,6 +121,10 @@ public class Goal {
                 .orElseThrow(IllegalArgumentException::new);
     }
 
+    public boolean isDelete() {
+        return calendarGoals.isEmpty();
+    }
+
     String changeName(String name) {
         this.name = name;
         return name;

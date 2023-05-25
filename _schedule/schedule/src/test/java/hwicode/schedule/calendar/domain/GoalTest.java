@@ -305,7 +305,7 @@ class GoalTest {
     }
 
     @Test
-    void 목표는_캘린더와_연결된_목표를_제거할_수_있다() {
+    void 목표는_캘린더와_연관된_목표를_제거할_수_있다() {
         // given
         YearMonth first = YEAR_MONTH;
         YearMonth second = YEAR_MONTH.plusMonths(1);
@@ -331,7 +331,6 @@ class GoalTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-
     @Test
     void 목표에_존재하지_않는_캘린더를_조회하면_에러가_발생한다() {
         // given
@@ -340,6 +339,37 @@ class GoalTest {
         // when then
         assertThatThrownBy(() -> goal.deleteCalendarGoal(YEAR_MONTH))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void 목표에_캘린더와_연관된_목표가_없다면_is_delete는_true이다() {
+        // given
+        Goal goal = new Goal(List.of(
+                new Calendar(YEAR_MONTH)
+        ));
+        goal.deleteCalendarGoal(YEAR_MONTH);
+
+        // when
+        boolean isDelete = goal.isDelete();
+
+        // then
+        assertThat(isDelete).isTrue();
+    }
+
+    @Test
+    void 목표에_캘린더와_연관된_목표가_있다면_is_delete는_false이다() {
+        // given
+        Goal goal = new Goal(List.of(
+                new Calendar(YEAR_MONTH),
+                new Calendar(YEAR_MONTH.plusMonths(1))
+        ));
+        goal.deleteCalendarGoal(YEAR_MONTH);
+
+        // when
+        boolean isDelete = goal.isDelete();
+
+        // then
+        assertThat(isDelete).isFalse();
     }
 
 }
