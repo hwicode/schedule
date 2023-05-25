@@ -1,5 +1,11 @@
 package hwicode.schedule.calendar.domain;
 
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
+
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +50,7 @@ public class Goal {
                 .anyMatch(subGoal -> subGoal.isSame(name));
 
         if (duplication) {
-            throw new IllegalArgumentException();
+            throw new SubGoalDuplicateException();
         }
     }
 
@@ -56,7 +62,7 @@ public class Goal {
     public GoalStatus changeToTodo() {
         boolean isAllToDo = isAllSameStatus(SubGoalStatus.TODO);
         if (!isAllToDo) {
-            throw new IllegalArgumentException();
+            throw new SubGoalNotAllTodoException();
         }
 
         this.goalStatus = GoalStatus.TODO;
@@ -71,7 +77,7 @@ public class Goal {
     public GoalStatus changeToDone() {
         boolean isAllDone = isAllSameStatus(SubGoalStatus.DONE);
         if (!isAllDone) {
-            throw new IllegalArgumentException();
+            throw new SubGoalNotAllDoneException();
         }
 
         this.goalStatus = GoalStatus.DONE;
@@ -97,7 +103,7 @@ public class Goal {
         return subGoals.stream()
                 .filter(subGoal -> subGoal.isSame(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(SubGoalNotFoundException::new);
     }
 
     private void checkGoalStatusConditions(SubGoalStatus subGoalStatus) {
@@ -118,7 +124,7 @@ public class Goal {
         return calendarGoals.stream()
                 .filter(calendarGoal -> calendarGoal.isSameCalendar(yearMonth))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(CalendarGoalNotFoundException::new);
     }
 
     public boolean isDelete() {

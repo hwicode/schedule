@@ -1,5 +1,10 @@
 package hwicode.schedule.calendar.domain;
 
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.time.YearMonth;
@@ -25,7 +30,7 @@ class GoalTest {
 
         // then
         assertThatThrownBy(() -> goal.createSubGoal(SUB_GOAL_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalDuplicateException.class);
     }
 
     @Test
@@ -77,7 +82,7 @@ class GoalTest {
 
         // then
         assertThatThrownBy(() -> goal.deleteSubGoal(SUB_GOAL_NAME))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalNotFoundException.class);
     }
 
     @Test
@@ -262,7 +267,7 @@ class GoalTest {
 
         // when then
         assertThatThrownBy(goal::changeToTodo)
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalNotAllTodoException.class);
     }
 
     @Test
@@ -275,7 +280,7 @@ class GoalTest {
 
         // when then
         assertThatThrownBy(goal::changeToDone)
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalNotAllDoneException.class);
     }
 
     @Test
@@ -289,7 +294,7 @@ class GoalTest {
 
         // then
         assertThatThrownBy(() -> goal.createSubGoal(changedName))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalDuplicateException.class);
     }
 
     @Test
@@ -301,7 +306,7 @@ class GoalTest {
 
         // when then
         assertThatThrownBy(() -> goal.changeSubGoalName(SUB_GOAL_NAME, SUB_GOAL_NAME2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(SubGoalDuplicateException.class);
     }
 
     @Test
@@ -324,11 +329,11 @@ class GoalTest {
 
         // then
         assertThatThrownBy(() -> goal.deleteCalendarGoal(first))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalNotFoundException.class);
         assertThatThrownBy(() -> goal.deleteCalendarGoal(second))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalNotFoundException.class);
         assertThatThrownBy(() -> goal.deleteCalendarGoal(third))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalNotFoundException.class);
     }
 
     @Test
@@ -338,7 +343,7 @@ class GoalTest {
 
         // when then
         assertThatThrownBy(() -> goal.deleteCalendarGoal(YEAR_MONTH))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalNotFoundException.class);
     }
 
     @Test
