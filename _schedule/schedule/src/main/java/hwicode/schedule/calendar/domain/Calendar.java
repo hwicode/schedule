@@ -1,8 +1,8 @@
 package hwicode.schedule.calendar.domain;
 
-import hwicode.schedule.calendar.exception.domain.CalendarGoalDuplicateException;
-import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
-import hwicode.schedule.calendar.exception.domain.WeeklyDateNotValidException;
+import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
 
 import java.time.YearMonth;
 import java.util.ArrayList;
