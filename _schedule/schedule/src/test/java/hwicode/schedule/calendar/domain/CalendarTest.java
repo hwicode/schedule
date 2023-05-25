@@ -1,5 +1,7 @@
 package hwicode.schedule.calendar.domain;
 
+import hwicode.schedule.calendar.exception.domain.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.WeeklyDateNotValidException;
 import org.junit.jupiter.api.Test;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
@@ -25,7 +27,7 @@ class CalendarTest {
         // then
         Goal duplicatedGoal = new Goal(changedGoalName);
         assertThatThrownBy(() -> calendar.addGoal(duplicatedGoal))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
     @Test
@@ -39,7 +41,7 @@ class CalendarTest {
 
         // when then
         assertThatThrownBy(() -> calendar.changeGoalName(GOAL_NAME, GOAL_NAME2))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
     @Test
@@ -64,7 +66,7 @@ class CalendarTest {
         // when
         int notValidDate = 8;
         assertThatThrownBy(() -> calendar.changeWeeklyStudyDate(notValidDate))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(WeeklyDateNotValidException.class);
     }
 
     @Test
@@ -75,6 +77,6 @@ class CalendarTest {
         // when
         int notValidDate = -5;
         assertThatThrownBy(() -> calendar.changeWeeklyStudyDate(notValidDate))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(WeeklyDateNotValidException.class);
     }
 }

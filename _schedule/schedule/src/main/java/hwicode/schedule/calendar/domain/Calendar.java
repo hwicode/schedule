@@ -1,5 +1,9 @@
 package hwicode.schedule.calendar.domain;
 
+import hwicode.schedule.calendar.exception.domain.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.WeeklyDateNotValidException;
+
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +36,7 @@ public class Calendar {
                 .anyMatch(calendarGoal -> calendarGoal.isSameGoal(name));
 
         if (duplication) {
-            throw new IllegalArgumentException();
+            throw new CalendarGoalDuplicateException();
         }
     }
 
@@ -40,7 +44,7 @@ public class Calendar {
         return calendarGoals.stream()
                 .filter(calendarGoal -> calendarGoal.isSameGoal(name))
                 .findFirst()
-                .orElseThrow(IllegalArgumentException::new);
+                .orElseThrow(CalendarGoalNotFoundException::new);
     }
 
     public boolean changeWeeklyStudyDate(int weeklyDate) {
@@ -55,7 +59,7 @@ public class Calendar {
 
     private void validateWeeklyDate(int weeklyDate) {
         if (0 > weeklyDate || weeklyDate > 7) {
-            throw new IllegalArgumentException();
+            throw new WeeklyDateNotValidException();
         }
     }
 
