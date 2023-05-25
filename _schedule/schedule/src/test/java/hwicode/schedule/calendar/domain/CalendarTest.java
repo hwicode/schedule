@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.domain;
 
 import hwicode.schedule.calendar.exception.domain.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.WeeklyDateNotValidException;
 import org.junit.jupiter.api.Test;
 
@@ -12,6 +13,32 @@ class CalendarTest {
 
     private Calendar createCalendar() {
         return new Calendar(YEAR_MONTH);
+    }
+
+    @Test
+    void 캘린더에_목표를_추가할_수_있다() {
+        // given
+        Calendar calendar = createCalendar();
+        Goal goal = new Goal(GOAL_NAME);
+
+        // when
+        calendar.addGoal(goal);
+
+        // then
+        assertThatThrownBy(() -> calendar.addGoal(goal))
+                .isInstanceOf(CalendarGoalDuplicateException.class);
+    }
+
+    @Test
+    void 캘린더에_목표를_추가할_때_이미_존재하는_이름이면_에러가_발생한다() {
+        // given
+        Calendar calendar = createCalendar();
+        Goal goal = new Goal(GOAL_NAME);
+        calendar.addGoal(goal);
+
+        // when then
+        assertThatThrownBy(() -> calendar.addGoal(goal))
+                .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
     @Test
@@ -28,6 +55,16 @@ class CalendarTest {
         Goal duplicatedGoal = new Goal(changedGoalName);
         assertThatThrownBy(() -> calendar.addGoal(duplicatedGoal))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
+    }
+
+    @Test
+    void 캘린더에_존재하지_않는_목표의_이름_변경을_요청시_에러가_발생한다() {
+        // given
+        Calendar calendar = createCalendar();
+
+        // when then
+        assertThatThrownBy(() -> calendar.changeGoalName(GOAL_NAME, GOAL_NAME2))
+                .isInstanceOf(CalendarGoalNotFoundException.class);
     }
 
     @Test
@@ -79,4 +116,5 @@ class CalendarTest {
         assertThatThrownBy(() -> calendar.changeWeeklyStudyDate(notValidDate))
                 .isInstanceOf(WeeklyDateNotValidException.class);
     }
+
 }
