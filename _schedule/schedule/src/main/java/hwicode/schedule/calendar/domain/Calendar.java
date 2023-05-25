@@ -1,11 +1,17 @@
 package hwicode.schedule.calendar.domain;
 
+import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Calendar {
 
+    private YearMonth yearMonth;
     private final List<CalendarGoal> calendarGoals = new ArrayList<>();
+
+    public Calendar(YearMonth yearMonth) {
+        this.yearMonth = yearMonth;
+    }
 
     public CalendarGoal addGoal(Goal goal) {
         validateCalendarGoal(goal.getName());
@@ -33,5 +39,9 @@ public class Calendar {
                 .filter(calendarGoal -> calendarGoal.isSameGoal(name))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    boolean isSame(YearMonth yearMonth) {
+        return this.yearMonth.equals(yearMonth);
     }
 }
