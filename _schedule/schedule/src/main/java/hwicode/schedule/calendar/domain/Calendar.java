@@ -7,10 +7,12 @@ import java.util.List;
 public class Calendar {
 
     private YearMonth yearMonth;
+    private int weeklyStudyDate;
     private final List<CalendarGoal> calendarGoals = new ArrayList<>();
 
     public Calendar(YearMonth yearMonth) {
         this.yearMonth = yearMonth;
+        weeklyStudyDate = 5;
     }
 
     public CalendarGoal addGoal(Goal goal) {
@@ -39,6 +41,22 @@ public class Calendar {
                 .filter(calendarGoal -> calendarGoal.isSameGoal(name))
                 .findFirst()
                 .orElseThrow(IllegalArgumentException::new);
+    }
+
+    public boolean changeWeeklyStudyDate(int weeklyDate) {
+        validateWeeklyDate(weeklyDate);
+
+        if (this.weeklyStudyDate == weeklyDate) {
+            return false;
+        }
+        this.weeklyStudyDate = weeklyDate;
+        return true;
+    }
+
+    private void validateWeeklyDate(int weeklyDate) {
+        if (0 > weeklyDate || weeklyDate > 7) {
+            throw new IllegalArgumentException();
+        }
     }
 
     boolean isSame(YearMonth yearMonth) {
