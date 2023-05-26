@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.infra;
+package hwicode.schedule.calendar.infra.jpa_repository;
 
 import hwicode.schedule.calendar.domain.Calendar;
 import org.springframework.data.jpa.repository.JpaRepository;

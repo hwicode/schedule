@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.calendar.domain.Calendar;
-import hwicode.schedule.calendar.infra.CalendarRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

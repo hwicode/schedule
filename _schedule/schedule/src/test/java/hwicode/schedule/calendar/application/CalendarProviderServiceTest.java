@@ -2,7 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.Calendar;
-import hwicode.schedule.calendar.infra.CalendarRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
