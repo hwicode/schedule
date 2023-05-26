@@ -316,11 +316,11 @@ class GoalTest {
         YearMonth second = YEAR_MONTH.plusMonths(1);
         YearMonth third = YEAR_MONTH.plusMonths(2);
 
-        Goal goal = new Goal(List.of(
+        Goal goal = new Goal(
                 new Calendar(first),
                 new Calendar(second),
                 new Calendar(third)
-        ));
+        );
 
         // when
         goal.deleteCalendarGoal(first);
@@ -349,9 +349,9 @@ class GoalTest {
     @Test
     void 목표에_캘린더와_연관된_목표가_없다면_is_delete는_true이다() {
         // given
-        Goal goal = new Goal(List.of(
+        Goal goal = new Goal(
                 new Calendar(YEAR_MONTH)
-        ));
+        );
         goal.deleteCalendarGoal(YEAR_MONTH);
 
         // when
@@ -364,10 +364,10 @@ class GoalTest {
     @Test
     void 목표에_캘린더와_연관된_목표가_있다면_is_delete는_false이다() {
         // given
-        Goal goal = new Goal(List.of(
+        Goal goal = new Goal(
                 new Calendar(YEAR_MONTH),
                 new Calendar(YEAR_MONTH.plusMonths(1))
-        ));
+        );
         goal.deleteCalendarGoal(YEAR_MONTH);
 
         // when

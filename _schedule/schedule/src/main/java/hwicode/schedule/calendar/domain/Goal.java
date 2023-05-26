@@ -41,7 +41,7 @@ public class Goal {
     }
 
     // 테스트 코드에서만 사용되는 생성자!
-    Goal(List<Calendar> calendars) {
+    Goal(Calendar... calendars) {
         for (Calendar calendar : calendars) {
             calendarGoals.add(new CalendarGoal(calendar, this));
         }
