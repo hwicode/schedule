@@ -8,7 +8,6 @@ import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.time.YearMonth;
-import java.util.List;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;

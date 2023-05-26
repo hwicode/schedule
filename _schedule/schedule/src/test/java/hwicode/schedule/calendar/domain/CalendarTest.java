@@ -22,11 +22,13 @@ class CalendarTest {
         Goal goal = new Goal(GOAL_NAME);
 
         // when
-        calendar.addGoal(goal);
+        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         // then
         assertThatThrownBy(() -> calendar.addGoal(goal))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
+        assertThat(calendarGoal.isSameCalendar(YEAR_MONTH)).isTrue();
+        assertThat(calendarGoal.isSameGoal(GOAL_NAME)).isTrue();
     }
 
     @Test
