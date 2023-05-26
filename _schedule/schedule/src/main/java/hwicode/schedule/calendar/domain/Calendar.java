@@ -3,19 +3,32 @@ package hwicode.schedule.calendar.domain;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Calendar {
 
-    private YearMonth yearMonth;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
+    private YearMonth yearAndMonth;
+
     private int weeklyStudyDate;
+
+    @OneToMany(mappedBy = "calendar")
     private final List<CalendarGoal> calendarGoals = new ArrayList<>();
 
     public Calendar(YearMonth yearMonth) {
-        this.yearMonth = yearMonth;
+        this.yearAndMonth = yearMonth;
         weeklyStudyDate = 5;
     }
 
@@ -64,6 +77,6 @@ public class Calendar {
     }
 
     boolean isSame(YearMonth yearMonth) {
-        return this.yearMonth.equals(yearMonth);
+        return this.yearAndMonth.equals(yearMonth);
     }
 }

@@ -5,16 +5,34 @@ import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
+import javax.persistence.*;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Goal {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @ColumnDefault(value = "TODO")
+    @Enumerated(value = EnumType.STRING)
     private GoalStatus goalStatus;
+
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CalendarGoal> calendarGoals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubGoal> subGoals = new ArrayList<>();
 
     public Goal(String name) {
@@ -36,7 +54,7 @@ public class Goal {
 
     public SubGoal createSubGoal(String name) {
         validateSubGoal(name);
-        SubGoal subGoal = new SubGoal(name);
+        SubGoal subGoal = new SubGoal(this, name);
         subGoals.add(subGoal);
 
         if (this.goalStatus == GoalStatus.DONE) {
