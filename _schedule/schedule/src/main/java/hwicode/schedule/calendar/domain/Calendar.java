@@ -79,4 +79,9 @@ public class Calendar {
     boolean isSame(YearMonth yearMonth) {
         return this.yearAndMonth.equals(yearMonth);
     }
+
+    public Long getId() {
+        return this.id;
+    }
+
 }
