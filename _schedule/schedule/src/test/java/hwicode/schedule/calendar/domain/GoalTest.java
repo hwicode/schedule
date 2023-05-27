@@ -48,7 +48,7 @@ class GoalTest {
     void 목표의_상태가_PROGRESS_일_때_서브_목표_추가시_목표는_PROGRESS_상태를_유지한다() {
         // given
         Goal goal = createGoal();
-        goal.changeToProgress();
+        goal.changeGoalStatus(GoalStatus.PROGRESS);
 
         // when
         goal.createSubGoal(SUB_GOAL_NAME);
@@ -61,7 +61,7 @@ class GoalTest {
     void 목표의_상태가_DONE_일_때_서브_목표_추가시_목표는_PROGRESS_상태가_된다() {
         // given
         Goal goal = createGoal();
-        goal.changeToDone();
+        goal.changeGoalStatus(GoalStatus.DONE);
 
         // when
         goal.createSubGoal(SUB_GOAL_NAME);
@@ -117,7 +117,7 @@ class GoalTest {
         Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
-        goal.changeToDone();
+        goal.changeGoalStatus(GoalStatus.DONE);
 
         // when
         goal.deleteSubGoal(SUB_GOAL_NAME);
@@ -144,7 +144,7 @@ class GoalTest {
         // given
         Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
-        goal.changeToProgress();
+        goal.changeGoalStatus(GoalStatus.PROGRESS);
 
         // when
         GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
@@ -159,7 +159,7 @@ class GoalTest {
         Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
-        goal.changeToDone();
+        goal.changeGoalStatus(GoalStatus.DONE);
 
         // when
         GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
@@ -187,7 +187,7 @@ class GoalTest {
         Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
-        goal.changeToProgress();
+        goal.changeGoalStatus(GoalStatus.PROGRESS);
 
         // when
         GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.TODO);
@@ -202,7 +202,7 @@ class GoalTest {
         Goal goal = createGoal();
         goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
-        goal.changeToDone();
+        goal.changeGoalStatus(GoalStatus.DONE);
 
         // when
         GoalStatus goalStatus = goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.TODO);
@@ -219,7 +219,7 @@ class GoalTest {
         goal.createSubGoal(SUB_GOAL_NAME2);
 
         // when
-        GoalStatus goalStatus = goal.changeToTodo();
+        GoalStatus goalStatus = goal.changeGoalStatus(GoalStatus.TODO);
 
         // then
         assertThat(goalStatus).isEqualTo(GoalStatus.TODO);
@@ -234,7 +234,7 @@ class GoalTest {
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
 
         // when
-        GoalStatus goalStatus = goal.changeToProgress();
+        GoalStatus goalStatus = goal.changeGoalStatus(GoalStatus.PROGRESS);
 
         // then
         assertThat(goalStatus).isEqualTo(GoalStatus.PROGRESS);
@@ -250,7 +250,7 @@ class GoalTest {
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
 
         // when
-        GoalStatus goalStatus = goal.changeToDone();
+        GoalStatus goalStatus = goal.changeGoalStatus(GoalStatus.DONE);
 
         // then
         assertThat(goalStatus).isEqualTo(GoalStatus.DONE);
@@ -265,7 +265,7 @@ class GoalTest {
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
 
         // when then
-        assertThatThrownBy(goal::changeToTodo)
+        assertThatThrownBy(() -> goal.changeGoalStatus(GoalStatus.TODO))
                 .isInstanceOf(SubGoalNotAllTodoException.class);
     }
 
@@ -278,7 +278,7 @@ class GoalTest {
         goal.changeSubGoalStatus(SUB_GOAL_NAME2, SubGoalStatus.DONE);
 
         // when then
-        assertThatThrownBy(goal::changeToDone)
+        assertThatThrownBy(() -> goal.changeGoalStatus(GoalStatus.DONE))
                 .isInstanceOf(SubGoalNotAllDoneException.class);
     }
 

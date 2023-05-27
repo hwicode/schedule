@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.Goal;
+import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
@@ -98,7 +99,7 @@ class GoalAggregateServiceTest {
 
         // then
         Goal savedGoal = goalRepository.findGoalWithSubGoals(goal.getId()).orElseThrow();
-        assertThatThrownBy(savedGoal::changeToDone)
+        assertThatThrownBy(() -> savedGoal.changeGoalStatus(GoalStatus.DONE))
                 .isInstanceOf(SubGoalNotAllDoneException.class);
     }
 

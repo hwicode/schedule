@@ -1,10 +1,7 @@
 package hwicode.schedule.calendar.domain;
 
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalNotFoundException;
-import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
-import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
-import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
-import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.goal.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -77,7 +74,20 @@ public class Goal {
         return this.goalStatus;
     }
 
-    public GoalStatus changeToTodo() {
+    public GoalStatus changeGoalStatus(GoalStatus goalStatus) {
+        switch (goalStatus) {
+            case TODO:
+                return changeToTodo();
+            case PROGRESS:
+                return changeToProgress();
+            case DONE:
+                return changeToDone();
+            default:
+                throw new GoalStatusNotFoundException();
+        }
+    }
+
+    private GoalStatus changeToTodo() {
         boolean isAllToDo = isAllSameStatus(SubGoalStatus.TODO);
         if (!isAllToDo) {
             throw new SubGoalNotAllTodoException();
@@ -87,12 +97,12 @@ public class Goal {
         return getGoalStatus();
     }
 
-    public GoalStatus changeToProgress() {
+    private GoalStatus changeToProgress() {
         this.goalStatus = GoalStatus.PROGRESS;
         return getGoalStatus();
     }
 
-    public GoalStatus changeToDone() {
+    private GoalStatus changeToDone() {
         boolean isAllDone = isAllSameStatus(SubGoalStatus.DONE);
         if (!isAllDone) {
             throw new SubGoalNotAllDoneException();
