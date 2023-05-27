@@ -49,4 +49,8 @@ public class SubGoal {
         return this.subGoalStatus == subGoalStatus;
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
 }
