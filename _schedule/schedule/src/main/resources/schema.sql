@@ -67,14 +67,14 @@ create table calendar_goal (
 create table goal (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   goal_staus varchar(255) DEFAULT 'TODO',
+   goal_status varchar(255) DEFAULT 'TODO',
    primary key (id)
 ) engine=InnoDB;
 
 create table sub_goal (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   sub_goal_staus varchar(255) DEFAULT 'TODO',
+   sub_goal_status varchar(255) DEFAULT 'TODO',
    goal_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
