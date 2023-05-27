@@ -89,6 +89,7 @@ class CalendarProviderServiceTest {
 
         // then
         assertThat(calendars).hasSize(3);
+        assertThat(calendarRepository.findAll()).hasSize(3);
         assertThat(calendarRepository.existsById(calendars.get(0).getId())).isTrue();
         assertThat(calendarRepository.existsById(calendars.get(1).getId())).isTrue();
         assertThat(calendarRepository.existsById(calendars.get(2).getId())).isTrue();

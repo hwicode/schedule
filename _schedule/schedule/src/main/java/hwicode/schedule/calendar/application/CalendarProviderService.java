@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -16,7 +17,7 @@ public class CalendarProviderService {
     private final CalendarRepository calendarRepository;
 
     public Calendar provideCalendar(YearMonth yearMonth) {
-        return calendarRepository.findByYearAndMonth(yearMonth)
+        return calendarRepository.findByYearAndMonthWithCalendarGoals(yearMonth)
                 .orElseGet(() -> saveCalendar(yearMonth));
     }
 
@@ -27,10 +28,21 @@ public class CalendarProviderService {
 
     public List<Calendar> provideCalendars(List<YearMonth> yearMonths) {
         List<Calendar> calendars = new ArrayList<>();
+        List<Calendar> noneSavedCalendars = new ArrayList<>();
+
         for (YearMonth yearMonth : yearMonths) {
-            calendars.add(new Calendar(yearMonth));
+            Optional<Calendar> calendar = calendarRepository.findByYearAndMonthWithCalendarGoals(yearMonth);
+
+            calendar.ifPresentOrElse(
+                    calendars::add,
+                    () -> noneSavedCalendars.add(new Calendar(yearMonth))
+            );
         }
-        return calendarRepository.saveAll(calendars);
+
+        if (!noneSavedCalendars.isEmpty()) {
+            calendars.addAll(calendarRepository.saveAll(noneSavedCalendars));
+        }
+        return calendars;
     }
 
 }
