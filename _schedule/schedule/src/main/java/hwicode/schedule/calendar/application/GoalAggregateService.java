@@ -29,4 +29,11 @@ public class GoalAggregateService {
         return goal.changeSubGoalName(subGoalName, newSubGoalName);
     }
 
+    @Transactional
+    public String deleteSubGoal(Long goalId, String subGoalName) {
+        Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
+        goal.deleteSubGoal(subGoalName);
+        return subGoalName;
+    }
+
 }

@@ -3,6 +3,7 @@ package hwicode.schedule.calendar.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
+import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -60,6 +61,21 @@ class GoalAggregateServiceTest {
         // then
         assertThatThrownBy(() -> goalAggregateService.createSubGoal(goal.getId(), newSubGoalName))
                 .isInstanceOf(SubGoalDuplicateException.class);
+    }
+
+    @Test
+    void 목표에_서브_목표를_제거할_수_있다() {
+        // given
+        Goal goal = new Goal(GOAL_NAME);
+        goal.createSubGoal(SUB_GOAL_NAME);
+        goalRepository.save(goal);
+
+        // when
+        goalAggregateService.deleteSubGoal(goal.getId(), SUB_GOAL_NAME);
+
+        // then
+        assertThatThrownBy(() -> goalAggregateService.deleteSubGoal(goal.getId(), SUB_GOAL_NAME))
+                .isInstanceOf(SubGoalNotFoundException.class);
     }
 
 }
