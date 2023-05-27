@@ -1,7 +1,9 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.calendar.domain.Goal;
+import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;
+import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,12 @@ public class GoalAggregateService {
         Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
         goal.deleteSubGoal(subGoalName);
         return subGoalName;
+    }
+    
+    @Transactional
+    public GoalStatus changeSubGoalStatus(Long goalId, String subGoalName, SubGoalStatus subGoalStatus) {
+        Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
+        return goal.changeSubGoalStatus(subGoalName, subGoalStatus);
     }
 
 }
