@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class CalendarGoalDuplicateException extends BusinessException {
 
     public CalendarGoalDuplicateException() {
-        super("목표가 중복되었습니다.", HttpStatus.BAD_REQUEST);
+        super("캘린더에 목표가 중복되었습니다.", HttpStatus.BAD_REQUEST);
     }
 }
