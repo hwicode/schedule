@@ -7,11 +7,16 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class GoalSaveRepository {
+public class GoalSaveAndFindRepository {
 
     private final GoalRepository goalRepository;
 
     public Goal save(Goal goal) {
         return goalRepository.save(goal);
+    }
+
+    public Goal findById(Long id) {
+        return goalRepository.findById(id)
+                .orElseThrow(IllegalArgumentException::new);
     }
 }

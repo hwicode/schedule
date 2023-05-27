@@ -61,6 +61,26 @@ class CalendarAggregateServiceTest {
     }
 
     @Test
+    void 목표를_일정_기간동안_연장할_수_있다() {
+        // given
+        Long goalId = calendarAggregateService.saveGoal(GOAL_NAME, List.of(YEAR_MONTH));
+
+        List<YearMonth> yearMonths = List.of(
+                YEAR_MONTH.plusMonths(1),
+                YEAR_MONTH.plusMonths(2),
+                YEAR_MONTH.plusMonths(3)
+        );
+
+        // when
+        calendarAggregateService.addGoalToCalendars(goalId, yearMonths);
+
+        // then
+        assertThat(goalRepository.findAll()).hasSize(1);
+        assertThat(goalRepository.existsById(goalId)).isTrue();
+        assertThat(calendarGoalRepository.findAll()).hasSize(4);
+    }
+
+    @Test
     void 캘린더는_목표의_이름을_변경할_수_있다() {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);

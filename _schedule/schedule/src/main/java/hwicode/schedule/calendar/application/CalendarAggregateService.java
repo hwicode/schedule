@@ -4,7 +4,7 @@ import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.infra.limited_repository.CalendarGoalSaveAllRepository;
-import hwicode.schedule.calendar.infra.limited_repository.GoalSaveRepository;
+import hwicode.schedule.calendar.infra.limited_repository.GoalSaveAndFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,13 +18,26 @@ import java.util.stream.Collectors;
 public class CalendarAggregateService {
 
     private final CalendarProviderService calendarProviderService;
-    private final GoalSaveRepository goalSaveRepository;
+    private final GoalSaveAndFindRepository goalSaveAndFindRepository;
     private final CalendarGoalSaveAllRepository calendarGoalSaveAllRepository;
 
     @Transactional
     public Long saveGoal(String name, List<YearMonth> yearMonths) {
         Goal goal = new Goal(name);
-        goalSaveRepository.save(goal);
+        goalSaveAndFindRepository.save(goal);
+
+        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<CalendarGoal> calendarGoals = calendars.stream()
+                .map(calendar -> calendar.addGoal(goal))
+                .collect(Collectors.toList());
+
+        calendarGoalSaveAllRepository.saveAll(calendarGoals);
+        return goal.getId();
+    }
+
+    @Transactional
+    public Long addGoalToCalendars(Long goalId, List<YearMonth> yearMonths) {
+        Goal goal = goalSaveAndFindRepository.findById(goalId);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
         List<CalendarGoal> calendarGoals = calendars.stream()
