@@ -52,7 +52,7 @@ create table learning_time (
 
 create table calendar (
    id bigint not null auto_increment,
-   year_and_month date not null,
+   year_and_month date not null unique,
    weekly_study_date tinyint,
    primary key (id)
 ) engine=InnoDB;
