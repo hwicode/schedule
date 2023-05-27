@@ -41,4 +41,11 @@ public class CalendarAggregateService {
         return calendar.changeGoalName(goalName, newGoalName);
     }
 
+    @Transactional
+    public int changeWeeklyStudyDate(YearMonth yearMonth, int weeklyStudyDate) {
+        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+        calendar.changeWeeklyStudyDate(weeklyStudyDate);
+        return weeklyStudyDate;
+    }
+
 }

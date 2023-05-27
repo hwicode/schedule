@@ -80,4 +80,19 @@ class CalendarAggregateServiceTest {
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
+    @Test
+    void 캘린더는_일주일간_공부일을_변경할_수_있다() {
+        // given
+        Calendar calendar = new Calendar(YEAR_MONTH);
+        calendar.changeWeeklyStudyDate(4);
+        calendarRepository.save(calendar);
+
+        // when
+        calendarAggregateService.changeWeeklyStudyDate(YEAR_MONTH, 7);
+
+        // then
+        Calendar savedCalendar = calendarRepository.findByYearAndMonthWithCalendarGoals(YEAR_MONTH).orElseThrow();
+        assertThat(savedCalendar.changeWeeklyStudyDate(7)).isFalse();
+    }
+
 }
