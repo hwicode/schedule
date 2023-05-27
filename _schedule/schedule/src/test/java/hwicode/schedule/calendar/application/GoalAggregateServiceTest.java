@@ -1,12 +1,12 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.domain.GoalStatus;
-import hwicode.schedule.calendar.domain.SubGoalStatus;
+import hwicode.schedule.calendar.domain.*;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +32,12 @@ class GoalAggregateServiceTest {
 
     @Autowired
     SubGoalRepository subGoalRepository;
+
+    @Autowired
+    CalendarRepository calendarRepository;
+
+    @Autowired
+    CalendarGoalRepository calendarGoalRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -115,6 +121,26 @@ class GoalAggregateServiceTest {
         // then
         Goal savedGoal = goalRepository.findById(goal.getId()).orElseThrow();
         assertThat(savedGoal.getGoalStatus()).isEqualTo(GoalStatus.PROGRESS);
+    }
+
+    @Test
+    void 목표를_삭제하면_목표와_연관된_서브_목표와_캘린더에_연관된_목표도_전부_삭제된다() {
+        // given
+        Calendar calendar = new Calendar(YEAR_MONTH);
+        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
+        CalendarGoal calendarGoal = calendar.addGoal(goal);
+
+        calendarRepository.save(calendar);
+        goalRepository.save(goal);
+        calendarGoalRepository.save(calendarGoal);
+
+        // when
+        goalAggregateService.deleteGoal(goal.getId());
+
+        // then
+        assertThat(goalRepository.existsById(goal.getId())).isFalse();
+        assertThat(calendarGoalRepository.findAll()).isEmpty();
+        assertThat(subGoalRepository.findAll()).isEmpty();
     }
 
 }

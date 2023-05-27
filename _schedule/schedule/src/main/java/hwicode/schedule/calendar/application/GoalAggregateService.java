@@ -50,4 +50,11 @@ public class GoalAggregateService {
         return goal.changeGoalStatus(goalStatus);
     }
 
+    @Transactional
+    public Long deleteGoal(Long goalId) {
+        Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
+        goalRepository.delete(goal);
+        return goalId;
+    }
+
 }
