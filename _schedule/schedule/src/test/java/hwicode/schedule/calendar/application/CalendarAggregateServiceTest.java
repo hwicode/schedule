@@ -1,7 +1,12 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.calendar.domain.Calendar;
+import hwicode.schedule.calendar.domain.CalendarGoal;
+import hwicode.schedule.calendar.domain.Goal;
+import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,9 +16,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.YearMonth;
 import java.util.List;
 
-import static hwicode.schedule.calendar.CalendarDataHelper.GOAL_NAME;
-import static hwicode.schedule.calendar.CalendarDataHelper.YEAR_MONTH;
+import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class CalendarAggregateServiceTest {
@@ -23,6 +28,9 @@ class CalendarAggregateServiceTest {
 
     @Autowired
     CalendarAggregateService calendarAggregateService;
+
+    @Autowired
+    CalendarRepository calendarRepository;
 
     @Autowired
     GoalRepository goalRepository;
@@ -50,6 +58,26 @@ class CalendarAggregateServiceTest {
         // then
         assertThat(goalRepository.existsById(goalId)).isTrue();
         assertThat(calendarGoalRepository.findAll()).hasSize(3);
+    }
+
+    @Test
+    void 캘린더는_목표의_이름을_변경할_수_있다() {
+        // given
+        Calendar calendar = new Calendar(YEAR_MONTH);
+        Goal goal = new Goal(GOAL_NAME);
+        CalendarGoal calendarGoal = calendar.addGoal(goal);
+
+        calendarRepository.save(calendar);
+        goalRepository.save(goal);
+        calendarGoalRepository.save(calendarGoal);
+
+        // when
+        String newGoalName = calendarAggregateService.changeGoalName(YEAR_MONTH, GOAL_NAME, GOAL_NAME2);
+
+        // then
+        List<YearMonth> yearMonths = List.of(YEAR_MONTH);
+        assertThatThrownBy(() -> calendarAggregateService.saveGoal(newGoalName, yearMonths))
+                .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
 }

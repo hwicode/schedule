@@ -34,4 +34,11 @@ public class CalendarAggregateService {
         calendarGoalSaveAllRepository.saveAll(calendarGoals);
         return goal.getId();
     }
+
+    @Transactional
+    public String changeGoalName(YearMonth yearMonth, String goalName, String newGoalName) {
+        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+        return calendar.changeGoalName(goalName, newGoalName);
+    }
+
 }
