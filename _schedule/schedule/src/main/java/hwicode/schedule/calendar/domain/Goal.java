@@ -168,16 +168,16 @@ public class Goal {
         return this.name.equals(name);
     }
 
-    GoalStatus getGoalStatus() {
-        return this.goalStatus;
-    }
-
     String getName() {
         return this.name;
     }
 
     public Long getId() {
         return this.id;
+    }
+
+    public GoalStatus getGoalStatus() {
+        return this.goalStatus;
     }
 
 }

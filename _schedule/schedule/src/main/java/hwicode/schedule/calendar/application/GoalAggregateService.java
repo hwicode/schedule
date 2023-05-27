@@ -44,4 +44,10 @@ public class GoalAggregateService {
         return goal.changeSubGoalStatus(subGoalName, subGoalStatus);
     }
 
+    @Transactional
+    public GoalStatus changeGoalStatus(Long goalId, GoalStatus goalStatus) {
+        Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
+        return goal.changeGoalStatus(goalStatus);
+    }
+
 }

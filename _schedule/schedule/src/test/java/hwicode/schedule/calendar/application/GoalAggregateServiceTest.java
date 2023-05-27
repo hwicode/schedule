@@ -103,4 +103,18 @@ class GoalAggregateServiceTest {
                 .isInstanceOf(SubGoalNotAllDoneException.class);
     }
 
+    @Test
+    void 목표는_진행_상태를_변경할_수_있다() {
+        // given
+        Goal goal = new Goal(GOAL_NAME);
+        goalRepository.save(goal);
+
+        // when
+        goalAggregateService.changeGoalStatus(goal.getId(), GoalStatus.PROGRESS);
+
+        // then
+        Goal savedGoal = goalRepository.findById(goal.getId()).orElseThrow();
+        assertThat(savedGoal.getGoalStatus()).isEqualTo(GoalStatus.PROGRESS);
+    }
+
 }
