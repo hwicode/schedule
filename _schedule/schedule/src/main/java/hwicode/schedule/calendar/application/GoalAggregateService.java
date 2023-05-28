@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.YearMonth;
+
 @RequiredArgsConstructor
 @Service
 public class GoalAggregateService {
@@ -54,6 +56,17 @@ public class GoalAggregateService {
     public Long deleteGoal(Long goalId) {
         Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
         goalRepository.delete(goal);
+        return goalId;
+    }
+
+    @Transactional
+    public Long deleteCalendarGoal(Long goalId, YearMonth yearMonth) {
+        Goal goal = goalRepository.findGoalWithSubGoals(goalId).orElseThrow();
+        goal.deleteCalendarGoal(yearMonth);
+
+        if (goal.isCalendarGoalEmpty()) {
+            goalRepository.delete(goal);
+        }
         return goalId;
     }
 
