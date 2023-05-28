@@ -2,7 +2,7 @@ package hwicode.schedule.calendar.infra;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.exception.GoalNotFoundException;
-import hwicode.schedule.calendar.infra.limited_repository.GoalSaveAndFindRepository;
+import hwicode.schedule.calendar.infra.limited_repository.GoalFindAndSaveRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,13 +11,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class GoalSaveAndFindRepositoryTest {
+class GoalFindAndSaveRepositoryTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    GoalSaveAndFindRepository goalSaveAndFindRepository;
+    GoalFindAndSaveRepository goalFindAndSaveRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -30,7 +30,7 @@ class GoalSaveAndFindRepositoryTest {
         Long noneExistId = 1L;
 
         // then when
-        assertThatThrownBy(() -> goalSaveAndFindRepository.findById(noneExistId))
+        assertThatThrownBy(() -> goalFindAndSaveRepository.findById(noneExistId))
                 .isInstanceOf(GoalNotFoundException.class);
     }
 }

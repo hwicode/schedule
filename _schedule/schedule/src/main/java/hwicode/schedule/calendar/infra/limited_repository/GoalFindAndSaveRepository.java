@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
-public class GoalSaveAndFindRepository {
+public class GoalFindAndSaveRepository {
 
     private final GoalRepository goalRepository;
 
