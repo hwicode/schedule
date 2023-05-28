@@ -155,7 +155,7 @@ public class Goal {
                 .orElseThrow(CalendarGoalNotFoundException::new);
     }
 
-    public boolean isDelete() {
+    public boolean isCalendarGoalEmpty() {
         return calendarGoals.isEmpty();
     }
 

@@ -346,7 +346,7 @@ class GoalTest {
     }
 
     @Test
-    void 목표에_캘린더와_연관된_목표가_없다면_is_delete는_true이다() {
+    void 목표에_캘린더와_연관된_목표가_없다면_isCalendarGoalEmpty는_true이다() {
         // given
         Goal goal = new Goal(
                 new Calendar(YEAR_MONTH)
@@ -354,14 +354,14 @@ class GoalTest {
         goal.deleteCalendarGoal(YEAR_MONTH);
 
         // when
-        boolean isDelete = goal.isDelete();
+        boolean isDelete = goal.isCalendarGoalEmpty();
 
         // then
         assertThat(isDelete).isTrue();
     }
 
     @Test
-    void 목표에_캘린더와_연관된_목표가_있다면_is_delete는_false이다() {
+    void 목표에_캘린더와_연관된_목표가_있다면_isCalendarGoalEmpty는_false이다() {
         // given
         Goal goal = new Goal(
                 new Calendar(YEAR_MONTH),
@@ -370,7 +370,7 @@ class GoalTest {
         goal.deleteCalendarGoal(YEAR_MONTH);
 
         // when
-        boolean isDelete = goal.isDelete();
+        boolean isDelete = goal.isCalendarGoalEmpty();
 
         // then
         assertThat(isDelete).isFalse();
