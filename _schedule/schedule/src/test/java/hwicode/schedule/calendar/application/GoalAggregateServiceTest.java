@@ -2,7 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.*;
-import hwicode.schedule.calendar.exception.application.GoalNotFoundException;
+import hwicode.schedule.calendar.exception.GoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;

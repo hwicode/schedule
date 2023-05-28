@@ -4,7 +4,7 @@ import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
-import hwicode.schedule.calendar.exception.application.GoalNotFoundException;
+import hwicode.schedule.calendar.exception.GoalNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import lombok.RequiredArgsConstructor;
