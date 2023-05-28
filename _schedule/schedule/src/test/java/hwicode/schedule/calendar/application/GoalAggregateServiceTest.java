@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.*;
+import hwicode.schedule.calendar.exception.application.GoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
@@ -185,6 +186,16 @@ class GoalAggregateServiceTest {
         assertThat(goalRepository.existsById(goal.getId())).isFalse();
         assertThat(calendarGoalRepository.findAll()).isEmpty();
         assertThat(calendarRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    void 존재하지_않는_목표를_조회하면_에러가_발생한다() {
+        // given
+        Long noneExistId = 1L;
+
+        // when then
+        assertThatThrownBy(() -> goalAggregateService.createSubGoal(noneExistId, SUB_GOAL_NAME))
+                .isInstanceOf(GoalNotFoundException.class);
     }
 
 }
