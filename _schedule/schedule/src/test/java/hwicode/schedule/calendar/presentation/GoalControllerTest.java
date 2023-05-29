@@ -5,6 +5,8 @@ import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.presentation.goal.GoalController;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +20,7 @@ import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,6 +57,29 @@ class GoalControllerTest {
                 ));
 
         verify(goalAggregateService).saveSubGoal(any(), any());
+    }
+
+    @Test
+    void 서브_목표의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        SubGoalNameModifyRequest subGoalNameModifyRequest = new SubGoalNameModifyRequest(SUB_GOAL_NAME, NEW_SUB_GOAL_NAME);
+        SubGoalNameModifyResponse subGoalNameModifyResponse = new SubGoalNameModifyResponse(GOAL_ID, NEW_SUB_GOAL_NAME);
+
+        given(goalAggregateService.changeSubGoalName(any(), any(), any()))
+                .willReturn(NEW_SUB_GOAL_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/goals/{goalId}/sub-goals/{subGoalId}/name", GOAL_ID, SUB_GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subGoalNameModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subGoalNameModifyResponse)
+                ));
+
+        verify(goalAggregateService).changeSubGoalName(any(), any(), any());
     }
 
 }

@@ -3,6 +3,8 @@ package hwicode.schedule.calendar.presentation.goal;
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -26,6 +28,16 @@ public class GoalController {
                 goalId, subGoalSaveRequest.getSubGoalName()
         );
         return new SubGoalSaveResponse(subGoalId, subGoalSaveRequest.getSubGoalName());
+    }
+
+    @PatchMapping("/goals/{goalId}/sub-goals/{subGoalId}/name")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubGoalNameModifyResponse changeSubGoalName(@PathVariable @Positive Long goalId,
+                                                       @RequestBody @Valid SubGoalNameModifyRequest subGoalNameModifyRequest) {
+        String changedSubGoalName = goalAggregateService.changeSubGoalName(
+                goalId, subGoalNameModifyRequest.getSubGoalName(), subGoalNameModifyRequest.getNewSubGoalName()
+        );
+        return new SubGoalNameModifyResponse(goalId, changedSubGoalName);
     }
 
 }
