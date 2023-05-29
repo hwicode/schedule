@@ -20,7 +20,7 @@ public class GoalAggregateService {
     private final SubGoalSaveRepository subGoalSaveRepository;
 
     @Transactional
-    public Long createSubGoal(Long goalId, String subGoalName) {
+    public Long saveSubGoal(Long goalId, String subGoalName) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
         SubGoal subGoal = goal.createSubGoal(subGoalName);
         return subGoalSaveRepository.save(subGoal)

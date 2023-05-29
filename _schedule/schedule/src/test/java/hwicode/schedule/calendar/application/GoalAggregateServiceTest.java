@@ -57,7 +57,7 @@ class GoalAggregateServiceTest {
         goalRepository.save(goal);
 
         // when
-        Long subGoalId = goalAggregateService.createSubGoal(goal.getId(), SUB_GOAL_NAME);
+        Long subGoalId = goalAggregateService.saveSubGoal(goal.getId(), SUB_GOAL_NAME);
 
         // then
         assertThat(subGoalRepository.existsById(subGoalId)).isTrue();
