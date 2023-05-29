@@ -9,6 +9,8 @@ import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.Goal
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -23,6 +25,7 @@ import java.util.Set;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -110,6 +113,30 @@ class CalendarControllerTest {
                 ));
 
         verify(calendarAggregateService).changeGoalName(any(), any(), any());
+    }
+
+    @Test
+    void 캘린더에_일주일간_공부일_수정을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        int weeklyStudyDate = 6;
+        WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, weeklyStudyDate);
+        WeeklyStudyDateModifyResponse weeklyStudyDateModifyResponse = new WeeklyStudyDateModifyResponse(CALENDAR_ID, weeklyStudyDate);
+
+        given(calendarAggregateService.changeWeeklyStudyDate(any(), anyInt()))
+                .willReturn(weeklyStudyDate);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(weeklyStudyDateModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(weeklyStudyDateModifyResponse)
+                ));
+
+        verify(calendarAggregateService).changeWeeklyStudyDate(any(), anyInt());
     }
 
 }

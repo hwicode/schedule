@@ -7,6 +7,8 @@ import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.Goal
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -42,8 +44,8 @@ public class CalendarController {
     @PatchMapping("/calendars/{calendarId}/goals/{goalId}")
     @ResponseStatus(value = HttpStatus.OK)
     public GoalNameModifyResponse changeGoalName(@PathVariable @Positive Long calendarId,
-                               @PathVariable @Positive Long goalId,
-                               @RequestBody @Valid GoalNameModifyRequest goalNameModifyRequest) {
+                                                 @PathVariable @Positive Long goalId,
+                                                 @RequestBody @Valid GoalNameModifyRequest goalNameModifyRequest) {
         String changedGoalName = calendarAggregateService.changeGoalName(
                 goalNameModifyRequest.getYearMonth(),
                 goalNameModifyRequest.getGoalName(),
@@ -51,6 +53,16 @@ public class CalendarController {
         );
 
         return new GoalNameModifyResponse(calendarId, changedGoalName);
+    }
+
+    @PatchMapping("/calendars/{calendarId}/weeklyStudyDate")
+    @ResponseStatus(value = HttpStatus.OK)
+    public WeeklyStudyDateModifyResponse changeWeeklyStudyDate(@PathVariable @Positive Long calendarId,
+                                                               @RequestBody @Valid WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest) {
+        int weeklyStudyDate = calendarAggregateService.changeWeeklyStudyDate(
+                weeklyStudyDateModifyRequest.getYearMonth(), weeklyStudyDateModifyRequest.getWeeklyStudyDate()
+        );
+        return new WeeklyStudyDateModifyResponse(calendarId, weeklyStudyDate);
     }
 
 }
