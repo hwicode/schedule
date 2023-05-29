@@ -1,9 +1,12 @@
-package hwicode.schedule.calendar.presentation.calendar;
+package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.presentation.calendar.CalendarController;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -84,6 +87,29 @@ class CalendarControllerTest {
                 ));
 
         verify(calendarAggregateService).addGoalToCalendars(any(), any());
+    }
+
+    @Test
+    void 목표의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
+        GoalNameModifyResponse goalNameModifyResponse = new GoalNameModifyResponse(CALENDAR_ID, NEW_GOAL_NAME);
+
+        given(calendarAggregateService.changeGoalName(any(), any(), any()))
+                .willReturn(NEW_GOAL_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/goals/{goalId}", CALENDAR_ID, GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalNameModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(goalNameModifyResponse)
+                ));
+
+        verify(calendarAggregateService).changeGoalName(any(), any(), any());
     }
 
 }

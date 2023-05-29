@@ -3,6 +3,8 @@ package hwicode.schedule.calendar.presentation.calendar;
 import hwicode.schedule.calendar.application.CalendarAggregateService;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +37,20 @@ public class CalendarController {
                 goalId, goalAddToCalendarsRequest.getYearMonths()
         );
         return new GoalAddToCalendarsResponse(addedGoalId, goalAddToCalendarsRequest.getYearMonths());
+    }
+
+    @PatchMapping("/calendars/{calendarId}/goals/{goalId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public GoalNameModifyResponse changeGoalName(@PathVariable @Positive Long calendarId,
+                               @PathVariable @Positive Long goalId,
+                               @RequestBody @Valid GoalNameModifyRequest goalNameModifyRequest) {
+        String changedGoalName = calendarAggregateService.changeGoalName(
+                goalNameModifyRequest.getYearMonth(),
+                goalNameModifyRequest.getGoalName(),
+                goalNameModifyRequest.getNewGoalName()
+        );
+
+        return new GoalNameModifyResponse(calendarId, changedGoalName);
     }
 
 }
