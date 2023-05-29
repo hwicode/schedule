@@ -15,4 +15,5 @@ public class CalendarDataHelper {
 
     public static final Long CALENDAR_ID = 1L;
     public static final Long GOAL_ID = 1L;
+    public static final Long SUB_GOAL_ID = 1L;
 }
