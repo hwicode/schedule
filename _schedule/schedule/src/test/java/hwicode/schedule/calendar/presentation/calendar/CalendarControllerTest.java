@@ -1,0 +1,61 @@
+package hwicode.schedule.calendar.presentation.calendar;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.time.YearMonth;
+import java.util.Set;
+
+import static hwicode.schedule.calendar.CalendarDataHelper.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(CalendarController.class)
+class CalendarControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    @MockBean
+    CalendarAggregateService calendarAggregateService;
+
+    @Autowired
+    ObjectMapper objectMapper;
+
+    @Test
+    void 목표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+        // given
+        Set<YearMonth> yearMonths = Set.of(YEAR_MONTH, YEAR_MONTH.plusMonths(1));
+        GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
+        GoalSaveResponse goalSaveResponse = new GoalSaveResponse(GOAL_ID, GOAL_NAME);
+
+        given(calendarAggregateService.saveGoal(any(), any()))
+                .willReturn(GOAL_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalSaveRequest)));
+
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(goalSaveResponse)
+                ));
+
+        verify(calendarAggregateService).saveGoal(any(), any());
+    }
+}
