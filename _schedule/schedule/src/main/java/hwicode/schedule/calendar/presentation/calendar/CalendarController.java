@@ -11,12 +11,14 @@ import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_mod
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class CalendarController {
 
