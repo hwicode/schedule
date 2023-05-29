@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.presentation.goal;
 
 import hwicode.schedule.calendar.application.GoalAggregateService;
+import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
@@ -38,6 +39,14 @@ public class GoalController {
                 goalId, subGoalNameModifyRequest.getSubGoalName(), subGoalNameModifyRequest.getNewSubGoalName()
         );
         return new SubGoalNameModifyResponse(goalId, changedSubGoalName);
+    }
+
+    @DeleteMapping("/goals/{goalId}/sub-goals/{subGoalId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteSubGoal(@PathVariable @Positive Long goalId,
+                              @PathVariable @Positive Long subGoalId,
+                              @RequestBody @Valid SubGoalDeleteRequest subGoalDeleteRequest) {
+        goalAggregateService.deleteSubGoal(goalId, subGoalDeleteRequest.getSubGoalName());
     }
 
 }

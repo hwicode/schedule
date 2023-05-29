@@ -3,6 +3,7 @@ package hwicode.schedule.calendar.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.presentation.goal.GoalController;
+import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
@@ -20,8 +21,7 @@ import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(GoalController.class)
@@ -37,7 +37,7 @@ class GoalControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void 목표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+    void 서브_목표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         SubGoalSaveRequest subGoalSaveRequest = new SubGoalSaveRequest(SUB_GOAL_NAME);
         SubGoalSaveResponse subGoalSaveResponse = new SubGoalSaveResponse(GOAL_ID, SUB_GOAL_NAME);
@@ -81,5 +81,22 @@ class GoalControllerTest {
 
         verify(goalAggregateService).changeSubGoalName(any(), any(), any());
     }
+
+    @Test
+    void 서브_목표_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        SubGoalDeleteRequest subGoalDeleteRequest = new SubGoalDeleteRequest(SUB_GOAL_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals/{subGoalId}", GOAL_ID, SUB_GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(subGoalDeleteRequest)));
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(goalAggregateService).deleteSubGoal(any(), any());
+    }
+
 
 }
