@@ -2,6 +2,8 @@ package hwicode.schedule.calendar.presentation.calendar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -20,6 +22,7 @@ import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,4 +61,29 @@ class CalendarControllerTest {
 
         verify(calendarAggregateService).saveGoal(any(), any());
     }
+
+    @Test
+    void 여러_개의_캘린더에_목표_추가를_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        Set<YearMonth> yearMonths = Set.of(YEAR_MONTH, YEAR_MONTH.plusMonths(1));
+        GoalAddToCalendarsRequest goalAddToCalendarsRequest = new GoalAddToCalendarsRequest(yearMonths);
+        GoalAddToCalendarsResponse goalAddToCalendarsResponse = new GoalAddToCalendarsResponse(GOAL_ID, goalAddToCalendarsRequest.getYearMonths());
+
+        given(calendarAggregateService.addGoalToCalendars(any(), any()))
+                .willReturn(GOAL_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/calendars/goals/{goalId}", GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalAddToCalendarsRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(goalAddToCalendarsResponse)
+                ));
+
+        verify(calendarAggregateService).addGoalToCalendars(any(), any());
+    }
+
 }
