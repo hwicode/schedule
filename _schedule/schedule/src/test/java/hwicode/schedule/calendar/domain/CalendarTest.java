@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.domain;
 
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
-import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
 import org.junit.jupiter.api.Test;
 

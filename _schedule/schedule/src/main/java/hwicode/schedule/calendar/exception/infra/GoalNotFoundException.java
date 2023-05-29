@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.exception;
+package hwicode.schedule.calendar.exception.infra;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;

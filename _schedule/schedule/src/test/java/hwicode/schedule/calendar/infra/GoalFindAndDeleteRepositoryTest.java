@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.infra;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.exception.GoalNotFoundException;
+import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import hwicode.schedule.calendar.infra.limited_repository.GoalFindAndDeleteRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

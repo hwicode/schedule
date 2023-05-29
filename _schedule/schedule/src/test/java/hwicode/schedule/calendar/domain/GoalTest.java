@@ -1,6 +1,6 @@
 package hwicode.schedule.calendar.domain;
 
-import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
