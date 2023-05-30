@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.presentation.goal.dto.save;
+package hwicode.schedule.calendar.presentation.goal.dto.subgoal_save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.presentation.goal.dto.delete;
+package hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
