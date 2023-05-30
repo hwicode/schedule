@@ -6,6 +6,8 @@ import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.presentation.goal.GoalController;
 import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
@@ -123,6 +125,29 @@ class GoalControllerTest {
                 ));
 
         verify(goalAggregateService).changeSubGoalStatus(any(), any(), any());
+    }
+
+    @Test
+    void 목표의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        GoalStatusModifyRequest goalStatusModifyRequest = new GoalStatusModifyRequest(GoalStatus.DONE);
+        GoalStatusModifyResponse goalStatusModifyResponse = new GoalStatusModifyResponse(GOAL_ID, GoalStatus.DONE);
+
+        given(goalAggregateService.changeGoalStatus(any(), any()))
+                .willReturn(GoalStatus.DONE);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/goals/{goalId}/status", GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalStatusModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(goalStatusModifyResponse)
+                ));
+
+        verify(goalAggregateService).changeGoalStatus(any(), any());
     }
 
 }

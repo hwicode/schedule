@@ -3,6 +3,8 @@ package hwicode.schedule.calendar.presentation.goal;
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
@@ -63,6 +65,16 @@ public class GoalController {
 
         return new SubGoalStatusModifyResponse(
                 subGoalStatusModifyRequest.getSubGoalName(), goalStatus, subGoalStatusModifyRequest.getSubGoalStatus());
+    }
+
+    @PatchMapping("/goals/{goalId}/status")
+    @ResponseStatus(value = HttpStatus.OK)
+    public GoalStatusModifyResponse changeGoalStatus(@PathVariable @Positive Long goalId,
+                                                     @RequestBody @Valid GoalStatusModifyRequest goalStatusModifyRequest) {
+        GoalStatus changedGoalStatus = goalAggregateService.changeGoalStatus(
+                goalId, goalStatusModifyRequest.getGoalStatus()
+        );
+        return new GoalStatusModifyResponse(goalId, changedGoalStatus);
     }
 
 }
