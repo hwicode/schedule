@@ -146,15 +146,15 @@ class GoalAggregateServiceTest {
     @Test
     void 목표에서_캘린더와_관련된_목표를_삭제할_수_있다() {
         // given
+        Goal goal = new Goal(GOAL_NAME);
         Calendar calendar = new Calendar(YEAR_MONTH);
         Calendar calendar2 = new Calendar(YEAR_MONTH.plusMonths(1));
-        Goal goal = new Goal(GOAL_NAME);
         CalendarGoal calendarGoal = calendar.addGoal(goal);
         CalendarGoal calendarGoal2 = calendar2.addGoal(goal);
 
+        goalRepository.save(goal);
         calendarRepository.save(calendar);
         calendarRepository.save(calendar2);
-        goalRepository.save(goal);
         calendarGoalRepository.save(calendarGoal);
         calendarGoalRepository.save(calendarGoal2);
 
