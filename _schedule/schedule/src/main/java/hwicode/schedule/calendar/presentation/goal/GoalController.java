@@ -77,4 +77,10 @@ public class GoalController {
         return new GoalStatusModifyResponse(goalId, changedGoalStatus);
     }
 
+    @DeleteMapping("/goals/{goalId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteGoal(@PathVariable @Positive Long goalId) {
+        goalAggregateService.deleteGoal(goalId);
+    }
+
 }
