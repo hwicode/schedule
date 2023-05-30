@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.presentation.goal;
 
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
+import hwicode.schedule.calendar.presentation.goal.dto.calendargoal_delete.CalendarGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
@@ -81,6 +82,14 @@ public class GoalController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteGoal(@PathVariable @Positive Long goalId) {
         goalAggregateService.deleteGoal(goalId);
+    }
+
+    @DeleteMapping("/calendars/{calendarId}/goals/{goalId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteCalendarGoal(@PathVariable @Positive Long calendarId,
+                                   @PathVariable @Positive Long goalId,
+                                   @RequestBody @Valid CalendarGoalDeleteRequest calendarGoalDeleteRequest) {
+        goalAggregateService.deleteCalendarGoal(goalId, calendarGoalDeleteRequest.getYearMonth());
     }
 
 }

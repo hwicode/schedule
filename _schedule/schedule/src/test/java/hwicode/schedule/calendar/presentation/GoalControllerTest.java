@@ -5,6 +5,7 @@ import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.presentation.goal.GoalController;
+import hwicode.schedule.calendar.presentation.goal.dto.calendargoal_delete.CalendarGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
@@ -159,6 +160,22 @@ class GoalControllerTest {
         perform.andExpect(status().isNoContent());
 
         verify(goalAggregateService).deleteGoal(any());
+    }
+
+    @Test
+    void 캘린더에서_목표를_삭제하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        CalendarGoalDeleteRequest calendarGoalDeleteRequest = new CalendarGoalDeleteRequest(YEAR_MONTH);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/calendars/{calendarId}/goals/{goalId}", CALENDAR_ID, GOAL_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(calendarGoalDeleteRequest)));
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(goalAggregateService).deleteCalendarGoal(any(), any());
     }
 
 }
