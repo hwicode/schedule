@@ -104,7 +104,7 @@ class CalendarEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/calendars/goals/{goalId}", port));
+                .post(String.format("http://localhost:%s/calendars/goals/{goalId}", port));
 
         //then
         response.then()

@@ -82,7 +82,7 @@ class CalendarControllerTest {
                 .willReturn(GOAL_ID);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/calendars/goals/{goalId}", GOAL_ID)
+        ResultActions perform = mockMvc.perform(post("/calendars/goals/{goalId}", GOAL_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalAddToCalendarsRequest)));
 

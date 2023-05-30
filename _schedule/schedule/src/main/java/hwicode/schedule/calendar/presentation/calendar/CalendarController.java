@@ -33,7 +33,7 @@ public class CalendarController {
         return new GoalSaveResponse(goalId, goalSaveRequest.getGoalName());
     }
 
-    @PatchMapping("/calendars/goals/{goalId}")
+    @PostMapping("/calendars/goals/{goalId}")
     @ResponseStatus(value = HttpStatus.OK)
     public GoalAddToCalendarsResponse addGoalToCalendars(@PathVariable @Positive Long goalId,
                                                          @RequestBody @Valid GoalAddToCalendarsRequest goalAddToCalendarsRequest) {
