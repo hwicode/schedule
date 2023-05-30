@@ -1,11 +1,14 @@
 package hwicode.schedule.calendar.presentation.goal;
 
 import hwicode.schedule.calendar.application.GoalAggregateService;
+import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.presentation.goal.dto.delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -47,6 +50,19 @@ public class GoalController {
                               @PathVariable @Positive Long subGoalId,
                               @RequestBody @Valid SubGoalDeleteRequest subGoalDeleteRequest) {
         goalAggregateService.deleteSubGoal(goalId, subGoalDeleteRequest.getSubGoalName());
+    }
+
+    @PatchMapping("/goals/{goalId}/sub-goals/{subGoalId}/status")
+    @ResponseStatus(value = HttpStatus.OK)
+    public SubGoalStatusModifyResponse changeSubGoalStatus(@PathVariable @Positive Long goalId,
+                                                           @PathVariable @Positive Long subGoalId,
+                                                           @RequestBody @Valid SubGoalStatusModifyRequest subGoalStatusModifyRequest) {
+        GoalStatus goalStatus = goalAggregateService.changeSubGoalStatus(
+                goalId, subGoalStatusModifyRequest.getSubGoalName(), subGoalStatusModifyRequest.getSubGoalStatus()
+        );
+
+        return new SubGoalStatusModifyResponse(
+                subGoalStatusModifyRequest.getSubGoalName(), goalStatus, subGoalStatusModifyRequest.getSubGoalStatus());
     }
 
 }
