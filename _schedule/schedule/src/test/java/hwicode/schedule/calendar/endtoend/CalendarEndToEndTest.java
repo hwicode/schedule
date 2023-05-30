@@ -89,7 +89,8 @@ class CalendarEndToEndTest {
     @Test
     void 캘린더에_목표_추가_요청() {
         //given
-        goalRepository.save(new Goal(GOAL_NAME));
+        Goal goal = new Goal(GOAL_NAME);
+        goalRepository.save(goal);
 
         Set<YearMonth> yearMonths = Set.of(
                 YEAR_MONTH, YEAR_MONTH.plusMonths(1), YEAR_MONTH.plusMonths(2)
@@ -97,7 +98,7 @@ class CalendarEndToEndTest {
         GoalAddToCalendarsRequest goalAddToCalendarsRequest = new GoalAddToCalendarsRequest(yearMonths);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", GOAL_ID)
+                .pathParam("goalId", goal.getId())
                 .contentType(ContentType.JSON)
                 .body(goalAddToCalendarsRequest);
 
@@ -128,8 +129,8 @@ class CalendarEndToEndTest {
         GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("calendarId", CALENDAR_ID)
-                .pathParam("goalId", GOAL_ID)
+                .pathParam("calendarId", calendar.getId())
+                .pathParam("goalId", goal.getId())
                 .contentType(ContentType.JSON)
                 .body(goalNameModifyRequest);
 
@@ -149,12 +150,13 @@ class CalendarEndToEndTest {
     @Test
     void 일주일간_공부일_수정_요청() {
         // given
-        calendarRepository.save(new Calendar(YEAR_MONTH));
+        Calendar calendar = new Calendar(YEAR_MONTH);
+        calendarRepository.save(calendar);
 
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, 6);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("calendarId", CALENDAR_ID)
+                .pathParam("calendarId", calendar.getId())
                 .contentType(ContentType.JSON)
                 .body(weeklyStudyDateModifyRequest);
 
