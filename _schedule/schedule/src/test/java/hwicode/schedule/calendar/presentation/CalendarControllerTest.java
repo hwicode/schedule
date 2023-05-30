@@ -105,7 +105,7 @@ class CalendarControllerTest {
                 .willReturn(NEW_GOAL_NAME);
 
         // when
-        ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/goals/{goalId}", CALENDAR_ID, GOAL_ID)
+        ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/goals/{goalId}/name", CALENDAR_ID, GOAL_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalNameModifyRequest)));
 
@@ -151,7 +151,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                patch("/calendars/{calendarId}/goals/{goalId}",
+                patch("/calendars/{calendarId}/goals/{goalId}/name",
                         CALENDAR_ID, GOAL_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(

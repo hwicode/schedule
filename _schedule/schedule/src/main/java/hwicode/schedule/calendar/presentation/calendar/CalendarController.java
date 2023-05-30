@@ -43,7 +43,7 @@ public class CalendarController {
         return new GoalAddToCalendarsResponse(addedGoalId, goalAddToCalendarsRequest.getYearMonths());
     }
 
-    @PatchMapping("/calendars/{calendarId}/goals/{goalId}")
+    @PatchMapping("/calendars/{calendarId}/goals/{goalId}/name")
     @ResponseStatus(value = HttpStatus.OK)
     public GoalNameModifyResponse changeGoalName(@PathVariable @Positive Long calendarId,
                                                  @PathVariable @Positive Long goalId,
