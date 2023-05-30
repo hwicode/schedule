@@ -84,10 +84,10 @@ public class GoalController {
         goalAggregateService.deleteGoal(goalId);
     }
 
-    @DeleteMapping("/calendars/{calendarId}/goals/{goalId}")
+    @DeleteMapping("/goals/{goalId}/calendars/{calendarId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCalendarGoal(@PathVariable @Positive Long calendarId,
-                                   @PathVariable @Positive Long goalId,
+    public void deleteCalendarGoal(@PathVariable @Positive Long goalId,
+                                   @PathVariable @Positive Long calendarId,
                                    @RequestBody @Valid CalendarGoalDeleteRequest calendarGoalDeleteRequest) {
         goalAggregateService.deleteCalendarGoal(goalId, calendarGoalDeleteRequest.getYearMonth());
     }

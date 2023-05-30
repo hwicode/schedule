@@ -235,7 +235,7 @@ class GoalEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/calendars/{calendarId}/goals/{goalId}", port));
+                .delete(String.format("http://localhost:%s/goals/{goalId}/calendars/{calendarId}", port));
 
         // then
         response.then()

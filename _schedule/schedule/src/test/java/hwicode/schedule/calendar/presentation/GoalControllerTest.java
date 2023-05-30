@@ -171,7 +171,7 @@ class GoalControllerTest {
         CalendarGoalDeleteRequest calendarGoalDeleteRequest = new CalendarGoalDeleteRequest(YEAR_MONTH);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/calendars/{calendarId}/goals/{goalId}", CALENDAR_ID, GOAL_ID)
+        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/calendars/{calendarId}", CALENDAR_ID, GOAL_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(calendarGoalDeleteRequest)));
 
