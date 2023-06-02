@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class GoalSaveRequest {
     private String goalName;
 
     @NotEmpty
+    @Size(max = 24, message = "YearMonths size must not exceed 24")
     private Set<YearMonth> yearMonths;
 
     public List<YearMonth> getYearMonths() {

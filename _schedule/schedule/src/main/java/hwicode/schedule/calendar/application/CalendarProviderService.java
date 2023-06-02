@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.calendar.domain.Calendar;
+import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class CalendarProviderService {
     }
 
     public List<Calendar> provideCalendars(List<YearMonth> yearMonths) {
+        validateYearMonthsSize(yearMonths);
         List<Calendar> calendars = new ArrayList<>();
         List<Calendar> noneSavedCalendars = new ArrayList<>();
 
@@ -43,6 +45,12 @@ public class CalendarProviderService {
             calendars.addAll(calendarRepository.saveAll(noneSavedCalendars));
         }
         return calendars;
+    }
+
+    private void validateYearMonthsSize(List<YearMonth> yearMonths) {
+        if (yearMonths.size() > 24) {
+            throw new YearMonthsSizeNotValidException();
+        }
     }
 
 }
