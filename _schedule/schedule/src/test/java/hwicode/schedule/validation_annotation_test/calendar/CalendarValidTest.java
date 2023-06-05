@@ -38,6 +38,21 @@ class CalendarValidTest {
     ObjectMapper objectMapper;
 
     @Test
+    void 목표_기간이_24개월_이하면_통과된다() throws Exception {
+        // given
+        Set<YearMonth> yearMonths = Set.of(YEAR_MONTH);
+        GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalSaveRequest)));
+
+        // then
+        perform.andExpect(status().isCreated());
+    }
+
+    @Test
     void 목표_기간이_비어있으면_에러가_발생한다() throws Exception {
         // given
         Set<YearMonth> emptyYearMonths = new HashSet<>();
