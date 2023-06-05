@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
 import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
@@ -204,6 +205,27 @@ class CalendarControllerTest {
         // then
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(weeklyDateNotValidException.getMessage()));
+    }
+
+    @Test
+    void 목표_생성을_할_때_목표_기간이_24개월보다_크다면_에러가_발생한다() throws Exception {
+        // given
+        YearMonthsSizeNotValidException yearMonthsSizeNotValidException = new YearMonthsSizeNotValidException();
+
+        Set<YearMonth> overSizeYearMonths = Set.of(YEAR_MONTH);
+
+        GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, overSizeYearMonths);
+        given(calendarAggregateService.saveGoal(any(), any()))
+                .willThrow(yearMonthsSizeNotValidException);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalSaveRequest)));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(yearMonthsSizeNotValidException.getMessage()));
     }
 
 }
