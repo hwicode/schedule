@@ -1,4 +1,4 @@
-package hwicode.schedule.dto_valid_test.calendar;
+package hwicode.schedule.validation_annotation_test.calendar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarAggregateService;
@@ -55,7 +55,6 @@ class CalendarValidTest {
                 .andExpect(jsonPath("$.errors[0].field").value(field))
                 .andExpect(jsonPath("$.errors[0].message").value(message));
     }
-
 
     @Test
     void 목표_기간이_24개월_이상이면_에러가_발생한다() throws Exception {
