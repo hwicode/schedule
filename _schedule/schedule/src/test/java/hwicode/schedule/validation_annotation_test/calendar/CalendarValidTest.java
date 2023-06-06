@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -70,11 +71,10 @@ class CalendarValidTest {
 
         // then
         String field = "yearMonths";
-        String message = "must not be empty";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(message));
+                .andExpect(jsonPath("$.errors[0].message").value(NOT_EMPTY_ERROR_MESSAGE));
     }
 
     @Test
@@ -144,16 +144,15 @@ class CalendarValidTest {
                 .content(wrongWeeklyStudyDateBody));
 
         // then
-        String message = "HTTP message body 중에 타입을 잘못 설정한게 있습니다.";
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
+                .andExpect(jsonPath("$.message").value(BODY_TYPE_ERROR_MESSAGE));
     }
 
     private static Stream<Arguments> provideWrongWeeklyStudyDate() {
         return Stream.of(
                 arguments(8, "must be less than or equal to 7"),
                 arguments(-1, "must be greater than or equal to 0"),
-                arguments(null, "must not be null")
+                arguments(null, NOT_NULL_ERROR_MESSAGE)
         );
     }
 

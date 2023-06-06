@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -75,16 +76,15 @@ class TaskValidTest {
                 .content(wrongTimeTableIdBody));
 
         // then
-        String message = "HTTP message body 중에 타입을 잘못 설정한게 있습니다.";
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
+                .andExpect(jsonPath("$.message").value(BODY_TYPE_ERROR_MESSAGE));
     }
 
     private static Stream<Arguments> provideWrongDailyToDoListId() {
         return Stream.of(
-                arguments(null, "must not be null"),
-                arguments(-1L, "must be greater than 0"),
-                arguments(0L, "must be greater than 0")
+                arguments(null, NOT_NULL_ERROR_MESSAGE),
+                arguments(-1L, POSITIVE_ERROR_MESSAGE),
+                arguments(0L, POSITIVE_ERROR_MESSAGE)
         );
     }
 
@@ -108,11 +108,10 @@ class TaskValidTest {
     }
 
     private static Stream<Arguments> provideWrongTaskName() {
-        String blankMessage = "must not be blank";
         return Stream.of(
-                arguments(null, blankMessage),
-                arguments("", blankMessage),
-                arguments(" ", blankMessage)
+                arguments(null, NOT_BLANK_ERROR_MESSAGE),
+                arguments("", NOT_BLANK_ERROR_MESSAGE),
+                arguments(" ", NOT_BLANK_ERROR_MESSAGE)
         );
     }
 
@@ -147,11 +146,10 @@ class TaskValidTest {
 
         // then
         String field = "difficulty";
-        String errorMessage = "must not be null";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(errorMessage));
+                .andExpect(jsonPath("$.errors[0].message").value(NOT_NULL_ERROR_MESSAGE));
     }
 
     private static Stream<Arguments> provideWrongDifficulty() {
@@ -179,9 +177,8 @@ class TaskValidTest {
                 .content(wrongDifficultyBody));
 
         // then
-        String message = "HTTP message body 중에 타입을 잘못 설정한게 있습니다.";
         perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
+                .andExpect(jsonPath("$.message").value(BODY_TYPE_ERROR_MESSAGE));
     }
 
 }

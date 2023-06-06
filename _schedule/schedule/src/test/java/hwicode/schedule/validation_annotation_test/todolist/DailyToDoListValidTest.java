@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.NOT_NULL_ERROR_MESSAGE;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -72,11 +73,10 @@ class DailyToDoListValidTest {
 
         // then
         String field = "review";
-        String message = "must not be null";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(message));
+                .andExpect(jsonPath("$.errors[0].message").value(NOT_NULL_ERROR_MESSAGE));
     }
 
 }

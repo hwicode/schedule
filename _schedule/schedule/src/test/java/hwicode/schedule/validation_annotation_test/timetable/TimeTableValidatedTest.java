@@ -19,10 +19,10 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -72,7 +72,7 @@ class TimeTableValidatedTest {
         );
 
         // then
-        String message = "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; nested exception is java.lang.NumberFormatException: For input string: \"ww\"";
+        String message = getNumberFormatExceptionMessage(wrongTimeTableId);
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(message));
     }
@@ -98,8 +98,8 @@ class TimeTableValidatedTest {
 
     private static Stream<Arguments> provideWrongTimeTableId() {
         return Stream.of(
-                arguments(-1L, "must be greater than 0"),
-                arguments(0L, "must be greater than 0")
+                arguments(-1L, POSITIVE_ERROR_MESSAGE),
+                arguments(0L, POSITIVE_ERROR_MESSAGE)
         );
     }
 
@@ -123,8 +123,7 @@ class TimeTableValidatedTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(errorMessage))
-                .andDo(print());
+                .andExpect(jsonPath("$.errors[0].message").value(errorMessage));
     }
 
     @Test
@@ -156,8 +155,8 @@ class TimeTableValidatedTest {
 
     private static Stream<Arguments> provideWrongSubject() {
         return Stream.of(
-                arguments("", "must not be blank"),
-                arguments(" ", "must not be blank")
+                arguments("", NOT_BLANK_ERROR_MESSAGE),
+                arguments(" ", NOT_BLANK_ERROR_MESSAGE)
         );
     }
 
@@ -199,7 +198,7 @@ class TimeTableValidatedTest {
                         .queryParam("subject_of_task_id", subjectOfTaskId));
 
         // then
-        String message = "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; nested exception is java.lang.NumberFormatException: For input string: \"ww\"";
+        String message = getNumberFormatExceptionMessage(subjectOfTaskId);
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(message));
     }
@@ -215,15 +214,15 @@ class TimeTableValidatedTest {
                         .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId)));
 
         // then
-        String message = "Failed to convert value of type 'java.lang.String' to required type 'java.lang.Long'; nested exception is java.lang.NumberFormatException: For input string: \"null\"";
+        String message = getNumberFormatExceptionMessage(String.valueOf(subjectOfTaskId));
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(message));
     }
 
     private static Stream<Arguments> provideWrongSubjectOfTaskId() {
         return Stream.of(
-                arguments(-1L, "must be greater than 0"),
-                arguments(0L, "must be greater than 0")
+                arguments(-1L, POSITIVE_ERROR_MESSAGE),
+                arguments(0L, POSITIVE_ERROR_MESSAGE)
         );
     }
 
