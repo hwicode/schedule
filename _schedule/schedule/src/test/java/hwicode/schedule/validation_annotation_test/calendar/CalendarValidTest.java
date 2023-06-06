@@ -58,7 +58,7 @@ class CalendarValidTest {
     }
 
     @Test
-    void 목표_기간이_비어있으면_에러가_발생한다() throws Exception {
+    void 목표_기간이_비어있으면_400에러가_발생한다() throws Exception {
         // given
         Set<YearMonth> emptyYearMonths = new HashSet<>();
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, emptyYearMonths);
@@ -78,7 +78,7 @@ class CalendarValidTest {
     }
 
     @Test
-    void 목표_기간이_24개월_이상이면_에러가_발생한다() throws Exception {
+    void 목표_기간이_24개월_이상이면_400에러가_발생한다() throws Exception {
         // given
         Set<YearMonth> overSizeYearMonths = Set.of(
                 YEAR_MONTH, YEAR_MONTH.plusMonths(1), YEAR_MONTH.plusMonths(2),
@@ -140,7 +140,7 @@ class CalendarValidTest {
 
     @ParameterizedTest
     @MethodSource("provideWrongWeeklyStudyDate")
-    void 일주일간_공부일에_잘못된_값이_들어오면_에러가_발생한다(Integer weeklyStudyDate, String errorMessage) throws Exception {
+    void 일주일간_공부일에_잘못된_값이_들어오면_400에러가_발생한다(Integer weeklyStudyDate, String errorMessage) throws Exception {
         // given
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, weeklyStudyDate);
 

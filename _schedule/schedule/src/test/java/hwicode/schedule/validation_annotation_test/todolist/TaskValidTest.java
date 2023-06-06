@@ -68,7 +68,7 @@ class TaskValidTest {
 
     @ParameterizedTest
     @MethodSource("provideWrongDailyToDoListId")
-    void 투두리스트의_id에_잘못된_값이_들어오면_에러가_발생한다(Long dailyToDoListId, String errorMessage) throws Exception {
+    void 투두리스트의_id에_잘못된_값이_들어오면_400에러가_발생한다(Long dailyToDoListId, String errorMessage) throws Exception {
         // given
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoListId, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
@@ -96,7 +96,7 @@ class TaskValidTest {
 
     @ParameterizedTest
     @MethodSource("provideWrongTaskName")
-    void 과제의_이름에_잘못된_값이_들어오면_에러가_발생한다(String taskName, String errorMessage) throws Exception {
+    void 과제의_이름에_잘못된_값이_들어오면_400에러가_발생한다(String taskName, String errorMessage) throws Exception {
         // given
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
@@ -114,7 +114,7 @@ class TaskValidTest {
     }
 
     @Test
-    void 과제의_어려움에_null이_들어오면_에러가_발생한다() throws Exception {
+    void 과제의_어려움에_null이_들어오면_400에러가_발생한다() throws Exception {
         // given
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, null, Priority.SECOND, Importance.SECOND);
 
@@ -142,7 +142,7 @@ class TaskValidTest {
 
     @ParameterizedTest
     @MethodSource("provideWrongDifficulty")
-    void 과제의_어려움에_형식에_맞지_않는_값이_들어오면_에러가_발생한다(String wrongDifficulty) throws Exception {
+    void 과제의_어려움에_형식에_맞지_않는_값이_들어오면_400에러가_발생한다(String wrongDifficulty) throws Exception {
         // given
         String wrongDifficultyBody = String.format(
                 "{\"dailyToDoListId\":1," +

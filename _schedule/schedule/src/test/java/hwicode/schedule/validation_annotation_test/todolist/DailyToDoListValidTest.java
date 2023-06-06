@@ -60,7 +60,7 @@ class DailyToDoListValidTest {
     }
 
     @Test
-    void 리뷰와_없으면_에러가_발생한다() throws Exception {
+    void 리뷰와_없으면_400에러가_발생한다() throws Exception {
         // given
         DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(null, Emoji.GOOD);
 
