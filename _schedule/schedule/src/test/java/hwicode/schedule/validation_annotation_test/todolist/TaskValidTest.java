@@ -58,6 +58,28 @@ class TaskValidTest {
         perform.andExpect(status().isCreated());
     }
 
+    @Test
+    void 투두리스트의_id에_형식에_맞지_않는_값이_들어오면_400에러가_발생한다() throws Exception {
+        // given
+        String wrongTableId = "ww";
+        String wrongTimeTableIdBody = String.format(
+                "{\"dailyToDoListId\":1," +
+                "\"taskName\":\"taskName\"," +
+                "\"difficulty\":\"%s\"," +
+                "\"priority\":\"SECOND\"," +
+                "\"importance\":\"SECOND\"}", wrongTableId);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(wrongTimeTableIdBody));
+
+        // then
+        String message = "HTTP message body 중에 타입을 잘못 설정한게 있습니다.";
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(message));
+    }
+
     private static Stream<Arguments> provideWrongDailyToDoListId() {
         return Stream.of(
                 arguments(null, "must not be null"),

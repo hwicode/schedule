@@ -130,6 +130,25 @@ class CalendarValidTest {
         perform.andExpect(status().isOk());
     }
 
+    @Test
+    void 일주일간_공부일에_형식에_맞지_않는_값이_들어오면_400에러가_발생한다() throws Exception {
+        // given
+        String wrongWeeklyStudyDate = "ww";
+        String wrongWeeklyStudyDateBody = String.format(
+                "{\"yearMonth\":\"2023-05\"," +
+                "\"weeklyStudyDate\":%s}", wrongWeeklyStudyDate);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(wrongWeeklyStudyDateBody));
+
+        // then
+        String message = "HTTP message body 중에 타입을 잘못 설정한게 있습니다.";
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(message));
+    }
+
     private static Stream<Arguments> provideWrongWeeklyStudyDate() {
         return Stream.of(
                 arguments(8, "must be less than or equal to 7"),
