@@ -3,6 +3,7 @@ package hwicode.schedule.common.exception;
 import hwicode.schedule.common.exception.ErrorResponse.ValidationError;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -85,6 +86,19 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), validationErrors);
         return ResponseEntity.status(ex.getHttpStatus())
                 .body(errorResponse);
+    }
+
+    @ExceptionHandler(DuplicateKeyException.class)
+    protected ResponseEntity<ErrorResponse> duplicateKeyException(DuplicateKeyException ex) {
+        GlobalErrorCode globalErrorCode = GlobalErrorCode.DUPLICATE_KEY;
+
+        log.error(CUSTOM_LOG_FORMAT,
+                ex.getClass().getSimpleName(),
+                ex.getMessage(),
+                globalErrorCode.getMessage());
+
+        return ResponseEntity.status(globalErrorCode.getHttpStatus())
+                .body(new ErrorResponse(globalErrorCode.getMessage()));
     }
 
     @Override
