@@ -1,4 +1,4 @@
-package hwicode.schedule.common.config;
+package hwicode.schedule.common.mdc;
 
 import lombok.RequiredArgsConstructor;
 

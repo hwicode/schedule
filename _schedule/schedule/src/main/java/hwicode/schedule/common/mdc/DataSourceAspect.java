@@ -1,4 +1,4 @@
-package hwicode.schedule.common.config;
+package hwicode.schedule.common.mdc;
 
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
