@@ -1,4 +1,4 @@
-package hwicode.schedule.common.config;
+package hwicode.schedule.common.jpa_converter;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
