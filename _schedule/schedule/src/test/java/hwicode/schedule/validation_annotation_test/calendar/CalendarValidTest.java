@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -108,17 +109,10 @@ class CalendarValidTest {
                 .andExpect(jsonPath("$.errors[0].message").value(message));
     }
 
-    private static Stream<Arguments> provideWeeklyStudyDate() {
-        return Stream.of(
-                arguments(0), arguments(1), arguments(2), arguments(3), arguments(4), arguments(5), arguments(6), arguments(7)
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("provideWeeklyStudyDate")
-    void 일주일간_공부일이_0과_7사이면_통과된다() throws Exception {
+    @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
+    void 일주일간_공부일이_0과_7사이면_통과된다(Integer weeklyStudyDate) throws Exception {
         // given
-        int weeklyStudyDate = 4;
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, weeklyStudyDate);
 
         // when

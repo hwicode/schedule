@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -152,16 +153,8 @@ class TaskValidTest {
                 .andExpect(jsonPath("$.errors[0].message").value(NOT_NULL_ERROR_MESSAGE));
     }
 
-    private static Stream<Arguments> provideWrongDifficulty() {
-        return Stream.of(
-                arguments("normal"),
-                arguments("NORMA"),
-                arguments("Normal")
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("provideWrongDifficulty")
+    @ValueSource(strings = {"normal", "NORMA", "Normal"})
     void 과제의_어려움에_형식에_맞지_않는_값이_들어오면_400에러가_발생한다(String wrongDifficulty) throws Exception {
         // given
         String wrongDifficultyBody = String.format(

@@ -8,8 +8,7 @@ import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.DailyT
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -17,11 +16,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.stream.Stream;
-
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.NOT_NULL_ERROR_MESSAGE;
-import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,14 +34,8 @@ class DailyToDoListValidTest {
     @Autowired
     ObjectMapper objectMapper;
 
-    private static Stream<Arguments> provideReview() {
-        return Stream.of(
-                arguments("좋은데!"), arguments(""), arguments("  ")
-        );
-    }
-
     @ParameterizedTest
-    @MethodSource("provideReview")
+    @ValueSource(strings = {"좋은데!", "", "  "})
     void 리뷰와_이모지가_존재하면_통과된다(String review) throws Exception {
         // given
         DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
