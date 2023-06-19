@@ -24,7 +24,7 @@ import java.util.List;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -56,7 +56,7 @@ class TaskEndToEndTest {
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
 
         RequestSpecification requestSpecification = given()
                 .pathParam("dailyToDoListId", dailyToDoList.getId())
@@ -72,7 +72,7 @@ class TaskEndToEndTest {
                 .statusCode(HttpStatus.CREATED.value());
 
         List<Task> all = taskRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
+        assertThat(all).hasSize(1);
     }
 
     @Test
