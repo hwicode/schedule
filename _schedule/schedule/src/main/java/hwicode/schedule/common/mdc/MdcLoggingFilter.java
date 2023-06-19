@@ -20,19 +20,19 @@ public class MdcLoggingFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        postConstructMdc();
+        startMdc();
         chain.doFilter(request, response);
-        preDestroyMdc();
+        endMdc();
     }
 
-    private void postConstructMdc() {
+    private void startMdc() {
         final UUID uuid = UUID.randomUUID();
         MDC.put("request_id", uuid.toString());
         MDC.put(QUERY_COUNT, String.valueOf(0));
         MDC.put(START_TIME, String.valueOf(System.currentTimeMillis()));
     }
 
-    private void preDestroyMdc() {
+    private void endMdc() {
         long start = Long.parseLong(MDC.get(START_TIME));
         long end = System.currentTimeMillis();
         log.info("number of queries executed : {}, total time spent : {}ms",
