@@ -1,5 +1,6 @@
-package hwicode.schedule.common.mdc;
+package hwicode.schedule.common.mdc.query_counter;
 
+import hwicode.schedule.common.mdc.MdcLoggingFilter;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.MDC;
 

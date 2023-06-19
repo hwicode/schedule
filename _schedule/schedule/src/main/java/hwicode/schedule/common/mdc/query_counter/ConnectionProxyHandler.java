@@ -1,4 +1,4 @@
-package hwicode.schedule.common.mdc;
+package hwicode.schedule.common.mdc.query_counter;
 
 import lombok.RequiredArgsConstructor;
 
