@@ -9,7 +9,7 @@ import java.lang.reflect.Proxy;
 
 @Component
 @Aspect
-public class DataSourceAspect {
+public class DataSourceAop {
 
     @Around("execution(* javax.sql.DataSource.getConnection())")
     public Object getConnection(ProceedingJoinPoint proceedingJoinPoint) throws Throwable {
