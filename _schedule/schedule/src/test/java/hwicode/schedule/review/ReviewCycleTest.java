@@ -89,7 +89,67 @@ class ReviewCycleTest {
         // then
         assertThat(result)
                 .hasSize(newReviewCycleDates.size())
-                .containsAll(newReviewCycleDates);
+                .isEqualTo(newReviewCycleDates);
+    }
+
+    @Test
+    void 복습_주기를_생성할_때_입력된_리스트가_변해도_복습_주기는_변화가_없다() {
+        // given
+        List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        // when
+        reviewCycleDates.add(10);
+
+        // then
+        assertThat(reviewCycle.getCycle()).hasSize(3);
+    }
+
+    @Test
+    void 복습_주기의_주기를_변경할_때_입력된_리스트가_변해도_복습_주기는_변화가_없다() {
+        // given
+        List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        List<Integer> newReviewCycleDates = new ArrayList<>(List.of(1, 5, 10, 20));
+        reviewCycle.changeCycle(newReviewCycleDates);
+
+        // when
+        newReviewCycleDates.add(30);
+
+        // then
+        assertThat(reviewCycle.getCycle()).hasSize(4);
+    }
+
+    @Test
+    void 복습_주기의_주기를_변경할_때_리턴된_리스트가_변해도_복습_주기는_변화가_없다() {
+        // given
+        List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        List<Integer> newReviewCycleDates = new ArrayList<>(List.of(1, 5, 10, 20));
+        List<Integer> result = reviewCycle.changeCycle(newReviewCycleDates);
+
+        // when
+        result.add(30);
+
+        // then
+        assertThat(reviewCycle.getCycle()).hasSize(4);
+    }
+
+    @Test
+    void 복습_주기의_주기를_가져올_때_가져온_리스트가_변해도_복습_주기는_변화가_없다() {
+        // given
+        List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        List<Integer> cycle = reviewCycle.getCycle();
+
+        // when
+        cycle.add(30);
+
+        // then
+        assertThat(reviewCycle.getCycle()).hasSize(3);
     }
 
 }
@@ -102,7 +162,7 @@ class ReviewCycle {
     public ReviewCycle(String name, List<Integer> reviewCycleDates) {
         validateReviewCycleDates(reviewCycleDates);
         this.name = name;
-        this.reviewCycleDates = reviewCycleDates;
+        this.reviewCycleDates = new ArrayList<>(reviewCycleDates);
     }
 
     private void validateReviewCycleDates(List<Integer> reviewCycleDates) {
@@ -127,8 +187,12 @@ class ReviewCycle {
 
     public List<Integer> changeCycle(List<Integer> newReviewCycleDates) {
         validateReviewCycleDates(newReviewCycleDates);
-        this.reviewCycleDates = newReviewCycleDates;
-        return newReviewCycleDates;
+        this.reviewCycleDates = new ArrayList<>(newReviewCycleDates);
+        return new ArrayList<>(newReviewCycleDates);
+    }
+
+    public List<Integer> getCycle() {
+        return new ArrayList<>(reviewCycleDates);
     }
 
 }
