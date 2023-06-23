@@ -75,12 +75,29 @@ class ReviewCycleTest {
         assertThat(isChanged).isFalse();
     }
 
+    @Test
+    void 복습_주기의_주기를_변경할_수_있다() {
+        // given
+        List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        List<Integer> newReviewCycleDates = List.of(1, 5, 10, 20);
+
+        // when
+        List<Integer> result = reviewCycle.changeCycle(newReviewCycleDates);
+
+        // then
+        assertThat(result)
+                .hasSize(newReviewCycleDates.size())
+                .containsAll(newReviewCycleDates);
+    }
+
 }
 
 class ReviewCycle {
 
     private String name;
-    private final List<Integer> reviewCycleDates;
+    private List<Integer> reviewCycleDates;
 
     public ReviewCycle(String name, List<Integer> reviewCycleDates) {
         validateReviewCycleDates(reviewCycleDates);
@@ -106,6 +123,12 @@ class ReviewCycle {
         }
         this.name = name;
         return true;
+    }
+
+    public List<Integer> changeCycle(List<Integer> newReviewCycleDates) {
+        validateReviewCycleDates(newReviewCycleDates);
+        this.reviewCycleDates = newReviewCycleDates;
+        return newReviewCycleDates;
     }
 
 }
