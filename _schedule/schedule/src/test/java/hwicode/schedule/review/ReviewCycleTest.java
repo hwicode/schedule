@@ -13,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class ReviewCycleTest {
 
     private static final String REVIEW_CYCLE_NAME = "name";
+    private static final String NEW_REVIEW_CYCLE_NAME = "newName";
 
     @Test
     void 복습_주기를_생성할_수_있다() {
@@ -48,6 +49,32 @@ class ReviewCycleTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    void 복습_주기의_이름을_변경하면_true가_리턴된다() {
+        // given
+        List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        // when
+        boolean isChanged = reviewCycle.changeName(NEW_REVIEW_CYCLE_NAME);
+
+        // then
+        assertThat(isChanged).isTrue();
+    }
+
+    @Test
+    void 복습_주기의_이름을_변경하지_못하면_false가_리턴된다() {
+        // given
+        List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+
+        // when
+        boolean isChanged = reviewCycle.changeName(REVIEW_CYCLE_NAME);
+
+        // then
+        assertThat(isChanged).isFalse();
+    }
+
 }
 
 class ReviewCycle {
@@ -71,6 +98,14 @@ class ReviewCycle {
                 throw new IllegalArgumentException();
             }
         }
+    }
+
+    public boolean changeName(String name) {
+        if (this.name.equals(name)) {
+            return false;
+        }
+        this.name = name;
+        return true;
     }
 
 }
