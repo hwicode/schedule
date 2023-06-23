@@ -12,13 +12,15 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReviewCycleTest {
 
+    private static final String REVIEW_CYCLE_NAME = "name";
+
     @Test
     void 복습_주기를_생성할_수_있다() {
         // given
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
 
         // when
-        ReviewCycle reviewCycle = new ReviewCycle(reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
 
         // then
         assertThat(reviewCycle).isInstanceOf(ReviewCycle.class);
@@ -31,7 +33,7 @@ class ReviewCycleTest {
         reviewCycleDates.add(null);
 
         // when then
-        assertThatThrownBy(() -> new ReviewCycle(reviewCycleDates))
+        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -42,7 +44,7 @@ class ReviewCycleTest {
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60, noneValidDate);
 
         // when then
-        assertThatThrownBy(() -> new ReviewCycle(reviewCycleDates))
+        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -50,10 +52,12 @@ class ReviewCycleTest {
 
 class ReviewCycle {
 
+    private String name;
     private final List<Integer> reviewCycleDates;
 
-    public ReviewCycle(List<Integer> reviewCycleDates) {
+    public ReviewCycle(String name, List<Integer> reviewCycleDates) {
         validateReviewCycleDates(reviewCycleDates);
+        this.name = name;
         this.reviewCycleDates = reviewCycleDates;
     }
 
