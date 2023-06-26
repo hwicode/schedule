@@ -1,4 +1,4 @@
-package hwicode.schedule.review.domain;
+package hwicode.schedule.dailyschedule.todolist.domain;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -7,8 +7,8 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static hwicode.schedule.review.ReviewDataHelper.NEW_REVIEW_CYCLE_NAME;
-import static hwicode.schedule.review.ReviewDataHelper.REVIEW_CYCLE_NAME;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.NEW_REVIEW_CYCLE_NAME;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.REVIEW_CYCLE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 

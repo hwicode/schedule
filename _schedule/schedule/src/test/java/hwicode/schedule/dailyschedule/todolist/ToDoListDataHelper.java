@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist;
 
+import java.time.LocalDate;
+
 public class ToDoListDataHelper {
 
     // 단순히 id값으로 숫자가 필요할 때만 사용
@@ -12,4 +14,9 @@ public class ToDoListDataHelper {
     public static final String SUB_TASK_NAME = "subTaskName";
 
     public static final String EXTERNAL_MESSAGE = "externalMessage";
+
+    public static final String REVIEW_CYCLE_NAME = "reviewCycleName";
+    public static final String NEW_REVIEW_CYCLE_NAME = "newReviewCycleName";
+
+    public static final LocalDate START_DATE = LocalDate.of(2023, 6, 26);
 }

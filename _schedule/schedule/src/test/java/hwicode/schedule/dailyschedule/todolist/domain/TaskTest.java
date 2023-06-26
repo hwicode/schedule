@@ -7,7 +7,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static hwicode.schedule.review.ReviewDataHelper.START_DATE;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.START_DATE;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class TaskTest {

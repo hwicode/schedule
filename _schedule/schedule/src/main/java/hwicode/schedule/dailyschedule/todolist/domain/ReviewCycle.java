@@ -1,4 +1,4 @@
-package hwicode.schedule.review.domain;
+package hwicode.schedule.dailyschedule.todolist.domain;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ReviewCycle {
         return new ArrayList<>(newReviewCycleDates);
     }
 
-    public List<Integer> getCycle() {
+    List<Integer> getCycle() {
         return new ArrayList<>(reviewCycleDates);
     }
 
