@@ -1,14 +1,14 @@
-package hwicode.schedule.review.domain;
+package hwicode.schedule.dailyschedule.todolist.domain;
 
 import java.time.LocalDate;
 
 public class ReviewDateTask {
 
-    private ReviewTask reviewTask;
+    private Task task;
     private ReviewDate reviewDate;
 
-    public ReviewDateTask(ReviewTask reviewTask, ReviewDate reviewDate) {
-        this.reviewTask = reviewTask;
+    public ReviewDateTask(Task task, ReviewDate reviewDate) {
+        this.task = task;
         this.reviewDate = reviewDate;
     }
 

@@ -1,4 +1,4 @@
-package hwicode.schedule.review.domain;
+package hwicode.schedule.dailyschedule.todolist.domain;
 
 import java.time.LocalDate;
 
