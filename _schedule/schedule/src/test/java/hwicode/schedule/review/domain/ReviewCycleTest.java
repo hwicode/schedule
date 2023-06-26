@@ -7,13 +7,12 @@ import org.junit.jupiter.params.provider.ValueSource;
 import java.util.ArrayList;
 import java.util.List;
 
+import static hwicode.schedule.review.ReviewDataHelper.NEW_REVIEW_CYCLE_NAME;
+import static hwicode.schedule.review.ReviewDataHelper.REVIEW_CYCLE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ReviewCycleTest {
-
-    private static final String REVIEW_CYCLE_NAME = "name";
-    private static final String NEW_REVIEW_CYCLE_NAME = "newName";
 
     @Test
     void 복습_주기를_생성할_수_있다() {
