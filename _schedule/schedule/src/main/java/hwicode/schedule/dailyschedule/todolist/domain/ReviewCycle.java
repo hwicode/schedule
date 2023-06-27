@@ -1,11 +1,26 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.common.jpa_converter.ReviewCycleDatesAttributeConverter;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class ReviewCycle {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false)
     private String name;
+
+    @Column(nullable = false)
+    @Convert(converter = ReviewCycleDatesAttributeConverter.class)
     private List<Integer> reviewCycleDates;
 
     public ReviewCycle(String name, List<Integer> reviewCycleDates) {

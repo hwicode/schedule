@@ -1,10 +1,25 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.util.Objects;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class ReviewDateTask {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @JoinColumn(name = "task_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private Task task;
+
+    @JoinColumn(name = "review_date_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private ReviewDate reviewDate;
 
     public ReviewDateTask(Task task, ReviewDate reviewDate) {

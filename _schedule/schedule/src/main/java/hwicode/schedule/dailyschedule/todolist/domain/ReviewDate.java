@@ -1,12 +1,25 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class ReviewDate {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
     private LocalDate date;
+
+    @OneToMany(mappedBy = "reviewDate")
     private final Set<ReviewDateTask> reviewDateTasks = new HashSet<>();
 
     public ReviewDate(LocalDate date) {

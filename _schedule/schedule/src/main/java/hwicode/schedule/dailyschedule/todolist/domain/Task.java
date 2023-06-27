@@ -36,17 +36,18 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Importance importance;
 
-    @Transient
+    @ColumnDefault(value = "NORMAL")
+    @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
     @ColumnDefault(value = "TODO")
     @Enumerated(value = EnumType.STRING)
     private TaskStatus taskStatus;
 
-    @Transient
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewDateTask> reviewDateTasks = new ArrayList<>();
 
-    @Transient
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
     public Task(DailyToDoList dailyToDoList, String name) {

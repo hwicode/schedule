@@ -8,6 +8,9 @@ drop table if exists calendar cascade;
 drop table if exists calendar_goal cascade;
 drop table if exists goal cascade;
 drop table if exists sub_goal cascade;
+drop table if exists review_date cascade;
+drop table if exists review_date_task cascade;
+drop table if exists review_cycle cascade;
 
 SET foreign_key_checks = 1;
 
@@ -79,6 +82,26 @@ create table sub_goal (
    primary key (id)
 ) engine=InnoDB;
 
+create table review_date (
+   id bigint not null auto_increment,
+   date date not null unique,
+   primary key (id)
+) engine=InnoDB;
+
+create table review_date_task (
+   id bigint not null auto_increment,
+   task_id bigint not null,
+   review_date_id bigint not null,
+   primary key (id)
+) engine=InnoDB;
+
+create table review_cycle (
+   id bigint not null auto_increment,
+   name varchar(255) not null,
+   review_cycle_dates text not null,
+   primary key (id)
+) engine=InnoDB;
+
 alter table daily_schedule
    add constraint
    foreign key (calendar_id)
@@ -123,3 +146,13 @@ alter table sub_goal
    add constraint
    foreign key (goal_id)
    references goal (id);
+
+alter table review_date_task
+   add constraint
+   foreign key (task_id)
+   references task (id);
+
+alter table review_date_task
+   add constraint
+   foreign key (review_date_id)
+   references review_date (id);
