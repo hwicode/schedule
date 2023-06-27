@@ -4,6 +4,8 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.Sub
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import org.junit.jupiter.api.Test;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;

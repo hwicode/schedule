@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import hwicode.schedule.dailyschedule.checklist.domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;

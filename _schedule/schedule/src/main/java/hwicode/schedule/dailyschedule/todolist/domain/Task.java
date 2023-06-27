@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;

@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify;
 
-import hwicode.schedule.dailyschedule.checklist.domain.TaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

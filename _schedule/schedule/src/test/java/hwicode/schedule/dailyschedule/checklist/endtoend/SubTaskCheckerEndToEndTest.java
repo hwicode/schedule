@@ -12,6 +12,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
