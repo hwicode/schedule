@@ -2,9 +2,9 @@ package hwicode.schedule.validation_annotation_test.timetable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.common.exception.GlobalErrorCode;
-import hwicode.schedule.dailyschedule.timetable.application.TimeTableAggregateService;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.TimeTableController;
-import hwicode.schedule.dailyschedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
+import hwicode.schedule.timetable.application.TimeTableAggregateService;
+import hwicode.schedule.timetable.presentation.timetable.TimeTableController;
+import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +18,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
+import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;

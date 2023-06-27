@@ -1,11 +1,11 @@
 package hwicode.schedule.dailyschedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeAggregateService;
-import hwicode.schedule.dailyschedule.timetable.domain.LearningTime;
-import hwicode.schedule.dailyschedule.timetable.domain.TimeTable;
-import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.LearningTimeRepository;
-import hwicode.schedule.dailyschedule.timetable.infra.jpa_repository.TimeTableRepository;
+import hwicode.schedule.timetable.application.LearningTimeAggregateService;
+import hwicode.schedule.timetable.domain.LearningTime;
+import hwicode.schedule.timetable.domain.TimeTable;
+import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
+import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.dailyschedule.timetable.TimeTableDataHelper.*;
+import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;

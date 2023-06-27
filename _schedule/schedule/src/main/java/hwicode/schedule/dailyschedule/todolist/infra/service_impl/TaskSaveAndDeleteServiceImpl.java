@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
+import hwicode.schedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;

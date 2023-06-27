@@ -4,7 +4,7 @@ import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.timetable.application.LearningTimeConstraintRemovalService;
+import hwicode.schedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
