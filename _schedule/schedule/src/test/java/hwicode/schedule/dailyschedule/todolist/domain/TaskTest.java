@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -8,7 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.START_DATE;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 class TaskTest {
 
@@ -82,9 +81,9 @@ class TaskTest {
         List<ReviewDateTask> result = task.review(reviewDate);
 
         // then
-        Assertions.assertThat(result).hasSize(cycle.size());
+        assertThat(result).hasSize(cycle.size());
         List<ReviewDateTask> emptyList = task.review(reviewDate);
-        Assertions.assertThat(emptyList).isEmpty();
+        assertThat(emptyList).isEmpty();
     }
 
     @Test
@@ -103,13 +102,13 @@ class TaskTest {
         List<ReviewDateTask> secondResult = task.review(secondReviewDate);
 
         // then
-        Assertions.assertThat(firstResult).hasSize(3);
+        assertThat(firstResult).hasSize(3);
         List<ReviewDateTask> firstEmptyList = task.review(firstReviewDates);
-        Assertions.assertThat(firstEmptyList).isEmpty();
+        assertThat(firstEmptyList).isEmpty();
 
-        Assertions.assertThat(secondResult).hasSize(2);
+        assertThat(secondResult).hasSize(2);
         List<ReviewDateTask> secondEmptyList = task.review(secondReviewDate);
-        Assertions.assertThat(secondEmptyList).isEmpty();
+        assertThat(secondEmptyList).isEmpty();
     }
 
 }
