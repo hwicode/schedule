@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.InvalidReviewCycleDateException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.ReviewCycleNullException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -34,7 +36,7 @@ class ReviewCycleTest {
 
         // when then
         assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(ReviewCycleNullException.class);
     }
 
     @ParameterizedTest
@@ -45,7 +47,7 @@ class ReviewCycleTest {
 
         // when then
         assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
-                .isInstanceOf(IllegalArgumentException.class);
+                .isInstanceOf(InvalidReviewCycleDateException.class);
     }
 
     @Test

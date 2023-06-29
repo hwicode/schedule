@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.common.jpa_converter.ReviewCycleDatesAttributeConverter;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.InvalidReviewCycleDateException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.ReviewCycleNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -32,11 +34,11 @@ public class ReviewCycle {
     private void validateReviewCycleDates(List<Integer> reviewCycleDates) {
         for (Integer reviewCycleDate : reviewCycleDates) {
             if (reviewCycleDate == null) {
-                throw new IllegalArgumentException();
+                throw new ReviewCycleNullException();
             }
 
             if (reviewCycleDate < 1 || reviewCycleDate > 60) {
-                throw new IllegalArgumentException();
+                throw new InvalidReviewCycleDateException();
             }
         }
     }
