@@ -25,6 +25,7 @@ public class TimeTable {
     @OneToMany(mappedBy = "timeTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
+    // 테스트 코드에서만 사용되는 생성자!
     public TimeTable(LocalDate today) {
         validator = new TimeTableValidator(today);
     }

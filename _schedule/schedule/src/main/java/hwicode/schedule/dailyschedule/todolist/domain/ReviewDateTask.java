@@ -22,7 +22,7 @@ public class ReviewDateTask {
     @ManyToOne(fetch = FetchType.LAZY)
     private ReviewDate reviewDate;
 
-    public ReviewDateTask(Task task, ReviewDate reviewDate) {
+    ReviewDateTask(Task task, ReviewDate reviewDate) {
         this.task = task;
         this.reviewDate = reviewDate;
     }

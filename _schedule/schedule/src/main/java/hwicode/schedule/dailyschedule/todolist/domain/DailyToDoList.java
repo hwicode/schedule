@@ -22,6 +22,7 @@ public class DailyToDoList {
     @Enumerated(value = EnumType.STRING)
     private Emoji emoji;
 
+    // 테스트 코드에서만 사용되는 생성자!
     public DailyToDoList(Emoji emoji) {
         this.emoji = emoji;
     }

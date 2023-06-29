@@ -50,6 +50,7 @@ public class Task {
     @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTask> subTasks = new ArrayList<>();
 
+    // 테스트 코드에서만 사용되는 생성자!
     public Task(DailyToDoList dailyToDoList, String name) {
         this.dailyToDoList = dailyToDoList;
         this.name = name;

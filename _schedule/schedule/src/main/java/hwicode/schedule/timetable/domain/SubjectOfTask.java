@@ -17,6 +17,7 @@ public class SubjectOfTask {
     @Column(nullable = false)
     private String name;
 
+    // 테스트 코드에서만 사용되는 생성자!
     public SubjectOfTask(String name) {
         this.name = name;
     }

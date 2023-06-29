@@ -35,6 +35,7 @@ public class LearningTime {
     @OneToOne(fetch = FetchType.LAZY)
     private SubjectOfSubTask subjectOfSubTask;
 
+    // 테스트 코드에서만 사용되는 생성자!
     LearningTime(LocalDateTime startTime) {
         this.startTime = startTime;
     }
