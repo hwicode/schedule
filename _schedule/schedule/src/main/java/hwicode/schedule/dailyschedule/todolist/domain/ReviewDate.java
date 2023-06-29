@@ -41,11 +41,12 @@ public class ReviewDate {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReviewDate that = (ReviewDate) o;
-        return Objects.equals(date, that.date);
+        return Objects.equals(id, that.id)
+                && Objects.equals(date, that.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date);
+        return Objects.hash(id, date);
     }
 }

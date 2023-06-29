@@ -44,12 +44,13 @@ public class ReviewDateTask {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ReviewDateTask that = (ReviewDateTask) o;
-        return Objects.equals(task, that.task)
+        return Objects.equals(id, that.id)
+                && Objects.equals(task, that.task)
                 && Objects.equals(reviewDate, that.reviewDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(task, reviewDate);
+        return Objects.hash(id, task, reviewDate);
     }
 }
