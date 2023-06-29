@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.cross_boundedcontext_test;
+package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
@@ -19,7 +19,7 @@ import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NA
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class ToDoListExternalIntegrationTest {
+class ToDoListAndChecklistTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;

@@ -1,12 +1,8 @@
-package hwicode.schedule.dailyschedule.cross_boundedcontext_test;
+package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.timetable.application.LearningTimeAggregateService;
-import hwicode.schedule.timetable.domain.LearningTime;
-import hwicode.schedule.timetable.domain.TimeTable;
-import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
-import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
+import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -15,22 +11,32 @@ import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoLis
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
+import hwicode.schedule.timetable.application.LearningTimeAggregateService;
+import hwicode.schedule.timetable.domain.LearningTime;
+import hwicode.schedule.timetable.domain.TimeTable;
+import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
+import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.timetable.TimeTableDataHelper.*;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.SUB_TASK_NAME;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
+import static hwicode.schedule.timetable.TimeTableDataHelper.NEW_START_TIME;
+import static hwicode.schedule.timetable.TimeTableDataHelper.START_TIME;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class SubTaskSaveAndDeleteServiceIntegrationTest {
+class ToDoListAndTimeTableTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
+
+    @Autowired
+    TaskSaveAndDeleteService taskSaveAndDeleteService;
 
     @Autowired
     SubTaskSaveAndDeleteService subTaskSaveAndDeleteService;
@@ -58,50 +64,41 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-    private Long saveSubjectOfSubTask(Long timeTableId) {
-        DailyToDoList dailyToDoList = dailyToDoListRepository.findById(timeTableId).orElseThrow();
-        Task task = taskRepository.save(new Task(dailyToDoList, TASK_NAME));
-        SubTask subTask = subTaskRepository.save(new SubTask(task, SUB_TASK_NAME));
-        return subTask.getId();
-    }
-
     @Test
-    void ToDo_리스트에_서브_과제를_추가할_수_있다() {
+    void 과제와_연관된_학습_시간이_있더라도_과제를_삭제할_수_있다() {
         // given
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
         timeTableRepository.save(timeTable);
 
-        saveSubjectOfSubTask(timeTable.getId());
+        Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId());
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(timeTable.getId(), TASK_NAME, NEW_SUBJECT);
+        learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
+        learningTimeAggregateService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
-        // when
-        Long subTaskId = subTaskSaveAndDeleteService.save(subTaskSaveRequest);
-
-        // then
-        assertThat(subTaskRepository.existsById(subTaskId)).isTrue();
-    }
-
-    @Test
-    void ToDo_리스트에_서브_과제를_삭제할_수_있다() {
-        // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
-        timeTableRepository.save(timeTable);
-
-        Long subjectOfSubTaskId = saveSubjectOfSubTask(timeTable.getId());
-
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(timeTable.getId(), TASK_NAME, subjectOfSubTaskId, SUB_TASK_NAME);
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(timeTable.getId(), subjectOfTaskId, TASK_NAME);
 
         // when
-        subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);
+        taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest);
 
         // then
-        shouldDelete(SUB_TASK_NAME, subTaskDeleteRequest);
-    }
-
-    private void shouldDelete(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        assertThatThrownBy(() -> subTaskSaveAndDeleteService.delete(subTaskName, subTaskDeleteRequest))
+        assertThatThrownBy(() -> taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest))
                 .isInstanceOf(NotValidExternalRequestException.class);
+        checkSubjectOfTaskIsDelete(learningTime.getId());
+        checkSubjectOfTaskIsDelete(learningTime2.getId());
+    }
+
+    private Long saveSubjectOfTask(Long timeTableId) {
+        DailyToDoList dailyToDoList = dailyToDoListRepository.findById(timeTableId).orElseThrow();
+        Task savedTask = taskRepository.save(new Task(dailyToDoList, TASK_NAME));
+        return savedTask.getId();
+    }
+
+    private void checkSubjectOfTaskIsDelete(Long learningTimeId) {
+        LearningTime savedLearningTime = learningTimeRepository.findById(learningTimeId).orElseThrow();
+        boolean isDelete = savedLearningTime.deleteSubject();
+        assertThat(isDelete).isFalse();
     }
 
     @Test
@@ -123,9 +120,17 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
         subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest);
 
         // then
-        shouldDelete(SUB_TASK_NAME, subTaskDeleteRequest);
+        assertThatThrownBy(() -> subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest))
+                .isInstanceOf(NotValidExternalRequestException.class);
         checkSubjectOfSubTaskIsDelete(learningTime.getId());
         checkSubjectOfSubTaskIsDelete(learningTime2.getId());
+    }
+
+    private Long saveSubjectOfSubTask(Long timeTableId) {
+        DailyToDoList dailyToDoList = dailyToDoListRepository.findById(timeTableId).orElseThrow();
+        Task task = taskRepository.save(new Task(dailyToDoList, TASK_NAME));
+        SubTask subTask = subTaskRepository.save(new SubTask(task, SUB_TASK_NAME));
+        return subTask.getId();
     }
 
     private void checkSubjectOfSubTaskIsDelete(Long learningTimeId) {
