@@ -34,6 +34,12 @@ public class SubTask {
         this.subTaskStatus = SubTaskStatus.TODO;
     }
 
+    // 테스트 코드에서만 사용되는 생성자!
+    public SubTask(String name, SubTaskStatus subTaskStatus) {
+        this.name = name;
+        this.subTaskStatus = subTaskStatus;
+    }
+
     SubTask cloneSubTask() {
         return new SubTask(this.task, this.name);
     }
@@ -49,12 +55,11 @@ public class SubTask {
         SubTask subTask = (SubTask) o;
         return Objects.equals(id, subTask.id)
                 && Objects.equals(task, subTask.task)
-                && Objects.equals(name, subTask.name)
-                && subTaskStatus == subTask.subTaskStatus;
+                && Objects.equals(name, subTask.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, task, name, subTaskStatus);
+        return Objects.hash(id, task, name);
     }
 }

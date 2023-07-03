@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
@@ -14,7 +16,7 @@ class ReviewDateTest {
     private List<Task> addTasksToReviewDate(ReviewDate reviewDate, int number) {
         List<Task> tasks = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            Task task = new Task(null, TASK_NAME + i, null, null, null, createSubTasks(i));
+            Task task = new Task(TASK_NAME + i, TaskStatus.PROGRESS, createSubTasks(i));
             tasks.add(task);
             task.review(List.of(reviewDate));
         }
@@ -24,7 +26,7 @@ class ReviewDateTest {
     private List<SubTask> createSubTasks(int number) {
         List<SubTask> subTasks = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            SubTask subTask = new SubTask(null, SUB_TASK_NAME + i);
+            SubTask subTask = new SubTask(SUB_TASK_NAME + i, SubTaskStatus.DONE);
             subTasks.add(subTask);
         }
         return subTasks;
