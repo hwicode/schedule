@@ -1,13 +1,18 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.START_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class TaskTest {
 
@@ -75,38 +80,57 @@ class TaskTest {
         // given
         Task task = new Task();
         List<Integer> cycle = List.of(1, 2, 5, 10, 20);
-        List<ReviewDate> reviewDate = createReviewDate(START_DATE, cycle);
+        List<ReviewDate> reviewDates = createReviewDate(START_DATE, cycle);
 
         // when
-        List<ReviewDateTask> result = task.review(reviewDate);
+        List<ReviewDateTask> result = task.review(reviewDates);
 
         // then
         assertThat(result).hasSize(cycle.size());
-        List<ReviewDateTask> emptyList = task.review(reviewDate);
+        List<ReviewDateTask> emptyList = task.review(reviewDates);
         assertThat(emptyList).isEmpty();
     }
 
-    @Test
-    void 과제를_복습할_때_중복되는_날짜들을_제외하고_날짜들을_생성할_수_있다() {
+    private static Stream<Arguments> provideReviewCyclesAndNewSize() {
+        return Stream.of(
+                arguments(
+                        List.of(1, 2, 5),
+                        List.of(1, 2, 5, 10, 20),
+                        2
+                ),
+                arguments(
+                        List.of(1, 5, 9, 15),
+                        List.of(1, 2, 5, 10, 20),
+                        3
+                ),
+                arguments(
+                        List.of(10, 20, 30, 40, 50),
+                        List.of(1, 2, 5, 10, 20),
+                        3
+                )
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideReviewCyclesAndNewSize")
+    void 과제를_복습할_때_중복되는_날짜들을_제외하고_날짜들을_생성할_수_있다(List<Integer> firstCycle, List<Integer> secondCycle, int newDatesSize) {
         // given
         Task task = new Task();
 
-        List<Integer> firstCycle = List.of(1, 2, 5);
         List<ReviewDate> firstReviewDates = createReviewDate(START_DATE, firstCycle);
         List<ReviewDateTask> firstResult = task.review(firstReviewDates);
 
-        List<Integer> secondCycle = List.of(1, 2, 5, 10, 20);
         List<ReviewDate> secondReviewDate = createReviewDate(START_DATE, secondCycle);
 
         // when
         List<ReviewDateTask> secondResult = task.review(secondReviewDate);
 
         // then
-        assertThat(firstResult).hasSize(3);
+        assertThat(firstResult).hasSize(firstCycle.size());
         List<ReviewDateTask> firstEmptyList = task.review(firstReviewDates);
         assertThat(firstEmptyList).isEmpty();
 
-        assertThat(secondResult).hasSize(2);
+        assertThat(secondResult).hasSize(newDatesSize);
         List<ReviewDateTask> secondEmptyList = task.review(secondReviewDate);
         assertThat(secondEmptyList).isEmpty();
     }

@@ -4,23 +4,33 @@ import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.Inv
 import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.ReviewCycleNullException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.NEW_REVIEW_CYCLE_NAME;
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.REVIEW_CYCLE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ReviewCycleTest {
 
-    @Test
-    void 복습_주기를_생성할_수_있다() {
-        // given
-        List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
+    private static Stream<List<Integer>> provideReviewCycleDates() {
+        return Stream.of(
+                List.of(1, 2, 4, 7, 14, 60),
+                List.of(4, 5, 6, 10, 20, 50),
+                List.of(7, 8, 9, 12, 5, 2)
+        );
+    }
 
+    @ParameterizedTest
+    @MethodSource("provideReviewCycleDates")
+    void 복습_주기를_생성할_수_있다(List<Integer> reviewCycleDates) {
         // when
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
 
@@ -76,13 +86,28 @@ class ReviewCycleTest {
         assertThat(isChanged).isFalse();
     }
 
-    @Test
-    void 복습_주기의_주기를_변경할_수_있다() {
-        // given
-        List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+    private static Stream<Arguments> provideReviewCycles() {
+        return Stream.of(
+                arguments(
+                        List.of(1, 2, 5),
+                        List.of(1, 2, 5, 10, 20)
+                ),
+                arguments(
+                        List.of(1, 5, 9, 15),
+                        List.of(1, 2, 5, 10, 20)
+                ),
+                arguments(
+                        List.of(10, 20, 30, 40, 50),
+                        List.of(1, 2, 5, 10, 20)
+                )
+        );
+    }
 
-        List<Integer> newReviewCycleDates = List.of(1, 5, 10, 20);
+    @ParameterizedTest
+    @MethodSource("provideReviewCycles")
+    void 복습_주기의_주기를_변경할_수_있다(List<Integer> reviewCycleDates, List<Integer> newReviewCycleDates) {
+        // given
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
 
         // when
         List<Integer> result = reviewCycle.changeCycle(newReviewCycleDates);
