@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.shared_domain.Importance;
+import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
