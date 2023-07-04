@@ -1,11 +1,10 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
-import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Objects;
+import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -23,35 +22,17 @@ public class ReviewDateTask {
     @ManyToOne(fetch = FetchType.LAZY)
     private ReviewDate reviewDate;
 
+    @Column(nullable = false)
+    private LocalDate date;
+
     ReviewDateTask(ReviewTask reviewTask, ReviewDate reviewDate) {
         this.reviewTask = reviewTask;
         this.reviewDate = reviewDate;
+        this.date = reviewDate.getDate();
     }
 
     boolean isSameDate(ReviewDate reviewDate) {
-        return this.reviewDate.equals(reviewDate);
+        return this.date.equals(reviewDate.getDate());
     }
 
-    void addToReviewDate() {
-        reviewDate.addReviewDateTask(this);
-    }
-
-    ReviewTask cloneTask(DailyToDoList dailyToDoList) {
-        return reviewTask.cloneTask(dailyToDoList);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewDateTask that = (ReviewDateTask) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(reviewTask, that.reviewTask)
-                && Objects.equals(reviewDate, that.reviewDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, reviewTask, reviewDate);
-    }
 }

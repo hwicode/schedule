@@ -12,7 +12,6 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -83,7 +82,6 @@ public class ReviewTask {
                 .map(reviewDate -> new ReviewDateTask(this, reviewDate))
                 .collect(Collectors.toList());
 
-        uniqueReviewDateTasks.forEach(ReviewDateTask::addToReviewDate);
         reviewDateTasks.addAll(uniqueReviewDateTasks);
         return uniqueReviewDateTasks;
     }
@@ -98,21 +96,4 @@ public class ReviewTask {
         return this.id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewTask task = (ReviewTask) o;
-        return Objects.equals(id, task.id)
-                && Objects.equals(name, task.name)
-                && priority == task.priority
-                && importance == task.importance
-                && difficulty == task.difficulty
-                && Objects.equals(reviewSubTasks, task.reviewSubTasks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, priority, importance, difficulty, reviewSubTasks);
-    }
 }

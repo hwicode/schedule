@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "sub_task")
@@ -48,18 +47,4 @@ public class ReviewSubTask {
         return id;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewSubTask subTask = (ReviewSubTask) o;
-        return Objects.equals(id, subTask.id)
-                && Objects.equals(reviewTask, subTask.reviewTask)
-                && Objects.equals(name, subTask.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, reviewTask, name);
-    }
 }
