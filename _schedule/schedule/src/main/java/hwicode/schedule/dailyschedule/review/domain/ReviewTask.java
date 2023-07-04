@@ -11,6 +11,7 @@ import org.hibernate.annotations.ColumnDefault;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -51,28 +52,26 @@ public class ReviewTask {
     @OneToMany(mappedBy = "reviewTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
 
-    ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty, List<ReviewSubTask> reviewSubTasks) {
+    public ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty) {
         this.reviewList = reviewList;
         this.name = name;
         this.priority = priority;
         this.importance = importance;
         this.difficulty = difficulty;
         this.taskStatus = TaskStatus.TODO;
-        this.reviewSubTasks.addAll(reviewSubTasks);
-    }
-
-    // 테스트 코드에서만 사용되는 생성자!
-    public ReviewTask(String name, TaskStatus taskStatus, List<ReviewSubTask> reviewSubTasks) {
-        this.name = name;
-        this.taskStatus = taskStatus;
-        this.reviewSubTasks.addAll(reviewSubTasks);
     }
 
     public ReviewTask cloneTask(ReviewList reviewList) {
+        ReviewTask clonedTask = new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty);
         List<ReviewSubTask> clonedReviewSubTasks = this.reviewSubTasks.stream()
-                .map(ReviewSubTask::cloneSubTask)
+                .map(reviewSubTask -> reviewSubTask.cloneSubTask(clonedTask))
                 .collect(Collectors.toList());
-        return new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty, clonedReviewSubTasks);
+        clonedTask.addAllToReviewSubTasks(clonedReviewSubTasks);
+        return clonedTask;
+    }
+
+    public void addAllToReviewSubTasks(List<ReviewSubTask> clonedReviewSubTasks) {
+        this.reviewSubTasks.addAll(clonedReviewSubTasks);
     }
 
     public List<ReviewDateTask> review(List<ReviewDate> reviewDates) {
@@ -93,6 +92,24 @@ public class ReviewTask {
 
     public Long getId() {
         return this.id;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ReviewTask that = (ReviewTask) o;
+        return Objects.equals(id, that.id)
+                && Objects.equals(name, that.name)
+                && priority == that.priority
+                && importance == that.importance
+                && difficulty == that.difficulty
+                && Objects.equals(reviewSubTasks, that.reviewSubTasks);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, priority, importance, difficulty, reviewSubTasks);
     }
 
 }

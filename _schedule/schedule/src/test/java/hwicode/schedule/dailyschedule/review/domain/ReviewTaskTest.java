@@ -4,17 +4,44 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.START_DATE;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.SUB_TASK_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class ReviewTaskTest {
+
+    private ReviewTask createReviewTaskWithReviewSubTasks(int number) {
+        ReviewTask reviewTask = new ReviewTask();
+        List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
+        for (int i = 0; i < number; i++) {
+            ReviewSubTask reviewSubTask = new ReviewSubTask(reviewTask, SUB_TASK_NAME + i);
+            reviewSubTasks.add(reviewSubTask);
+        }
+        reviewTask.addAllToReviewSubTasks(reviewSubTasks);
+        return reviewTask;
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {1, 3, 5, 6, 7, 20})
+    void 과제를_복사할_수_있다(int number) {
+        // given
+        ReviewTask reviewTask = createReviewTaskWithReviewSubTasks(number);
+
+        // when
+        ReviewTask clonedTask = reviewTask.cloneTask(new ReviewList());
+
+        // then
+        assertThat(clonedTask).isEqualTo(reviewTask);
+    }
 
     private List<ReviewDate> createReviewDate(LocalDate startDate, List<Integer> cycle) {
         return cycle.stream()
