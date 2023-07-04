@@ -1,12 +1,13 @@
-package hwicode.schedule.dailyschedule.todolist.domain;
+package hwicode.schedule.dailyschedule.review.domain;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -30,11 +31,11 @@ public class ReviewDate {
         this.reviewDateTasks.add(reviewDateTask);
     }
 
-    public List<Task> createTodayReviewTasks(DailyToDoList dailyToDoList) {
-        return reviewDateTasks.stream()
-                .map(reviewDateTask -> reviewDateTask.cloneTask(dailyToDoList))
-                .collect(Collectors.toList());
-    }
+//    public List<Task> createTodayReviewTasks(DailyToDoList dailyToDoList) {
+//        return reviewDateTasks.stream()
+//                .map(reviewDateTask -> reviewDateTask.cloneTask(dailyToDoList))
+//                .collect(Collectors.toList());
+//    }
 
     @Override
     public boolean equals(Object o) {

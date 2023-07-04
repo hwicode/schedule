@@ -1,5 +1,6 @@
-package hwicode.schedule.dailyschedule.todolist.domain;
+package hwicode.schedule.dailyschedule.review.domain;
 
+import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -16,14 +17,14 @@ public class ReviewDateTask {
 
     @JoinColumn(name = "task_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private Task task;
+    private ReviewTask reviewTask;
 
     @JoinColumn(name = "review_date_id")
     @ManyToOne(fetch = FetchType.LAZY)
     private ReviewDate reviewDate;
 
-    ReviewDateTask(Task task, ReviewDate reviewDate) {
-        this.task = task;
+    ReviewDateTask(ReviewTask reviewTask, ReviewDate reviewDate) {
+        this.reviewTask = reviewTask;
         this.reviewDate = reviewDate;
     }
 
@@ -35,8 +36,8 @@ public class ReviewDateTask {
         reviewDate.addReviewDateTask(this);
     }
 
-    Task cloneTask(DailyToDoList dailyToDoList) {
-        return task.cloneTask(dailyToDoList);
+    ReviewTask cloneTask(DailyToDoList dailyToDoList) {
+        return reviewTask.cloneTask(dailyToDoList);
     }
 
     @Override
@@ -45,12 +46,12 @@ public class ReviewDateTask {
         if (o == null || getClass() != o.getClass()) return false;
         ReviewDateTask that = (ReviewDateTask) o;
         return Objects.equals(id, that.id)
-                && Objects.equals(task, that.task)
+                && Objects.equals(reviewTask, that.reviewTask)
                 && Objects.equals(reviewDate, that.reviewDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, task, reviewDate);
+        return Objects.hash(id, reviewTask, reviewDate);
     }
 }

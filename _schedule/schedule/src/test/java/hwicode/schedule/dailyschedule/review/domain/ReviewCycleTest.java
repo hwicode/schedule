@@ -1,7 +1,7 @@
-package hwicode.schedule.dailyschedule.todolist.domain;
+package hwicode.schedule.dailyschedule.review.domain;
 
-import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.InvalidReviewCycleDateException;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.ReviewCycleNullException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.InvalidReviewCycleDateException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleNullException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;

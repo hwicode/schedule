@@ -1,8 +1,8 @@
-package hwicode.schedule.dailyschedule.todolist.domain;
+package hwicode.schedule.dailyschedule.review.domain;
 
 import hwicode.schedule.common.jpa_converter.ReviewCycleDatesAttributeConverter;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.InvalidReviewCycleDateException;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle.ReviewCycleNullException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.InvalidReviewCycleDateException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -57,7 +57,7 @@ public class ReviewCycle {
         return new ArrayList<>(newReviewCycleDates);
     }
 
-    List<Integer> getCycle() {
+    public List<Integer> getCycle() {
         return new ArrayList<>(reviewCycleDates);
     }
 

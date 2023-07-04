@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.exception.domain.review_cycle;
+package hwicode.schedule.dailyschedule.review.exception.domain.review_cycle;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
