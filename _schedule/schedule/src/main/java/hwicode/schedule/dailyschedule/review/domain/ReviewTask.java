@@ -1,10 +1,9 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
-import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -25,7 +24,7 @@ public class ReviewTask {
 
     @JoinColumn(name = "daily_schedule_id")
     @ManyToOne(fetch = FetchType.LAZY)
-    private DailyToDoList dailyToDoList;
+    private ReviewList reviewList;
 
     @Column(nullable = false)
     private String name;
@@ -52,8 +51,8 @@ public class ReviewTask {
     @OneToMany(mappedBy = "reviewTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
 
-    ReviewTask(DailyToDoList dailyToDoList, String name, Priority priority, Importance importance, Difficulty difficulty, List<ReviewSubTask> reviewSubTasks) {
-        this.dailyToDoList = dailyToDoList;
+    ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty, List<ReviewSubTask> reviewSubTasks) {
+        this.reviewList = reviewList;
         this.name = name;
         this.priority = priority;
         this.importance = importance;
@@ -69,11 +68,11 @@ public class ReviewTask {
         this.reviewSubTasks.addAll(reviewSubTasks);
     }
 
-    ReviewTask cloneTask(DailyToDoList dailyToDoList) {
+    public ReviewTask cloneTask(ReviewList reviewList) {
         List<ReviewSubTask> clonedReviewSubTasks = this.reviewSubTasks.stream()
                 .map(ReviewSubTask::cloneSubTask)
                 .collect(Collectors.toList());
-        return new ReviewTask(dailyToDoList, this.name, this.priority, this.importance, this.difficulty, clonedReviewSubTasks);
+        return new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty, clonedReviewSubTasks);
     }
 
     public List<ReviewDateTask> review(List<ReviewDate> reviewDates) {
