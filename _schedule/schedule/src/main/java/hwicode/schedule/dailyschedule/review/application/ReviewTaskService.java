@@ -38,4 +38,9 @@ public class ReviewTaskService {
         reviewDateTaskRepository.saveAll(reviewDateTasks);
     }
 
+    @Transactional
+    public void cancelReviewedTask(Long reviewTaskId) {
+        reviewDateTaskRepository.deleteAllReviewDateTasksBy(reviewTaskId);
+    }
+
 }

@@ -10,10 +10,13 @@ import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTask
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,6 +63,35 @@ class ReviewTaskServiceTest {
         assertThat(reviewDateTaskRepository.findAll()).hasSize(cycle.size());
     }
 
+    private static Stream<List<Integer>> createCycle() {
+        return Stream.of(
+                List.of(1, 2, 5, 7),
+                List.of(4, 7, 20, 23, 25, 30, 50),
+                List.of(1, 2, 4, 8, 16, 32),
+                List.of(7, 14, 21, 28, 35, 42, 49, 56),
+                List.of(7)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("createCycle")
+    void 과제의_복습을_취소할_수_있다(List<Integer> cycle) {
+        // given
+        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+
+        reviewTaskRepository.save(reviewTask);
+        reviewCycleRepository.save(reviewCycle);
+
+        reviewTaskService.reviewTask(reviewTask.getId(), reviewCycle.getId(), START_DATE);
+
+        // when
+        reviewTaskService.cancelReviewedTask(reviewTask.getId());
+
+        // then
+        assertThat(reviewDateTaskRepository.findAll()).isEmpty();
+    }
+
     @Test
     void 과제를_복습할_때_복습할_과제가_존재하지_않으면_에러가_발생한다() {
         // given
@@ -70,7 +102,8 @@ class ReviewTaskServiceTest {
         reviewCycleRepository.save(reviewCycle);
 
         // when then
-        assertThatThrownBy(() -> reviewTaskService.reviewTask(noneExistId, reviewCycle.getId(), START_DATE))
+        Long reviewCycleId = reviewCycle.getId();
+        assertThatThrownBy(() -> reviewTaskService.reviewTask(noneExistId, reviewCycleId, START_DATE))
                 .isInstanceOf(ReviewTaskNotFoundException.class);
     }
 
@@ -83,7 +116,8 @@ class ReviewTaskServiceTest {
         reviewTaskRepository.save(reviewTask);
 
         // when then
-        assertThatThrownBy(() -> reviewTaskService.reviewTask(reviewTask.getId(), noneExistId, START_DATE))
+        Long reviewTaskId = reviewTask.getId();
+        assertThatThrownBy(() -> reviewTaskService.reviewTask(reviewTaskId, noneExistId, START_DATE))
                 .isInstanceOf(ReviewCycleNotFoundException.class);
     }
 
