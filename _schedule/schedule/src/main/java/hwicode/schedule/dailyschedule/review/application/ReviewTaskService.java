@@ -4,6 +4,8 @@ import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDate;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDateTask;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewTaskNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
@@ -26,8 +28,10 @@ public class ReviewTaskService {
 
     @Transactional
     public void reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
-        ReviewTask reviewTask = reviewTaskRepository.findById(reviewTaskId).orElseThrow();
-        ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId).orElseThrow();
+        ReviewTask reviewTask = reviewTaskRepository.findById(reviewTaskId)
+                .orElseThrow(ReviewTaskNotFoundException::new);
+        ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId)
+                .orElseThrow(ReviewCycleNotFoundException::new);
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, startDate);
 
         List<ReviewDateTask> reviewDateTasks = reviewTask.review(reviewDates);
