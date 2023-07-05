@@ -61,4 +61,8 @@ public class ReviewCycle {
         return new ArrayList<>(reviewCycleDates);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }
