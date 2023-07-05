@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.NEW_REVIEW_CYCLE_NAME;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.REVIEW_CYCLE_NAME;
+import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.NEW_REVIEW_CYCLE_NAME;
+import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.REVIEW_CYCLE_NAME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;

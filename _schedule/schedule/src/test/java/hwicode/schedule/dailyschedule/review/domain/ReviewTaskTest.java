@@ -12,8 +12,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.START_DATE;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.SUB_TASK_NAME;
+import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.REVIEW_SUB_TASK_NAME;
+import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.START_DATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
@@ -23,7 +23,7 @@ class ReviewTaskTest {
         ReviewTask reviewTask = new ReviewTask();
         List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            ReviewSubTask reviewSubTask = new ReviewSubTask(reviewTask, SUB_TASK_NAME + i);
+            ReviewSubTask reviewSubTask = new ReviewSubTask(reviewTask, REVIEW_SUB_TASK_NAME + i);
             reviewSubTasks.add(reviewSubTask);
         }
         reviewTask.addAllToReviewSubTasks(reviewSubTasks);
