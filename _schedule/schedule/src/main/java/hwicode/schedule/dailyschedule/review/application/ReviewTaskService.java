@@ -28,7 +28,7 @@ public class ReviewTaskService {
 
     @Transactional
     public void reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
-        ReviewTask reviewTask = reviewTaskRepository.findById(reviewTaskId)
+        ReviewTask reviewTask = reviewTaskRepository.findReviewTaskWithReviewDateTasks(reviewTaskId)
                 .orElseThrow(ReviewTaskNotFoundException::new);
         ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId)
                 .orElseThrow(ReviewCycleNotFoundException::new);
