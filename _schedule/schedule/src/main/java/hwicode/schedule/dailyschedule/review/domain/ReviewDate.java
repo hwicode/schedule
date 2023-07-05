@@ -24,4 +24,9 @@ public class ReviewDate {
     LocalDate getDate() {
         return this.date;
     }
+
+    public Long getId() {
+        return id;
+    }
+
 }
