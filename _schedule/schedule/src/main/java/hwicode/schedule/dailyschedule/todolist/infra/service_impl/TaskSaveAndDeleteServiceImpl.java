@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.review.infra.ReviewTaskConstraintRemover;
 import hwicode.schedule.timetable.application.LearningTimeConstraintRemovalService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
@@ -23,7 +24,9 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     private final TaskCheckerSubService taskCheckerSubService;
     private final TaskRepository taskRepository;
+
     private final LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
+    private final ReviewTaskConstraintRemover reviewTaskConstraintRemover;
 
     @Override
     @Transactional
@@ -32,16 +35,15 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
         Task task = taskRepository.findById(taskId)
                 .orElseThrow(TaskNotExistException::new);
-
         task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
         return taskId;
     }
 
+    // Task를 생성하게 되면 Checklist 바운디드 컨텍스트에 영향을 주게 됨
     private Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
         try {
-            return taskCheckerSubService.saveTaskChecker(
-                    createTaskCheckerSaveRequest(taskSaveRequest)
-            );
+            TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(taskSaveRequest);
+            return taskCheckerSubService.saveTaskChecker(taskCheckerSaveRequest);
         } catch (BusinessException e) {
             throw new NotValidExternalRequestException(
                     List.of(e.getMessage())
@@ -59,9 +61,16 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
     @Override
     @Transactional
     public Long delete(String taskName, TaskDeleteRequest taskDeleteRequest) {
-        learningTimeConstraintRemovalService.deleteSubjectOfTaskBelongingToLearningTime(taskDeleteRequest.getTaskId());
+        Long taskId = taskDeleteRequest.getTaskId();
+        deleteForeignKeyConstraint(taskId);
         deleteTaskChecker(taskName, taskDeleteRequest);
-        return taskDeleteRequest.getTaskId();
+        return taskId;
+    }
+
+    // 하나의 테이블에 여러 개의 엔티티가 매핑되어 있다. 다른 바운디드 컨텍스트에서 Task 테이블과의 매핑을 제거하는 메서드
+    private void deleteForeignKeyConstraint(Long taskId) {
+        learningTimeConstraintRemovalService.deleteSubjectOfTaskBelongingToLearningTime(taskId);
+        reviewTaskConstraintRemover.deleteReviewTaskConstraint(taskId);
     }
 
     private void deleteTaskChecker(String taskName, TaskDeleteRequest taskDeleteRequest) {
