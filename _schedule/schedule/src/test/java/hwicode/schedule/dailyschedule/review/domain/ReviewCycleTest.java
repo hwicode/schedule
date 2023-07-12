@@ -164,18 +164,16 @@ class ReviewCycleTest {
     }
 
     @Test
-    void 복습_주기의_주기를_가져올_때_가져온_리스트가_변해도_복습_주기는_변화가_없다() {
+    void 복습_주기의_주기를_가져올_때_가져온_리스트에_값을_추가하면_에러가_발생한다() {
         // given
         List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
 
         List<Integer> cycle = reviewCycle.getCycle();
 
-        // when
-        cycle.add(30);
-
-        // then
-        assertThat(reviewCycle.getCycle()).hasSize(3);
+        // when then
+        assertThatThrownBy(() -> cycle.add(1))
+                .isInstanceOf(RuntimeException.class);
     }
 
 }

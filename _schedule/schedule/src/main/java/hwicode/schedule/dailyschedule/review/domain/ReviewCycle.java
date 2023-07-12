@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,7 +59,7 @@ public class ReviewCycle {
     }
 
     public List<Integer> getCycle() {
-        return new ArrayList<>(reviewCycleDates);
+        return Collections.unmodifiableList(reviewCycleDates);
     }
 
     public Long getId() {
