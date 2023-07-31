@@ -1,16 +1,18 @@
 package hwicode.schedule.dailyschedule.review.infra;
 
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
+import hwicode.schedule.dailyschedule.todolist.infra.service_impl.TaskConstraintRemover;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
-@Service
-public class ReviewTaskConstraintRemover {
+@Component
+public class ReviewTaskConstraintRemover implements TaskConstraintRemover {
 
     private final ReviewDateTaskRepository reviewDateTaskRepository;
 
-    public void deleteReviewTaskConstraint(Long reviewTaskId) {
-        reviewDateTaskRepository.deleteAllReviewDateTasksBy(reviewTaskId);
+    @Override
+    public void delete(Long taskId) {
+        reviewDateTaskRepository.deleteAllReviewDateTasksBy(taskId);
     }
 }
