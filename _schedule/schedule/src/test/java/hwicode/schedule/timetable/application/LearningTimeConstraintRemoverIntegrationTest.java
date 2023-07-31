@@ -6,6 +6,8 @@ import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
+import hwicode.schedule.timetable.infra.SubjectOfSubTaskConstraintRemover;
+import hwicode.schedule.timetable.infra.SubjectOfTaskConstraintRemover;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
@@ -18,13 +20,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-class LearningTimeConstraintRemovalServiceIntegrationTest {
+class LearningTimeConstraintRemoverIntegrationTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    LearningTimeConstraintRemovalService learningTimeConstraintRemovalService;
+    SubjectOfTaskConstraintRemover subjectOfTaskConstraintRemover;
+
+    @Autowired
+    SubjectOfSubTaskConstraintRemover subjectOfSubTaskConstraintRemover;
 
     @Autowired
     TimeTableRepository timeTableRepository;
@@ -58,7 +63,7 @@ class LearningTimeConstraintRemovalServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        learningTimeConstraintRemovalService.deleteSubjectOfTaskBelongingToLearningTime(subjectOfTask.getId());
+        subjectOfTaskConstraintRemover.delete(subjectOfTask.getId());
 
         // then
         checkSubjectIsDelete(learningTime.getId());
@@ -80,7 +85,7 @@ class LearningTimeConstraintRemovalServiceIntegrationTest {
         timeTableRepository.save(timeTable);
 
         // when
-        learningTimeConstraintRemovalService.deleteSubjectOfSubTaskBelongingToLearningTime(subjectOfSubTask.getId());
+        subjectOfSubTaskConstraintRemover.delete(subjectOfSubTask.getId());
 
         // then
         checkSubjectIsDelete(learningTime.getId());
