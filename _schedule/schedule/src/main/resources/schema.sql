@@ -16,7 +16,7 @@ SET foreign_key_checks = 1;
 
 create table daily_schedule (
    id bigint not null auto_increment,
-   today date,
+   today timestamp,
    review text,
    emoji varchar(255) DEFAULT 'NOT_BAD',
    calendar_id bigint,
@@ -55,7 +55,7 @@ create table learning_time (
 
 create table calendar (
    id bigint not null auto_increment,
-   year_and_month date not null unique,
+   year_and_month timestamp not null unique,
    weekly_study_date tinyint,
    primary key (id)
 ) engine=InnoDB;
@@ -84,7 +84,7 @@ create table sub_goal (
 
 create table review_date (
    id bigint not null auto_increment,
-   date date not null unique,
+   date timestamp not null unique,
    primary key (id)
 ) engine=InnoDB;
 
@@ -92,7 +92,7 @@ create table review_date_task (
    id bigint not null auto_increment,
    task_id bigint not null,
    review_date_id bigint not null,
-   date date not null,
+   date timestamp not null,
    primary key (id)
 ) engine=InnoDB;
 
