@@ -1,11 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
-import hwicode.schedule.common.exception.BusinessException;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerDeleteRequest;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import lombok.RequiredArgsConstructor;
@@ -24,15 +22,9 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     @Override
     @Transactional
     public Long save(SubTaskSaveRequest subTaskSaveRequest) {
-       try {
-           return subTaskCheckerSubService.saveSubTaskChecker(
-                   createSubTaskCheckerSaveRequest(subTaskSaveRequest)
-           );
-       } catch (BusinessException e) {
-           throw new NotValidExternalRequestException(
-                   List.of(e.getMessage())
-           );
-       }
+        return subTaskCheckerSubService.saveSubTaskChecker(
+                createSubTaskCheckerSaveRequest(subTaskSaveRequest)
+        );
     }
 
     private SubTaskCheckerSaveRequest createSubTaskCheckerSaveRequest(SubTaskSaveRequest subTaskSaveRequest) {
@@ -60,16 +52,9 @@ public class SubTaskSaveAndDeleteServiceImpl implements SubTaskSaveAndDeleteServ
     }
 
     private void deleteSubTaskChecker(String subTaskName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        try {
             subTaskCheckerSubService.deleteSubTaskChecker(
-                    subTaskName,
-                    createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
+                    subTaskName, createSubTaskCheckerDeleteRequest(subTaskDeleteRequest)
             );
-        } catch (BusinessException e) {
-            throw new NotValidExternalRequestException(
-                    List.of(e.getMessage())
-            );
-        }
     }
 
     private SubTaskCheckerDeleteRequest createSubTaskCheckerDeleteRequest(SubTaskDeleteRequest subTaskDeleteRequest) {

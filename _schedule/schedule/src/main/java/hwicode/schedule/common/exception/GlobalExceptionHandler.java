@@ -1,7 +1,6 @@
 package hwicode.schedule.common.exception;
 
 import hwicode.schedule.common.exception.ErrorResponse.ValidationError;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpHeaders;
@@ -26,8 +25,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     private static final String LOG_FORMAT = "Class : {}, Message : {}";
     private static final String CUSTOM_LOG_FORMAT = "Class : {}, Message : {}, CustomMessage : {}";
-    private static final String EXTERNAL_ERROR_LOG_FORMAT = "Class : {}, Message : {}, ExternalErrorMessage : {}";
-    private static final String EXTERNAL_ERROR = "externalError";
 
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<Object> handleBusinessException(BusinessException ex) {
@@ -69,22 +66,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ErrorResponse errorResponse = new ErrorResponse(globalErrorCode.getMessage(), validationErrors);
         return ResponseEntity.status(globalErrorCode.getHttpStatus())
-                .body(errorResponse);
-    }
-
-    @ExceptionHandler(NotValidExternalRequestException.class)
-    protected ResponseEntity<ErrorResponse> notValidExternalRequestException(NotValidExternalRequestException ex) {
-        log.info(EXTERNAL_ERROR_LOG_FORMAT,
-                ex.getClass().getSimpleName(),
-                ex.getMessage(),
-                ex.getExternalErrorMessages());
-
-        List<ValidationError> validationErrors = ex.getExternalErrorMessages().stream()
-                .map(s -> new ValidationError(EXTERNAL_ERROR, s))
-                .collect(Collectors.toList());
-
-        ErrorResponse errorResponse = new ErrorResponse(ex.getMessage(), validationErrors);
-        return ResponseEntity.status(ex.getHttpStatus())
                 .body(errorResponse);
     }
 

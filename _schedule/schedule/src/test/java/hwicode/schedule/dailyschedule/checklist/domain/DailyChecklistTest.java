@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;

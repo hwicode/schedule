@@ -1,8 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.SubTaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
@@ -16,10 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
-
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -83,14 +80,12 @@ class SubTaskControllerTest {
     }
 
     @Test
-    void 서브_과제를_저장할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
+    void 서브_과제를_저장할_때_실패하면_에러가_발생한다() throws Exception {
         // given
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
-                List.of(EXTERNAL_MESSAGE)
-        );
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
 
         given(subTaskSaveAndDeleteService.save(any()))
-                .willThrow(notValidExternalRequestException);
+                .willThrow(dailyChecklistNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -102,23 +97,19 @@ class SubTaskControllerTest {
                         )));
 
         // then
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
         verify(subTaskSaveAndDeleteService).save(any());
     }
 
     @Test
-    void 서브_과제를_삭제할_때_외부에서_에러가_발생하면_에러가_발생한다() throws Exception {
+    void 서브_과제를_삭제할_때_실패하면_에러가_발생한다() throws Exception {
         // given
-        NotValidExternalRequestException notValidExternalRequestException = new NotValidExternalRequestException(
-                List.of(EXTERNAL_MESSAGE)
-        );
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
 
         given(subTaskSaveAndDeleteService.delete(any(), any()))
-                .willThrow(notValidExternalRequestException);
+                .willThrow(dailyChecklistNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -130,10 +121,8 @@ class SubTaskControllerTest {
                         )));
 
         // then
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(notValidExternalRequestException.getMessage()))
-                .andExpect(jsonPath("$.errors", hasSize(1)))
-                .andExpect(jsonPath("$.errors[0].message").value(EXTERNAL_MESSAGE));
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
         verify(subTaskSaveAndDeleteService).delete(any(), any());
     }

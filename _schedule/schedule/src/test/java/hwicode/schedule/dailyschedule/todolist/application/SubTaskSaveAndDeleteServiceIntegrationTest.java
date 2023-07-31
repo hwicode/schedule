@@ -1,11 +1,11 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.SubTask;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
@@ -79,7 +79,7 @@ class SubTaskSaveAndDeleteServiceIntegrationTest {
 
         // then
         assertThatThrownBy(() -> subTaskSaveAndDeleteService.delete(SUB_TASK_NAME, subTaskDeleteRequest))
-                .isInstanceOf(NotValidExternalRequestException.class);
+                .isInstanceOf(SubTaskCheckerNotFoundException.class);
     }
 
 }

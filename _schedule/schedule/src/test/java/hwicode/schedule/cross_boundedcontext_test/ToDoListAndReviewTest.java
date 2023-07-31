@@ -1,6 +1,7 @@
 package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
@@ -9,7 +10,6 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteServ
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
-import hwicode.schedule.dailyschedule.todolist.exception.application.NotValidExternalRequestException;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
@@ -74,7 +74,7 @@ class ToDoListAndReviewTest {
 
         // then
         assertThatThrownBy(() -> taskSaveAndDeleteService.delete(TASK_NAME, taskDeleteRequest))
-                .isInstanceOf(NotValidExternalRequestException.class);
+                .isInstanceOf(TaskCheckerNotFoundException.class);
         assertThat(reviewDateTaskRepository.findAll()).isEmpty();
     }
 
