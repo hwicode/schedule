@@ -3,8 +3,9 @@ package hwicode.schedule.calendar.application;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.infra.limited_repository.CalendarGoalSaveAllRepository;
-import hwicode.schedule.calendar.infra.limited_repository.GoalFindAndSaveRepository;
+import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
+import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,36 +16,37 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class CalendarAggregateService {
+public class CalendarService {
 
     private final CalendarProviderService calendarProviderService;
-    private final GoalFindAndSaveRepository goalFindAndSaveRepository;
-    private final CalendarGoalSaveAllRepository calendarGoalSaveAllRepository;
+    private final GoalRepository goalRepository;
+    private final CalendarGoalRepository calendarGoalRepository;
 
     @Transactional
     public Long saveGoal(String name, List<YearMonth> yearMonths) {
         Goal goal = new Goal(name);
-        goalFindAndSaveRepository.save(goal);
+        goalRepository.save(goal);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
         List<CalendarGoal> calendarGoals = calendars.stream()
                 .map(calendar -> calendar.addGoal(goal))
                 .collect(Collectors.toList());
 
-        calendarGoalSaveAllRepository.saveAll(calendarGoals);
+        calendarGoalRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 
     @Transactional
     public Long addGoalToCalendars(Long goalId, List<YearMonth> yearMonths) {
-        Goal goal = goalFindAndSaveRepository.findById(goalId);
+        Goal goal = goalRepository.findById(goalId)
+                .orElseThrow(GoalNotFoundException::new);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
         List<CalendarGoal> calendarGoals = calendars.stream()
                 .map(calendar -> calendar.addGoal(goal))
                 .collect(Collectors.toList());
 
-        calendarGoalSaveAllRepository.saveAll(calendarGoals);
+        calendarGoalRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 

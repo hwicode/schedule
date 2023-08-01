@@ -21,13 +21,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class CalendarAggregateServiceTest {
+class CalendarServiceTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    CalendarAggregateService calendarAggregateService;
+    CalendarService calendarService;
 
     @Autowired
     CalendarRepository calendarRepository;
@@ -53,7 +53,7 @@ class CalendarAggregateServiceTest {
         );
 
         // when
-        Long goalId = calendarAggregateService.saveGoal(GOAL_NAME, yearMonths);
+        Long goalId = calendarService.saveGoal(GOAL_NAME, yearMonths);
 
         // then
         assertThat(goalRepository.existsById(goalId)).isTrue();
@@ -63,7 +63,7 @@ class CalendarAggregateServiceTest {
     @Test
     void 목표를_일정_기간동안_연장할_수_있다() {
         // given
-        Long goalId = calendarAggregateService.saveGoal(GOAL_NAME, List.of(YEAR_MONTH));
+        Long goalId = calendarService.saveGoal(GOAL_NAME, List.of(YEAR_MONTH));
 
         List<YearMonth> yearMonths = List.of(
                 YEAR_MONTH.plusMonths(1),
@@ -72,7 +72,7 @@ class CalendarAggregateServiceTest {
         );
 
         // when
-        calendarAggregateService.addGoalToCalendars(goalId, yearMonths);
+        calendarService.addGoalToCalendars(goalId, yearMonths);
 
         // then
         assertThat(goalRepository.findAll()).hasSize(1);
@@ -92,11 +92,11 @@ class CalendarAggregateServiceTest {
         calendarGoalRepository.save(calendarGoal);
 
         // when
-        String newGoalName = calendarAggregateService.changeGoalName(YEAR_MONTH, GOAL_NAME, GOAL_NAME2);
+        String newGoalName = calendarService.changeGoalName(YEAR_MONTH, GOAL_NAME, GOAL_NAME2);
 
         // then
         List<YearMonth> yearMonths = List.of(YEAR_MONTH);
-        assertThatThrownBy(() -> calendarAggregateService.saveGoal(newGoalName, yearMonths))
+        assertThatThrownBy(() -> calendarService.saveGoal(newGoalName, yearMonths))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
@@ -108,7 +108,7 @@ class CalendarAggregateServiceTest {
         calendarRepository.save(calendar);
 
         // when
-        calendarAggregateService.changeWeeklyStudyDate(YEAR_MONTH, 7);
+        calendarService.changeWeeklyStudyDate(YEAR_MONTH, 7);
 
         // then
         Calendar savedCalendar = calendarRepository.findByYearAndMonthWithCalendarGoals(YEAR_MONTH).orElseThrow();

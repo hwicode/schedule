@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
@@ -44,7 +44,7 @@ class CalendarEndToEndTest {
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    CalendarAggregateService calendarAggregateService;
+    CalendarService calendarService;
 
     @Autowired
     CalendarRepository calendarRepository;
@@ -143,7 +143,7 @@ class CalendarEndToEndTest {
                 .statusCode(HttpStatus.OK.value());
 
         List<YearMonth> yearMonths = List.of(YEAR_MONTH);
-        assertThatThrownBy(() -> calendarAggregateService.saveGoal(NEW_GOAL_NAME, yearMonths))
+        assertThatThrownBy(() -> calendarService.saveGoal(NEW_GOAL_NAME, yearMonths))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 

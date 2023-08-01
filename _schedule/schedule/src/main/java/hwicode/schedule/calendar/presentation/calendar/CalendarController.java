@@ -1,6 +1,6 @@
 package hwicode.schedule.calendar.presentation.calendar;
 
-import hwicode.schedule.calendar.application.CalendarAggregateService;
+import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
@@ -22,12 +22,12 @@ import javax.validation.constraints.Positive;
 @RestController
 public class CalendarController {
 
-    private final CalendarAggregateService calendarAggregateService;
+    private final CalendarService calendarService;
 
     @PostMapping("/calendars/goals")
     @ResponseStatus(value = HttpStatus.CREATED)
     public GoalSaveResponse saveGoal(@RequestBody @Valid GoalSaveRequest goalSaveRequest) {
-        Long goalId = calendarAggregateService.saveGoal(
+        Long goalId = calendarService.saveGoal(
                 goalSaveRequest.getGoalName(), goalSaveRequest.getYearMonths()
         );
         return new GoalSaveResponse(goalId, goalSaveRequest.getGoalName());
@@ -37,7 +37,7 @@ public class CalendarController {
     @ResponseStatus(value = HttpStatus.OK)
     public GoalAddToCalendarsResponse addGoalToCalendars(@PathVariable @Positive Long goalId,
                                                          @RequestBody @Valid GoalAddToCalendarsRequest goalAddToCalendarsRequest) {
-        Long addedGoalId = calendarAggregateService.addGoalToCalendars(
+        Long addedGoalId = calendarService.addGoalToCalendars(
                 goalId, goalAddToCalendarsRequest.getYearMonths()
         );
         return new GoalAddToCalendarsResponse(addedGoalId, goalAddToCalendarsRequest.getYearMonths());
@@ -48,7 +48,7 @@ public class CalendarController {
     public GoalNameModifyResponse changeGoalName(@PathVariable @Positive Long calendarId,
                                                  @PathVariable @Positive Long goalId,
                                                  @RequestBody @Valid GoalNameModifyRequest goalNameModifyRequest) {
-        String changedGoalName = calendarAggregateService.changeGoalName(
+        String changedGoalName = calendarService.changeGoalName(
                 goalNameModifyRequest.getYearMonth(),
                 goalNameModifyRequest.getGoalName(),
                 goalNameModifyRequest.getNewGoalName()
@@ -61,7 +61,7 @@ public class CalendarController {
     @ResponseStatus(value = HttpStatus.OK)
     public WeeklyStudyDateModifyResponse changeWeeklyStudyDate(@PathVariable @Positive Long calendarId,
                                                                @RequestBody @Valid WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest) {
-        int weeklyStudyDate = calendarAggregateService.changeWeeklyStudyDate(
+        int weeklyStudyDate = calendarService.changeWeeklyStudyDate(
                 weeklyStudyDateModifyRequest.getYearMonth(), weeklyStudyDateModifyRequest.getWeeklyStudyDate()
         );
         return new WeeklyStudyDateModifyResponse(calendarId, weeklyStudyDate);
