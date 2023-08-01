@@ -1,13 +1,10 @@
 package hwicode.schedule.calendar.domain;
 
-import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllTodoException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import org.junit.jupiter.api.Test;
-
-import java.time.YearMonth;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -306,74 +303,6 @@ class GoalTest {
         // when then
         assertThatThrownBy(() -> goal.changeSubGoalName(SUB_GOAL_NAME, SUB_GOAL_NAME2))
                 .isInstanceOf(SubGoalDuplicateException.class);
-    }
-
-    @Test
-    void 목표는_캘린더와_연관된_목표를_제거할_수_있다() {
-        // given
-        YearMonth first = YEAR_MONTH;
-        YearMonth second = YEAR_MONTH.plusMonths(1);
-        YearMonth third = YEAR_MONTH.plusMonths(2);
-
-        Goal goal = new Goal(
-                new Calendar(first),
-                new Calendar(second),
-                new Calendar(third)
-        );
-
-        // when
-        goal.deleteCalendarGoal(first);
-        goal.deleteCalendarGoal(second);
-        goal.deleteCalendarGoal(third);
-
-        // then
-        assertThatThrownBy(() -> goal.deleteCalendarGoal(first))
-                .isInstanceOf(CalendarGoalNotFoundException.class);
-        assertThatThrownBy(() -> goal.deleteCalendarGoal(second))
-                .isInstanceOf(CalendarGoalNotFoundException.class);
-        assertThatThrownBy(() -> goal.deleteCalendarGoal(third))
-                .isInstanceOf(CalendarGoalNotFoundException.class);
-    }
-
-    @Test
-    void 목표에_존재하지_않는_캘린더를_조회하면_에러가_발생한다() {
-        // given
-        Goal goal = createGoal();
-
-        // when then
-        assertThatThrownBy(() -> goal.deleteCalendarGoal(YEAR_MONTH))
-                .isInstanceOf(CalendarGoalNotFoundException.class);
-    }
-
-    @Test
-    void 목표에_캘린더와_연관된_목표가_없다면_isCalendarGoalEmpty는_true이다() {
-        // given
-        Goal goal = new Goal(
-                new Calendar(YEAR_MONTH)
-        );
-        goal.deleteCalendarGoal(YEAR_MONTH);
-
-        // when
-        boolean isDelete = goal.isCalendarGoalEmpty();
-
-        // then
-        assertThat(isDelete).isTrue();
-    }
-
-    @Test
-    void 목표에_캘린더와_연관된_목표가_있다면_isCalendarGoalEmpty는_false이다() {
-        // given
-        Goal goal = new Goal(
-                new Calendar(YEAR_MONTH),
-                new Calendar(YEAR_MONTH.plusMonths(1))
-        );
-        goal.deleteCalendarGoal(YEAR_MONTH);
-
-        // when
-        boolean isDelete = goal.isCalendarGoalEmpty();
-
-        // then
-        assertThat(isDelete).isFalse();
     }
 
 }

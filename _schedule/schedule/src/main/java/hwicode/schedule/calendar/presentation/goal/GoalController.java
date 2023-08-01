@@ -2,14 +2,13 @@ package hwicode.schedule.calendar.presentation.goal;
 
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
-import hwicode.schedule.calendar.presentation.goal.dto.calendargoal_delete.CalendarGoalDeleteRequest;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveRequest;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveResponse;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveRequest;
+import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyResponse;
 import lombok.RequiredArgsConstructor;
@@ -82,14 +81,6 @@ public class GoalController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteGoal(@PathVariable @Positive Long goalId) {
         goalAggregateService.deleteGoal(goalId);
-    }
-
-    @DeleteMapping("/goals/{goalId}/calendars/{calendarId}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteCalendarGoal(@PathVariable @Positive Long goalId,
-                                   @PathVariable @Positive Long calendarId,
-                                   @RequestBody @Valid CalendarGoalDeleteRequest calendarGoalDeleteRequest) {
-        goalAggregateService.deleteCalendarGoal(goalId, calendarGoalDeleteRequest.getYearMonth());
     }
 
 }

@@ -1,13 +1,11 @@
 package hwicode.schedule.calendar.domain;
 
-import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.goal.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +33,6 @@ public class Goal {
     public Goal(String name) {
         this.name = name;
         this.goalStatus = GoalStatus.TODO;
-    }
-
-    // 테스트 코드에서만 사용되는 생성자!
-    Goal(Calendar... calendars) {
-        for (Calendar calendar : calendars) {
-            calendarGoals.add(new CalendarGoal(calendar, this));
-        }
     }
 
     public String changeSubGoalName(String subGoalName, String newSubGoalName) {
@@ -142,21 +133,6 @@ public class Goal {
         if (this.goalStatus == GoalStatus.DONE && subGoalStatus != SubGoalStatus.DONE) {
             changeToProgress();
         }
-    }
-
-    public void deleteCalendarGoal(YearMonth yearMonth) {
-        calendarGoals.remove(findCalendarGoalBy(yearMonth));
-    }
-
-    private CalendarGoal findCalendarGoalBy(YearMonth yearMonth) {
-        return calendarGoals.stream()
-                .filter(calendarGoal -> calendarGoal.isSameCalendar(yearMonth))
-                .findFirst()
-                .orElseThrow(CalendarGoalNotFoundException::new);
-    }
-
-    public boolean isCalendarGoalEmpty() {
-        return calendarGoals.isEmpty();
     }
 
     String changeName(String name) {

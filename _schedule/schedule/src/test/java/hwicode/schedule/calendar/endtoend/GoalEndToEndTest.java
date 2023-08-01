@@ -1,16 +1,15 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.application.GoalAggregateService;
-import hwicode.schedule.calendar.domain.*;
+import hwicode.schedule.calendar.domain.Goal;
+import hwicode.schedule.calendar.domain.GoalStatus;
+import hwicode.schedule.calendar.domain.SubGoal;
+import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
-import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
-import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
-import hwicode.schedule.calendar.presentation.goal.dto.calendargoal_delete.CalendarGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
@@ -26,8 +25,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
-
-import java.util.List;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static io.restassured.RestAssured.given;
@@ -48,19 +45,10 @@ class GoalEndToEndTest {
     GoalAggregateService goalAggregateService;
 
     @Autowired
-    CalendarService calendarService;
-
-    @Autowired
     GoalRepository goalRepository;
 
     @Autowired
     SubGoalRepository subGoalRepository;
-
-    @Autowired
-    CalendarRepository calendarRepository;
-
-    @Autowired
-    CalendarGoalRepository calendarGoalRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -216,36 +204,6 @@ class GoalEndToEndTest {
 
         boolean isExist = goalRepository.existsById(goal.getId());
         assertThat(isExist).isFalse();
-    }
-
-    @Test
-    void 캘린더에_있는_목표_삭제_요청() {
-        // given
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
-
-        goalRepository.save(goal);
-        calendarRepository.save(calendar);
-
-        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
-
-        CalendarGoalDeleteRequest calendarGoalDeleteRequest = new CalendarGoalDeleteRequest(YEAR_MONTH);
-
-        RequestSpecification requestSpecification = given()
-                .pathParam("calendarId", calendar.getId())
-                .pathParam("goalId", goal.getId())
-                .contentType(ContentType.JSON)
-                .body(calendarGoalDeleteRequest);
-
-        // when
-        Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/goals/{goalId}/calendars/{calendarId}", port));
-
-        // then
-        response.then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-
-        assertThat(calendarGoalRepository.findAll()).isEmpty();
     }
 
 }

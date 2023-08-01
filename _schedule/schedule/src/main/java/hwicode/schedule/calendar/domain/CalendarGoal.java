@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.YearMonth;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -35,7 +34,4 @@ public class CalendarGoal {
         return goal.isSame(name);
     }
 
-    boolean isSameCalendar(YearMonth yearMonth) {
-        return calendar.isSame(yearMonth);
-    }
 }

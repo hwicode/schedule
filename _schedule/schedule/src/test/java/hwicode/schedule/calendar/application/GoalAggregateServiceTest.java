@@ -148,46 +148,4 @@ class GoalAggregateServiceTest {
         assertThat(subGoalRepository.findAll()).isEmpty();
     }
 
-    @Test
-    void 목표에서_캘린더와_관련된_목표를_삭제할_수_있다() {
-        // given
-        Goal goal = new Goal(GOAL_NAME);
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Calendar calendar2 = new Calendar(YEAR_MONTH.plusMonths(1));
-
-        goalRepository.save(goal);
-        calendarRepository.save(calendar);
-        calendarRepository.save(calendar2);
-
-        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH, YEAR_MONTH.plusMonths(1)));
-
-        // when
-        goalAggregateService.deleteCalendarGoal(goal.getId(), YEAR_MONTH);
-
-        // then
-        assertThat(goalRepository.existsById(goal.getId())).isTrue();
-        assertThat(calendarGoalRepository.findAll()).hasSize(1);
-        assertThat(calendarRepository.findAll()).hasSize(2);
-    }
-
-    @Test
-    void 목표에서_캘린더와_관련된_목표를_삭제한_후에_목표와_관련된_캘린더가_존재하지_않으면_목표를_삭제한다() {
-        // given
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
-
-        calendarRepository.save(calendar);
-        goalRepository.save(goal);
-
-        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
-
-        // when
-        goalAggregateService.deleteCalendarGoal(goal.getId(), YEAR_MONTH);
-
-        // then
-        assertThat(goalRepository.existsById(goal.getId())).isFalse();
-        assertThat(calendarGoalRepository.findAll()).isEmpty();
-        assertThat(calendarRepository.findAll()).hasSize(1);
-    }
-
 }

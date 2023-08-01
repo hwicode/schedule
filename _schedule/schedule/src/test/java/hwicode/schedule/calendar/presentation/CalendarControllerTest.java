@@ -3,7 +3,7 @@ package hwicode.schedule.calendar.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
-import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.application.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
 import hwicode.schedule.calendar.presentation.calendar.CalendarController;

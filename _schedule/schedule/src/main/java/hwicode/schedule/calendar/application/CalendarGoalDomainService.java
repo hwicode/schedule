@@ -3,7 +3,7 @@ package hwicode.schedule.calendar.application;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.exception.domain.CalendarGoalNotFoundException;
+import hwicode.schedule.calendar.exception.application.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import org.springframework.stereotype.Service;
 
