@@ -12,7 +12,6 @@ import java.util.Optional;
 public interface CalendarRepository extends JpaRepository<Calendar, Long> {
 
     @Query("SELECT c FROM Calendar c "
-            + "LEFT JOIN FETCH c.calendarGoals "
             + "WHERE c.yearAndMonth = :yearAndMonth")
-    Optional<Calendar> findByYearAndMonthWithCalendarGoals(@Param("yearAndMonth") YearMonth yearAndMonth);
+    Optional<Calendar> findByYearAndMonth(@Param("yearAndMonth") YearMonth yearAndMonth);
 }

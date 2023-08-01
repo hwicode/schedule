@@ -111,7 +111,7 @@ class CalendarServiceTest {
         calendarService.changeWeeklyStudyDate(YEAR_MONTH, 7);
 
         // then
-        Calendar savedCalendar = calendarRepository.findByYearAndMonthWithCalendarGoals(YEAR_MONTH).orElseThrow();
+        Calendar savedCalendar = calendarRepository.findByYearAndMonth(YEAR_MONTH).orElseThrow();
         assertThat(savedCalendar.changeWeeklyStudyDate(7)).isFalse();
     }
 

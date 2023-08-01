@@ -168,7 +168,7 @@ class CalendarEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Calendar savedCalendar = calendarRepository.findByYearAndMonthWithCalendarGoals(YEAR_MONTH).orElseThrow();
+        Calendar savedCalendar = calendarRepository.findByYearAndMonth(YEAR_MONTH).orElseThrow();
         assertThat(savedCalendar.changeWeeklyStudyDate(6)).isFalse();
     }
 

@@ -18,7 +18,7 @@ public class CalendarProviderService {
     private final CalendarRepository calendarRepository;
 
     public Calendar provideCalendar(YearMonth yearMonth) {
-        return calendarRepository.findByYearAndMonthWithCalendarGoals(yearMonth)
+        return calendarRepository.findByYearAndMonth(yearMonth)
                 .orElseGet(() -> saveCalendar(yearMonth));
     }
 
@@ -33,7 +33,7 @@ public class CalendarProviderService {
         List<Calendar> noneSavedCalendars = new ArrayList<>();
 
         for (YearMonth yearMonth : yearMonths) {
-            Optional<Calendar> calendar = calendarRepository.findByYearAndMonthWithCalendarGoals(yearMonth);
+            Optional<Calendar> calendar = calendarRepository.findByYearAndMonth(yearMonth);
 
             calendar.ifPresentOrElse(
                     calendars::add,
