@@ -22,16 +22,16 @@ public class CalendarGoal {
     @ManyToOne(fetch = FetchType.LAZY)
     private Goal goal;
 
-    CalendarGoal(Calendar calendar, Goal goal) {
+    public CalendarGoal(Calendar calendar, Goal goal) {
         this.calendar = calendar;
         this.goal = goal;
     }
 
-    String changeGoalName(String name) {
+    public String changeGoalName(String name) {
         return goal.changeName(name);
     }
 
-    boolean isSameGoal(String name) {
+    public boolean isSameGoal(String name) {
         return goal.isSame(name);
     }
 
