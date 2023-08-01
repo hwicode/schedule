@@ -11,14 +11,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class CalendarService {
 
+    private final CalendarGoalDomainService calendarGoalDomainService;
     private final CalendarProviderService calendarProviderService;
+
     private final GoalRepository goalRepository;
     private final CalendarGoalRepository calendarGoalRepository;
 
@@ -28,9 +30,7 @@ public class CalendarService {
         goalRepository.save(goal);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
-        List<CalendarGoal> calendarGoals = calendars.stream()
-                .map(calendar -> calendar.addGoal(goal))
-                .collect(Collectors.toList());
+        List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
 
         calendarGoalRepository.saveAll(calendarGoals);
         return goal.getId();
@@ -42,18 +42,27 @@ public class CalendarService {
                 .orElseThrow(GoalNotFoundException::new);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
-        List<CalendarGoal> calendarGoals = calendars.stream()
-                .map(calendar -> calendar.addGoal(goal))
-                .collect(Collectors.toList());
+        List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
 
         calendarGoalRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 
+    private List<CalendarGoal> createCalendarGoals(List<Calendar> calendars, Goal goal) {
+        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        for (Calendar calendar : calendars) {
+            List<CalendarGoal> foundCalendarGoals = calendarGoalRepository.findAllByCalendar(calendar);
+            CalendarGoal calendarGoal = calendarGoalDomainService.addGoalToCalendar(calendar, goal, foundCalendarGoals);
+            calendarGoals.add(calendarGoal);
+        }
+        return calendarGoals;
+    }
+
     @Transactional
     public String changeGoalName(YearMonth yearMonth, String goalName, String newGoalName) {
         Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
-        return calendar.changeGoalName(goalName, newGoalName);
+        List<CalendarGoal> foundCalendarGoals = calendarGoalRepository.findAllByCalendar(calendar);
+        return calendarGoalDomainService.changeGoalName(goalName, newGoalName, foundCalendarGoals);
     }
 
     @Transactional

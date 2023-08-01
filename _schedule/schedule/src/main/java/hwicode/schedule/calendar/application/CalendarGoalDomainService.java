@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public class CalendarGoalDomainService {
 
-    public CalendarGoal addGoal(Calendar calendar, Goal goal, List<CalendarGoal> calendarGoals) {
+    public CalendarGoal addGoalToCalendar(Calendar calendar, Goal goal, List<CalendarGoal> calendarGoals) {
         validateCalendarGoal(goal.getName(), calendarGoals);
         CalendarGoal calendarGoal = new CalendarGoal(calendar, goal);
         calendarGoals.add(calendarGoal);

@@ -25,10 +25,10 @@ class CalendarGoalDomainServiceTest {
         List<CalendarGoal> calendarGoals = new ArrayList<>();
 
         // when
-        calendarGoalDomainService.addGoal(calendar, goal, calendarGoals);
+        calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
 
         // then
-        assertThatThrownBy(() -> calendarGoalDomainService.addGoal(calendar, goal, calendarGoals))
+        assertThatThrownBy(() -> calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
@@ -40,10 +40,10 @@ class CalendarGoalDomainServiceTest {
         Goal goal = new Goal(GOAL_NAME);
         List<CalendarGoal> calendarGoals = new ArrayList<>();
 
-        calendarGoalDomainService.addGoal(calendar, goal, calendarGoals);
+        calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
 
         // when then
-        assertThatThrownBy(() -> calendarGoalDomainService.addGoal(calendar, goal, calendarGoals))
+        assertThatThrownBy(() -> calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
@@ -55,14 +55,14 @@ class CalendarGoalDomainServiceTest {
         Goal goal = new Goal(GOAL_NAME);
         List<CalendarGoal> calendarGoals = new ArrayList<>();
 
-        calendarGoalDomainService.addGoal(calendar, goal, calendarGoals);
+        calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
 
         // when
         String changedGoalName = calendarGoalDomainService.changeGoalName(GOAL_NAME, GOAL_NAME2, calendarGoals);
 
         // then
         Goal duplicatedGoal = new Goal(changedGoalName);
-        assertThatThrownBy(() -> calendarGoalDomainService.addGoal(calendar, duplicatedGoal, calendarGoals))
+        assertThatThrownBy(() -> calendarGoalDomainService.addGoalToCalendar(calendar, duplicatedGoal, calendarGoals))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
@@ -86,8 +86,8 @@ class CalendarGoalDomainServiceTest {
         Goal goal2 = new Goal(GOAL_NAME2);
         List<CalendarGoal> calendarGoals = new ArrayList<>();
 
-        calendarGoalDomainService.addGoal(calendar, goal, calendarGoals);
-        calendarGoalDomainService.addGoal(calendar, goal2, calendarGoals);
+        calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
+        calendarGoalDomainService.addGoalToCalendar(calendar, goal2, calendarGoals);
 
         // when then
         assertThatThrownBy(() -> calendarGoalDomainService.changeGoalName(GOAL_NAME, GOAL_NAME2, calendarGoals))
