@@ -3,7 +3,6 @@ package hwicode.schedule.calendar.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.domain.Calendar;
-import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
@@ -120,11 +119,11 @@ class CalendarEndToEndTest {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         goalRepository.save(goal);
         calendarRepository.save(calendar);
-        calendarGoalRepository.save(calendarGoal);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
 
         GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
 

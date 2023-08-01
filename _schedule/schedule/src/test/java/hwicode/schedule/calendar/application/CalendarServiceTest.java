@@ -2,7 +2,6 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.Calendar;
-import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
@@ -85,11 +84,11 @@ class CalendarServiceTest {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         calendarRepository.save(calendar);
         goalRepository.save(goal);
-        calendarGoalRepository.save(calendarGoal);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
 
         // when
         String newGoalName = calendarService.changeGoalName(YEAR_MONTH, GOAL_NAME, GOAL_NAME2);

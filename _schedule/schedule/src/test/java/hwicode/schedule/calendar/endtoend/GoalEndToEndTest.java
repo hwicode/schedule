@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.*;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
@@ -26,7 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.time.YearMonth;
+import java.util.List;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static io.restassured.RestAssured.given;
@@ -45,6 +46,9 @@ class GoalEndToEndTest {
 
     @Autowired
     GoalAggregateService goalAggregateService;
+
+    @Autowired
+    CalendarService calendarService;
 
     @Autowired
     GoalRepository goalRepository;
@@ -219,11 +223,11 @@ class GoalEndToEndTest {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         goalRepository.save(goal);
         calendarRepository.save(calendar);
-        calendarGoalRepository.save(calendarGoal);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
 
         CalendarGoalDeleteRequest calendarGoalDeleteRequest = new CalendarGoalDeleteRequest(YEAR_MONTH);
 

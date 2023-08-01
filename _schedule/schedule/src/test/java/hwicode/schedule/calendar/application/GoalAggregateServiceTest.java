@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -26,6 +28,9 @@ class GoalAggregateServiceTest {
 
     @Autowired
     GoalAggregateService goalAggregateService;
+
+    @Autowired
+    CalendarService calendarService;
 
     @Autowired
     GoalRepository goalRepository;
@@ -128,11 +133,11 @@ class GoalAggregateServiceTest {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         calendarRepository.save(calendar);
         goalRepository.save(goal);
-        calendarGoalRepository.save(calendarGoal);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
 
         // when
         goalAggregateService.deleteGoal(goal.getId());
@@ -149,14 +154,12 @@ class GoalAggregateServiceTest {
         Goal goal = new Goal(GOAL_NAME);
         Calendar calendar = new Calendar(YEAR_MONTH);
         Calendar calendar2 = new Calendar(YEAR_MONTH.plusMonths(1));
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
-        CalendarGoal calendarGoal2 = calendar2.addGoal(goal);
 
         goalRepository.save(goal);
         calendarRepository.save(calendar);
         calendarRepository.save(calendar2);
-        calendarGoalRepository.save(calendarGoal);
-        calendarGoalRepository.save(calendarGoal2);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH, YEAR_MONTH.plusMonths(1)));
 
         // when
         goalAggregateService.deleteCalendarGoal(goal.getId(), YEAR_MONTH);
@@ -172,11 +175,11 @@ class GoalAggregateServiceTest {
         // given
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        CalendarGoal calendarGoal = calendar.addGoal(goal);
 
         calendarRepository.save(calendar);
         goalRepository.save(goal);
-        calendarGoalRepository.save(calendarGoal);
+
+        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
 
         // when
         goalAggregateService.deleteCalendarGoal(goal.getId(), YEAR_MONTH);
