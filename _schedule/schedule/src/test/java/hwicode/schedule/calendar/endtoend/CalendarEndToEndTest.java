@@ -7,7 +7,7 @@ import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
-import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;

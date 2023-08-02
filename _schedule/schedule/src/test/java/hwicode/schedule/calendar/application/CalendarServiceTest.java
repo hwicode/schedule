@@ -6,7 +6,7 @@ import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
-import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.infra;
+package hwicode.schedule.calendar.infra.jpa_repository.goal;
 
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;

@@ -1,7 +1,6 @@
-package hwicode.schedule.calendar.infra.jpa_repository;
+package hwicode.schedule.calendar.infra.jpa_repository.goal;
 
 import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.infra.GoalFindRepository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

@@ -2,7 +2,7 @@ package hwicode.schedule.calendar.infra.limited_repository;
 
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
-import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

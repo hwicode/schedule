@@ -7,7 +7,7 @@ import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneExceptio
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
-import hwicode.schedule.calendar.infra.jpa_repository.GoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
