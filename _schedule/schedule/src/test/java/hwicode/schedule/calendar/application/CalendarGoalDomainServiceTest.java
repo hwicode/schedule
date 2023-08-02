@@ -1,10 +1,9 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.calendar.domain.Calendar;
-import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.exception.application.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -22,7 +21,7 @@ class CalendarGoalDomainServiceTest {
 
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        List<Goal> calendarGoals = new ArrayList<>();
 
         // when
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
@@ -38,7 +37,7 @@ class CalendarGoalDomainServiceTest {
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
 
@@ -53,7 +52,7 @@ class CalendarGoalDomainServiceTest {
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
-        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
 
@@ -70,11 +69,11 @@ class CalendarGoalDomainServiceTest {
     void 캘린더에_존재하지_않는_목표의_이름_변경을_요청시_에러가_발생한다() {
         // given
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
-        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        List<Goal> calendarGoals = new ArrayList<>();
 
         // when then
         assertThatThrownBy(() -> calendarGoalDomainService.changeGoalName(GOAL_NAME, GOAL_NAME2, calendarGoals))
-                .isInstanceOf(CalendarGoalNotFoundException.class);
+                .isInstanceOf(GoalNotFoundException.class);
     }
 
     @Test
@@ -84,7 +83,7 @@ class CalendarGoalDomainServiceTest {
         Calendar calendar = new Calendar(YEAR_MONTH);
         Goal goal = new Goal(GOAL_NAME);
         Goal goal2 = new Goal(GOAL_NAME2);
-        List<CalendarGoal> calendarGoals = new ArrayList<>();
+        List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
         calendarGoalDomainService.addGoalToCalendar(calendar, goal2, calendarGoals);

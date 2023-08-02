@@ -26,12 +26,8 @@ public class CalendarGoal {
         this.goal = goal;
     }
 
-    public String changeGoalName(String name) {
-        return goal.changeName(name);
-    }
-
-    public boolean isSameGoal(String name) {
-        return goal.isSame(name);
+    public Goal getGoal() {
+        return this.goal;
     }
 
 }

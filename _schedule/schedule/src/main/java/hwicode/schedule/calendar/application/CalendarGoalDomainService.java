@@ -3,8 +3,8 @@ package hwicode.schedule.calendar.application;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
-import hwicode.schedule.calendar.exception.application.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
+import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,32 +12,31 @@ import java.util.List;
 @Service
 public class CalendarGoalDomainService {
 
-    public CalendarGoal addGoalToCalendar(Calendar calendar, Goal goal, List<CalendarGoal> calendarGoals) {
+    public CalendarGoal addGoalToCalendar(Calendar calendar, Goal goal, List<Goal> calendarGoals) {
         validateCalendarGoal(goal.getName(), calendarGoals);
-        CalendarGoal calendarGoal = new CalendarGoal(calendar, goal);
-        calendarGoals.add(calendarGoal);
-        return calendarGoal;
+        calendarGoals.add(goal);
+        return new CalendarGoal(calendar, goal);
     }
 
-    public String changeGoalName(String goalName, String newGoalName, List<CalendarGoal> calendarGoals) {
+    public String changeGoalName(String goalName, String newGoalName, List<Goal> calendarGoals) {
         validateCalendarGoal(newGoalName, calendarGoals);
-        return findCalendarGoal(goalName, calendarGoals).changeGoalName(newGoalName);
+        return findCalendarGoal(goalName, calendarGoals).changeName(newGoalName);
     }
 
-    private void validateCalendarGoal(String goalName, List<CalendarGoal> calendarGoals) {
-        boolean duplication = calendarGoals.stream()
-                .anyMatch(calendarGoal -> calendarGoal.isSameGoal(goalName));
+    private void validateCalendarGoal(String goalName, List<Goal> goals) {
+        boolean duplication = goals.stream()
+                .anyMatch(goal -> goal.isSame(goalName));
 
         if (duplication) {
             throw new CalendarGoalDuplicateException();
         }
     }
 
-    private CalendarGoal findCalendarGoal(String goalName, List<CalendarGoal> calendarGoals) {
-        return calendarGoals.stream()
-                .filter(calendarGoal -> calendarGoal.isSameGoal(goalName))
+    private Goal findCalendarGoal(String goalName, List<Goal> goals) {
+        return goals.stream()
+                .filter(goal -> goal.isSame(goalName))
                 .findFirst()
-                .orElseThrow(CalendarGoalNotFoundException::new);
+                .orElseThrow(GoalNotFoundException::new);
     }
 
 }

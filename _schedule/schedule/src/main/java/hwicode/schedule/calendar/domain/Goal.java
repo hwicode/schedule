@@ -135,17 +135,17 @@ public class Goal {
         }
     }
 
-    String changeName(String name) {
+    public Long getId() {
+        return this.id;
+    }
+
+    public String changeName(String name) {
         this.name = name;
         return name;
     }
 
-    boolean isSame(String name) {
+    public boolean isSame(String name) {
         return this.name.equals(name);
-    }
-
-    public Long getId() {
-        return this.id;
     }
 
     public String getName() {
