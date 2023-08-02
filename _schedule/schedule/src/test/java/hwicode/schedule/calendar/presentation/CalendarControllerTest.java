@@ -3,9 +3,9 @@ package hwicode.schedule.calendar.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
-import hwicode.schedule.calendar.exception.application.CalendarGoalNotFoundException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
+import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import hwicode.schedule.calendar.presentation.calendar.CalendarController;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
@@ -146,9 +146,9 @@ class CalendarControllerTest {
     @Test
     void 목표의_이름_변경을_요청할_때_캘린더에_목표가_존재하지_않는다면_에러가_발생한다() throws Exception {
         // given
-        CalendarGoalNotFoundException calendarGoalNotFoundException = new CalendarGoalNotFoundException();
+        GoalNotFoundException goalNotFoundException = new GoalNotFoundException();
         given(calendarService.changeGoalName(any(), any(), any()))
-                .willThrow(calendarGoalNotFoundException);
+                .willThrow(goalNotFoundException);
 
         // when
         ResultActions perform = mockMvc.perform(
@@ -161,7 +161,7 @@ class CalendarControllerTest {
 
         // then
         perform.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(calendarGoalNotFoundException.getMessage()));
+                .andExpect(jsonPath("$.message").value(goalNotFoundException.getMessage()));
 
         verify(calendarService).changeGoalName(any(), any(), any());
     }
