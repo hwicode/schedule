@@ -4,8 +4,8 @@ import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
-import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
+import hwicode.schedule.calendar.infra.limited_repository.CalendarGoalSaveAllRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,7 +22,7 @@ public class CalendarService {
     private final CalendarProviderService calendarProviderService;
 
     private final GoalRepository goalRepository;
-    private final CalendarGoalRepository calendarGoalRepository;
+    private final CalendarGoalSaveAllRepository calendarGoalSaveAllRepository;
 
     @Transactional
     public Long saveGoal(String name, List<YearMonth> yearMonths) {
@@ -32,7 +32,7 @@ public class CalendarService {
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
         List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
 
-        calendarGoalRepository.saveAll(calendarGoals);
+        calendarGoalSaveAllRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 
@@ -44,7 +44,7 @@ public class CalendarService {
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
         List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
 
-        calendarGoalRepository.saveAll(calendarGoals);
+        calendarGoalSaveAllRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 
