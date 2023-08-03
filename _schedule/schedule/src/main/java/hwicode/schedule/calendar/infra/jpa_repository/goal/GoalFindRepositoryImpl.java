@@ -16,7 +16,7 @@ public class GoalFindRepositoryImpl implements GoalFindRepository {
 
     @Override
     public List<Goal> findAllByCalendar(Calendar calendar) {
-        List<CalendarGoal> calendarGoals = calendarGoalRepository.findAllByCalendar(calendar);
+        List<CalendarGoal> calendarGoals = calendarGoalRepository.findAllByCalendarWithGoal(calendar);
         return calendarGoals.stream()
                 .map(CalendarGoal::getGoal)
                 .collect(Collectors.toList());
