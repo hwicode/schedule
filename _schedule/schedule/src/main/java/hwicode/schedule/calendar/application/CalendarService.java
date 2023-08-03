@@ -30,7 +30,7 @@ public class CalendarService {
         goalRepository.save(goal);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
-        List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
+        List<CalendarGoal> calendarGoals = addGoal(calendars, goal);
 
         calendarGoalSaveAllRepository.saveAll(calendarGoals);
         return goal.getId();
@@ -42,13 +42,13 @@ public class CalendarService {
                 .orElseThrow(GoalNotFoundException::new);
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
-        List<CalendarGoal> calendarGoals = createCalendarGoals(calendars, goal);
+        List<CalendarGoal> calendarGoals = addGoal(calendars, goal);
 
         calendarGoalSaveAllRepository.saveAll(calendarGoals);
         return goal.getId();
     }
 
-    private List<CalendarGoal> createCalendarGoals(List<Calendar> calendars, Goal goal) {
+    private List<CalendarGoal> addGoal(List<Calendar> calendars, Goal goal) {
         List<CalendarGoal> calendarGoals = new ArrayList<>();
         for (Calendar calendar : calendars) {
             List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar);
