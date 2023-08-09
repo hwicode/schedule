@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -22,17 +21,14 @@ public class ReviewDateTask {
     @ManyToOne(fetch = FetchType.LAZY)
     private ReviewDate reviewDate;
 
-    @Column(nullable = false)
-    private LocalDate date;
-
     ReviewDateTask(ReviewTask reviewTask, ReviewDate reviewDate) {
         this.reviewTask = reviewTask;
         this.reviewDate = reviewDate;
-        this.date = reviewDate.getDate();
     }
 
     boolean isSameDate(ReviewDate reviewDate) {
-        return this.date.equals(reviewDate.getDate());
+        return this.reviewDate.getDate()
+                .equals(reviewDate.getDate());
     }
 
 }

@@ -92,7 +92,6 @@ create table review_date_task (
    id bigint not null auto_increment,
    task_id bigint not null,
    review_date_id bigint not null,
-   date timestamp not null,
    primary key (id)
 ) engine=InnoDB;
 
