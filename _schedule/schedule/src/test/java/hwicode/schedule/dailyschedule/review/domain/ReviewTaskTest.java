@@ -37,7 +37,7 @@ class ReviewTaskTest {
         ReviewTask reviewTask = createReviewTaskWithReviewSubTasks(number);
 
         // when
-        ReviewTask clonedTask = reviewTask.cloneTask(new ReviewList());
+        ReviewTask clonedTask = reviewTask.cloneTask();
 
         // then
         assertThat(clonedTask).isEqualTo(reviewTask);

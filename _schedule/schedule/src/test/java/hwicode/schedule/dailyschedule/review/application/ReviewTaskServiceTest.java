@@ -49,7 +49,7 @@ class ReviewTaskServiceTest {
     @Test
     void 복습_주기에_맞춰_과제를_복습할_수_있다() {
         // given
-        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
+        ReviewTask reviewTask = new ReviewTask(REVIEW_TASK_NAME, null, null, null);
         List<Integer> cycle = List.of(1, 2, 4);
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
 
@@ -77,7 +77,7 @@ class ReviewTaskServiceTest {
     @MethodSource("createCycle")
     void 과제의_복습을_취소할_수_있다(List<Integer> cycle) {
         // given
-        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
+        ReviewTask reviewTask = new ReviewTask(REVIEW_TASK_NAME, null, null, null);
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
 
         reviewTaskRepository.save(reviewTask);
@@ -112,7 +112,7 @@ class ReviewTaskServiceTest {
         // given
         Long noneExistId = 1L;
 
-        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
+        ReviewTask reviewTask = new ReviewTask(REVIEW_TASK_NAME, null, null, null);
         reviewTaskRepository.save(reviewTask);
 
         // when then
