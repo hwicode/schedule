@@ -24,6 +24,10 @@ public class ReviewTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @JoinColumn(name = "daily_schedule_id")
+    @ManyToOne(fetch = FetchType.LAZY)
+    private ReviewList reviewList;
+
     @Column(nullable = false)
     private String name;
 
@@ -49,7 +53,8 @@ public class ReviewTask {
     @OneToMany(mappedBy = "reviewTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
 
-    public ReviewTask(String name, Priority priority, Importance importance, Difficulty difficulty) {
+    public ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty) {
+        this.reviewList = reviewList;
         this.name = name;
         this.priority = priority;
         this.importance = importance;
@@ -57,8 +62,8 @@ public class ReviewTask {
         this.taskStatus = TaskStatus.TODO;
     }
 
-    public ReviewTask cloneTask() {
-        ReviewTask clonedTask = new ReviewTask(this.name, this.priority, this.importance, this.difficulty);
+    public ReviewTask cloneTask(ReviewList reviewList) {
+        ReviewTask clonedTask = new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty);
         List<ReviewSubTask> clonedReviewSubTasks = this.reviewSubTasks.stream()
                 .map(reviewSubTask -> reviewSubTask.cloneSubTask(clonedTask))
                 .collect(Collectors.toList());
