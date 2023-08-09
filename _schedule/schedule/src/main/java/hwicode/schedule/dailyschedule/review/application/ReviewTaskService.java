@@ -7,8 +7,8 @@ import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewTaskNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
-import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
+import hwicode.schedule.dailyschedule.review.infra.limited_repository.ReviewDateTaskSaveAllOrDeleteAllRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +20,11 @@ import java.util.List;
 @Service
 public class ReviewTaskService {
 
-    private final ReviewDateProviderService reviewDateProviderService;
-
     private final ReviewTaskRepository reviewTaskRepository;
     private final ReviewCycleRepository reviewCycleRepository;
-    private final ReviewDateTaskRepository reviewDateTaskRepository;
+
+    private final ReviewDateProviderService reviewDateProviderService;
+    private final ReviewDateTaskSaveAllOrDeleteAllRepository reviewDateTaskSaveAllOrDeleteAllRepository;
 
     @Transactional
     public void reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
@@ -35,12 +35,12 @@ public class ReviewTaskService {
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, startDate);
 
         List<ReviewDateTask> reviewDateTasks = reviewTask.review(reviewDates);
-        reviewDateTaskRepository.saveAll(reviewDateTasks);
+        reviewDateTaskSaveAllOrDeleteAllRepository.saveAll(reviewDateTasks);
     }
 
     @Transactional
     public void cancelReviewedTask(Long reviewTaskId) {
-        reviewDateTaskRepository.deleteAllReviewDateTasksBy(reviewTaskId);
+        reviewDateTaskSaveAllOrDeleteAllRepository.deleteAllReviewDateTasksBy(reviewTaskId);
     }
 
 }
