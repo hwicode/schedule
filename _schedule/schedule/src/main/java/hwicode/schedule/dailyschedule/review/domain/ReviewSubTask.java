@@ -2,12 +2,13 @@ package hwicode.schedule.dailyschedule.review.domain;
 
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.util.Objects;
 
+@EqualsAndHashCode(of = {"id", "name"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "sub_task")
 @Entity
@@ -40,20 +41,6 @@ public class ReviewSubTask {
 
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewSubTask that = (ReviewSubTask) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name);
     }
 
 }

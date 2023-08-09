@@ -5,15 +5,16 @@ import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
+@EqualsAndHashCode(of = {"id", "name", "priority", "importance", "difficulty", "reviewSubTasks"})
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "task")
 @Entity
@@ -87,24 +88,6 @@ public class ReviewTask {
 
     public Long getId() {
         return this.id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ReviewTask that = (ReviewTask) o;
-        return Objects.equals(id, that.id)
-                && Objects.equals(name, that.name)
-                && priority == that.priority
-                && importance == that.importance
-                && difficulty == that.difficulty
-                && Objects.equals(reviewSubTasks, that.reviewSubTasks);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, priority, importance, difficulty, reviewSubTasks);
     }
 
 }
