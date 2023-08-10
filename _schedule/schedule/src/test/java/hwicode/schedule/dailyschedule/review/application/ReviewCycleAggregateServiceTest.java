@@ -57,4 +57,35 @@ class ReviewCycleAggregateServiceTest {
         assertThat(savedReviewCycle.changeName(newName)).isFalse();
     }
 
+    @Test
+    void 복습_주기의_주기을_변경할_수_있다() {
+        // given
+        List<Integer> cycle = List.of(1, 2, 3, 4, 5);
+        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
+
+        List<Integer> newCycle = List.of(2, 4, 5, 8, 13, 20);
+
+        // when
+        reviewCycleAggregateService.changeCycle(reviewCycleId, newCycle);
+
+        // then
+        ReviewCycle savedReviewCycle = reviewCycleRepository.findById(reviewCycleId).orElseThrow();
+        assertThat(savedReviewCycle.getCycle())
+                .hasSize(newCycle.size())
+                .isEqualTo(newCycle);
+    }
+
+    @Test
+    void 복습_주기를_삭제할_수_있다() {
+        // given
+        List<Integer> cycle = List.of(1, 2, 3, 4, 5);
+        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
+
+        // when
+        reviewCycleAggregateService.deleteReviewCycle(reviewCycleId);
+
+        // then
+        assertThat(reviewCycleRepository.existsById(reviewCycleId)).isFalse();
+    }
+
 }

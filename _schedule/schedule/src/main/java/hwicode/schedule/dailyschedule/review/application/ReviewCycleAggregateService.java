@@ -24,10 +24,28 @@ public class ReviewCycleAggregateService {
 
     @Transactional
     public String changeReviewCycleName(Long reviewCycleId, String newName) {
-        ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId)
-                .orElseThrow(ReviewCycleNotFoundException::new);
+        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
 
         reviewCycle.changeName(newName);
         return newName;
     }
+
+    @Transactional
+    public List<Integer> changeCycle(Long reviewCycleId, List<Integer> cycle) {
+        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
+
+        return reviewCycle.changeCycle(cycle);
+    }
+
+    @Transactional
+    public void deleteReviewCycle(Long reviewCycleId) {
+        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
+        reviewCycleRepository.delete(reviewCycle);
+    }
+
+    private ReviewCycle findReviewCycle(Long reviewCycleId) {
+        return reviewCycleRepository.findById(reviewCycleId)
+                .orElseThrow(ReviewCycleNotFoundException::new);
+    }
+
 }
