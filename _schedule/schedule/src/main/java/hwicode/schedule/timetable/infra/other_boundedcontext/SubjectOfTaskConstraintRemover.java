@@ -1,4 +1,4 @@
-package hwicode.schedule.timetable.infra;
+package hwicode.schedule.timetable.infra.other_boundedcontext;
 
 import hwicode.schedule.dailyschedule.todolist.infra.service_impl.TaskConstraintRemover;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;

@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.review.infra;
+package hwicode.schedule.dailyschedule.review.infra.other_boundedcontext;
 
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.service_impl.TaskConstraintRemover;
