@@ -31,4 +31,8 @@ public class ReviewDateTask {
                 .equals(reviewDate.getDate());
     }
 
+    public ReviewTask getReviewTask() {
+        return reviewTask;
+    }
+
 }

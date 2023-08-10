@@ -6,10 +6,20 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
+import java.util.List;
+
 public interface ReviewDateTaskRepository extends JpaRepository<ReviewDateTask, Long> {
 
     @Query("Delete ReviewDateTask r "
             + "WHERE r.reviewTask.id = :id")
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void deleteAllReviewDateTasksBy(@Param("id") Long reviewTaskId);
+
+    //todo: 쿼리 개선 필요
+    @Query("SELECT r FROM ReviewDateTask r "
+            + "JOIN FETCH r.reviewTask "
+            + "JOIN FETCH r.reviewDate "
+            + "WHERE r.reviewDate.date = :date")
+    List<ReviewDateTask> findAllByDateWithReviewTask(@Param("date") LocalDate date);
 }
