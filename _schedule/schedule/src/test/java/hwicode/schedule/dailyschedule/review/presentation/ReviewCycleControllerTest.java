@@ -24,8 +24,7 @@ import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReviewCycleController.class)
@@ -113,5 +112,22 @@ class ReviewCycleControllerTest {
 
         verify(reviewCycleAggregateService).changeCycle(any(), any());
     }
+
+    @Test
+    void 복습_주기의_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(reviewCycleAggregateService.deleteReviewCycle(REVIEW_CYCLE_ID))
+                .willReturn(REVIEW_CYCLE_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/review-cycles/{reviewCycleId}",
+                REVIEW_CYCLE_ID));
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(reviewCycleAggregateService).deleteReviewCycle(any());
+    }
+
 
 }

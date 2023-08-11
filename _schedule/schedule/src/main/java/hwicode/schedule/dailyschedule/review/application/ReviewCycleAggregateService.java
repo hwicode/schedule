@@ -38,9 +38,10 @@ public class ReviewCycleAggregateService {
     }
 
     @Transactional
-    public void deleteReviewCycle(Long reviewCycleId) {
+    public Long deleteReviewCycle(Long reviewCycleId) {
         ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
         reviewCycleRepository.delete(reviewCycle);
+        return reviewCycleId;
     }
 
     private ReviewCycle findReviewCycle(Long reviewCycleId) {

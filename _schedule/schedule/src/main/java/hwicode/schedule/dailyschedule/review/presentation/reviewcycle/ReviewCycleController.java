@@ -52,4 +52,10 @@ public class ReviewCycleController {
         return new ReviewCycleCycleModifyResponse(reviewCycleId, cycle);
     }
 
+    @DeleteMapping("/dailyschedule/review-cycles/{reviewCycleId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteReviewCycle(@PathVariable @Positive Long reviewCycleId) {
+        reviewCycleAggregateService.deleteReviewCycle(reviewCycleId);
+    }
+
 }
