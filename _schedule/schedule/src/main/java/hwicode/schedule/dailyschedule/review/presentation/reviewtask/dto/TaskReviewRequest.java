@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.review.presentation;
+package hwicode.schedule.dailyschedule.review.presentation.reviewtask.dto;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
