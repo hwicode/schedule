@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.review.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.ReviewCycleController;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyRequest;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveRequest;
@@ -86,6 +88,30 @@ class ReviewCycleControllerTest {
                 ));
 
         verify(reviewCycleAggregateService).changeReviewCycleName(any(), any());
+    }
+
+    @Test
+    void 복습_주기의_주기_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        List<Integer> cycle = List.of(1);
+        ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest = new ReviewCycleCycleModifyRequest(cycle);
+        ReviewCycleCycleModifyResponse reviewCycleCycleModifyResponse = new ReviewCycleCycleModifyResponse(REVIEW_CYCLE_ID, cycle);
+
+        given(reviewCycleAggregateService.changeCycle(any(), any()))
+                .willReturn(cycle);
+
+        // when
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/review-cycles/{reviewCycleId}/cycle", REVIEW_CYCLE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewCycleCycleModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(reviewCycleCycleModifyResponse)
+                ));
+
+        verify(reviewCycleAggregateService).changeCycle(any(), any());
     }
 
 }

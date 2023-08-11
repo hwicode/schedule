@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.review.presentation.reviewcycle;
 
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyRequest;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveRequest;
@@ -39,6 +41,15 @@ public class ReviewCycleController {
         String newName = reviewCycleNameModifyRequest.getNewReviewCycleName();
         reviewCycleAggregateService.changeReviewCycleName(reviewCycleId, newName);
         return new ReviewCycleNameModifyResponse(reviewCycleId, newName);
+    }
+
+    @PatchMapping("/dailyschedule/review-cycles/{reviewCycleId}/cycle")
+    @ResponseStatus(HttpStatus.OK)
+    public ReviewCycleCycleModifyResponse changeCycle(@PathVariable @Positive Long reviewCycleId,
+                                                      @RequestBody @Valid ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest) {
+        List<Integer> cycle = reviewCycleCycleModifyRequest.getCycle();
+        reviewCycleAggregateService.changeCycle(reviewCycleId, cycle);
+        return new ReviewCycleCycleModifyResponse(reviewCycleId, cycle);
     }
 
 }
