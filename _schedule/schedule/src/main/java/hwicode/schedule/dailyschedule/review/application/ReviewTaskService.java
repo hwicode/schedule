@@ -27,7 +27,7 @@ public class ReviewTaskService {
     private final ReviewDateTaskSaveAllOrDeleteAllRepository reviewDateTaskSaveAllOrDeleteAllRepository;
 
     @Transactional
-    public void reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
+    public Long reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
         ReviewTask reviewTask = reviewTaskRepository.findReviewTaskWithReviewDateTasks(reviewTaskId)
                 .orElseThrow(ReviewTaskNotFoundException::new);
         ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId)
@@ -36,6 +36,7 @@ public class ReviewTaskService {
 
         List<ReviewDateTask> reviewDateTasks = reviewTask.review(reviewDates);
         reviewDateTaskSaveAllOrDeleteAllRepository.saveAll(reviewDateTasks);
+        return reviewTask.getId();
     }
 
     @Transactional
