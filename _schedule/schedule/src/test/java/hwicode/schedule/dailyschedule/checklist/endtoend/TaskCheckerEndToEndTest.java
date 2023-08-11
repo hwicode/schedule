@@ -34,7 +34,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class TaskCheckerEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -66,14 +66,13 @@ class TaskCheckerEndToEndTest {
         TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, TaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskId", taskCheckerId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status", port));
+                .patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status", dailyChecklist.getId(), taskCheckerId);
 
         //then
         response.then()
@@ -96,14 +95,13 @@ class TaskCheckerEndToEndTest {
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskId", taskCheckerId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskDifficultyModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty", port));
+                .patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty", dailyChecklist.getId(), taskCheckerId);
 
         //then
         response.then()
@@ -126,14 +124,13 @@ class TaskCheckerEndToEndTest {
         TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_CHECKLIST_ID)
-                .pathParam("taskId", taskCheckerId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name", port));
+                .patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name", dailyChecklist.getId(), taskCheckerId);
 
         // then
         response.then()

@@ -30,7 +30,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class LearningTimeEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -61,11 +61,12 @@ class LearningTimeEndToEndTest {
         timeTableRepository.save(timeTable);
 
         RequestSpecification requestSpecification = given()
+                .port(port)
                 .contentType(ContentType.JSON);
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/learning-times/%s", port, learningTime.getId()));
+                .delete("/dailyschedule/learning-times/{learningTimeId}", learningTime.getId());
 
         // then
         response.then()
@@ -86,12 +87,13 @@ class LearningTimeEndToEndTest {
         LearningTimeSubjectModifyRequest learningTimeSubjectModifyRequest = new LearningTimeSubjectModifyRequest(TimeTableDataHelper.NEW_SUBJECT);
 
         RequestSpecification requestSpecification = given()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject", port, learningTime.getId()));
+                .patch("/dailyschedule/learning-times/{learningTimeId}/subject", learningTime.getId());
 
         // then
         response.then()
@@ -115,12 +117,13 @@ class LearningTimeEndToEndTest {
                 subjectOfTask.getId());
 
         RequestSpecification requestSpecification = given()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectOfTaskModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject-of-task", port, learningTime.getId()));
+                .patch("/dailyschedule/learning-times/{learningTimeId}/subject-of-task", learningTime.getId());
 
         // then
         response.then()
@@ -144,12 +147,13 @@ class LearningTimeEndToEndTest {
                 subjectOfSubTask.getId());
 
         RequestSpecification requestSpecification = given()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectOfSubTaskModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/learning-times/%s/subject-of-subtask", port, learningTime.getId()));
+                .patch("/dailyschedule/learning-times/{learningTimeId}/subject-of-subtask", learningTime.getId());
 
         // then
         response.then()

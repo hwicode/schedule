@@ -37,7 +37,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CalendarEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -69,12 +69,13 @@ class CalendarEndToEndTest {
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
 
         RequestSpecification requestSpecification = given()
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(goalSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/calendars/goals", port));
+                .post("/calendars/goals");
 
         //then
         response.then()
@@ -97,13 +98,13 @@ class CalendarEndToEndTest {
         GoalAddToCalendarsRequest goalAddToCalendarsRequest = new GoalAddToCalendarsRequest(yearMonths);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(goalAddToCalendarsRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/calendars/goals/{goalId}", port));
+                .post("/calendars/goals/{goalId}", goal.getId());
 
         //then
         response.then()
@@ -128,14 +129,13 @@ class CalendarEndToEndTest {
         GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("calendarId", calendar.getId())
-                .pathParam("goalId", goal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(goalNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/calendars/{calendarId}/goals/{goalId}/name", port));
+                .patch("/calendars/{calendarId}/goals/{goalId}/name", calendar.getId(), goal.getId());
 
         // then
         response.then()
@@ -155,13 +155,13 @@ class CalendarEndToEndTest {
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, 6);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("calendarId", calendar.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(weeklyStudyDateModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/calendars/{calendarId}/weeklyStudyDate", port));
+                .patch("/calendars/{calendarId}/weeklyStudyDate", calendar.getId());
 
         // then
         response.then()

@@ -34,7 +34,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class SubTaskCheckerEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -70,15 +70,14 @@ class SubTaskCheckerEndToEndTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", dailyChecklist.getId())
-                .pathParam("taskId", taskChecker.getId())
-                .pathParam("subTaskId", subTaskCheckerId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subTaskStatusModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status", port));
+                .patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
+                        dailyChecklist.getId(), taskChecker.getId(), subTaskCheckerId);
 
         //then
         response.then()
@@ -105,14 +104,13 @@ class SubTaskCheckerEndToEndTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(taskCheckerId, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskId", taskCheckerId)
-                .pathParam("subTaskId", subTaskCheckerId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subTaskCheckerNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name", port));
+                .patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name", taskCheckerId, subTaskCheckerId);
 
         // then
         response.then()

@@ -24,7 +24,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class DailyToDoListEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -47,13 +47,13 @@ class DailyToDoListEndToEndTest {
         DailyToDoListInformationChangeRequest dailyToDoListInformationChangeRequest = new DailyToDoListInformationChangeRequest(review, Emoji.GOOD);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", dailyToDoList.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(dailyToDoListInformationChangeRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", port));
+                .patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", dailyToDoList.getId());
 
         //then
         response.then()

@@ -36,7 +36,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class GoalEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -63,13 +63,13 @@ class GoalEndToEndTest {
         SubGoalSaveRequest subGoalSaveRequest = new SubGoalSaveRequest(SUB_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subGoalSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/goals/{goalId}/sub-goals", port));
+                .post("/goals/{goalId}/sub-goals", goal.getId());
 
         //then
         response.then()
@@ -88,20 +88,20 @@ class GoalEndToEndTest {
         SubGoalNameModifyRequest subGoalNameModifyRequest = new SubGoalNameModifyRequest(SUB_GOAL_NAME, NEW_SUB_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
-                .pathParam("subGoalId", subGoal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subGoalNameModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/goals/{goalId}/sub-goals/{subGoalId}/name", port));
+                .patch("goals/{goalId}/sub-goals/{subGoalId}/name", goal.getId(), subGoal.getId());
 
         // then
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        assertThatThrownBy(() -> goalAggregateService.saveSubGoal(goal.getId(), NEW_SUB_GOAL_NAME))
+        Long goalId = goal.getId();
+        assertThatThrownBy(() -> goalAggregateService.saveSubGoal(goalId, NEW_SUB_GOAL_NAME))
                 .isInstanceOf(SubGoalDuplicateException.class);
     }
 
@@ -115,14 +115,13 @@ class GoalEndToEndTest {
         SubGoalDeleteRequest subGoalDeleteRequest = new SubGoalDeleteRequest(SUB_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
-                .pathParam("subGoalId", subGoal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subGoalDeleteRequest);
 
         // when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/goals/{goalId}/sub-goals/{subGoalId}", port));
+                .delete("/goals/{goalId}/sub-goals/{subGoalId}", goal.getId(), subGoal.getId());
 
         // then
         response.then()
@@ -143,13 +142,12 @@ class GoalEndToEndTest {
         SubGoalStatusModifyRequest subGoalStatusModifyRequest = new SubGoalStatusModifyRequest(SUB_GOAL_NAME, SubGoalStatus.TODO);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
-                .pathParam("subGoalId", subGoal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subGoalStatusModifyRequest);
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/goals/{goalId}/sub-goals/{subGoalId}/status", port));
+                .patch("/goals/{goalId}/sub-goals/{subGoalId}/status", goal.getId(), subGoal.getId());
 
         // then
         response.then()
@@ -169,13 +167,13 @@ class GoalEndToEndTest {
         GoalStatusModifyRequest goalStatusModifyRequest = new GoalStatusModifyRequest(GoalStatus.PROGRESS);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(goalStatusModifyRequest);
 
         // when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/goals/{goalId}/status", port));
+                .patch("/goals/{goalId}/status", goal.getId());
 
         // then
         response.then()

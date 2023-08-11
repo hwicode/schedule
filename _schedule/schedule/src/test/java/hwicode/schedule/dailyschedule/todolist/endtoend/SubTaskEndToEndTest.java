@@ -6,7 +6,8 @@ import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.*;
+import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
@@ -23,18 +24,16 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class SubTaskEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -69,21 +68,19 @@ class SubTaskEndToEndTest {
         SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskId", TASK_ID)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subTaskSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks", port));
+                .post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks", dailyToDoList.getId(), TASK_ID);
 
         //then
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        List<SubTask> all = subTaskRepository.findAll();
-        assertThat(all.size()).isEqualTo(1);
+        assertThat(subTaskRepository.findAll()).hasSize(1);
     }
 
     @Test
@@ -103,15 +100,14 @@ class SubTaskEndToEndTest {
         SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskId", TASK_ID)
-                .pathParam("subTaskId", SUB_TASK_ID)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(subTaskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}", port));
+                .delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
+                        dailyToDoList.getId(), TASK_ID, SUB_TASK_ID);
 
         //then
         response.then()

@@ -33,7 +33,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class TaskEndToEndTest {
 
     @LocalServerPort
-    private int port;
+    int port;
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
@@ -61,13 +61,13 @@ class TaskEndToEndTest {
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", dailyToDoList.getId())
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskSaveRequest);
 
         //when
         Response response = requestSpecification.when()
-                .post(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", port));
+                .post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", dailyToDoList.getId());
 
         //then
         response.then()
@@ -90,14 +90,13 @@ class TaskEndToEndTest {
         TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyToDoList.getId(), taskId, TASK_NAME);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("dailyToDoListId", DAILY_TO_DO_LIST_ID)
-                .pathParam("taskId", TASK_ID)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskDeleteRequest);
 
         //when
         Response response = requestSpecification.when()
-                .delete(String.format("http://localhost:%s/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", port));
+                .delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", dailyToDoList.getId(), taskId);
 
         //then
         response.then()
@@ -119,13 +118,13 @@ class TaskEndToEndTest {
         TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("taskId", taskId)
+                .port(port)
                 .contentType(ContentType.JSON)
                 .body(taskInformationModifyRequest);
 
         //when
         Response response = requestSpecification.when()
-                .patch(String.format("http://localhost:%s/dailyschedule/tasks/{taskId}/information", port));
+                .patch("/dailyschedule/tasks/{taskId}/information", taskId);
 
         //then
         response.then()
