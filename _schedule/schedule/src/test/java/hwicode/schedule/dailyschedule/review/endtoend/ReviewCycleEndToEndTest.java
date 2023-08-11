@@ -18,6 +18,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
+import java.util.Set;
 
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.NEW_REVIEW_CYCLE_NAME;
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.REVIEW_CYCLE_NAME;
@@ -47,7 +48,7 @@ class ReviewCycleEndToEndTest {
     @Test
     void 복습_주기_생성_요청() {
         // given
-        List<Integer> cycle = List.of(1, 2, 3, 4, 5);
+        Set<Integer> cycle = Set.of(1, 2, 3, 4, 5);
 
         ReviewCycleSaveRequest reviewCycleSaveRequest = new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, cycle);
 
@@ -95,7 +96,7 @@ class ReviewCycleEndToEndTest {
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
         Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
 
-        List<Integer> newCycle = List.of(2, 4, 5, 8, 13, 20);
+        Set<Integer> newCycle = Set.of(2, 4, 5, 8, 13, 20);
         ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest = new ReviewCycleCycleModifyRequest(newCycle);
 
         RequestSpecification requestSpecification = given().port(port)
@@ -113,7 +114,7 @@ class ReviewCycleEndToEndTest {
         ReviewCycle savedReviewCycle = reviewCycleRepository.findById(reviewCycleId).orElseThrow();
         assertThat(savedReviewCycle.getCycle())
                 .hasSize(newCycle.size())
-                .isEqualTo(newCycle);
+                .isEqualTo(reviewCycleCycleModifyRequest.getCycle());
     }
 
     @Test

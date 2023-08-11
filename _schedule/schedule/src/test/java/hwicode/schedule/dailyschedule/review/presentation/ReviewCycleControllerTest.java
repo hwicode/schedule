@@ -19,7 +19,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
 
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -44,9 +45,9 @@ class ReviewCycleControllerTest {
     @Test
     void 복습_주기를_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        List<Integer> cycle = List.of(1);
+        Set<Integer> cycle = Set.of(1);
         ReviewCycleSaveRequest reviewCycleSaveRequest = new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, cycle);
-        ReviewCycleSaveResponse reviewCycleSaveResponse = new ReviewCycleSaveResponse(REVIEW_CYCLE_ID, REVIEW_CYCLE_NAME, cycle);
+        ReviewCycleSaveResponse reviewCycleSaveResponse = new ReviewCycleSaveResponse(REVIEW_CYCLE_ID, REVIEW_CYCLE_NAME, new ArrayList<>(cycle));
 
         given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
                 .willReturn(REVIEW_CYCLE_ID);
@@ -94,12 +95,12 @@ class ReviewCycleControllerTest {
     @Test
     void 복습_주기의_주기_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        List<Integer> cycle = List.of(1);
+        Set<Integer> cycle = Set.of(1);
         ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest = new ReviewCycleCycleModifyRequest(cycle);
-        ReviewCycleCycleModifyResponse reviewCycleCycleModifyResponse = new ReviewCycleCycleModifyResponse(REVIEW_CYCLE_ID, cycle);
+        ReviewCycleCycleModifyResponse reviewCycleCycleModifyResponse = new ReviewCycleCycleModifyResponse(REVIEW_CYCLE_ID, new ArrayList<>(cycle));
 
         given(reviewCycleAggregateService.changeCycle(any(), any()))
-                .willReturn(cycle);
+                .willReturn(new ArrayList<>(cycle));
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/review-cycles/{reviewCycleId}/cycle", REVIEW_CYCLE_ID)
