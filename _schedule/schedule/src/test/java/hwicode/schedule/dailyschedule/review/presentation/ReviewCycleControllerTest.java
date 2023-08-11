@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.review.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.ReviewCycleController;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyRequest;
+import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -16,11 +18,11 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
-import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.REVIEW_CYCLE_ID;
-import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.REVIEW_CYCLE_NAME;
+import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -59,6 +61,31 @@ class ReviewCycleControllerTest {
                 ));
 
         verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+    }
+
+    @Test
+    void 복습_주기의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception{
+        // given
+        ReviewCycleNameModifyRequest reviewCycleNameModifyRequest = new ReviewCycleNameModifyRequest(NEW_REVIEW_CYCLE_NAME);
+        ReviewCycleNameModifyResponse reviewCycleNameModifyResponse = new ReviewCycleNameModifyResponse(REVIEW_CYCLE_ID, NEW_REVIEW_CYCLE_NAME);
+
+        given(reviewCycleAggregateService.changeReviewCycleName(any(), any()))
+                .willReturn(NEW_REVIEW_CYCLE_NAME);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                patch("/dailyschedule/review-cycles/{reviewCycleId}/name",
+                        REVIEW_CYCLE_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(reviewCycleNameModifyRequest)));
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(reviewCycleNameModifyResponse)
+                ));
+
+        verify(reviewCycleAggregateService).changeReviewCycleName(any(), any());
     }
 
 }
