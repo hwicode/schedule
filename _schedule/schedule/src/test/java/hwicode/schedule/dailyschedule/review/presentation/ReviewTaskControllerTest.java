@@ -2,6 +2,8 @@ package hwicode.schedule.dailyschedule.review.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewTaskNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +19,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReviewTaskController.class)
@@ -44,8 +47,8 @@ class ReviewTaskControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/tasks/{taskId}/review",
                         REVIEW_TASK_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(taskReviewRequest)));
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(taskReviewRequest)));
 
         // then
         perform.andExpect(status().isCreated())
@@ -70,6 +73,52 @@ class ReviewTaskControllerTest {
         perform.andExpect(status().isNoContent());
 
         verify(reviewTaskService).cancelReviewedTask(any());
+    }
+
+    @Test
+    void 과제의_복습을_요청할_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        ReviewTaskNotFoundException reviewTaskNotFoundException = new ReviewTaskNotFoundException();
+        given(reviewTaskService.reviewTask(any(), any(), any()))
+                .willThrow(reviewTaskNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/tasks/{taskId}/review",
+                        REVIEW_TASK_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                        new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(reviewTaskNotFoundException.getMessage()));
+
+        verify(reviewTaskService).reviewTask(any(), any(), any());
+    }
+
+    @Test
+    void 과제의_복습을_요청할_때_복습_주기가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        ReviewCycleNotFoundException reviewCycleNotFoundException = new ReviewCycleNotFoundException();
+        given(reviewTaskService.reviewTask(any(), any(), any()))
+                .willThrow(reviewCycleNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/tasks/{taskId}/review",
+                        REVIEW_TASK_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(
+                         new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
+                )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(reviewCycleNotFoundException.getMessage()));
+
+        verify(reviewTaskService).reviewTask(any(), any(), any());
     }
 
 }
