@@ -15,6 +15,7 @@ import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,4 +55,21 @@ class ReviewTaskControllerTest {
 
         verify(reviewTaskService).reviewTask(any(), any(), any());
     }
+
+    @Test
+    void 과제의_복습을_취소하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(reviewTaskService.cancelReviewedTask(any()))
+                .willReturn(REVIEW_TASK_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tasks/{taskId}/review",
+                REVIEW_TASK_ID));
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(reviewTaskService).cancelReviewedTask(any());
+    }
+
 }

@@ -26,4 +26,10 @@ public class ReviewTaskController {
         return new TaskReviewResponse(id);
     }
 
+    @DeleteMapping("/dailyschedule/tasks/{taskId}/review")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void cancelReviewedTask(@PathVariable("taskId") @Positive Long reviewTaskId) {
+        reviewTaskService.cancelReviewedTask(reviewTaskId);
+    }
+
 }

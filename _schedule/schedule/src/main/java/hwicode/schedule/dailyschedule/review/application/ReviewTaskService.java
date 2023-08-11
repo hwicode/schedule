@@ -40,8 +40,9 @@ public class ReviewTaskService {
     }
 
     @Transactional
-    public void cancelReviewedTask(Long reviewTaskId) {
+    public Long cancelReviewedTask(Long reviewTaskId) {
         reviewDateTaskSaveAllOrDeleteAllRepository.deleteAllReviewDateTasksBy(reviewTaskId);
+        return reviewTaskId;
     }
 
 }
