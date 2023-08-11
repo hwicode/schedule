@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.review.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.ReviewCycleController;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyResponse;
@@ -25,6 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ReviewCycleController.class)
@@ -129,5 +131,23 @@ class ReviewCycleControllerTest {
         verify(reviewCycleAggregateService).deleteReviewCycle(any());
     }
 
+    @Test
+    void 복습_주기의_삭제을_요청할_때_복습_주기가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        ReviewCycleNotFoundException reviewCycleNotFoundException = new ReviewCycleNotFoundException();
+
+        given(reviewCycleAggregateService.deleteReviewCycle(REVIEW_CYCLE_ID))
+                .willThrow(reviewCycleNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/review-cycles/{reviewCycleId}",
+                REVIEW_CYCLE_ID));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(reviewCycleNotFoundException.getMessage()));
+
+        verify(reviewCycleAggregateService).deleteReviewCycle(any());
+    }
 
 }
