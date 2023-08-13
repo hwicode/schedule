@@ -108,7 +108,7 @@ create table review_cycle (
 
 create table tag (
    id bigint not null auto_increment,
-   name varchar(255) not null,
+   name varchar(255) not null unique,
    primary key (id)
 ) engine=InnoDB;
 
