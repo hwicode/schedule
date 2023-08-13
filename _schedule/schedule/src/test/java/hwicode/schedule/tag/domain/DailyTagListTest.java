@@ -37,6 +37,32 @@ class DailyTagListTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    void DailyTagList에_Tag를_삭제할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Tag tag = new Tag(TAG_NAME);
+        dailyTagList.addTag(tag);
+
+        // when
+        dailyTagList.deleteTag(tag);
+
+        // then
+        assertThatThrownBy(() -> dailyTagList.deleteTag(tag))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void DailyTagList에_존재하지_않는_Tag를_조회하면_에러가_발생한다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Tag tag = new Tag(TAG_NAME);
+
+        // when then
+        assertThatThrownBy(() -> dailyTagList.deleteTag(tag))
+                .isInstanceOf(RuntimeException.class);
+    }
+
 }
 
 class DailyTagList {
@@ -58,6 +84,19 @@ class DailyTagList {
             throw new RuntimeException();
         }
     }
+
+    public void deleteTag(Tag tag) {
+        DailyTag dailyTag = findDailyTagBy(tag);
+        dailyTags.remove(dailyTag);
+    }
+
+    private DailyTag findDailyTagBy(Tag tag) {
+        return dailyTags.stream()
+                .filter(d -> d.isSameTag(tag))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+    }
+
 }
 
 class DailyTag {
