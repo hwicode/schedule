@@ -3,16 +3,24 @@ package hwicode.schedule.tag.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
+import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
 import hwicode.schedule.tag.infra.DailyTagListRepository;
 import hwicode.schedule.tag.infra.MemoRepository;
+import hwicode.schedule.tag.infra.MemoTagRepository;
+import hwicode.schedule.tag.infra.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static hwicode.schedule.tag.TagDataHelper.MEMO_TEXT;
-import static hwicode.schedule.tag.TagDataHelper.NEW_MEMO_TEXT;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -31,6 +39,12 @@ class MemoServiceTest {
     @Autowired
     DailyTagListRepository dailyTagListRepository;
 
+    @Autowired
+    TagRepository tagRepository;
+
+    @Autowired
+    MemoTagRepository memoTagRepository;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -40,6 +54,7 @@ class MemoServiceTest {
     void 메모를_생성할_수_있다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
 
         // when
         Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
@@ -74,6 +89,36 @@ class MemoServiceTest {
         // when then
         assertThatThrownBy(() -> memoService.changeMemoText(noneExistId, MEMO_TEXT))
                 .isInstanceOf(MemoNotFoundException.class);
+    }
+
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void 메모에_태그를_여러_개_추가할_수_있다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+
+        dailyTagListRepository.save(dailyTagList);
+        memoRepository.save(memo);
+
+        List<Long> tagIds = tagRepository.saveAll(tags)
+                .stream()
+                .map(Tag::getId)
+                .collect(Collectors.toList());
+
+        // when
+        memoService.addTagsToMemo(memo.getId(), tagIds);
+
+        // then
+        assertThat(memoTagRepository.findAll()).hasSize(tags.size());
+    }
+
+    private static Stream<List<Tag>> provideTags() {
+        return Stream.of(
+                List.of(new Tag(TAG_NAME)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3))
+        );
     }
 
 }

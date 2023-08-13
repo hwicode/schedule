@@ -55,7 +55,8 @@ public class Memo {
     }
 
     private void validateTag(Tag tag) {
-        boolean duplication = memoTags.stream().anyMatch(m -> m.isSameTag(tag));
+        boolean duplication = memoTags.stream()
+                .anyMatch(m -> m.isSameTag(tag));
 
         if (duplication) {
             throw new MemoTagDuplicateException();

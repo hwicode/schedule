@@ -7,7 +7,7 @@ import javax.persistence.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
-class MemoTag {
+public class MemoTag {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
