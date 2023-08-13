@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,6 +95,28 @@ class MemoTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    void Memo에_여러_개의_Tag를_추가할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        List<Tag> tags = List.of(
+                new Tag(TAG_NAME),
+                new Tag(TAG_NAME2),
+                new Tag(TAG_NAME3)
+        );
+
+        // when
+        List<MemoTag> memoTags = memo.addTags(tags);
+
+        // then
+        for (int i = 0; i < tags.size(); i++) {
+            MemoTag memoTag = memoTags.get(i);
+            Tag tag = tags.get(i);
+            assertThat(memoTag.isSameTag(tag)).isTrue();
+        }
+    }
+
 }
 
 class Memo {
@@ -113,6 +136,12 @@ class Memo {
         }
         this.text = text;
         return true;
+    }
+
+    public List<MemoTag> addTags(List<Tag> tags) {
+        return tags.stream()
+                .map(this::addTag)
+                .collect(Collectors.toList());
     }
 
     public MemoTag addTag(Tag tag) {
