@@ -11,6 +11,10 @@ drop table if exists sub_goal cascade;
 drop table if exists review_date cascade;
 drop table if exists review_date_task cascade;
 drop table if exists review_cycle cascade;
+drop table if exists tag cascade;
+drop table if exists memo cascade;
+drop table if exists daily_tag cascade;
+drop table if exists memo_tag cascade;
 
 SET foreign_key_checks = 1;
 
@@ -102,6 +106,33 @@ create table review_cycle (
    primary key (id)
 ) engine=InnoDB;
 
+create table tag (
+   id bigint not null auto_increment,
+   name varchar(255) not null,
+   primary key (id)
+) engine=InnoDB;
+
+create table memo (
+   id bigint not null auto_increment,
+   text text not null,
+   daily_schedule_id bigint,
+   primary key (id)
+) engine=InnoDB;
+
+create table daily_tag (
+   id bigint not null auto_increment,
+   daily_schedule_id bigint not null,
+   tag_id bigint not null,
+   primary key (id)
+) engine=InnoDB;
+
+create table memo_tag (
+   id bigint not null auto_increment,
+   memo_id bigint not null,
+   tag_id bigint not null,
+   primary key (id)
+) engine=InnoDB;
+
 alter table daily_schedule
    add constraint
    foreign key (calendar_id)
@@ -156,3 +187,28 @@ alter table review_date_task
    add constraint
    foreign key (review_date_id)
    references review_date (id);
+
+alter table memo
+   add constraint
+   foreign key (daily_schedule_id)
+   references daily_schedule (id);
+
+alter table daily_tag
+   add constraint
+   foreign key (daily_schedule_id)
+   references daily_schedule (id);
+
+alter table daily_tag
+   add constraint
+   foreign key (tag_id)
+   references tag (id);
+
+alter table memo_tag
+   add constraint
+   foreign key (memo_id)
+   references memo (id);
+
+alter table memo_tag
+   add constraint
+   foreign key (tag_id)
+   references tag (id);

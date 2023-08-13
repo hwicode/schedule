@@ -2,15 +2,30 @@ package hwicode.schedule.tag.domain;
 
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
 public class Memo {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String text;
+
+    @JoinColumn(name = "daily_schedule_id")
+    @ManyToOne(fetch = FetchType.LAZY)
     private DailyTagList dailyTagList;
+
+    @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MemoTag> memoTags = new ArrayList<>();
 
     public Memo(String text, DailyTagList dailyTagList) {

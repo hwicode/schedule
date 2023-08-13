@@ -2,12 +2,22 @@ package hwicode.schedule.tag.domain;
 
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
+import lombok.NoArgsConstructor;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
+@Table(name = "daily_schedule")
+@Entity
 public class DailyTagList {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @OneToMany(mappedBy = "dailyTagList", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DailyTag> dailyTags = new ArrayList<>();
 
     public DailyTag addTag(Tag tag) {
