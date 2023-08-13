@@ -37,6 +37,19 @@ class MemoServiceTest {
     }
 
     @Test
+    void 메모를_생성할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+
+        // when
+        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+    }
+
+
+    @Test
     void 메모의_내용를_변경할_수_있다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
