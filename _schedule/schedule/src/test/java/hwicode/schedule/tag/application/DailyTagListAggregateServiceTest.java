@@ -4,6 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
 import hwicode.schedule.tag.infra.DailyTagListRepository;
 import hwicode.schedule.tag.infra.DailyTagRepository;
 import hwicode.schedule.tag.infra.TagRepository;
@@ -67,6 +68,27 @@ class DailyTagListAggregateServiceTest {
         // when
         assertThatThrownBy(() -> dailyTagListAggregateService.addTagToDailyTagList(noneExistId, tagId))
                 .isInstanceOf(DailyTagListNotFoundException.class);
+    }
+
+    @Test
+    void DailyTagList에_태그를_삭제할_수_있다() {
+        // given
+        Tag tag = new Tag(TAG_NAME);
+        DailyTagList dailyTagList = new DailyTagList();
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        Long dailyTagId = dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
+
+        // when
+        dailyTagListAggregateService.deleteTagToDailyTagList(dailyTagId, tag.getId());
+
+        // then
+        Long tagId = tag.getId();
+        assertThatThrownBy(() -> dailyTagListAggregateService.deleteTagToDailyTagList(dailyTagId, tagId))
+                .isInstanceOf(DailyTagNotFoundException.class);
+        assertThat(dailyTagRepository.findAll()).isEmpty();
     }
 
 }

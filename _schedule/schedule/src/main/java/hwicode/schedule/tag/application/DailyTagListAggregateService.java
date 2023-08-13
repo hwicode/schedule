@@ -32,4 +32,15 @@ public class DailyTagListAggregateService {
         return dailyTag.getId();
     }
 
+    @Transactional
+    public Long deleteTagToDailyTagList(Long dailyTagListId, Long tagId) {
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(TagNotFoundException::new);
+        DailyTagList dailyTagList = dailyTagListRepository.findDailyTagListWithDailyTags(dailyTagListId)
+                .orElseThrow(DailyTagListNotFoundException::new);
+
+        dailyTagList.deleteTag(tag);
+        return dailyTagList.getId();
+    }
+
 }
