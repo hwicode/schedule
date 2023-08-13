@@ -2,12 +2,11 @@ package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.domain.DailyTagList;
+import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
-import hwicode.schedule.tag.infra.DailyTagListRepository;
-import hwicode.schedule.tag.infra.DailyTagRepository;
-import hwicode.schedule.tag.infra.TagRepository;
+import hwicode.schedule.tag.infra.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,8 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static hwicode.schedule.tag.TagDataHelper.NEW_TAG_NAME;
-import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
+import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -36,6 +34,9 @@ class TagServiceTest {
     DailyTagListAggregateService  dailyTagListAggregateService;
 
     @Autowired
+    MemoService memoService;
+
+    @Autowired
     TagRepository tagRepository;
 
     @Autowired
@@ -43,6 +44,12 @@ class TagServiceTest {
 
     @Autowired
     DailyTagRepository dailyTagRepository;
+
+    @Autowired
+    MemoRepository memoRepository;
+
+    @Autowired
+    MemoTagRepository memoTagRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -132,6 +139,64 @@ class TagServiceTest {
                 List.of(new DailyTagList(), new DailyTagList(), new DailyTagList()),
                 List.of(new DailyTagList(), new DailyTagList(), new DailyTagList(), new DailyTagList())
         );
+    }
+
+    @Test
+    void 태그를_삭제할_때_MemoTag도_같이_삭제할_수_있다() {
+        // given
+        Long tagId = tagService.saveTag(TAG_NAME);
+
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);
+        memoRepository.save(memo);
+        memoRepository.save(memo2);
+
+        memoService.addTagsToMemo(memo.getId(), List.of(tagId));
+        memoService.addTagsToMemo(memo2.getId(), List.of(tagId));
+
+        // when
+        tagService.deleteTag(tagId);
+
+        // then
+        assertThatThrownBy(() -> tagService.deleteTag(tagId))
+                .isInstanceOf(TagNotFoundException.class);
+        assertThat(tagRepository.findAll()).isEmpty();
+        assertThat(memoTagRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void 태그를_삭제할_때_DailyTag와_MemoTag도_같이_삭제할_수_있다() {
+        // given
+        Long tagId = tagService.saveTag(TAG_NAME);
+
+        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList2 = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+        dailyTagListRepository.save(dailyTagList2);
+
+        dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tagId);
+        dailyTagListAggregateService.addTagToDailyTagList(dailyTagList2.getId(), tagId);
+
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);
+        memoRepository.save(memo);
+        memoRepository.save(memo2);
+
+        memoService.addTagsToMemo(memo.getId(), List.of(tagId));
+        memoService.addTagsToMemo(memo2.getId(), List.of(tagId));
+
+        // when
+        tagService.deleteTag(tagId);
+
+        // then
+        assertThatThrownBy(() -> tagService.deleteTag(tagId))
+                .isInstanceOf(TagNotFoundException.class);
+        assertThat(tagRepository.findAll()).isEmpty();
+        assertThat(dailyTagRepository.findAll()).isEmpty();
+        assertThat(memoTagRepository.findAll()).isEmpty();
     }
 
 }
