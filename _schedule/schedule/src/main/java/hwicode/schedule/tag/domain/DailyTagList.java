@@ -1,5 +1,8 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +22,7 @@ public class DailyTagList {
                 .anyMatch(dailyTag -> dailyTag.isSameTag(tag));
 
         if (duplication) {
-            throw new RuntimeException();
+            throw new DailyTagDuplicateException();
         }
     }
 
@@ -32,7 +35,7 @@ public class DailyTagList {
         return dailyTags.stream()
                 .filter(dailyTag -> dailyTag.isSameTag(tag))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(DailyTagNotFoundException::new);
     }
 
 }

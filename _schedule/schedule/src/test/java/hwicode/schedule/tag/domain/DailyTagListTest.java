@@ -1,5 +1,7 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
@@ -31,7 +33,7 @@ class DailyTagListTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagList.addTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(DailyTagDuplicateException.class);
     }
 
     @Test
@@ -46,7 +48,7 @@ class DailyTagListTest {
 
         // then
         assertThatThrownBy(() -> dailyTagList.deleteTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(DailyTagNotFoundException.class);
     }
 
     @Test
@@ -57,7 +59,7 @@ class DailyTagListTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagList.deleteTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(DailyTagNotFoundException.class);
     }
 
 }
