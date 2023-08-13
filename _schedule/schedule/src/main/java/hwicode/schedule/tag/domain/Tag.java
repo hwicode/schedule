@@ -32,4 +32,8 @@ public class Tag {
         return this.name.equals(tag.name);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }
