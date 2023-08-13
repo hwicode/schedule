@@ -30,7 +30,7 @@ public class DailyTagList {
 
     private DailyTag findDailyTagBy(Tag tag) {
         return dailyTags.stream()
-                .filter(d -> d.isSameTag(tag))
+                .filter(dailyTag -> dailyTag.isSameTag(tag))
                 .findFirst()
                 .orElseThrow(RuntimeException::new);
     }

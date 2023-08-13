@@ -39,6 +39,35 @@ class MemoTest {
                 .isInstanceOf(RuntimeException.class);
     }
 
+    @Test
+    void Memo에_Tag를_삭제할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Memo memo = new Memo(dailyTagList);
+        Tag tag = new Tag(TAG_NAME);
+
+        memo.addTag(tag);
+
+        // when
+        memo.deleteTag(tag);
+
+        // then
+        assertThatThrownBy(() -> memo.deleteTag(tag))
+                .isInstanceOf(RuntimeException.class);
+    }
+
+    @Test
+    void Memo에_존재하지_않는_Tag를_조회하면_에러가_발생한다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Memo memo = new Memo(dailyTagList);
+        Tag tag = new Tag(TAG_NAME);
+
+        // when then
+        assertThatThrownBy(() -> memo.deleteTag(tag))
+                .isInstanceOf(RuntimeException.class);
+    }
+
 }
 
 class Memo {
@@ -64,6 +93,19 @@ class Memo {
             throw new RuntimeException();
         }
     }
+
+    public void deleteTag(Tag tag) {
+        MemoTag memoTag = findMemoTagBy(tag);
+        memoTags.remove(memoTag);
+    }
+
+    private MemoTag findMemoTagBy(Tag tag) {
+        return memoTags.stream()
+                .filter(memoTag -> memoTag.isSameTag(tag))
+                .findFirst()
+                .orElseThrow(RuntimeException::new);
+    }
+
 }
 
 class MemoTag {
