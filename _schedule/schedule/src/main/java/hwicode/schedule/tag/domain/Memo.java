@@ -74,4 +74,8 @@ public class Memo {
                 .orElseThrow(MemoTagNotFoundException::new);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }
