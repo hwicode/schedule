@@ -164,4 +164,41 @@ class MemoServiceTest {
         assertThat(memoRepository.existsById(memoId)).isTrue();
     }
 
+    @Test
+    void 메모를_삭제할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
+
+        // when
+        memoService.deleteMemo(memoId);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isFalse();
+    }
+
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void 메모를_삭제하면_메모에_존재하는_태그들도_삭제되어야_한다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        List<Long> tagIds = tagRepository.saveAll(tags)
+                .stream()
+                .map(Tag::getId)
+                .collect(Collectors.toList());
+
+        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+
+        // when
+        memoService.deleteMemo(memoId);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isFalse();
+        assertThat(memoTagRepository.findAll()).isEmpty();
+    }
+
 }

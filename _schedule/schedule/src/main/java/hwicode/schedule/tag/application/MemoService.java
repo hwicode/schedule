@@ -77,4 +77,12 @@ public class MemoService {
         return memoId;
     }
 
+    @Transactional
+    public Long deleteMemo(Long memoId) {
+        Memo memo = memoRepository.findById(memoId)
+                .orElseThrow(MemoNotFoundException::new);
+        memoRepository.delete(memo);
+        return memo.getId();
+    }
+
 }
