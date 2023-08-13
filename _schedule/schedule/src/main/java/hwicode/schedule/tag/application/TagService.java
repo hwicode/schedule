@@ -3,6 +3,7 @@ package hwicode.schedule.tag.application;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
+import hwicode.schedule.tag.infra.DailyTagRepository;
 import hwicode.schedule.tag.infra.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,9 +11,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class TagAggregateService {
+public class TagService {
 
     private final TagRepository tagRepository;
+    private final DailyTagRepository dailyTagRepository;
 
     @Transactional
     public Long saveTag(String name) {
@@ -41,6 +43,7 @@ public class TagAggregateService {
     @Transactional
     public void deleteTag(Long tagId) {
         Tag tag = findTagBy(tagId);
+        dailyTagRepository.deleteAllDailyTagsBy(tagId);
         tagRepository.delete(tag);
     }
 
