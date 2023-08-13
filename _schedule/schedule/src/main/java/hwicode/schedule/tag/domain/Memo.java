@@ -1,5 +1,8 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,7 +43,7 @@ public class Memo {
         boolean duplication = memoTags.stream().anyMatch(m -> m.isSameTag(tag));
 
         if (duplication) {
-            throw new RuntimeException();
+            throw new MemoTagDuplicateException();
         }
     }
 
@@ -53,7 +56,7 @@ public class Memo {
         return memoTags.stream()
                 .filter(memoTag -> memoTag.isSameTag(tag))
                 .findFirst()
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(MemoTagNotFoundException::new);
     }
 
 }

@@ -1,5 +1,7 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -61,7 +63,7 @@ class MemoTest {
 
         // when then
         assertThatThrownBy(() -> memo.addTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(MemoTagDuplicateException.class);
     }
 
     @Test
@@ -78,7 +80,7 @@ class MemoTest {
 
         // then
         assertThatThrownBy(() -> memo.deleteTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(MemoTagNotFoundException.class);
     }
 
     @Test
@@ -90,7 +92,7 @@ class MemoTest {
 
         // when then
         assertThatThrownBy(() -> memo.deleteTag(tag))
-                .isInstanceOf(RuntimeException.class);
+                .isInstanceOf(MemoTagNotFoundException.class);
     }
 
     @Test
