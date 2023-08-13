@@ -6,6 +6,7 @@ import hwicode.schedule.tag.domain.MemoTag;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
+import hwicode.schedule.tag.exception.application.TagNotFoundException;
 import hwicode.schedule.tag.infra.DailyTagListRepository;
 import hwicode.schedule.tag.infra.MemoRepository;
 import hwicode.schedule.tag.infra.MemoTagRepository;
@@ -63,6 +64,17 @@ public class MemoService {
         memo.addTags(tags);
         memoRepository.save(memo);
         return memo.getId();
+    }
+
+    @Transactional
+    public Long deleteTagToMemo(Long memoId, Long tagId) {
+        Memo memo = memoRepository.findMemoWithMemoTags(memoId)
+                .orElseThrow(MemoNotFoundException::new);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(TagNotFoundException::new);
+
+        memo.deleteTag(tag);
+        return memoId;
     }
 
 }
