@@ -28,8 +28,12 @@ public class Tag {
         return true;
     }
 
-    boolean isSame(Tag tag) {
-        return this.name.equals(tag.name);
+    boolean isSame(String name) {
+        return this.name.equals(name);
+    }
+
+    String getName() {
+        return name;
     }
 
     public Long getId() {

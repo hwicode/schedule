@@ -27,7 +27,8 @@ public class DailyTag {
     }
 
     boolean isSameTag(Tag tag) {
-        return this.tag.isSame(tag);
+        String tagName = tag.getName();
+        return this.tag.isSame(tagName);
     }
 
     public Long getId() {
