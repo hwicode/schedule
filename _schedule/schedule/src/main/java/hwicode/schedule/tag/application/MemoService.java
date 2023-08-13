@@ -53,4 +53,16 @@ public class MemoService {
         return memo.getId();
     }
 
+    @Transactional
+    public Long saveMemoWithTags(Long dailyTagListId, String text, List<Long> tagIds) {
+        DailyTagList dailyTagList = dailyTagListRepository.findById(dailyTagListId)
+                .orElseThrow(DailyTagListNotFoundException::new);
+        List<Tag> tags = tagRepository.findAllById(tagIds);
+
+        Memo memo = new Memo(text, dailyTagList);
+        memo.addTags(tags);
+        memoRepository.save(memo);
+        return memo.getId();
+    }
+
 }

@@ -113,6 +113,26 @@ class MemoServiceTest {
         assertThat(memoTagRepository.findAll()).hasSize(tags.size());
     }
 
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void 메모와_태그를_여러_개를_같이_생성할_수_있다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        List<Long> tagIds = tagRepository.saveAll(tags)
+                .stream()
+                .map(Tag::getId)
+                .collect(Collectors.toList());
+
+        // when
+        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+        assertThat(memoTagRepository.findAll()).hasSize(tags.size());
+    }
+
     private static Stream<List<Tag>> provideTags() {
         return Stream.of(
                 List.of(new Tag(TAG_NAME)),

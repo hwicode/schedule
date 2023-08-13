@@ -47,7 +47,7 @@ public class Memo {
                 .collect(Collectors.toList());
     }
 
-    public MemoTag addTag(Tag tag) {
+    MemoTag addTag(Tag tag) {
         validateTag(tag);
         MemoTag memoTag = new MemoTag(this, tag);
         memoTags.add(memoTag);
