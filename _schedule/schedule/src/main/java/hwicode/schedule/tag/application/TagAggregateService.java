@@ -2,6 +2,7 @@ package hwicode.schedule.tag.application;
 
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
+import hwicode.schedule.tag.exception.application.TagNotFoundException;
 import hwicode.schedule.tag.infra.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,16 @@ public class TagAggregateService {
         Tag tag = new Tag(name);
         tagRepository.save(tag);
         return tag.getId();
+    }
+
+    @Transactional
+    public String changeTagName(Long tagId, String newTagName) {
+        validateTagName(newTagName);
+        Tag tag = tagRepository.findById(tagId)
+                .orElseThrow(TagNotFoundException::new);
+
+        tag.changeName(newTagName);
+        return newTagName;
     }
 
     private void validateTagName(String name) {
