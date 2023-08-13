@@ -30,4 +30,8 @@ public class DailyTag {
         return this.tag.isSame(tag);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }

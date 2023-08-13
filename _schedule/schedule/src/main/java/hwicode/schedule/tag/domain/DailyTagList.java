@@ -48,4 +48,8 @@ public class DailyTagList {
                 .orElseThrow(DailyTagNotFoundException::new);
     }
 
+    public Long getId() {
+        return id;
+    }
+
 }
