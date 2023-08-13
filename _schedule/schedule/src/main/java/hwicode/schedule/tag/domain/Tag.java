@@ -16,4 +16,8 @@ public class Tag {
         return true;
     }
 
+    boolean isSame(Tag tag) {
+        return this.name.equals(tag.name);
+    }
+
 }
