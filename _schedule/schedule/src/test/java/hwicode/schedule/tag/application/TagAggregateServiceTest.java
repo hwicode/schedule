@@ -74,4 +74,17 @@ class TagAggregateServiceTest {
                 .isInstanceOf(TagNotFoundException.class);
     }
 
+    @Test
+    void 태그를_삭제할_수_있다() {
+        // given
+        Long tagId = tagAggregateService.saveTag(TAG_NAME);
+
+        // when
+        tagAggregateService.deleteTag(tagId);
+
+        // then
+        assertThatThrownBy(() -> tagAggregateService.deleteTag(tagId))
+                .isInstanceOf(TagNotFoundException.class);
+    }
+
 }

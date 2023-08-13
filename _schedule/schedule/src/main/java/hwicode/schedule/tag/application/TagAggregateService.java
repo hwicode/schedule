@@ -25,8 +25,7 @@ public class TagAggregateService {
     @Transactional
     public String changeTagName(Long tagId, String newTagName) {
         validateTagName(newTagName);
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(TagNotFoundException::new);
+        Tag tag = findTagBy(tagId);
 
         tag.changeName(newTagName);
         return newTagName;
@@ -37,6 +36,17 @@ public class TagAggregateService {
                 .ifPresent(tag -> {
                     throw new TagDuplicateException();
                 });
+    }
+
+    @Transactional
+    public void deleteTag(Long tagId) {
+        Tag tag = findTagBy(tagId);
+        tagRepository.delete(tag);
+    }
+
+    private Tag findTagBy(Long tagId) {
+        return tagRepository.findById(tagId)
+                .orElseThrow(TagNotFoundException::new);
     }
 
 }
