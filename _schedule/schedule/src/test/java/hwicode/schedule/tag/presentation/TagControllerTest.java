@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.tag.application.TagService;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.presentation.tag.TagController;
+import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyRequest;
+import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyResponse;
 import hwicode.schedule.tag.presentation.tag.dto.save.TagSaveRequest;
 import hwicode.schedule.tag.presentation.tag.dto.save.TagSaveResponse;
 import org.junit.jupiter.api.Test;
@@ -13,14 +15,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.ResultMatcher;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static hwicode.schedule.tag.TagDataHelper.TAG_ID;
-import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
+import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -61,7 +62,30 @@ class TagControllerTest {
     }
 
     @Test
-    void 태그_생성을_요청할_때_태그_이름이_중복되면_에러가_발생한다() throws Exception {
+    void 태그의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        TagNameModifyRequest tagNameModifyRequest = new TagNameModifyRequest(NEW_TAG_NAME);
+        TagNameModifyResponse tagNameModifyResponse = new TagNameModifyResponse(TAG_ID, NEW_TAG_NAME);
+
+        given(tagService.changeTagName(any(), any()))
+                .willReturn(NEW_TAG_NAME);
+
+        // when
+        ResultActions resultActions = mockMvc.perform(patch("/dailyschedule/tags/{tagId}", TAG_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(tagNameModifyRequest)));
+
+        // then
+        resultActions.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(tagNameModifyResponse)
+                ));
+
+        verify(tagService).changeTagName(any(), any());
+    }
+
+    @Test
+    void 태그_생성_또는_이름_변경을_요청할_때_태그_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         TagDuplicateException tagDuplicateException = new TagDuplicateException();
         given(tagService.saveTag(any()))
@@ -76,7 +100,7 @@ class TagControllerTest {
 
         // then
         resultActions.andExpect(status().isBadRequest())
-                        .andExpect(jsonPath("$.message").value(tagDuplicateException.getMessage()));
+                .andExpect(jsonPath("$.message").value(tagDuplicateException.getMessage()));
 
         verify(tagService).saveTag(any());
     }
