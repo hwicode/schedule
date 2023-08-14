@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.domain.Calendar;
+import hwicode.schedule.calendar.exception.application.YearMonthNullException;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.YEAR_MONTH;
@@ -135,6 +137,17 @@ class CalendarProviderServiceTest {
         assertThatThrownBy(() -> calendarProviderService.provideCalendars(yearMonths))
                 .isInstanceOf(YearMonthsSizeNotValidException.class);
         assertThat(yearMonths).hasSize(25);
+    }
+
+    @Test
+    void YearMonth의_리스트에_null이_존재하면_에러가_발생한다() {
+        // given
+        List<YearMonth> yearMonths = new ArrayList<>();
+        yearMonths.add(null);
+
+        // when then
+        assertThatThrownBy(() -> calendarProviderService.provideCalendars(yearMonths))
+                .isInstanceOf(YearMonthNullException.class);
     }
 
 }

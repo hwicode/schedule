@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.calendar.application.CalendarService;
+import hwicode.schedule.calendar.exception.application.YearMonthNullException;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.calendar.WeeklyDateNotValidException;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.YearMonth;
+import java.util.HashSet;
 import java.util.Set;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
@@ -226,6 +228,28 @@ class CalendarControllerTest {
         // then
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(yearMonthsSizeNotValidException.getMessage()));
+    }
+
+    @Test
+    void 목표_생성을_할_때_목표_기간에_null이_존재하면_에러가_발생한다() throws Exception {
+        // given
+        YearMonthNullException yearMonthNullException = new YearMonthNullException();
+
+        Set<YearMonth> yearMonths = new HashSet<>();
+        yearMonths.add(null);
+
+        GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
+        given(calendarService.saveGoal(any(), any()))
+                .willThrow(yearMonthNullException);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(goalSaveRequest)));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(yearMonthNullException.getMessage()));
     }
 
 }
