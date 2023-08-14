@@ -37,4 +37,10 @@ public class TagController {
         return new TagNameModifyResponse(tagId, newTagName);
     }
 
+    @DeleteMapping("/dailyschedule/tags/{tagId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTag(@PathVariable @Positive Long tagId) {
+        tagService.deleteTag(tagId);
+    }
+
 }

@@ -3,6 +3,7 @@ package hwicode.schedule.tag.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.tag.application.TagService;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
+import hwicode.schedule.tag.exception.application.TagNotFoundException;
 import hwicode.schedule.tag.presentation.tag.TagController;
 import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyRequest;
 import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyResponse;
@@ -21,8 +22,7 @@ import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,12 +48,12 @@ class TagControllerTest {
                 .willReturn(TAG_ID);
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/dailyschedule/tags")
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/tags")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tagSaveRequest)));
 
         // then
-        resultActions.andExpect(status().isCreated())
+        perform.andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.content().string(
                         objectMapper.writeValueAsString(tagSaveResponse)
                 ));
@@ -71,12 +71,12 @@ class TagControllerTest {
                 .willReturn(NEW_TAG_NAME);
 
         // when
-        ResultActions resultActions = mockMvc.perform(patch("/dailyschedule/tags/{tagId}", TAG_ID)
+        ResultActions perform = mockMvc.perform(patch("/dailyschedule/tags/{tagId}", TAG_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tagNameModifyRequest)));
 
         // then
-        resultActions.andExpect(status().isOk())
+        perform.andExpect(status().isOk())
                 .andExpect(MockMvcResultMatchers.content().string(
                         objectMapper.writeValueAsString(tagNameModifyResponse)
                 ));
@@ -92,17 +92,49 @@ class TagControllerTest {
                 .willThrow(tagDuplicateException);
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/dailyschedule/tags")
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/tags")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         new TagSaveRequest(TAG_NAME)
                 )));
 
         // then
-        resultActions.andExpect(status().isBadRequest())
+        perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(tagDuplicateException.getMessage()));
 
         verify(tagService).saveTag(any());
+    }
+
+    @Test
+    void 태그_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(tagService.deleteTag(any()))
+                .willReturn(TAG_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID));
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(tagService).deleteTag(any());
+    }
+
+    @Test
+    void 태그를_찾을_때_태그가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        TagNotFoundException tagNotFoundException = new TagNotFoundException();
+        given(tagService.deleteTag(any()))
+                .willThrow(tagNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(tagNotFoundException.getMessage()));
+
+        verify(tagService).deleteTag(any());
     }
 
 }

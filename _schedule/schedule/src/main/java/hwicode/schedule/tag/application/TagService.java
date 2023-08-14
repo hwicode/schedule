@@ -44,10 +44,11 @@ public class TagService {
     }
 
     @Transactional
-    public void deleteTag(Long tagId) {
+    public Long deleteTag(Long tagId) {
         Tag tag = TagFindService.findById(tagRepository, tagId);
         deleteForeignKeyConstraint(tagId);
         tagRepository.delete(tag);
+        return tagId;
     }
 
     private void deleteForeignKeyConstraint(Long tagId) {
