@@ -6,6 +6,8 @@ import hwicode.schedule.tag.exception.application.MemoNotFoundException;
 import hwicode.schedule.tag.presentation.memo.MemoController;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
+import hwicode.schedule.tag.presentation.memo.dto.save_with_tags.MemoSaveWithTagsRequest;
+import hwicode.schedule.tag.presentation.memo.dto.save_with_tags.MemoSaveWithTagsResponse;
 import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddRequest;
 import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddResponse;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyRequest;
@@ -135,6 +137,30 @@ class MemoControllerTest {
                 ));
 
         verify(memoService).addTagsToMemo(any(), any());
+    }
+
+    @Test
+    void 메모에_여러_개의_태그를_추가하여_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+        // given
+        MemoSaveWithTagsRequest memoSaveWithTagsRequest = new MemoSaveWithTagsRequest(MEMO_TEXT, Set.of(TAG_ID));
+        MemoSaveWithTagsResponse memoSaveWithTagsResponse = new MemoSaveWithTagsResponse(DAILY_TAG_LIST_ID, MEMO_ID, MEMO_TEXT, List.of(TAG_ID));
+
+        given(memoService.saveMemoWithTags(any(), any(), any()))
+                .willReturn(MEMO_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos/tags", DAILY_TAG_LIST_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoSaveWithTagsRequest)));
+
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(memoSaveWithTagsResponse)
+                ));
+
+        verify(memoService).saveMemoWithTags(any(), any(), any());
     }
 
 }

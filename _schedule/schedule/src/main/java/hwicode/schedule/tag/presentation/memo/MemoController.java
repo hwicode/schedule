@@ -3,6 +3,8 @@ package hwicode.schedule.tag.presentation.memo;
 import hwicode.schedule.tag.application.MemoService;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
+import hwicode.schedule.tag.presentation.memo.dto.save_with_tags.MemoSaveWithTagsRequest;
+import hwicode.schedule.tag.presentation.memo.dto.save_with_tags.MemoSaveWithTagsResponse;
 import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddRequest;
 import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddResponse;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyRequest;
@@ -47,6 +49,15 @@ public class MemoController {
         List<Long> tagIds = memoTagsAddRequest.getTagIds();
         memoService.addTagsToMemo(memoId, tagIds);
         return new MemoTagsAddResponse(memoId, tagIds);
+    }
+
+    @PostMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos/tags")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MemoSaveWithTagsResponse saveMemoWithTags(@PathVariable @Positive Long dailyTagListId,
+                                                     @RequestBody @Valid MemoSaveWithTagsRequest memoSaveWithTagsRequest) {
+        List<Long> tagIds = memoSaveWithTagsRequest.getTagIds();
+        Long memoId = memoService.saveMemoWithTags(dailyTagListId, memoSaveWithTagsRequest.getText(), tagIds);
+        return new MemoSaveWithTagsResponse(dailyTagListId, memoId, memoSaveWithTagsRequest.getText(), tagIds);
     }
 
 }
