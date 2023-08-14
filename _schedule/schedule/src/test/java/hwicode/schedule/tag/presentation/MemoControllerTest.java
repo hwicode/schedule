@@ -179,4 +179,21 @@ class MemoControllerTest {
         verify(memoService).deleteTagToMemo(any(), any());
     }
 
+    @Test
+    void 메모의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(memoService.deleteMemo(any()))
+                .willReturn(MEMO_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/memos/{memoId}", MEMO_ID)
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(memoService).deleteMemo(any());
+    }
+
 }

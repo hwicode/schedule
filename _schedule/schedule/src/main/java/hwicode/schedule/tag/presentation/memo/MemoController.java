@@ -67,4 +67,10 @@ public class MemoController {
         memoService.deleteTagToMemo(memoId, tagId);
     }
 
+    @DeleteMapping("/dailyschedule/memos/{memoId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteMemo(@PathVariable @Positive Long memoId) {
+        memoService.deleteMemo(memoId);
+    }
+
 }
