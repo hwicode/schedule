@@ -89,16 +89,6 @@ class TagServiceTest {
     }
 
     @Test
-    void 존재하지_않는_태그를_조회하면_에러가_발생한다() {
-        // given
-        Long noneExistId = 1L;
-
-        // when then
-        assertThatThrownBy(() -> tagService.changeTagName(noneExistId, NEW_TAG_NAME))
-                .isInstanceOf(TagNotFoundException.class);
-    }
-
-    @Test
     void 태그를_삭제할_수_있다() {
         // given
         Long tagId = tagService.saveTag(TAG_NAME);

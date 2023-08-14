@@ -1,12 +1,12 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.MemoTag;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
-import hwicode.schedule.tag.exception.application.TagNotFoundException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
@@ -70,8 +70,7 @@ public class MemoService {
     public Long deleteTagToMemo(Long memoId, Long tagId) {
         Memo memo = memoRepository.findMemoWithMemoTags(memoId)
                 .orElseThrow(MemoNotFoundException::new);
-        Tag tag = tagRepository.findById(tagId)
-                .orElseThrow(TagNotFoundException::new);
+        Tag tag = TagFindService.findById(tagRepository, tagId);
 
         memo.deleteTag(tag);
         return memoId;
