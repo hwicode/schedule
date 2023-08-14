@@ -22,4 +22,5 @@ public class TagDataHelper {
     public static final String NEW_MEMO_TEXT = "newMemoText";
 
     public static final Long TAG_ID = 1L;
+    public static final Long DAILY_TAG_LIST_ID = 2L;
 }
