@@ -36,16 +36,14 @@ public class MemoService {
 
     @Transactional
     public String changeMemoText(Long memoId, String text) {
-        Memo memo = memoRepository.findById(memoId)
-                .orElseThrow(MemoNotFoundException::new);
+        Memo memo = findMemoBy(memoId);
         memo.changeText(text);
         return text;
     }
 
     @Transactional
     public Long addTagsToMemo(Long memoId, List<Long> tagIds) {
-        Memo memo = memoRepository.findMemoWithMemoTags(memoId)
-                .orElseThrow(MemoNotFoundException::new);
+        Memo memo = findMemoWithMemoTagsBy(memoId);
         List<Tag> tags = tagRepository.findAllById(tagIds);
 
         List<MemoTag> memoTags = memo.addTags(tags);
@@ -66,8 +64,7 @@ public class MemoService {
 
     @Transactional
     public Long deleteTagToMemo(Long memoId, Long tagId) {
-        Memo memo = memoRepository.findMemoWithMemoTags(memoId)
-                .orElseThrow(MemoNotFoundException::new);
+        Memo memo = findMemoWithMemoTagsBy(memoId);
         Tag tag = TagFindService.findById(tagRepository, tagId);
 
         memo.deleteTag(tag);
@@ -76,10 +73,19 @@ public class MemoService {
 
     @Transactional
     public Long deleteMemo(Long memoId) {
-        Memo memo = memoRepository.findById(memoId)
-                .orElseThrow(MemoNotFoundException::new);
+        Memo memo = findMemoBy(memoId);
         memoRepository.delete(memo);
         return memo.getId();
+    }
+
+    private Memo findMemoBy(Long memoId) {
+        return memoRepository.findById(memoId)
+                .orElseThrow(MemoNotFoundException::new);
+    }
+
+    private Memo findMemoWithMemoTagsBy(Long memoId) {
+        return memoRepository.findMemoWithMemoTags(memoId)
+                .orElseThrow(MemoNotFoundException::new);
     }
 
 }
