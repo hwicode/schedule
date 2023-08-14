@@ -47,7 +47,7 @@ class MemoControllerTest {
     @Test
     void 메모의_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        MemoSaveRequest memoSaveRequest = new MemoSaveRequest(MEMO_TEXT);
+        MemoSaveRequest memoSaveRequest = new MemoSaveRequest(DAILY_TAG_LIST_ID, MEMO_TEXT);
         MemoSaveResponse memoSaveResponse = new MemoSaveResponse(DAILY_TAG_LIST_ID, MEMO_ID, MEMO_TEXT);
 
         given(memoService.saveMemo(any(), any()))
@@ -55,7 +55,7 @@ class MemoControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                post("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos", DAILY_TAG_LIST_ID)
+                post("/dailyschedule/memos", DAILY_TAG_LIST_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoSaveRequest)));
 
@@ -141,7 +141,7 @@ class MemoControllerTest {
     @Test
     void 메모에_여러_개의_태그를_추가하여_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        MemoSaveWithTagsRequest memoSaveWithTagsRequest = new MemoSaveWithTagsRequest(MEMO_TEXT, Set.of(TAG_ID));
+        MemoSaveWithTagsRequest memoSaveWithTagsRequest = new MemoSaveWithTagsRequest(DAILY_TAG_LIST_ID, MEMO_TEXT, Set.of(TAG_ID));
         MemoSaveWithTagsResponse memoSaveWithTagsResponse = new MemoSaveWithTagsResponse(DAILY_TAG_LIST_ID, MEMO_ID, MEMO_TEXT, List.of(TAG_ID));
 
         given(memoService.saveMemoWithTags(any(), any(), any()))
@@ -149,7 +149,7 @@ class MemoControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                post("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos/tags", DAILY_TAG_LIST_ID)
+                post("/dailyschedule/memos/tags", DAILY_TAG_LIST_ID)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoSaveWithTagsRequest)));
 

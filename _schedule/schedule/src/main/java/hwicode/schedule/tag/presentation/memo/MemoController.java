@@ -25,10 +25,10 @@ public class MemoController {
 
     private final MemoService memoService;
 
-    @PostMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos")
+    @PostMapping("/dailyschedule/memos")
     @ResponseStatus(HttpStatus.CREATED)
-    public MemoSaveResponse saveMemo(@PathVariable @Positive Long dailyTagListId,
-                                     @RequestBody @Valid MemoSaveRequest memoSaveRequest) {
+    public MemoSaveResponse saveMemo(@RequestBody @Valid MemoSaveRequest memoSaveRequest) {
+        Long dailyTagListId = memoSaveRequest.getDailyTagListId();
         String text = memoSaveRequest.getText();
         Long memoId = memoService.saveMemo(dailyTagListId, text);
         return new MemoSaveResponse(dailyTagListId, memoId, text);
@@ -51,10 +51,10 @@ public class MemoController {
         return new MemoTagsAddResponse(memoId, tagIds);
     }
 
-    @PostMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos/tags")
+    @PostMapping("/dailyschedule/memos/tags")
     @ResponseStatus(HttpStatus.CREATED)
-    public MemoSaveWithTagsResponse saveMemoWithTags(@PathVariable @Positive Long dailyTagListId,
-                                                     @RequestBody @Valid MemoSaveWithTagsRequest memoSaveWithTagsRequest) {
+    public MemoSaveWithTagsResponse saveMemoWithTags(@RequestBody @Valid MemoSaveWithTagsRequest memoSaveWithTagsRequest) {
+        Long dailyTagListId = memoSaveWithTagsRequest.getDailyTagListId();
         List<Long> tagIds = memoSaveWithTagsRequest.getTagIds();
         Long memoId = memoService.saveMemoWithTags(dailyTagListId, memoSaveWithTagsRequest.getText(), tagIds);
         return new MemoSaveWithTagsResponse(dailyTagListId, memoId, memoSaveWithTagsRequest.getText(), tagIds);
