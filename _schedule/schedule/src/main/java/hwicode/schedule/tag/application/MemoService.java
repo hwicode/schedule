@@ -1,11 +1,11 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.tag.application.find_service.DailyTagListFindService;
 import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.MemoTag;
 import hwicode.schedule.tag.domain.Tag;
-import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoRepository;
@@ -28,8 +28,7 @@ public class MemoService {
 
     @Transactional
     public Long saveMemo(Long dailyTagListId, String text) {
-        DailyTagList dailyTagList = dailyTagListRepository.findById(dailyTagListId)
-                .orElseThrow(DailyTagListNotFoundException::new);
+        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, dailyTagListId);
         Memo memo = new Memo(text, dailyTagList);
         memoRepository.save(memo);
         return memo.getId();
@@ -56,8 +55,7 @@ public class MemoService {
 
     @Transactional
     public Long saveMemoWithTags(Long dailyTagListId, String text, List<Long> tagIds) {
-        DailyTagList dailyTagList = dailyTagListRepository.findById(dailyTagListId)
-                .orElseThrow(DailyTagListNotFoundException::new);
+        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, dailyTagListId);
         List<Tag> tags = tagRepository.findAllById(tagIds);
 
         Memo memo = new Memo(text, dailyTagList);

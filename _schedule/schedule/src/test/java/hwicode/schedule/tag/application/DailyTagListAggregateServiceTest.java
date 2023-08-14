@@ -3,7 +3,6 @@ package hwicode.schedule.tag.application;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Tag;
-import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
@@ -54,20 +53,6 @@ class DailyTagListAggregateServiceTest {
 
         // then
         assertThat(dailyTagRepository.existsById(dailyTagId)).isTrue();
-    }
-
-    @Test
-    void 존재하지_않는_DailyTagList를_조회하면_에러가_발생한다() {
-        // given
-        Long noneExistId = 1L;
-        Tag tag = new Tag(TAG_NAME);
-        tagRepository.save(tag);
-
-        Long tagId = tag.getId();
-
-        // when
-        assertThatThrownBy(() -> dailyTagListAggregateService.addTagToDailyTagList(noneExistId, tagId))
-                .isInstanceOf(DailyTagListNotFoundException.class);
     }
 
     @Test

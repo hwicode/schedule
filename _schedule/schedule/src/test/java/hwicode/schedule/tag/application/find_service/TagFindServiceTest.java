@@ -1,7 +1,6 @@
-package hwicode.schedule.tag.application;
+package hwicode.schedule.tag.application.find_service;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
