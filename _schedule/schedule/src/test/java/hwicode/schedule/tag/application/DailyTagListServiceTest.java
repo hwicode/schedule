@@ -17,13 +17,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
-class DailyTagListAggregateServiceTest {
+class DailyTagListServiceTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @Autowired
-    DailyTagListAggregateService dailyTagListAggregateService;
+    DailyTagListService dailyTagListService;
 
     @Autowired
     TagRepository tagRepository;
@@ -49,7 +49,7 @@ class DailyTagListAggregateServiceTest {
         dailyTagListRepository.save(dailyTagList);
 
         // when
-        Long dailyTagId = dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
+        Long dailyTagId = dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
 
         // then
         assertThat(dailyTagRepository.existsById(dailyTagId)).isTrue();
@@ -64,14 +64,14 @@ class DailyTagListAggregateServiceTest {
         tagRepository.save(tag);
         dailyTagListRepository.save(dailyTagList);
 
-        Long dailyTagId = dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
+        Long dailyTagId = dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
 
         // when
-        dailyTagListAggregateService.deleteTagToDailyTagList(dailyTagId, tag.getId());
+        dailyTagListService.deleteTagToDailyTagList(dailyTagId, tag.getId());
 
         // then
         Long tagId = tag.getId();
-        assertThatThrownBy(() -> dailyTagListAggregateService.deleteTagToDailyTagList(dailyTagId, tagId))
+        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(dailyTagId, tagId))
                 .isInstanceOf(DailyTagNotFoundException.class);
         assertThat(dailyTagRepository.findAll()).isEmpty();
     }

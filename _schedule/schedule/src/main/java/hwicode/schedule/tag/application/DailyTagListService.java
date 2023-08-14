@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class DailyTagListAggregateService {
+public class DailyTagListService {
 
     private final DailyTagListRepository dailyTagListRepository;
     private final TagRepository tagRepository;

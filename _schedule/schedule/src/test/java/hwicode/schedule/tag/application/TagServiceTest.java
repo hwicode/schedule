@@ -31,7 +31,7 @@ class TagServiceTest {
     TagService tagService;
 
     @Autowired
-    DailyTagListAggregateService  dailyTagListAggregateService;
+    DailyTagListService dailyTagListService;
 
     @Autowired
     MemoService memoService;
@@ -118,7 +118,7 @@ class TagServiceTest {
 
         dailyTagListRepository.saveAll(dailyTagLists);
         dailyTagLists.forEach(
-                dailyTagList -> dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tagId)
+                dailyTagList -> dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tagId)
         );
 
         // when
@@ -167,8 +167,8 @@ class TagServiceTest {
         dailyTagListRepository.save(dailyTagList);
         dailyTagListRepository.save(dailyTagList2);
 
-        dailyTagListAggregateService.addTagToDailyTagList(dailyTagList.getId(), tagId);
-        dailyTagListAggregateService.addTagToDailyTagList(dailyTagList2.getId(), tagId);
+        dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tagId);
+        dailyTagListService.addTagToDailyTagList(dailyTagList2.getId(), tagId);
 
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
         Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);
