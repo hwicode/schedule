@@ -3,6 +3,9 @@ package hwicode.schedule.tag.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.tag.application.MemoService;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
+import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
+import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import hwicode.schedule.tag.presentation.memo.MemoController;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
@@ -139,6 +142,50 @@ class MemoControllerTest {
     }
 
     @Test
+    void 메모에_태그_여러_개_추가를_요청할_때_메모에_이미_존재하는_태그가_있으면_에러가_발생한다() throws Exception {
+        // given
+        MemoTagDuplicateException memoTagDuplicateException = new MemoTagDuplicateException();
+        given(memoService.addTagsToMemo(any(), any()))
+                .willThrow(memoTagDuplicateException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new MemoTagsAddRequest(Set.of(TAG_ID))
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(memoTagDuplicateException.getMessage()));
+
+        verify(memoService).addTagsToMemo(any(), any());
+    }
+
+    @Test
+    void 메모에_태그_여러_개_추가를_요청할_때_태그의_수가_10보다_많다면_에러가_발생한다() throws Exception {
+        // given
+        InvalidNumberOfTagsException invalidNumberOfTagsException = new InvalidNumberOfTagsException();
+        given(memoService.addTagsToMemo(any(), any()))
+                .willThrow(invalidNumberOfTagsException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new MemoTagsAddRequest(Set.of(TAG_ID))
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(invalidNumberOfTagsException.getMessage()));
+
+        verify(memoService).addTagsToMemo(any(), any());
+    }
+
+    @Test
     void 메모에_여러_개의_태그를_추가하여_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         MemoSaveWithTagsRequest memoSaveWithTagsRequest = new MemoSaveWithTagsRequest(DAILY_TAG_LIST_ID, MEMO_TEXT, Set.of(TAG_ID));
@@ -175,6 +222,25 @@ class MemoControllerTest {
 
         // then
         perform.andExpect(status().isNoContent());
+
+        verify(memoService).deleteTagToMemo(any(), any());
+    }
+
+    @Test
+    void 메모에_태그_삭제를_요청할_때_메모에_해당_태그가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        MemoTagNotFoundException memoTagNotFoundException = new MemoTagNotFoundException();
+        given(memoService.deleteTagToMemo(any(), any()))
+                .willThrow(memoTagNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/memos/{memoId}/tags/{tagId}", MEMO_ID, TAG_ID)
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(memoTagNotFoundException.getMessage()));
 
         verify(memoService).deleteTagToMemo(any(), any());
     }
