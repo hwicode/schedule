@@ -1,15 +1,15 @@
-package hwicode.schedule.tag.infra;
+package hwicode.schedule.tag.infra.jpa_repository;
 
-import hwicode.schedule.tag.domain.DailyTag;
+import hwicode.schedule.tag.domain.MemoTag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface DailyTagRepository extends JpaRepository<DailyTag, Long> {
+public interface MemoTagRepository extends JpaRepository<MemoTag, Long> {
 
-    @Query("Delete DailyTag d "
-            + "WHERE d.tag.id = :id")
+    @Query("Delete MemoTag m "
+            + "WHERE m.tag.id = :id")
     @Modifying(clearAutomatically = true, flushAutomatically = true)
-    void deleteAllDailyTagsBy(@Param("id") Long tagId);
+    void deleteAllMemoTagsBy(@Param("id") Long tagId);
 }

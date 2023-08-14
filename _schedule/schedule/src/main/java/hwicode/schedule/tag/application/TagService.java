@@ -3,9 +3,9 @@ package hwicode.schedule.tag.application;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
-import hwicode.schedule.tag.infra.DailyTagRepository;
-import hwicode.schedule.tag.infra.MemoTagRepository;
-import hwicode.schedule.tag.infra.TagRepository;
+import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
+import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
+import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class TagService {
 
     private final TagRepository tagRepository;
+
     private final DailyTagRepository dailyTagRepository;
     private final MemoTagRepository memoTagRepository;
 

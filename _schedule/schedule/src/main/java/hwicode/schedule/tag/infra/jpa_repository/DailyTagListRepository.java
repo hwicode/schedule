@@ -1,4 +1,4 @@
-package hwicode.schedule.tag.infra;
+package hwicode.schedule.tag.infra.jpa_repository;
 
 import hwicode.schedule.tag.domain.DailyTagList;
 import org.springframework.data.jpa.repository.JpaRepository;
