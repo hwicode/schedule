@@ -23,4 +23,5 @@ public class TagDataHelper {
 
     public static final Long TAG_ID = 1L;
     public static final Long DAILY_TAG_LIST_ID = 2L;
+    public static final Long MEMO_ID = 3L;
 }
