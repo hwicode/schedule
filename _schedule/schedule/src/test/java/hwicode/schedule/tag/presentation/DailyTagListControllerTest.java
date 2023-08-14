@@ -20,6 +20,7 @@ import static hwicode.schedule.tag.TagDataHelper.TAG_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,7 +38,7 @@ class DailyTagListControllerTest {
     ObjectMapper objectMapper;
 
     @Test
-    void 오늘의_태그_리스트에_태그를_추가하면_201_상태코드가_리턴된다() throws Exception {
+    void 오늘의_태그_리스트에_태그를_추가를_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
         DailyTagListTagAddRequest dailyTagListTagAddRequest = new DailyTagListTagAddRequest(TAG_ID);
         DailyTagListTagAddResponse dailyTagListTagAddResponse = new DailyTagListTagAddResponse(DAILY_TAG_LIST_ID, TAG_ID);
@@ -80,6 +81,23 @@ class DailyTagListControllerTest {
                 .andExpect(jsonPath("$.message").value(dailyTagListNotFoundException.getMessage()));
 
         verify(dailyTagListService).addTagToDailyTagList(any(), any());
+    }
+
+    @Test
+    void 오늘의_태그_리스트에_태그를_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
+                .willReturn(DAILY_TAG_LIST_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", DAILY_TAG_LIST_ID, TAG_ID)
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(dailyTagListService).deleteTagToDailyTagList(any(), any());
     }
 
 }

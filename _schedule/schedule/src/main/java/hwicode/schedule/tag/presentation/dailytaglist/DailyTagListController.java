@@ -26,4 +26,11 @@ public class DailyTagListController {
         return new DailyTagListTagAddResponse(dailyTagListId, dailyTagListTagAddRequest.getTagId());
     }
 
+    @DeleteMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTagToDailyTagList(@PathVariable @Positive Long dailyTagListId,
+                                        @PathVariable @Positive Long tagId) {
+        dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tagId);
+    }
+
 }
