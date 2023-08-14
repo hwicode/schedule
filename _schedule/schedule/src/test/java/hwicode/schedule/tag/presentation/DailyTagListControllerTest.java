@@ -3,6 +3,8 @@ package hwicode.schedule.tag.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.tag.application.DailyTagListService;
 import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
+import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
 import hwicode.schedule.tag.presentation.dailytaglist.DailyTagListController;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddRequest;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddResponse;
@@ -84,6 +86,28 @@ class DailyTagListControllerTest {
     }
 
     @Test
+    void 오늘의_태그_리스트에_태그를_추가할_때_이미_존재하는_태그라면_에러가_발생한다() throws Exception {
+        // given
+        DailyTagDuplicateException dailyTagDuplicateException = new DailyTagDuplicateException();
+        given(dailyTagListService.addTagToDailyTagList(any(), any()))
+                .willThrow(dailyTagDuplicateException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags", DAILY_TAG_LIST_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new DailyTagListTagAddRequest(TAG_ID)
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(dailyTagDuplicateException.getMessage()));
+
+        verify(dailyTagListService).addTagToDailyTagList(any(), any());
+    }
+
+    @Test
     void 오늘의_태그_리스트에_태그의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
         given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
@@ -96,6 +120,25 @@ class DailyTagListControllerTest {
 
         // then
         perform.andExpect(status().isNoContent());
+
+        verify(dailyTagListService).deleteTagToDailyTagList(any(), any());
+    }
+
+    @Test
+    void 오늘의_태그_리스트에_태그의_삭제할_때_태그가_존재하지_않는다면_에러가_발생한다() throws Exception {
+        // given
+        DailyTagNotFoundException dailyTagNotFoundException = new DailyTagNotFoundException();
+        given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
+                .willThrow(dailyTagNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", DAILY_TAG_LIST_ID, TAG_ID)
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyTagNotFoundException.getMessage()));
 
         verify(dailyTagListService).deleteTagToDailyTagList(any(), any());
     }
