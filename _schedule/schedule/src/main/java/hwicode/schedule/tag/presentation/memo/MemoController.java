@@ -60,4 +60,11 @@ public class MemoController {
         return new MemoSaveWithTagsResponse(dailyTagListId, memoId, memoSaveWithTagsRequest.getText(), tagIds);
     }
 
+    @DeleteMapping("/dailyschedule/memos/{memoId}/tags/{tagId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTagToMemo(@PathVariable @Positive Long memoId,
+                                @PathVariable @Positive Long tagId) {
+        memoService.deleteTagToMemo(memoId, tagId);
+    }
+
 }

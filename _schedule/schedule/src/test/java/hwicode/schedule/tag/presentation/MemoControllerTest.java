@@ -28,8 +28,7 @@ import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -161,6 +160,23 @@ class MemoControllerTest {
                 ));
 
         verify(memoService).saveMemoWithTags(any(), any(), any());
+    }
+
+    @Test
+    void 메모에_태그의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // given
+        given(memoService.deleteTagToMemo(any(), any()))
+                .willReturn(MEMO_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/memos/{memoId}/tags/{tagId}", MEMO_ID, TAG_ID)
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(memoService).deleteTagToMemo(any(), any());
     }
 
 }

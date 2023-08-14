@@ -84,7 +84,7 @@ class DailyTagListControllerTest {
     }
 
     @Test
-    void 오늘의_태그_리스트에_태그를_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
+    void 오늘의_태그_리스트에_태그의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
         given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
                 .willReturn(DAILY_TAG_LIST_ID);
