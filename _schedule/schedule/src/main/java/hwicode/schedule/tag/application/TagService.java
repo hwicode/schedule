@@ -3,9 +3,9 @@ package hwicode.schedule.tag.application;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
-import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
-import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
+import hwicode.schedule.tag.infra.limited_repository.DailyTagConstraintRepository;
+import hwicode.schedule.tag.infra.limited_repository.MemoTagConstraintRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +16,8 @@ public class TagService {
 
     private final TagRepository tagRepository;
 
-    private final DailyTagRepository dailyTagRepository;
-    private final MemoTagRepository memoTagRepository;
+    private final DailyTagConstraintRepository dailyTagConstraintRepository;
+    private final MemoTagConstraintRepository memoTagConstraintRepository;
 
     @Transactional
     public Long saveTag(String name) {
@@ -56,8 +56,8 @@ public class TagService {
     }
 
     private void deleteForeignKeyConstraint(Long tagId) {
-        dailyTagRepository.deleteAllDailyTagsBy(tagId);
-        memoTagRepository.deleteAllMemoTagsBy(tagId);
+        dailyTagConstraintRepository.deleteTagForeignKeyConstraint(tagId);
+        memoTagConstraintRepository.deleteTagForeignKeyConstraint(tagId);
     }
 
 }
