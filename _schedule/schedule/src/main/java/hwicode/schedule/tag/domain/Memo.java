@@ -1,5 +1,6 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import lombok.AccessLevel;
@@ -42,6 +43,9 @@ public class Memo {
     }
 
     public List<MemoTag> addTags(List<Tag> tags) {
+        if (tags.size() > 10) {
+            throw new InvalidNumberOfTagsException();
+        }
         return tags.stream()
                 .map(this::addTag)
                 .collect(Collectors.toList());

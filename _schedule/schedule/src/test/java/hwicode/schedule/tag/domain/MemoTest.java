@@ -1,5 +1,6 @@
 package hwicode.schedule.tag.domain;
 
+import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import org.junit.jupiter.api.Test;
@@ -115,6 +116,23 @@ class MemoTest {
             Tag tag = tags.get(i);
             assertThat(memoTag.isSameTag(tag)).isTrue();
         }
+    }
+
+    @Test
+    void Memo에_10보다_큰_수의_Tag를_추가하면_에러가_발생한다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        List<Tag> tags = List.of(
+                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3),
+                new Tag(TAG_NAME4), new Tag(TAG_NAME5), new Tag(TAG_NAME6),
+                new Tag(TAG_NAME7), new Tag(TAG_NAME8), new Tag(TAG_NAME9),
+                new Tag(TAG_NAME10), new Tag(TAG_NAME11)
+        );
+
+        // when then
+        assertThatThrownBy(() -> memo.addTags(tags))
+                .isInstanceOf(InvalidNumberOfTagsException.class);
     }
 
 }
