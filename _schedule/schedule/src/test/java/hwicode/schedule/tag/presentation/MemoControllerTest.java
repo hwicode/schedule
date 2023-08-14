@@ -6,6 +6,8 @@ import hwicode.schedule.tag.exception.application.MemoNotFoundException;
 import hwicode.schedule.tag.presentation.memo.MemoController;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
+import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddRequest;
+import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddResponse;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyRequest;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyResponse;
 import org.junit.jupiter.api.Test;
@@ -16,6 +18,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import java.util.List;
+import java.util.Set;
 
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -106,6 +111,30 @@ class MemoControllerTest {
                 .andExpect(jsonPath("$.message").value(memoNotFoundException.getMessage()));
 
         verify(memoService).changeMemoText(any(), any());
+    }
+
+    @Test
+    void 메모에_태그_여러_개_추가를_요청하면_201_상태코드가_리턴된다() throws Exception {
+        // given
+        MemoTagsAddRequest memoTagsAddRequest = new MemoTagsAddRequest(Set.of(TAG_ID));
+        MemoTagsAddResponse memoTagsAddResponse = new MemoTagsAddResponse(MEMO_ID, List.of(TAG_ID));
+
+        given(memoService.addTagsToMemo(any(), any()))
+                .willReturn(MEMO_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(memoTagsAddRequest)));
+
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(memoTagsAddResponse)
+                ));
+
+        verify(memoService).addTagsToMemo(any(), any());
     }
 
 }
