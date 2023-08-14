@@ -3,6 +3,8 @@ package hwicode.schedule.tag.presentation.memo;
 import hwicode.schedule.tag.application.MemoService;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
+import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyRequest;
+import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,14 @@ public class MemoController {
         String text = memoSaveRequest.getText();
         Long memoId = memoService.saveMemo(dailyTagListId, text);
         return new MemoSaveResponse(dailyTagListId, memoId, text);
+    }
+
+    @PatchMapping("/dailyschedule/memos/{memoId}")
+    @ResponseStatus(HttpStatus.OK)
+    public MemoTextModifyResponse changeMemoText(@PathVariable @Positive Long memoId,
+                                                 @RequestBody @Valid MemoTextModifyRequest memoTextModifyRequest) {
+        memoService.changeMemoText(memoId, memoTextModifyRequest.getNewText());
+        return new MemoTextModifyResponse(memoId, memoTextModifyRequest.getNewText());
     }
 
 }
