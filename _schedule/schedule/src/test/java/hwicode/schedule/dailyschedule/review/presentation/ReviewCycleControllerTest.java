@@ -3,6 +3,8 @@ package hwicode.schedule.dailyschedule.review.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.InvalidReviewCycleDateException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleNullException;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.ReviewCycleController;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyResponse;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
@@ -63,6 +66,55 @@ class ReviewCycleControllerTest {
                 .andExpect(MockMvcResultMatchers.content().string(
                         objectMapper.writeValueAsString(reviewCycleSaveResponse)
                 ));
+
+        verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+    }
+
+    @Test
+    void 복습_주기를_생성을_요청할_때_복습_주기에_null값이_있으면_에러가_발생한다() throws Exception {
+        // given
+        ReviewCycleNullException reviewCycleNullException = new ReviewCycleNullException();
+        given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
+                .willThrow(reviewCycleNullException);
+
+        Set<Integer> set = new HashSet<>();
+        set.add(null);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/review-cycles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, set)
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(reviewCycleNullException.getMessage()));
+
+        verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+    }
+
+    @Test
+    void 복습_주기를_생성을_요청할_때_복습_주기의_크기가_유효하지_않으면_에러가_발생한다() throws Exception {
+        // given
+        InvalidReviewCycleDateException invalidReviewCycleDateException = new InvalidReviewCycleDateException();
+        given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
+                .willThrow(invalidReviewCycleDateException);
+
+        Set<Integer> overSizeReviewCycle = Set.of(1);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/review-cycles")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, overSizeReviewCycle)
+                        )));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(invalidReviewCycleDateException.getMessage()));
 
         verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
     }
