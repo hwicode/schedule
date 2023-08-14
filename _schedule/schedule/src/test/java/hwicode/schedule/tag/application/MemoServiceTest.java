@@ -16,6 +16,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -202,6 +203,85 @@ class MemoServiceTest {
         // then
         assertThat(memoRepository.existsById(memoId)).isFalse();
         assertThat(memoTagRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void 메모에_태그를_여러_개_추가할_때_태그의_id가_null이면_아무일도_일어나지_않는다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
+
+        List<Long> tagIds = new ArrayList<>();
+        tagIds.add(null);
+
+        // when
+        memoService.addTagsToMemo(memoId, tagIds);
+
+        // then
+        assertThat(memoTagRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void 메모와_태그를_여러_개를_같이_생성할_때_태그의_id가_null이면_메모만_생성된다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        List<Long> tagIds = new ArrayList<>();
+        tagIds.add(null);
+
+        // when
+        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+        assertThat(memoTagRepository.findAll()).isEmpty();
+    }
+
+    @Test
+    void 메모에_태그를_여러_개_추가할_때_tagIds에_null이_존재하면_null인_값은_무시된다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
+
+        Tag tag = new Tag(TAG_NAME);
+        tagRepository.save(tag);
+
+        List<Long> tagIds = new ArrayList<>();
+        tagIds.add(null);
+        tagIds.add(tag.getId());
+
+        // when
+        memoService.addTagsToMemo(memoId, tagIds);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+        assertThat(memoTagRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    void 메모와_태그를_여러_개를_같이_생성할_때_tagIds에_null이_존재하면_null인_값은_무시된다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        Tag tag = new Tag(TAG_NAME);
+        tagRepository.save(tag);
+
+        List<Long> tagIds = new ArrayList<>();
+        tagIds.add(null);
+        tagIds.add(tag.getId());
+
+        // when
+        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+        assertThat(memoTagRepository.findAll()).hasSize(1);
     }
 
 }
