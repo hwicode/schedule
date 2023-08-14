@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.review.application;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDateTask;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewListNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewListRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
@@ -25,7 +26,7 @@ public class ReviewListService {
     @Transactional
     public void addReviewTasks(Long reviewListId, LocalDate date) {
         ReviewList reviewList = reviewListRepository.findById(reviewListId)
-                .orElseThrow();
+                .orElseThrow(ReviewListNotFoundException::new);
         List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(date);
 
         List<ReviewTask> clonedReviewTasks = reviewDateTasks.stream()

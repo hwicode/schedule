@@ -4,10 +4,12 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
+import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewListNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewListRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest
@@ -77,6 +80,16 @@ class ReviewListServiceTest {
         ReviewTask reviewTask = new ReviewTask(null, reviewTaskName, null, null, null);
         reviewTaskRepository.save(reviewTask);
         return reviewTask;
+    }
+
+    @Test
+    void 존재하지_않는_복습_리스트를_조회하면_에러가_발생한다() {
+        // given
+        Long noneExistId = 1L;
+
+        // when then
+        assertThatThrownBy(() -> reviewListService.addReviewTasks(noneExistId, START_DATE))
+                .isInstanceOf(ReviewListNotFoundException.class);
     }
 
 }
