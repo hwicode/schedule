@@ -63,7 +63,6 @@ class MemoServiceTest {
         assertThat(memoRepository.existsById(memoId)).isTrue();
     }
 
-
     @Test
     void 메모의_내용를_변경할_수_있다() {
         // given
@@ -91,17 +90,8 @@ class MemoServiceTest {
                 .isInstanceOf(MemoNotFoundException.class);
     }
 
-    private static Stream<List<Tag>> provideTags() {
-        return Stream.of(
-                List.of(new Tag(TAG_NAME)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3))
-        );
-    }
-
-    @MethodSource("provideTags")
-    @ParameterizedTest
-    void 메모에_태그를_여러_개_추가할_수_있다(List<Tag> tags) {
+    @Test
+    void 메모에_태그를_여러_개_추가할_수_있다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
@@ -109,6 +99,9 @@ class MemoServiceTest {
         dailyTagListRepository.save(dailyTagList);
         memoRepository.save(memo);
 
+        List<Tag> tags = List.of(
+                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+        );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()
                 .map(Tag::getId)
@@ -121,33 +114,15 @@ class MemoServiceTest {
         assertThat(memoTagRepository.findAll()).hasSize(tags.size());
     }
 
-    @MethodSource("provideTags")
-    @ParameterizedTest
-    void 메모와_태그를_여러_개를_같이_생성할_수_있다(List<Tag> tags) {
+    @Test
+    void 메모에_존재하는_태그를_삭제할_수_있다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
-        List<Long> tagIds = tagRepository.saveAll(tags)
-                .stream()
-                .map(Tag::getId)
-                .collect(Collectors.toList());
-
-        // when
-        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
-
-        // then
-        assertThat(memoRepository.existsById(memoId)).isTrue();
-        assertThat(memoTagRepository.findAll()).hasSize(tags.size());
-    }
-
-    @MethodSource("provideTags")
-    @ParameterizedTest
-    void 메모에_존재하는_태그를_삭제할_수_있다(List<Tag> tags) {
-        // given
-        DailyTagList dailyTagList = new DailyTagList();
-        dailyTagListRepository.save(dailyTagList);
-
+        List<Tag> tags = List.of(
+                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+        );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()
                 .map(Tag::getId)
@@ -177,6 +152,34 @@ class MemoServiceTest {
 
         // then
         assertThat(memoRepository.existsById(memoId)).isFalse();
+    }
+
+    private static Stream<List<Tag>> provideTags() {
+        return Stream.of(
+                List.of(new Tag(TAG_NAME)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3))
+        );
+    }
+
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void 메모와_태그를_여러_개를_같이_생성할_수_있다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        List<Long> tagIds = tagRepository.saveAll(tags)
+                .stream()
+                .map(Tag::getId)
+                .collect(Collectors.toList());
+
+        // when
+        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+
+        // then
+        assertThat(memoRepository.existsById(memoId)).isTrue();
+        assertThat(memoTagRepository.findAll()).hasSize(tags.size());
     }
 
     @MethodSource("provideTags")

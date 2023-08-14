@@ -4,8 +4,11 @@ import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -39,18 +42,29 @@ class MemoTest {
         assertThat(isChange).isTrue();
     }
 
-    @Test
-    void Memo에_Tag를_추가할_수_있다() {
+    private static Stream<List<Tag>> provideTags() {
+        return Stream.of(
+                List.of(new Tag(TAG_NAME)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)),
+                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3), new Tag(TAG_NAME4))
+        );
+    }
+
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void Memo에_Tag를_추가할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Tag tag = new Tag(TAG_NAME);
 
-        // when
-        MemoTag memoTag = memo.addTag(tag);
+        for (Tag tag : tags) {
+            // when
+            MemoTag memoTag = memo.addTag(tag);
 
-        // then
-        assertThat(memoTag.isSameTag(tag)).isTrue();
+            // then
+            assertThat(memoTag.isSameTag(tag)).isTrue();
+        }
     }
 
     @Test
@@ -67,21 +81,22 @@ class MemoTest {
                 .isInstanceOf(MemoTagDuplicateException.class);
     }
 
-    @Test
-    void Memo에_Tag를_삭제할_수_있다() {
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void Memo에_Tag를_삭제할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Tag tag = new Tag(TAG_NAME);
+        memo.addTags(tags);
 
-        memo.addTag(tag);
+        for (Tag tag : tags) {
+            // when
+            memo.deleteTag(tag);
 
-        // when
-        memo.deleteTag(tag);
-
-        // then
-        assertThatThrownBy(() -> memo.deleteTag(tag))
-                .isInstanceOf(MemoTagNotFoundException.class);
+            // then
+            assertThatThrownBy(() -> memo.deleteTag(tag))
+                    .isInstanceOf(MemoTagNotFoundException.class);
+        }
     }
 
     @Test
@@ -96,16 +111,12 @@ class MemoTest {
                 .isInstanceOf(MemoTagNotFoundException.class);
     }
 
-    @Test
-    void Memo에_여러_개의_Tag를_추가할_수_있다() {
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void Memo에_여러_개의_Tag를_추가할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        List<Tag> tags = List.of(
-                new Tag(TAG_NAME),
-                new Tag(TAG_NAME2),
-                new Tag(TAG_NAME3)
-        );
 
         // when
         List<MemoTag> memoTags = memo.addTags(tags);

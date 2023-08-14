@@ -101,6 +101,15 @@ class TagServiceTest {
                 .isInstanceOf(TagNotFoundException.class);
     }
 
+    private static Stream<List<DailyTagList>> provideDailyTagLists() {
+        return Stream.of(
+                List.of(new DailyTagList()),
+                List.of(new DailyTagList(), new DailyTagList()),
+                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList()),
+                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList(), new DailyTagList())
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("provideDailyTagLists")
     void 태그를_삭제할_때_DailyTag도_같이_삭제할_수_있다(List<DailyTagList> dailyTagLists) {
@@ -120,15 +129,6 @@ class TagServiceTest {
                 .isInstanceOf(TagNotFoundException.class);
         assertThat(tagRepository.findAll()).isEmpty();
         assertThat(dailyTagRepository.findAll()).isEmpty();
-    }
-
-    private static Stream<List<DailyTagList>> provideDailyTagLists() {
-        return Stream.of(
-                List.of(new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList(), new DailyTagList())
-        );
     }
 
     @Test
