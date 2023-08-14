@@ -72,12 +72,15 @@ class MemoTest {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Tag tag = new Tag(TAG_NAME);
+        List<Tag> tags = List.of(
+                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+        );
 
-        memo.addTag(tag);
+        memo.addTags(tags);
 
         // when then
-        assertThatThrownBy(() -> memo.addTag(tag))
+        Tag duplicatedTag = tags.get(0);
+        assertThatThrownBy(() -> memo.addTag(duplicatedTag))
                 .isInstanceOf(MemoTagDuplicateException.class);
     }
 
