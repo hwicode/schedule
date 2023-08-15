@@ -66,14 +66,16 @@ class DailyTagListServiceTest {
 
         Long dailyTagId = dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
 
+        Long dailyTagListId = dailyTagList.getId();
+
         // when
-        dailyTagListService.deleteTagToDailyTagList(dailyTagId, tag.getId());
+        dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tag.getId());
 
         // then
         Long tagId = tag.getId();
-        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(dailyTagId, tagId))
+        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tagId))
                 .isInstanceOf(DailyTagNotFoundException.class);
-        assertThat(dailyTagRepository.findAll()).isEmpty();
+        assertThat(dailyTagRepository.existsById(dailyTagId)).isFalse();
     }
 
 }
