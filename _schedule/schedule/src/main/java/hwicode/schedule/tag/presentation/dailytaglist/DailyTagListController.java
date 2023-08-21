@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.presentation.dailytaglist;
 
 import hwicode.schedule.tag.application.DailyTagListService;
+import hwicode.schedule.tag.presentation.dailytaglist.dto.main_tag_modify.DailyTagListMainTagModifyResponse;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddRequest;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddResponse;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,14 @@ public class DailyTagListController {
     public void deleteTagToDailyTagList(@PathVariable @Positive Long dailyTagListId,
                                         @PathVariable @Positive Long tagId) {
         dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tagId);
+    }
+
+    @PatchMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}")
+    @ResponseStatus(HttpStatus.OK)
+    public DailyTagListMainTagModifyResponse changeMainTag(@PathVariable @Positive Long dailyTagListId,
+                                                           @PathVariable @Positive Long tagId) {
+        String mainTagName = dailyTagListService.changeMainTag(dailyTagListId, tagId);
+        return new DailyTagListMainTagModifyResponse(dailyTagListId, tagId, mainTagName);
     }
 
 }
