@@ -22,11 +22,15 @@ public class DailyChecklist {
     @Column(nullable = false)
     private int totalDifficultyScore;
 
+    @Column(nullable = false)
+    private int todayDonePercent;
+
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TaskChecker> taskCheckers = new ArrayList<>();
 
     public DailyChecklist() {
         this.totalDifficultyScore = 0;
+        this.todayDonePercent = 0;
     }
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
@@ -39,6 +43,7 @@ public class DailyChecklist {
         TaskChecker taskChecker = new TaskChecker(this, taskName, difficulty);
         taskCheckers.add(taskChecker);
         totalDifficultyScore += difficulty.getValue();
+        calculateTodayDonePercent();
         return taskChecker;
     }
 
@@ -55,6 +60,7 @@ public class DailyChecklist {
         TaskChecker taskChecker = findTaskCheckerBy(name);
         totalDifficultyScore -= taskChecker.getDifficultyScore();
         totalDifficultyScore += difficulty.getValue();
+        calculateTodayDonePercent();
         return taskChecker.changeDifficulty(difficulty);
     }
 
@@ -62,16 +68,25 @@ public class DailyChecklist {
         TaskChecker taskChecker = findTaskCheckerBy(name);
         totalDifficultyScore -= taskChecker.getDifficultyScore();
         taskCheckers.remove(taskChecker);
+        calculateTodayDonePercent();
     }
 
-    public TaskStatus changeTaskStatus(String name, TaskStatus taskStatus) {
-        switch (taskStatus) {
+    public TaskStatus changeTaskStatus(String name, TaskStatus newStatus) {
+        TaskChecker taskChecker = findTaskCheckerBy(name);
+        TaskStatus updatedStatus = updateStatus(taskChecker, newStatus);
+
+        calculateTodayDonePercent();
+        return updatedStatus;
+    }
+
+    private TaskStatus updateStatus(TaskChecker taskChecker, TaskStatus newStatus) {
+        switch (newStatus) {
             case TODO:
-                return findTaskCheckerBy(name).changeToTodo();
+                return taskChecker.changeToTodo();
             case PROGRESS:
-                return findTaskCheckerBy(name).changeToProgress();
+                return taskChecker.changeToProgress();
             case DONE:
-                return findTaskCheckerBy(name).changeToDone();
+                return taskChecker.changeToDone();
             default:
                 throw new StatusNotFoundException();
         }
@@ -79,6 +94,7 @@ public class DailyChecklist {
 
     public void makeTaskCheckerToDone(String name) {
         findTaskCheckerBy(name).makeDone();
+        calculateTodayDonePercent();
     }
 
     private TaskChecker findTaskCheckerBy(String name) {
@@ -89,19 +105,24 @@ public class DailyChecklist {
     }
 
     public SubTaskChecker createSubTaskChecker(String taskCheckerName, String subTaskCheckerName) {
-        return findTaskCheckerBy(taskCheckerName).createSubTaskChecker(subTaskCheckerName);
+        SubTaskChecker subTaskChecker = findTaskCheckerBy(taskCheckerName).createSubTaskChecker(subTaskCheckerName);
+        calculateTodayDonePercent();
+        return subTaskChecker;
     }
 
     public TaskStatus changeSubTaskStatus(String taskCheckerName, String subTaskCheckerName, SubTaskStatus subTaskStatus) {
-        return findTaskCheckerBy(taskCheckerName).changeSubTaskStatus(subTaskCheckerName, subTaskStatus);
+        TaskStatus taskStatus = findTaskCheckerBy(taskCheckerName).changeSubTaskStatus(subTaskCheckerName, subTaskStatus);
+        calculateTodayDonePercent();
+        return taskStatus;
     }
 
     public void deleteSubTaskChecker(String taskCheckerName, String subTaskCheckerName) {
         findTaskCheckerBy(taskCheckerName).deleteSubTaskChecker(subTaskCheckerName);
+        calculateTodayDonePercent();
     }
 
-    public int getTodayDonePercent() {
-        return (int) (getDoneTasksScore() / getTotalDifficultyScore() * 100);
+    private void calculateTodayDonePercent() {
+        this.todayDonePercent = (int) (getDoneTasksScore() / getTotalDifficultyScore() * 100);
     }
 
     private double getDoneTasksScore() {
@@ -113,6 +134,10 @@ public class DailyChecklist {
 
     public int getTotalDifficultyScore() {
         return this.totalDifficultyScore;
+    }
+
+    public int getTodayDonePercent() {
+        return this.todayDonePercent;
     }
 
     public Long getId() {
