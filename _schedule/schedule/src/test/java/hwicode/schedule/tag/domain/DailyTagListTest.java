@@ -86,10 +86,10 @@ class DailyTagListTest {
 
         for (Tag tag : tags) {
             // when
-            Tag mainTag = dailyTagList.changeMainTag(tag);
+            String mainTagName = dailyTagList.changeMainTag(tag);
 
             // then
-            assertThat(tag.getName()).isEqualTo(mainTag.getName());
+            assertThat(tag.getName()).isEqualTo(mainTagName);
         }
     }
 

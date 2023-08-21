@@ -46,10 +46,10 @@ public class DailyTagList {
         }
     }
 
-    public Tag changeMainTag(Tag tag) {
+    public String changeMainTag(Tag tag) {
         findDailyTagBy(tag);
         this.mainTag = tag.getName();
-        return tag;
+        return tag.getName();
     }
 
     private DailyTag findDailyTagBy(Tag tag) {

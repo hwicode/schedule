@@ -78,4 +78,24 @@ class DailyTagListServiceTest {
         assertThat(dailyTagRepository.existsById(dailyTagId)).isFalse();
     }
 
+    @Test
+    void DailyTagList에_메인_태그를_변경할_수_있다() {
+        // given
+        Tag tag = new Tag(TAG_NAME);
+        DailyTagList dailyTagList = new DailyTagList();
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tag.getId());
+
+        Long dailyTagListId = dailyTagList.getId();
+
+        // when
+        String mainTagName = dailyTagListService.changeMainTag(dailyTagListId, tag.getId());
+
+        // then
+        assertThat(mainTagName).isEqualTo(TAG_NAME);
+    }
+
 }

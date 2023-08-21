@@ -39,4 +39,12 @@ public class DailyTagListService {
         return dailyTagList.getId();
     }
 
+    @Transactional
+    public String changeMainTag(Long dailyTagListId, Long tagId) {
+        Tag tag = TagFindService.findById(tagRepository, tagId);
+        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, dailyTagListId);
+
+        return dailyTagList.changeMainTag(tag);
+    }
+
 }
