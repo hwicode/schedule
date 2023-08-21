@@ -75,6 +75,44 @@ class DailyTagListTest {
         }
     }
 
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void DailyTagList에_메인_태그를_설정할_수_있다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        for (Tag tag : tags) {
+            dailyTagList.addTag(tag);
+        }
+
+        for (Tag tag : tags) {
+            // when
+            Tag mainTag = dailyTagList.changeMainTag(tag);
+
+            // then
+            assertThat(tag.getName()).isEqualTo(mainTag.getName());
+        }
+    }
+
+    @MethodSource("provideTags")
+    @ParameterizedTest
+    void DailyTagList에_메인_태그를_삭제하면_메인_태그는_null이_된다(List<Tag> tags) {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        for (Tag tag : tags) {
+            dailyTagList.addTag(tag);
+        }
+
+        for (Tag tag : tags) {
+            dailyTagList.changeMainTag(tag);
+
+            // when
+            dailyTagList.deleteTag(tag);
+
+            // then
+            assertThat(dailyTagList.getMainTag()).isNull();
+        }
+    }
+
     @Test
     void DailyTagList에_존재하지_않는_Tag를_조회하면_에러가_발생한다() {
         // given

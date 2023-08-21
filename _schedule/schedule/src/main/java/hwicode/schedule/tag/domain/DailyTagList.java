@@ -17,6 +17,8 @@ public class DailyTagList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String mainTag;
+
     @OneToMany(mappedBy = "dailyTagList", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DailyTag> dailyTags = new ArrayList<>();
 
@@ -39,6 +41,15 @@ public class DailyTagList {
     public void deleteTag(Tag tag) {
         DailyTag dailyTag = findDailyTagBy(tag);
         dailyTags.remove(dailyTag);
+        if (tag.getName().equals(mainTag)) {
+            mainTag = null;
+        }
+    }
+
+    public Tag changeMainTag(Tag tag) {
+        findDailyTagBy(tag);
+        this.mainTag = tag.getName();
+        return tag;
     }
 
     private DailyTag findDailyTagBy(Tag tag) {
@@ -46,6 +57,10 @@ public class DailyTagList {
                 .filter(dailyTag -> dailyTag.isSameTag(tag))
                 .findFirst()
                 .orElseThrow(DailyTagNotFoundException::new);
+    }
+
+    String getMainTag() {
+        return mainTag;
     }
 
     public Long getId() {
