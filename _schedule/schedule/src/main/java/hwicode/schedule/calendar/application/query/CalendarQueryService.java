@@ -3,6 +3,7 @@ package hwicode.schedule.calendar.application.query;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.GoalQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.SubGoalQueryResponse;
+import hwicode.schedule.calendar.exception.application.CalendarNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
@@ -28,7 +29,7 @@ public class CalendarQueryService {
     @Transactional(readOnly = true)
     public CalendarQueryResponse getCalendarQueryResponse(YearMonth yearMonth) {
         CalendarQueryResponse calendarQueryResponse = calendarRepository.findCalendarQueryResponseBy(yearMonth)
-                .orElseThrow(RuntimeException::new);
+                .orElseThrow(CalendarNotFoundException::new);
 
         List<GoalQueryResponse> goalQueryResponses = calendarGoalRepository.findGoalQueryResponseBy(calendarQueryResponse.getId());
 

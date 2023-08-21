@@ -9,6 +9,7 @@ import hwicode.schedule.calendar.application.query.dto.SubGoalQueryResponse;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
+import hwicode.schedule.calendar.exception.application.CalendarNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class CalendarQueryServiceTest {
@@ -91,6 +93,16 @@ class CalendarQueryServiceTest {
                 .weeklyStudyDate(5)
                 .goalResponses(List.of(goalQueryResponse))
                 .build();
+    }
+
+    @Test
+    void 캘린더를_조회할_때_캘린더가_존재하지_않으면_에러가_발생한다() {
+        // given
+        YearMonth noneExistYearMonth = YearMonth.now();
+
+        // when then
+        assertThatThrownBy(() -> calendarQueryService.getCalendarQueryResponse(noneExistYearMonth))
+                .isInstanceOf(CalendarNotFoundException.class);
     }
 
 }
