@@ -1,18 +1,16 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
+import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
-import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
 @Table(name = "daily_schedule")
 @Entity
 public class DailyChecklist {
@@ -21,8 +19,15 @@ public class DailyChecklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private int totalDifficultyScore;
+
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TaskChecker> taskCheckers = new ArrayList<>();
+
+    public DailyChecklist() {
+        this.totalDifficultyScore = 0;
+    }
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
         validateTaskCheckerDuplication(newTaskCheckerName);
@@ -33,6 +38,7 @@ public class DailyChecklist {
         validateTaskCheckerDuplication(taskName);
         TaskChecker taskChecker = new TaskChecker(this, taskName, difficulty);
         taskCheckers.add(taskChecker);
+        totalDifficultyScore += difficulty.getValue();
         return taskChecker;
     }
 
@@ -46,11 +52,16 @@ public class DailyChecklist {
     }
 
     public Difficulty changeDifficulty(String name, Difficulty difficulty) {
-        return findTaskCheckerBy(name).changeDifficulty(difficulty);
+        TaskChecker taskChecker = findTaskCheckerBy(name);
+        totalDifficultyScore -= taskChecker.getDifficultyScore();
+        totalDifficultyScore += difficulty.getValue();
+        return taskChecker.changeDifficulty(difficulty);
     }
 
     public void deleteTaskChecker(String name) {
-        taskCheckers.remove(findTaskCheckerBy(name));
+        TaskChecker taskChecker = findTaskCheckerBy(name);
+        totalDifficultyScore -= taskChecker.getDifficultyScore();
+        taskCheckers.remove(taskChecker);
     }
 
     public TaskStatus changeTaskStatus(String name, TaskStatus taskStatus) {
@@ -101,9 +112,7 @@ public class DailyChecklist {
     }
 
     public int getTotalDifficultyScore() {
-        return taskCheckers.stream()
-                .mapToInt(TaskChecker::getDifficultyScore)
-                .sum();
+        return this.totalDifficultyScore;
     }
 
     public Long getId() {

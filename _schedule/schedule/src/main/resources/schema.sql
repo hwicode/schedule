@@ -21,6 +21,7 @@ SET foreign_key_checks = 1;
 create table daily_schedule (
    id bigint not null auto_increment,
    today timestamp,
+   total_difficulty_score smallint not null DEFAULT 0,
    review text,
    emoji varchar(255) DEFAULT 'NOT_BAD',
    calendar_id bigint,
