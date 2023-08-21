@@ -23,7 +23,7 @@ create table daily_schedule (
    today timestamp,
    total_difficulty_score smallint not null DEFAULT 0,
    today_done_percent tinyint not null DEFAULT 0,
-   main_tag varchar(255),
+   main_tag_name varchar(255),
    review text,
    emoji varchar(255) DEFAULT 'NOT_BAD',
    calendar_id bigint,

@@ -109,7 +109,7 @@ class DailyTagListTest {
             dailyTagList.deleteTag(tag);
 
             // then
-            assertThat(dailyTagList.getMainTag()).isNull();
+            assertThat(dailyTagList.getMainTagName()).isNull();
         }
     }
 

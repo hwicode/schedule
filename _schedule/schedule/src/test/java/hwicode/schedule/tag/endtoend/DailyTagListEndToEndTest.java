@@ -106,4 +106,31 @@ class DailyTagListEndToEndTest {
         assertThat(dailyTagRepository.findAll()).isEmpty();
     }
 
+    @Test
+    void 오늘의_태그_리스트에_메인_태그_변경_요청() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        Tag tag = new Tag(TAG_NAME);
+
+        dailyTagListRepository.save(dailyTagList);
+        tagRepository.save(tag);
+
+        Long dailyTagListId = dailyTagList.getId();
+        Long tagId = tag.getId();
+        dailyTagListService.addTagToDailyTagList(dailyTagListId, tagId);
+
+        RequestSpecification requestSpecification = given().port(port);
+
+        // when
+        Response response = requestSpecification.when()
+                .patch("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", dailyTagListId, tagId);
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+
+        DailyTagList savedDailyTagList = dailyTagListRepository.findById(dailyTagListId).orElseThrow();
+        assertThat(savedDailyTagList.getMainTagName()).isEqualTo(TAG_NAME);
+    }
+
 }
