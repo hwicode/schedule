@@ -76,6 +76,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("today", date);
         parameters.put("total_difficulty_score", 4);
         parameters.put("today_done_percent", 50);
+        parameters.put("total_learning_time", 180);
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
 

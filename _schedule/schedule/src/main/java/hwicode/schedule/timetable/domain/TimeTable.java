@@ -3,6 +3,7 @@ package hwicode.schedule.timetable.domain;
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -19,6 +20,10 @@ public class TimeTable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ColumnDefault(value = "0")
+    @Column(nullable = false)
+    private int totalLearningTime;
+
     @Embedded
     private TimeTableValidator validator;
 
@@ -28,6 +33,7 @@ public class TimeTable {
     // 테스트 코드에서만 사용되는 생성자!
     public TimeTable(LocalDate today) {
         validator = new TimeTableValidator(today);
+        totalLearningTime = 0;
     }
 
     public LearningTime createLearningTime(LocalDateTime startTime) {
@@ -41,16 +47,21 @@ public class TimeTable {
 
     public LocalDateTime changeLearningTimeStartTime(LocalDateTime startTime, LocalDateTime newStartTime) {
         validator.validateStartTime(learningTimes, newStartTime);
-        return findLearningTimeBy(startTime).changeStartTime(newStartTime);
+        LocalDateTime result = findLearningTimeBy(startTime).changeStartTime(newStartTime);
+        calculateTotalLearningTime();
+        return result;
     }
 
     public LocalDateTime changeLearningTimeEndTime(LocalDateTime startTime, LocalDateTime endTime) {
         validator.validateEndTime(learningTimes, endTime);
-        return findLearningTimeBy(startTime).changeEndTime(endTime);
+        LocalDateTime result = findLearningTimeBy(startTime).changeEndTime(endTime);
+        calculateTotalLearningTime();
+        return result;
     }
 
     public void deleteLearningTime(LocalDateTime startTime) {
         learningTimes.remove(findLearningTimeBy(startTime));
+        calculateTotalLearningTime();
     }
 
     private LearningTime findLearningTimeBy(LocalDateTime startTime) {
@@ -60,11 +71,15 @@ public class TimeTable {
                 .orElseThrow(LearningTimeNotFoundException::new);
     }
 
-    public int getTotalLearningTime() {
-        return learningTimes.stream()
+    private void calculateTotalLearningTime() {
+        this.totalLearningTime = learningTimes.stream()
                 .filter(LearningTime::isEndTimeNotNull)
                 .mapToInt(LearningTime::getTime)
                 .sum();
+    }
+
+    public int getTotalLearningTime() {
+        return this.totalLearningTime;
     }
 
     public int getSubjectTotalLearningTime(String subject) {

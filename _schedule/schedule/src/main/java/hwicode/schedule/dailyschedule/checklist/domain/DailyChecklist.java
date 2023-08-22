@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,9 +20,11 @@ public class DailyChecklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ColumnDefault(value = "0")
     @Column(nullable = false)
     private int totalDifficultyScore;
 
+    @ColumnDefault(value = "0")
     @Column(nullable = false)
     private int todayDonePercent;
 
