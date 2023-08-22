@@ -7,7 +7,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -26,15 +25,14 @@ public class DailyScheduleQueryRepository {
     }
 
     private RowMapper<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponseRowMapper() {
-        return (rs, rowNum) -> {
-            Long id = rs.getLong("id");
-            LocalDate today = rs.getTimestamp("today").toLocalDateTime().toLocalDate();
-            int totalDifficultyScore = rs.getInt("total_difficulty_score");
-            int todayDonePercent = rs.getInt("today_done_percent");
-            Emoji emoji = Emoji.valueOf(rs.getString("emoji"));
-            String mainTagName = rs.getString("main_tag_name");
-            return new DailyScheduleSummaryQueryResponse(id, today, totalDifficultyScore, todayDonePercent, emoji, mainTagName);
-        };
+        return (rs, rowNum) -> DailyScheduleSummaryQueryResponse.builder()
+                .id(rs.getLong("id"))
+                .yearAndMonthAndDay(rs.getTimestamp("today").toLocalDateTime().toLocalDate())
+                .totalDifficultyScore(rs.getInt("total_difficulty_score"))
+                .todayDonePercent(rs.getInt("today_done_percent"))
+                .emoji(Emoji.valueOf(rs.getString("emoji")))
+                .mainTagName(rs.getString("main_tag_name"))
+                .build();
     }
 
 }

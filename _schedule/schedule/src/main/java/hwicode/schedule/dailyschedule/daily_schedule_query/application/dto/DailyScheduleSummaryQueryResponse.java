@@ -7,6 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @EqualsAndHashCode
+@Builder
 @AllArgsConstructor
 public class DailyScheduleSummaryQueryResponse {
 
