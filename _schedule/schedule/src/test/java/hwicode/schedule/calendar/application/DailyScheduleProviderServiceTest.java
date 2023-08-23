@@ -49,10 +49,10 @@ class DailyScheduleProviderServiceTest {
         dailyScheduleRepository.save(dailySchedule);
 
         // when
-        DailySchedule result = dailyScheduleProviderService.provideDailySchedule(date);
+        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date);
 
         // then
-        assertThat(dailySchedule.getId()).isEqualTo(result.getId());
+        assertThat(dailySchedule.getId()).isEqualTo(dailyScheduleId);
     }
 
     @Test
@@ -61,11 +61,10 @@ class DailyScheduleProviderServiceTest {
         LocalDate date = YEAR_MONTH.atDay(1);
 
         // when
-        DailySchedule result = dailyScheduleProviderService.provideDailySchedule(date);
+        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date);
 
         // then
-        Long id = result.getId();
-        assertThat(dailyScheduleRepository.existsById(id)).isTrue();
+        assertThat(dailyScheduleRepository.existsById(dailyScheduleId)).isTrue();
         assertThat(calendarRepository.findAll()).hasSize(1);
     }
 

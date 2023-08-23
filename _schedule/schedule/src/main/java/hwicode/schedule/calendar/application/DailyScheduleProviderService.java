@@ -3,6 +3,7 @@ package hwicode.schedule.calendar.application;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.DailySchedule;
 import hwicode.schedule.calendar.infra.jpa_repository.DailyScheduleRepository;
+import hwicode.schedule.calendar.infra.other_boundedcontext.DailySchedulePostSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,11 +15,14 @@ import java.time.YearMonth;
 public class DailyScheduleProviderService {
 
     private final CalendarProviderService calendarProviderService;
+    private final DailySchedulePostSaveService dailySchedulePostSaveService;
     private final DailyScheduleRepository dailyScheduleRepository;
 
-    public DailySchedule provideDailySchedule(LocalDate date) {
-        return dailyScheduleRepository.findByDate(date)
+    public Long provideDailyScheduleId(LocalDate date) {
+        DailySchedule dailySchedule = dailyScheduleRepository.findByDate(date)
                 .orElseGet(() -> saveDailySchedule(date));
+
+        return dailySchedule.getId();
     }
 
     private DailySchedule saveDailySchedule(LocalDate date) {
@@ -26,7 +30,11 @@ public class DailyScheduleProviderService {
         Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
 
         DailySchedule dailySchedule = new DailySchedule(calendar, date);
-        return dailyScheduleRepository.save(dailySchedule);
+        dailyScheduleRepository.save(dailySchedule);
+
+        // DailySchedulePostSaveService는 Daily_Schedule이 생성되고 난 후 수행할 작업을 담당함
+        dailySchedulePostSaveService.perform(dailySchedule.getId());
+        return dailySchedule;
     }
 
 }
