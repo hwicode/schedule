@@ -52,7 +52,7 @@ class ReviewListServiceTest {
     @ValueSource(ints = {2, 4, 5, 7, 10})
     void 복습_리스트에_복습할_과제들을_추가할_수_있다(int numberOfTasks) {
         // given
-        ReviewList reviewList = new ReviewList();
+        ReviewList reviewList = new ReviewList(START_DATE.plusDays(1));
         reviewListRepository.save(reviewList);
 
         // 복습 주기를 하루로 해서, 다음날에 복습할 과제만 추가하도록 만듦
@@ -62,7 +62,7 @@ class ReviewListServiceTest {
         int numberOfReviewedTasks = createReviewedTasks(reviewCycle, numberOfTasks);
 
         // when
-        reviewListService.addReviewTasks(reviewList.getId(), START_DATE.plusDays(1));
+        reviewListService.addReviewTasks(reviewList.getId());
 
         // then
         assertThat(reviewTaskRepository.findAll()).hasSize(numberOfTasks + numberOfReviewedTasks);
@@ -88,7 +88,7 @@ class ReviewListServiceTest {
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> reviewListService.addReviewTasks(noneExistId, START_DATE))
+        assertThatThrownBy(() -> reviewListService.addReviewTasks(noneExistId))
                 .isInstanceOf(ReviewListNotFoundException.class);
     }
 

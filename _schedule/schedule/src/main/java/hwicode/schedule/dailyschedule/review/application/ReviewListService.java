@@ -24,9 +24,11 @@ public class ReviewListService {
     private final ReviewTaskRepository reviewTaskRepository;
 
     @Transactional
-    public void addReviewTasks(Long reviewListId, LocalDate date) {
+    public void addReviewTasks(Long reviewListId) {
         ReviewList reviewList = reviewListRepository.findById(reviewListId)
                 .orElseThrow(ReviewListNotFoundException::new);
+
+        LocalDate date = reviewList.getToday();
         List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(date);
 
         List<ReviewTask> clonedReviewTasks = reviewDateTasks.stream()
