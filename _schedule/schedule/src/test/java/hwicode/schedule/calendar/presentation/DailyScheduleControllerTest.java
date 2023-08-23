@@ -36,7 +36,7 @@ class DailyScheduleControllerTest {
                 .willReturn(dailyScheduleId);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
+        ResultActions perform = mockMvc.perform(get("/daily-todo-lists")
                 .queryParam("date", String.valueOf(date)));
 
         // then
