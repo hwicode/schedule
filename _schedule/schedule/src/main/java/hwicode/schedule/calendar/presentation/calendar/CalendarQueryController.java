@@ -21,7 +21,7 @@ public class CalendarQueryController {
 
     @GetMapping("/calendars")
     @ResponseStatus(value = HttpStatus.OK)
-    public CalendarQueryResponse getSubjectTotalLearningTime(@RequestParam YearMonth yearMonth) {
+    public CalendarQueryResponse getCalendarQueryResponse(@RequestParam YearMonth yearMonth) {
         calendarProviderService.provideCalendar(yearMonth);
         return calendarQueryService.getCalendarQueryResponse(yearMonth);
     }

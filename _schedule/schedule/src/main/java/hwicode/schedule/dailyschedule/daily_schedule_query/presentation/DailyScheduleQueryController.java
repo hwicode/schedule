@@ -1,18 +1,19 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.presentation;
 
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.DailyScheduleQueryService;
+import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Positive;
 import java.time.YearMonth;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Validated
 @RestController
 public class DailyScheduleQueryController {
 
@@ -20,8 +21,14 @@ public class DailyScheduleQueryController {
 
     @GetMapping("/dailyschedule/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
-    public List<DailyScheduleSummaryQueryResponse> changeDailyToDoListInformation(@RequestParam YearMonth yearMonth) {
-        return dailyScheduleQueryService.getDailyToDoListQueryResponse(yearMonth);
+    public List<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponses(@RequestParam YearMonth yearMonth) {
+        return dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(yearMonth);
+    }
+
+    @GetMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}")
+    @ResponseStatus(value = HttpStatus.OK)
+    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(@PathVariable("dailyToDoListId") @Positive Long dailyScheduleId) {
+        return dailyScheduleQueryService.getDailyScheduleQueryResponse(dailyScheduleId);
     }
 
 }
