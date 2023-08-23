@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.application.dto;
 
-import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import lombok.*;
 
 import java.time.LocalDate;

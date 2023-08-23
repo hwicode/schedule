@@ -3,7 +3,7 @@ package hwicode.schedule.validation_annotation_test.todolist;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.common.exception.GlobalErrorCode;
 import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
-import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.DailyToDoListController;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
 import org.junit.jupiter.api.Test;

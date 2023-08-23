@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.domain;
+package hwicode.schedule.dailyschedule.shared_domain;
 
 public enum Emoji {
     // 😁

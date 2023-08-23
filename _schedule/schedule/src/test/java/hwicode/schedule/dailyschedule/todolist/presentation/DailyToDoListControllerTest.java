@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
-import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.DailyToDoListController;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;

@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;

@@ -7,7 +7,7 @@ import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.SubTa
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.TaskQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.exception.DailyScheduleNotExistException;
 import hwicode.schedule.dailyschedule.shared_domain.*;
-import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
