@@ -31,7 +31,7 @@ class DailyScheduleQueryControllerTest {
         // given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(dailyScheduleQueryService.getDailyToDoListQueryResponse(any()))
+        given(dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(any()))
                 .willReturn(List.of());
 
         // when
@@ -41,7 +41,7 @@ class DailyScheduleQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(dailyScheduleQueryService).getDailyToDoListQueryResponse(any());
+        verify(dailyScheduleQueryService).getDailyScheduleSummaryQueryResponses(any());
     }
 
 }

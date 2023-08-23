@@ -69,7 +69,7 @@ class DailyScheduleQueryServiceTest {
         }
 
         // when
-        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getDailyToDoListQueryResponse(YearMonth.from(date));
+        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(YearMonth.from(date));
 
         // then
         assertThat(result).isEqualTo(expectedResponses);

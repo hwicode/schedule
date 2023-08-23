@@ -27,8 +27,7 @@ public class DailyScheduleQueryService {
     private final SubTaskQueryRepository subTaskQueryRepository;
 
     @Transactional(readOnly = true)
-    // todo: 메서드 이름 바꾸기
-    public List<DailyScheduleSummaryQueryResponse> getDailyToDoListQueryResponse(YearMonth yearMonth) {
+    public List<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponses(YearMonth yearMonth) {
         YearMonth nextMonth = yearMonth.plusMonths(1);
         return dailyScheduleQueryRepository.findDailyScheduleSummaryQueryResponseBy(yearMonth, nextMonth);
     }
