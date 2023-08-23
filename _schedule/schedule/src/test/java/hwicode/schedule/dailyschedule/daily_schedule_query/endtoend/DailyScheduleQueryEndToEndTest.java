@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -10,8 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
+import java.util.HashMap;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 
@@ -24,6 +31,9 @@ class DailyScheduleQueryEndToEndTest {
 
     @Autowired
     DatabaseCleanUp databaseCleanUp;
+
+    @Autowired
+    JdbcTemplate jdbcTemplate;
 
     @BeforeEach
     void clearDatabase() {
@@ -45,6 +55,39 @@ class DailyScheduleQueryEndToEndTest {
         //then
         response.then()
                 .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void daily_schedule_조회_요청() {
+        // given
+        Long dailyToDoListId = saveDailySchedule(LocalDate.of(2023, 8, 23));
+
+        RequestSpecification requestSpecification = given().port(port);
+
+        // when
+        Response response = requestSpecification.when()
+                .get("/dailyschedule/daily-todo-lists/{dailyToDoListId}", dailyToDoListId);
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    private Long saveDailySchedule(LocalDate date) {
+        SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
+        jdbcInsert.withTableName("daily_schedule").usingGeneratedKeyColumns("id");
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put("today", date);
+        parameters.put("total_difficulty_score", 4);
+        parameters.put("today_done_percent", 50);
+        parameters.put("total_learning_time", 180);
+        parameters.put("emoji", Emoji.NOT_BAD.name());
+        parameters.put("main_tag_name", "rr");
+        parameters.put("review", "review");
+
+        Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
+        return key.longValue();
     }
 
 }
