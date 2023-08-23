@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.infra;
 
+import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import lombok.RequiredArgsConstructor;
@@ -32,6 +33,27 @@ public class DailyScheduleQueryRepository {
                 .todayDonePercent(rs.getInt("today_done_percent"))
                 .emoji(Emoji.valueOf(rs.getString("emoji")))
                 .mainTagName(rs.getString("main_tag_name"))
+                .build();
+    }
+
+    public DailyScheduleQueryResponse findDailyScheduleQueryResponseBy(Long dailyScheduleId) {
+        String sql = "SELECT "
+                + "id, today, total_difficulty_score, today_done_percent, total_learning_time, emoji, main_tag_name, review "
+                + "FROM daily_schedule d "
+                + "WHERE d.id = ?";
+        return jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), dailyScheduleId);
+    }
+
+    private RowMapper<DailyScheduleQueryResponse> getDailyScheduleQueryResponseRowMapper() {
+        return (rs, rowNum) -> DailyScheduleQueryResponse.builder()
+                .id(rs.getLong("id"))
+                .yearAndMonthAndDay(rs.getTimestamp("today").toLocalDateTime().toLocalDate())
+                .totalDifficultyScore(rs.getInt("total_difficulty_score"))
+                .todayDonePercent(rs.getInt("today_done_percent"))
+                .totalLearningTime(rs.getInt("total_learning_time"))
+                .emoji(Emoji.valueOf(rs.getString("emoji")))
+                .mainTagName(rs.getString("main_tag_name"))
+                .review(rs.getString("review"))
                 .build();
     }
 
