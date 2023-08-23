@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 
+@Builder
 @Data
 public class DailyScheduleSummaryQueryResponse {
 
@@ -14,14 +15,4 @@ public class DailyScheduleSummaryQueryResponse {
     private final int todayDonePercent;
     private final Emoji emoji;
     private final String mainTagName;
-
-    @Builder
-    public DailyScheduleSummaryQueryResponse(Long id, LocalDate yearAndMonthAndDay, int totalDifficultyScore, int todayDonePercent, Emoji emoji, String mainTagName) {
-        this.id = id;
-        this.yearAndMonthAndDay = yearAndMonthAndDay;
-        this.totalDifficultyScore = totalDifficultyScore;
-        this.todayDonePercent = todayDonePercent;
-        this.emoji = emoji;
-        this.mainTagName = mainTagName;
-    }
 }

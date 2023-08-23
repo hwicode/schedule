@@ -88,9 +88,14 @@ class DailyScheduleQueryServiceTest {
         parameters.put("main_tag_name", "rr");
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        return new DailyScheduleSummaryQueryResponse(
-                key.longValue(), date, 4, 50, Emoji.NOT_BAD, "rr"
-        );
+        return DailyScheduleSummaryQueryResponse.builder()
+                .id(key.longValue())
+                .yearAndMonthAndDay(date)
+                .totalDifficultyScore(4)
+                .todayDonePercent(50)
+                .emoji(Emoji.NOT_BAD)
+                .mainTagName("rr")
+                .build();
     }
 
     private static Stream<Arguments> provideNumberOfTaskAndSubTask() {
@@ -144,9 +149,16 @@ class DailyScheduleQueryServiceTest {
         parameters.put("review", "review");
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        return new DailyScheduleQueryResponse(
-                key.longValue(), date, 4, 50, 180, Emoji.NOT_BAD, "rr", "review"
-        );
+        return DailyScheduleQueryResponse.builder()
+                .id(key.longValue())
+                .yearAndMonthAndDay(date)
+                .totalDifficultyScore(4)
+                .todayDonePercent(50)
+                .totalLearningTime(180)
+                .emoji(Emoji.NOT_BAD)
+                .mainTagName("rr")
+                .review("review")
+                .build();
     }
 
     private TaskQueryResponse saveTask(Long dailyScheduleId) {
@@ -162,9 +174,14 @@ class DailyScheduleQueryServiceTest {
         parameters.put("daily_schedule_id", dailyScheduleId);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        return new TaskQueryResponse(
-                key.longValue(), "name", Priority.SECOND, Importance.SECOND, Difficulty.NORMAL, TaskStatus.TODO
-        );
+        return TaskQueryResponse.builder()
+                .id(key.longValue())
+                .name("name")
+                .priority(Priority.SECOND)
+                .importance(Importance.SECOND)
+                .difficulty(Difficulty.NORMAL)
+                .taskStatus(TaskStatus.TODO)
+                .build();
     }
 
     private SubTaskQueryResponse saveSubTask(Long taskId) {
@@ -177,9 +194,12 @@ class DailyScheduleQueryServiceTest {
         parameters.put("task_id", taskId);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
-        return new SubTaskQueryResponse(
-                key.longValue(), "name", SubTaskStatus.TODO, taskId
-        );
+        return SubTaskQueryResponse.builder()
+                .id(key.longValue())
+                .name("name")
+                .subTaskStatus(SubTaskStatus.TODO)
+                .taskId(taskId)
+                .build();
     }
 
 }

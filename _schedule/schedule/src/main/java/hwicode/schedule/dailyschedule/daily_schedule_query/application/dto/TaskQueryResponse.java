@@ -8,6 +8,7 @@ import lombok.*;
 
 import java.util.List;
 
+@Builder
 @Data
 public class TaskQueryResponse {
 
@@ -19,14 +20,4 @@ public class TaskQueryResponse {
     private final TaskStatus taskStatus;
 
     private List<SubTaskQueryResponse> subTaskQueryResponses;
-
-    @Builder
-    public TaskQueryResponse(Long id, String name, Priority priority, Importance importance, Difficulty difficulty, TaskStatus taskStatus) {
-        this.id = id;
-        this.name = name;
-        this.priority = priority;
-        this.importance = importance;
-        this.difficulty = difficulty;
-        this.taskStatus = taskStatus;
-    }
 }

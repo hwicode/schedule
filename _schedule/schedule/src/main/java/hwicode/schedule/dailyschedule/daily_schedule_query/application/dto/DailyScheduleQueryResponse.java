@@ -6,6 +6,7 @@ import lombok.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Builder
 @Data
 public class DailyScheduleQueryResponse {
 
@@ -19,16 +20,4 @@ public class DailyScheduleQueryResponse {
     private final String review;
 
     private List<TaskQueryResponse> taskQueryResponses;
-
-    @Builder
-    public DailyScheduleQueryResponse(Long id, LocalDate yearAndMonthAndDay, int totalDifficultyScore, int todayDonePercent, int totalLearningTime, Emoji emoji, String mainTagName, String review) {
-        this.id = id;
-        this.yearAndMonthAndDay = yearAndMonthAndDay;
-        this.totalDifficultyScore = totalDifficultyScore;
-        this.todayDonePercent = todayDonePercent;
-        this.totalLearningTime = totalLearningTime;
-        this.emoji = emoji;
-        this.mainTagName = mainTagName;
-        this.review = review;
-    }
 }
