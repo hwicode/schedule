@@ -5,9 +5,11 @@ import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.Daily
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.SubTaskQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.TaskQueryResponse;
+import hwicode.schedule.dailyschedule.daily_schedule_query.exception.DailyScheduleNotExistException;
 import hwicode.schedule.dailyschedule.shared_domain.*;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -26,6 +28,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 @SpringBootTest
@@ -200,6 +203,16 @@ class DailyScheduleQueryServiceTest {
                 .subTaskStatus(SubTaskStatus.TODO)
                 .taskId(taskId)
                 .build();
+    }
+
+    @Test
+    void daily_schedule_테이블에서_daily_schedule을_조회할_때_존재하지_않으면_에러가_발생한다() {
+        // given
+        Long noneExistId = 1L;
+
+        // when then
+        assertThatThrownBy(() -> dailyScheduleQueryService.getDailyScheduleQueryResponse(noneExistId))
+                .isInstanceOf(DailyScheduleNotExistException.class);
     }
 
 }

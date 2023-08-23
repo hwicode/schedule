@@ -4,6 +4,7 @@ import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.Daily
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.SubTaskQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.TaskQueryResponse;
+import hwicode.schedule.dailyschedule.daily_schedule_query.exception.DailyScheduleNotExistException;
 import hwicode.schedule.dailyschedule.daily_schedule_query.infra.DailyScheduleQueryRepository;
 import hwicode.schedule.dailyschedule.daily_schedule_query.infra.SubTaskQueryRepository;
 import hwicode.schedule.dailyschedule.daily_schedule_query.infra.TaskQueryRepository;
@@ -33,9 +34,9 @@ public class DailyScheduleQueryService {
     }
 
     @Transactional(readOnly = true)
-    // todo: DailySchedule 조회시 예외처리 추가하기
     public DailyScheduleQueryResponse getDailyScheduleQueryResponse(Long dailyScheduleId) {
-        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(dailyScheduleId);
+        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(dailyScheduleId)
+                .orElseThrow(DailyScheduleNotExistException::new);
         List<TaskQueryResponse> taskQueryResponses = taskQueryRepository.findTaskQueryResponsesBy(dailyScheduleId);
 
         List<Long> taskIds = getTaskIds(taskQueryResponses);

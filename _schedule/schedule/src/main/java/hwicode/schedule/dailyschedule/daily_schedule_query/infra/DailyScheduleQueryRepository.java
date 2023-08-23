@@ -4,12 +4,14 @@ import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.Daily
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
 import hwicode.schedule.dailyschedule.todolist.domain.Emoji;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.time.YearMonth;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -36,12 +38,17 @@ public class DailyScheduleQueryRepository {
                 .build();
     }
 
-    public DailyScheduleQueryResponse findDailyScheduleQueryResponseBy(Long dailyScheduleId) {
+    public Optional<DailyScheduleQueryResponse> findDailyScheduleQueryResponseBy(Long dailyScheduleId) {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, total_learning_time, emoji, main_tag_name, review "
                 + "FROM daily_schedule d "
                 + "WHERE d.id = ?";
-        return jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), dailyScheduleId);
+        try {
+            DailyScheduleQueryResponse dailyScheduleQueryResponse = jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), dailyScheduleId);
+            return Optional.ofNullable(dailyScheduleQueryResponse);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
     }
 
     private RowMapper<DailyScheduleQueryResponse> getDailyScheduleQueryResponseRowMapper() {
