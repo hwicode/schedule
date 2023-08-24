@@ -40,7 +40,7 @@ public class LearningTime {
         this.startTime = startTime;
     }
 
-    LearningTime(TimeTable timeTable, LocalDateTime startTime) {
+    public LearningTime(TimeTable timeTable, LocalDateTime startTime) {
         this.timeTable = timeTable;
         this.startTime = startTime;
     }
