@@ -21,7 +21,7 @@ public class DailyTag {
     @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
-    DailyTag(DailyTagList dailyTagList, Tag tag) {
+    public DailyTag(DailyTagList dailyTagList, Tag tag) {
         this.dailyTagList = dailyTagList;
         this.tag = tag;
     }

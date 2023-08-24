@@ -5,6 +5,7 @@ import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundExcept
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,10 +18,18 @@ public class DailyTagList {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private LocalDate today;
+
     private String mainTagName;
 
     @OneToMany(mappedBy = "dailyTagList", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DailyTag> dailyTags = new ArrayList<>();
+
+    // 테스트 코드에서만 사용되는 생성자
+    public DailyTagList(LocalDate today) {
+        this.today = today;
+    }
 
     public DailyTag addTag(Tag tag) {
         validateTag(tag);
