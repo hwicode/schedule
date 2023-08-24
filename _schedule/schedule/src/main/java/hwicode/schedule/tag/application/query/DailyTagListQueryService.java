@@ -1,6 +1,6 @@
 package hwicode.schedule.tag.application.query;
 
-import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
+import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,13 +11,13 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class TagQueryService {
+public class DailyTagListQueryService {
 
     private final DailyTagListRepository dailyTagListRepository;
 
     @Transactional(readOnly = true)
-    public List<TagQueryResponse> getTagQueryResponses(LocalDate date) {
-        return dailyTagListRepository.findTagQueryResponsesBy(date);
+    public List<DailyTagQueryResponse> getDailyTagQueryResponses(LocalDate date) {
+        return dailyTagListRepository.findDailyTagQueryResponsesBy(date);
     }
 
 }

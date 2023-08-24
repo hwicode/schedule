@@ -7,7 +7,7 @@ import lombok.Data;
 @Builder
 @AllArgsConstructor
 @Data
-public class TagQueryResponse {
+public class DailyTagQueryResponse {
 
     private final Long id;
     private final String name;

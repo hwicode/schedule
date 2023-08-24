@@ -1,6 +1,6 @@
 package hwicode.schedule.tag.infra.jpa_repository;
 
-import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
+import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
 import hwicode.schedule.tag.domain.DailyTagList;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -23,5 +23,5 @@ public interface DailyTagListRepository extends JpaRepository<DailyTagList, Long
             + "LEFT JOIN d.dailyTags dt "
             + "INNER JOIN dt.tag t "
             + "WHERE d.today = :today")
-    List<TagQueryResponse> findTagQueryResponsesBy(@Param("today") LocalDate date);
+    List<DailyTagQueryResponse> findDailyTagQueryResponsesBy(@Param("today") LocalDate date);
 }
