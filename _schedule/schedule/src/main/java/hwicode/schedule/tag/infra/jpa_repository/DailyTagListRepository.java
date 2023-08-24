@@ -18,7 +18,7 @@ public interface DailyTagListRepository extends JpaRepository<DailyTagList, Long
     Optional<DailyTagList> findDailyTagListWithDailyTags(@Param("id") Long dailyTagListId);
 
     @Query("SELECT "
-            + "new hwicode.schedule.tag.application.query.dto.TagQueryResponse(t.id, t.name) "
+            + "new hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse(t.id, t.name) "
             + "FROM DailyTagList d "
             + "LEFT JOIN d.dailyTags dt "
             + "INNER JOIN dt.tag t "
