@@ -3,6 +3,7 @@ package hwicode.schedule.tag.application.query;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
+import hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
@@ -48,6 +49,11 @@ public class TagQueryService {
     @Transactional(readOnly = true)
     public List<TagQueryResponse> getTagQueryResponses() {
         return tagRepository.getTagQueryResponses();
+    }
+
+    @Transactional(readOnly = true)
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(String keywordPattern) {
+        return tagRepository.getTagSearchQueryResponses(keywordPattern);
     }
 
 }

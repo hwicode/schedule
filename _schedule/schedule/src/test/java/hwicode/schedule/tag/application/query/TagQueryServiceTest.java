@@ -4,6 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
+import hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse;
 import hwicode.schedule.tag.domain.*;
 import hwicode.schedule.tag.infra.jpa_repository.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -163,6 +164,28 @@ class TagQueryServiceTest {
         assertThat(tagQueryResponses).hasSize(5);
         for (int i = 0; i < 5; i++) {
             assertThat(tagQueryResponses.get(i).getName()).isEqualTo(TAG_NAME + i);
+        }
+    }
+
+    @Test
+    void 검색_키워드로_시작하는_태그_이름을_가진_태그들을_조회할_수_있다() {
+        // given
+        for (int i = 0; i < 5; i++) {
+            Tag tag = new Tag(TAG_NAME + i);
+            tagRepository.save(tag);
+        }
+        for (int i = 0; i < 5; i++) {
+            Tag tag = new Tag(i + TAG_NAME);
+            tagRepository.save(tag);
+        }
+
+        // when
+        List<TagSearchQueryResponse> tagSearchQueryResponses = tagQueryService.getTagSearchQueryResponses(TAG_NAME);
+
+        // then
+        assertThat(tagSearchQueryResponses).hasSize(5);
+        for (int i = 0; i < 5; i++) {
+            assertThat(tagSearchQueryResponses.get(i).getName()).isEqualTo(TAG_NAME + i);
         }
     }
 
