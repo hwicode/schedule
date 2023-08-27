@@ -74,4 +74,21 @@ class TagQueryEndToEndTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    void 특정_키워드를_가진_태그_조회_요청() {
+        // given
+        String keywordPattern = "a";
+
+        RequestSpecification requestSpecification = given().port(port)
+                .queryParam("keywordPattern", keywordPattern);
+
+        // when
+        Response response = requestSpecification.when()
+                .get("/search/tags");
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
 }
