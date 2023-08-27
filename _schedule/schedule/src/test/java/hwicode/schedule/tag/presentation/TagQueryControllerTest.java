@@ -108,4 +108,22 @@ class TagQueryControllerTest {
         verify(tagQueryService).getTagQueryResponses();
     }
 
+    @Test
+    void 특정_키워드로_태그의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        String keywordPattern = "a";
+
+        given(tagQueryService.getTagSearchQueryResponses(any()))
+                .willReturn(List.of());
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/search/tags")
+                .queryParam("keywordPattern", keywordPattern));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        verify(tagQueryService).getTagSearchQueryResponses(any());
+    }
+
 }

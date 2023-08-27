@@ -4,6 +4,7 @@ import hwicode.schedule.tag.application.query.TagQueryService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
+import hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -40,6 +41,12 @@ public class TagQueryController {
     @ResponseStatus(HttpStatus.OK)
     public List<TagQueryResponse> getTagQueryResponses() {
         return tagQueryService.getTagQueryResponses();
+    }
+
+    @GetMapping("/search/tags")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(@RequestParam String keywordPattern) {
+        return tagQueryService.getTagSearchQueryResponses(keywordPattern);
     }
 
 }
