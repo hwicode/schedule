@@ -3,6 +3,7 @@ package hwicode.schedule.tag.presentation.tag;
 import hwicode.schedule.tag.application.query.TagQueryService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
+import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +34,12 @@ public class TagQueryController {
     public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(@RequestParam @Positive Long tagId,
                                                                         @RequestParam(required = false) Long lastMemoId) {
         return tagQueryService.getMemoSearchQueryResponsePage(tagId, lastMemoId);
+    }
+
+    @GetMapping("/tags")
+    @ResponseStatus(HttpStatus.OK)
+    public List<TagQueryResponse> getTagQueryResponses() {
+        return tagQueryService.getTagQueryResponses();
     }
 
 }

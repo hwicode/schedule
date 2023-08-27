@@ -93,4 +93,19 @@ class TagQueryControllerTest {
         verify(tagQueryService).getMemoSearchQueryResponsePage(any(), any());
     }
 
+    @Test
+    void 모든_태그의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        given(tagQueryService.getTagQueryResponses())
+                .willReturn(List.of());
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/tags"));
+
+        // then
+        perform.andExpect(status().isOk());
+
+        verify(tagQueryService).getTagQueryResponses();
+    }
+
 }
