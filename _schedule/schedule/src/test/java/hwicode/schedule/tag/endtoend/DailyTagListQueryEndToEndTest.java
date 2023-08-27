@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.tag.domain.DailyTagList;
+import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +26,9 @@ class DailyTagListQueryEndToEndTest {
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
+    @Autowired
+    DailyTagListRepository dailyTagListRepository;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -40,6 +45,23 @@ class DailyTagListQueryEndToEndTest {
         //when
         Response response = requestSpecification.when()
                 .get("/dailyschedule/daily-tag-lists");
+
+        //then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
+    @Test
+    void 계획표의_메모들_조회_요청() {
+        //given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        RequestSpecification requestSpecification = given().port(port);
+
+        //when
+        Response response = requestSpecification.when()
+                .get("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos", dailyTagList.getId());
 
         //then
         response.then()
