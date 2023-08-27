@@ -37,7 +37,7 @@ class TagQueryEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .get("/daily-tag-lists");
+                .get("/search/daily-tag-lists");
 
         // then
         response.then()
@@ -53,7 +53,7 @@ class TagQueryEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .get("/memos");
+                .get("/search/memos");
 
         // then
         response.then()

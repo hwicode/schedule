@@ -34,7 +34,7 @@ class TagQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/daily-tag-lists")
+        ResultActions perform = mockMvc.perform(get("/search/daily-tag-lists")
                 .queryParam("tagId", String.valueOf(TAG_ID)));
 
         // then
@@ -50,7 +50,7 @@ class TagQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/daily-tag-lists")
+        ResultActions perform = mockMvc.perform(get("/search/daily-tag-lists")
                 .queryParam("tagId", String.valueOf(TAG_ID))
                 .queryParam("lastDailyTagListId", String.valueOf(DAILY_TAG_LIST_ID)));
 
@@ -67,7 +67,7 @@ class TagQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/memos")
+        ResultActions perform = mockMvc.perform(get("/search/memos")
                 .queryParam("tagId", String.valueOf(TAG_ID)));
 
         // then
@@ -83,7 +83,7 @@ class TagQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/memos")
+        ResultActions perform = mockMvc.perform(get("/search/memos")
                 .queryParam("tagId", String.valueOf(TAG_ID))
                 .queryParam("lastMemoId", String.valueOf(MEMO_ID)));
 
