@@ -17,9 +17,6 @@ import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSa
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
-import hwicode.schedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
-import hwicode.schedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
-import hwicode.schedule.timetable.presentation.timetable.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -148,75 +145,6 @@ class TimeTableControllerTest {
         perform.andExpect(status().isNoContent());
 
         verify(timeTableAggregateService).deleteLearningTime(any(), any());
-    }
-
-    @Test
-    void 특정_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
-        // given
-        int totalLearningTime = 100;
-        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = new SubjectTotalLearningTimeResponse(totalLearningTime);
-
-        given(timeTableAggregateService.calculateSubjectTotalLearningTime(any(), any()))
-                .willReturn(totalLearningTime);
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject", TimeTableDataHelper.SUBJECT));
-
-        // then
-        perform.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        objectMapper.writeValueAsString(subjectTotalLearningTimeResponse)
-                ));
-
-        verify(timeTableAggregateService).calculateSubjectTotalLearningTime(any(), any());
-    }
-
-    @Test
-    void Task_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
-        // given
-        int totalLearningTime = 100;
-        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = new SubjectOfTaskTotalLearningTimeResponse(totalLearningTime);
-
-        given(timeTableAggregateService.calculateSubjectOfTaskTotalLearningTime(any(), any()))
-                .willReturn(totalLearningTime);
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/task-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_TASK_ID)));
-
-        // then
-        perform.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        objectMapper.writeValueAsString(subjectOfTaskTotalLearningTimeResponse)
-                ));
-
-        verify(timeTableAggregateService).calculateSubjectOfTaskTotalLearningTime(any(), any());
-    }
-
-    @Test
-    void SubTask_학습_주제를_가진_학습_시간의_총_시간을_요청하면_200_상태코드가_리턴된다() throws Exception {
-        // given
-        int totalLearningTime = 100;
-        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = new SubjectOfSubTaskTotalLearningTimeResponse(totalLearningTime);
-
-        given(timeTableAggregateService.calculateSubjectOfSubTaskTotalLearningTime(any(), any()))
-                .willReturn(totalLearningTime);
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/subtask-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject_of_subtask_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_SUBTASK_ID)));
-
-        // then
-        perform.andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.content().string(
-                        objectMapper.writeValueAsString(subjectOfSubTaskTotalLearningTimeResponse)
-                ));
-
-        verify(timeTableAggregateService).calculateSubjectOfSubTaskTotalLearningTime(any(), any());
     }
 
     @Test

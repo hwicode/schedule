@@ -1,12 +1,8 @@
 package hwicode.schedule.timetable.application;
 
 import hwicode.schedule.timetable.domain.LearningTime;
-import hwicode.schedule.timetable.domain.SubjectOfSubTask;
-import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.infra.limited_repository.LearningTimeSaveRepository;
-import hwicode.schedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
-import hwicode.schedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
 import hwicode.schedule.timetable.infra.limited_repository.TimeTableFindRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,9 +15,6 @@ import java.time.LocalDateTime;
 public class TimeTableAggregateService {
 
     private final TimeTableFindRepository timeTableFindRepository;
-    private final SubjectOfTaskFindRepository subjectOfTaskFindRepository;
-    private final SubjectOfSubTaskFindRepository subjectOfSubTaskFindRepository;
-
     private final LearningTimeSaveRepository learningTimeSaveRepository;
 
     @Transactional
@@ -53,25 +46,4 @@ public class TimeTableAggregateService {
         timeTable.deleteLearningTime(startTime);
     }
 
-    @Transactional
-    public int calculateSubjectTotalLearningTime(Long timeTableId, String subject) {
-        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
-        return timeTable.getSubjectTotalLearningTime(subject);
-    }
-
-    @Transactional
-    public int calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
-        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
-        SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(subjectOfTaskId);
-
-        return timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
-    }
-
-    @Transactional
-    public int calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
-        TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(subjectOfSubTaskId);
-
-        return timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
-    }
 }

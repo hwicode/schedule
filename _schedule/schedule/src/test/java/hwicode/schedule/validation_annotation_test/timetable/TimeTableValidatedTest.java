@@ -18,10 +18,11 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
-import static hwicode.schedule.timetable.TimeTableDataHelper.*;
-import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
+import static hwicode.schedule.timetable.TimeTableDataHelper.START_TIME;
+import static hwicode.schedule.timetable.TimeTableDataHelper.TIME_TABLE_ID;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.POSITIVE_ERROR_MESSAGE;
+import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.getNumberFormatExceptionMessage;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -120,122 +121,6 @@ class TimeTableValidatedTest {
 
         // then
         String field = "saveLearningTime.timeTableId";
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
-                .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(errorMessage));
-    }
-
-    @Test
-    void 특정_학습_주제가_제대로_들어오면_통과된다() throws Exception {
-        // given when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", SUBJECT));
-
-        // then
-        perform.andExpect(status().isOk());
-    }
-
-    @Test
-    void 특정_학습_주제에_null_값이_들어오면_400에러가_발생한다() throws Exception {
-        // given
-        String subject = null;
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", subject));
-
-        // then
-        String message = "Required request parameter 'subject' for method parameter type String is not present";
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
-    }
-
-    private static Stream<Arguments> provideWrongSubject() {
-        return Stream.of(
-                arguments("", NOT_BLANK_ERROR_MESSAGE),
-                arguments(" ", NOT_BLANK_ERROR_MESSAGE)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideWrongSubject")
-    void 특정_학습_주제에_잘못된_값이_들어오면_400에러가_발생한다(String subject, String errorMessage) throws Exception {
-        // given when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", subject));
-
-        // then
-        String field = "getSubjectTotalLearningTime.subject";
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
-                .andExpect(jsonPath("$.errors[0].field").value(field))
-                .andExpect(jsonPath("$.errors[0].message").value(errorMessage));
-    }
-
-    @Test
-    void Task_학습_주제가_제대로_들어오면_통과된다() throws Exception {
-        // given when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(SUBJECT_OF_TASK_ID)));
-
-        // then
-        perform.andExpect(status().isOk());
-    }
-
-    @Test
-    void Task_학습_주제에_형식에_맞지_않는_값이_들어오면_400에러가_발생한다() throws Exception {
-        // given
-        String subjectOfTaskId = "ww";
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", subjectOfTaskId));
-
-        // then
-        String message = getNumberFormatExceptionMessage(subjectOfTaskId);
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
-    }
-
-    @Test
-    void Task_학습_주제에_null_값이_들어오면_400에러가_발생한다() throws Exception {
-        // given
-        Long subjectOfTaskId = null;
-
-        // when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId)));
-
-        // then
-        String message = getNumberFormatExceptionMessage(String.valueOf(subjectOfTaskId));
-        perform.andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value(message));
-    }
-
-    private static Stream<Arguments> provideWrongSubjectOfTaskId() {
-        return Stream.of(
-                arguments(-1L, POSITIVE_ERROR_MESSAGE),
-                arguments(0L, POSITIVE_ERROR_MESSAGE)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource("provideWrongSubjectOfTaskId")
-    void Task_학습_주제에_잘못된_값이_들어오면_400에러가_발생한다(Long subjectOfTaskId, String errorMessage) throws Exception {
-        // given when
-        ResultActions perform = mockMvc.perform(
-                get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId)));
-
-        // then
-        String field = "getSubjectOfTaskTotalLearningTime.subjectOfTaskId";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))

@@ -117,4 +117,62 @@ class TimeTableQueryServiceTest {
                 .build();
     }
 
+    @Test
+    void 타임_테이블에_존재하는_특정_학습_주제의_총_학습_시간을_계산할_수_있다() {
+        // given
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubject(SUBJECT);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        int totalLearningTime = timeTableQueryService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(30);
+    }
+
+    @Test
+    void 타임_테이블에_존재하는_특정_Task_학습_주제의_총_학습_시간을_계산할_수_있다() {
+        // given
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubjectOfTask(subjectOfTask);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        int totalLearningTime = timeTableQueryService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(30);
+    }
+
+    @Test
+    void 타임_테이블에_존재하는_특정_SubTask_학습_주제의_총_학습_시간을_계산할_수_있다() {
+        // given
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
+
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+
+        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
+        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
+        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
+
+        timeTableRepository.save(timeTable);
+
+        // when
+        int totalLearningTime = timeTableQueryService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
+
+        // then
+        assertThat(totalLearningTime).isEqualTo(30);
+    }
+
 }
