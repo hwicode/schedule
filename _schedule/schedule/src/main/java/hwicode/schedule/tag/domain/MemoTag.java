@@ -21,7 +21,7 @@ public class MemoTag {
     @ManyToOne(fetch = FetchType.LAZY)
     private Tag tag;
 
-    MemoTag(Memo memo, Tag tag) {
+    public MemoTag(Memo memo, Tag tag) {
         this.memo = memo;
         this.tag = tag;
     }

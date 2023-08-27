@@ -2,12 +2,9 @@ package hwicode.schedule.tag.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.query.dto.DailyTagListQueryResponse;
-import hwicode.schedule.tag.domain.DailyTag;
-import hwicode.schedule.tag.domain.DailyTagList;
-import hwicode.schedule.tag.domain.Tag;
-import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
-import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
-import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
+import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
+import hwicode.schedule.tag.domain.*;
+import hwicode.schedule.tag.infra.jpa_repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +33,12 @@ class TagQueryServiceTest {
 
     @Autowired
     DailyTagRepository dailyTagRepository;
+
+    @Autowired
+    MemoTagRepository memoTagRepository;
+
+    @Autowired
+    MemoRepository memoRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -90,6 +93,58 @@ class TagQueryServiceTest {
         assertThat(dailyTagListQueryResponsePage).hasSize(10);
         assertThat(dailyTagListQueryResponsePage.get(0).getYearAndMonthAndDay()).isEqualTo(date.plusDays(10));
         assertThat(dailyTagListQueryResponsePage.get(9).getYearAndMonthAndDay()).isEqualTo(date.plusDays(1));
+    }
+
+    @Test
+    void 메모의_첫_번째_페이지_조회를_요청할_수_있다() {
+        //given
+        Tag tag = new Tag(TAG_NAME);
+        tagRepository.save(tag);
+
+        String text = "a";
+        for (int i = 1; i <= 10; i++) {
+            DailyTagList dailyTagList = new DailyTagList();
+            dailyTagListRepository.save(dailyTagList);
+
+            Memo memo = new Memo(text + i, dailyTagList);
+            MemoTag memoTag = new MemoTag(memo, tag);
+            memoRepository.save(memo);
+            memoTagRepository.save(memoTag);
+        }
+
+        //when
+        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(tag.getId(), null);
+
+        //then
+        assertThat(memoSearchQueryResponsePage).hasSize(10);
+        assertThat(memoSearchQueryResponsePage.get(0).getText()).isEqualTo("a10");
+        assertThat(memoSearchQueryResponsePage.get(9).getText()).isEqualTo("a1");
+    }
+
+    @Test
+    void 메모의_두_번째_페이지_조회를_요청할_수_있다() {
+        // given
+        Tag tag = new Tag(TAG_NAME);
+        tagRepository.save(tag);
+
+        String text = "a";
+        for (int i = 1; i <= 20; i++) {
+            DailyTagList dailyTagList = new DailyTagList();
+            dailyTagListRepository.save(dailyTagList);
+
+            Memo memo = new Memo(text + i, dailyTagList);
+            MemoTag memoTag = new MemoTag(memo, tag);
+            memoRepository.save(memo);
+            memoTagRepository.save(memoTag);
+        }
+
+        // when
+        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(tag.getId(), 11L);
+
+        // then
+        assertThat(memoSearchQueryResponsePage).hasSize(10);
+        assertThat(memoSearchQueryResponsePage.get(0).getText()).isEqualTo("a10");
+        assertThat(memoSearchQueryResponsePage.get(9).getText()).isEqualTo("a1");
     }
 
 }
