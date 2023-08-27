@@ -1,12 +1,15 @@
 package hwicode.schedule.tag.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse;
 import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
 import hwicode.schedule.tag.domain.DailyTag;
 import hwicode.schedule.tag.domain.DailyTagList;
+import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
+import hwicode.schedule.tag.infra.jpa_repository.MemoRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,8 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 import java.util.List;
 
-import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
-import static hwicode.schedule.tag.TagDataHelper.TAG_NAME2;
+import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -37,6 +39,9 @@ class DailyTagListQueryServiceTest {
 
     @Autowired
     TagRepository tagRepository;
+
+    @Autowired
+    MemoRepository memoRepository;
 
     @BeforeEach
     void clearDatabase() {
@@ -73,6 +78,27 @@ class DailyTagListQueryServiceTest {
                 .id(tag.getId())
                 .name(tagName)
                 .build();
+    }
+
+    @Test
+    void 계획표에_존재하는_메모들을_조회할_수_있다() {
+        // given
+        DailyTagList dailyTagList = new DailyTagList();
+        dailyTagListRepository.save(dailyTagList);
+
+        for (int i = 0; i < 3; i++) {
+            Memo memo = new Memo(MEMO_TEXT + i, dailyTagList);
+            memoRepository.save(memo);
+        }
+
+        // when
+        List<DailyTagListMemoQueryResponse> dailyTagListMemoQueryResponses = dailyTagListQueryService.getDailyTagListMemoQueryResponses(dailyTagList.getId());
+
+        // then
+        assertThat(dailyTagListMemoQueryResponses).hasSize(3);
+        for (int i = 0; i < 3; i++) {
+            assertThat(dailyTagListMemoQueryResponses.get(i).getText()).isEqualTo(MEMO_TEXT + i);
+        }
     }
 
 }
