@@ -28,7 +28,7 @@ class TimeTableQueryControllerTest {
     TimeTableQueryService timeTableQueryService;
 
     @Test
-    void 날짜로_계획표의_조회를_요청하면_리다이렉트_상태코드가_리턴된다() throws Exception {
+    void 날짜로_계획표의_학습_시간_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         LocalDate date = LocalDate.of(2023, 8, 23);
 

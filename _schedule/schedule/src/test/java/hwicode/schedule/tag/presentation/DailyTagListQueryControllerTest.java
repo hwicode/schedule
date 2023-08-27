@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.time.LocalDate;
 import java.util.List;
 
+import static hwicode.schedule.tag.TagDataHelper.DAILY_TAG_LIST_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -28,7 +29,7 @@ class DailyTagListQueryControllerTest {
     DailyTagListQueryService dailyTagListQueryService;
 
     @Test
-    void 날짜로_계획표의_태그들의_조회를_요청하면_리다이렉트_상태코드가_리턴된다() throws Exception {
+    void 날짜로_계획표의_태그들의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         LocalDate date = LocalDate.of(2023, 8, 23);
 
@@ -43,6 +44,25 @@ class DailyTagListQueryControllerTest {
         perform.andExpect(status().isOk());
 
         verify(dailyTagListQueryService).getDailyTagQueryResponses(any());
+    }
+
+    @Test
+    void 계획표에_존재하는_메모들의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
+        // given
+        LocalDate date = LocalDate.of(2023, 8, 23);
+
+        given(dailyTagListQueryService.getDailyTagListMemoQueryResponses(any()))
+                .willReturn(List.of());
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                get("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos", DAILY_TAG_LIST_ID)
+        );
+
+        // then
+        perform.andExpect(status().isOk());
+
+        verify(dailyTagListQueryService).getDailyTagListMemoQueryResponses(any());
     }
 
 }
