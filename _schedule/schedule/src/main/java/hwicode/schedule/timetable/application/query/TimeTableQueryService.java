@@ -1,6 +1,9 @@
 package hwicode.schedule.timetable.application.query;
 
 import hwicode.schedule.timetable.application.query.dto.LearningTimeQueryResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
@@ -31,25 +34,28 @@ public class TimeTableQueryService {
     }
 
     @Transactional(readOnly = true)
-    public int calculateSubjectTotalLearningTime(Long timeTableId, String subject) {
+    public SubjectTotalLearningTimeResponse calculateSubjectTotalLearningTime(Long timeTableId, String subject) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
-        return timeTable.getSubjectTotalLearningTime(subject);
+        int subjectTotalLearningTime = timeTable.getSubjectTotalLearningTime(subject);
+        return new SubjectTotalLearningTimeResponse(subjectTotalLearningTime);
     }
 
     @Transactional(readOnly = true)
-    public int calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
+    public SubjectOfTaskTotalLearningTimeResponse calculateSubjectOfTaskTotalLearningTime(Long timeTableId, Long subjectOfTaskId) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
         SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(subjectOfTaskId);
 
-        return timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
+        int subjectOfTaskTotalLearningTime = timeTable.getSubjectOfTaskTotalLearningTime(subjectOfTask);
+        return new SubjectOfTaskTotalLearningTimeResponse(subjectOfTaskTotalLearningTime);
     }
 
     @Transactional(readOnly = true)
-    public int calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
+    public SubjectOfSubTaskTotalLearningTimeResponse calculateSubjectOfSubTaskTotalLearningTime(Long timeTableId, Long subjectOfSubTaskId) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(timeTableId);
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(subjectOfSubTaskId);
 
-        return timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
+        int subjectOfSubTaskTotalLearningTime = timeTable.getSubjectOfSubTaskTotalLearningTime(subjectOfSubTask);
+        return new SubjectOfSubTaskTotalLearningTimeResponse(subjectOfSubTaskTotalLearningTime);
     }
 
 }

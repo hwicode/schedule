@@ -2,6 +2,9 @@ package hwicode.schedule.timetable.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.timetable.application.query.dto.LearningTimeQueryResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
+import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
@@ -129,10 +132,10 @@ class TimeTableQueryServiceTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableQueryService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
+        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = timeTableQueryService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
 
         // then
-        assertThat(totalLearningTime).isEqualTo(30);
+        assertThat(subjectTotalLearningTimeResponse.getSubjectTotalLearningTime()).isEqualTo(30);
     }
 
     @Test
@@ -149,10 +152,10 @@ class TimeTableQueryServiceTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableQueryService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
+        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = timeTableQueryService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
 
         // then
-        assertThat(totalLearningTime).isEqualTo(30);
+        assertThat(subjectOfTaskTotalLearningTimeResponse.getSubjectOfTaskTotalLearningTime()).isEqualTo(30);
     }
 
     @Test
@@ -169,10 +172,10 @@ class TimeTableQueryServiceTest {
         timeTableRepository.save(timeTable);
 
         // when
-        int totalLearningTime = timeTableQueryService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
+        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = timeTableQueryService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
 
         // then
-        assertThat(totalLearningTime).isEqualTo(30);
+        assertThat(subjectOfSubTaskTotalLearningTimeResponse.getSubjectOfSubTaskTotalLearningTime()).isEqualTo(30);
     }
 
 }
