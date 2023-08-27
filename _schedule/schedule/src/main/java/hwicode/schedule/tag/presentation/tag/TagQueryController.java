@@ -1,7 +1,7 @@
 package hwicode.schedule.tag.presentation.tag;
 
 import hwicode.schedule.tag.application.query.TagQueryService;
-import hwicode.schedule.tag.application.query.dto.DailyTagListQueryResponse;
+import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -22,9 +22,9 @@ public class TagQueryController {
 
     @GetMapping("/daily-tag-lists")
     @ResponseStatus(HttpStatus.OK)
-    public List<DailyTagListQueryResponse> getDailyTagListQueryResponsePage(@RequestParam @Positive Long tagId,
-                                                                            @RequestParam(required = false) Long lastDailyTagListId) {
-        return tagQueryService.getDailyTagListQueryResponsePage(tagId, lastDailyTagListId);
+    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(@RequestParam @Positive Long tagId,
+                                                                                        @RequestParam(required = false) Long lastDailyTagListId) {
+        return tagQueryService.getDailyTagListSearchQueryResponsePage(tagId, lastDailyTagListId);
     }
 
 }

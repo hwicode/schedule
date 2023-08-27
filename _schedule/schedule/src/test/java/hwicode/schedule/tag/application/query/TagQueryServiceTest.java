@@ -1,7 +1,7 @@
 package hwicode.schedule.tag.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.tag.application.query.dto.DailyTagListQueryResponse;
+import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.domain.*;
 import hwicode.schedule.tag.infra.jpa_repository.*;
@@ -62,12 +62,12 @@ class TagQueryServiceTest {
         }
 
         //when
-        List<DailyTagListQueryResponse> dailyTagListQueryResponsePage = tagQueryService.getDailyTagListQueryResponsePage(tag.getId(), null);
+        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(tag.getId(), null);
 
         //then
-        assertThat(dailyTagListQueryResponsePage).hasSize(10);
-        assertThat(dailyTagListQueryResponsePage.get(0).getYearAndMonthAndDay()).isEqualTo(date.plusDays(size));
-        assertThat(dailyTagListQueryResponsePage.get(9).getYearAndMonthAndDay()).isEqualTo(date.plusDays(size - 9));
+        assertThat(dailyTagListSearchQueryResponsePage).hasSize(10);
+        assertThat(dailyTagListSearchQueryResponsePage.get(0).getYearAndMonthAndDay()).isEqualTo(date.plusDays(size));
+        assertThat(dailyTagListSearchQueryResponsePage.get(9).getYearAndMonthAndDay()).isEqualTo(date.plusDays(size - 9));
     }
 
     @Test
@@ -87,12 +87,12 @@ class TagQueryServiceTest {
         }
 
         // when
-        List<DailyTagListQueryResponse> dailyTagListQueryResponsePage = tagQueryService.getDailyTagListQueryResponsePage(tag.getId(), 11L);
+        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(tag.getId(), 11L);
 
         // then
-        assertThat(dailyTagListQueryResponsePage).hasSize(10);
-        assertThat(dailyTagListQueryResponsePage.get(0).getYearAndMonthAndDay()).isEqualTo(date.plusDays(10));
-        assertThat(dailyTagListQueryResponsePage.get(9).getYearAndMonthAndDay()).isEqualTo(date.plusDays(1));
+        assertThat(dailyTagListSearchQueryResponsePage).hasSize(10);
+        assertThat(dailyTagListSearchQueryResponsePage.get(0).getYearAndMonthAndDay()).isEqualTo(date.plusDays(10));
+        assertThat(dailyTagListSearchQueryResponsePage.get(9).getYearAndMonthAndDay()).isEqualTo(date.plusDays(1));
     }
 
     @Test

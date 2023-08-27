@@ -31,7 +31,7 @@ class TagQueryControllerTest {
     @Test
     void lastDailyTagListId_없이_태그를_통해_계획표의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getDailyTagListQueryResponsePage(any(), any()))
+        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -41,13 +41,13 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getDailyTagListQueryResponsePage(any(), any());
+        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any());
     }
 
     @Test
     void 태그를_통해_계획표의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getDailyTagListQueryResponsePage(any(), any()))
+        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -58,7 +58,7 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getDailyTagListQueryResponsePage(any(), any());
+        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any());
     }
 
 }

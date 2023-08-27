@@ -30,6 +30,6 @@ public interface MemoTagRepository extends JpaRepository<MemoTag, Long> {
             + "WHERE mt.tag.id = :tagId "
                 + "AND m.id < :memoId")
     List<MemoSearchQueryResponse> getMemoSearchQueryResponseNextPage(@Param("tagId") Long tagId,
-                                                                         @Param("memoId") Long memoId,
-                                                                         Pageable pageable);
+                                                                     @Param("memoId") Long memoId,
+                                                                     Pageable pageable);
 }

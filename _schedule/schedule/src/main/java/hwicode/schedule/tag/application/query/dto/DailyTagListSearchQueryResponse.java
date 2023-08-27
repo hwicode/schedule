@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Builder
 @AllArgsConstructor
 @Data
-public class DailyTagListQueryResponse {
+public class DailyTagListSearchQueryResponse {
 
     private final Long id;
     private final LocalDate yearAndMonthAndDay;

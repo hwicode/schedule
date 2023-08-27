@@ -1,6 +1,6 @@
 package hwicode.schedule.tag.application.query;
 
-import hwicode.schedule.tag.application.query.dto.DailyTagListQueryResponse;
+import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
@@ -23,13 +23,13 @@ public class TagQueryService {
     private final MemoTagRepository memoTagRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyTagListQueryResponse> getDailyTagListQueryResponsePage(Long tagId, Long lastDailyTagListId) {
+    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(Long tagId, Long lastDailyTagListId) {
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
         if (lastDailyTagListId == null) {
-            return dailyTagRepository.getDailyTagListQueryResponseFirstPage(tagId, pageable);
+            return dailyTagRepository.getDailyTagListSearchQueryResponseFirstPage(tagId, pageable);
         }
-        return dailyTagRepository.getDailyTagListQueryResponseNextPage(tagId, lastDailyTagListId, pageable);
+        return dailyTagRepository.getDailyTagListSearchQueryResponseNextPage(tagId, lastDailyTagListId, pageable);
     }
 
     @Transactional(readOnly = true)
