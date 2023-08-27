@@ -60,4 +60,18 @@ class TagQueryEndToEndTest {
                 .statusCode(HttpStatus.OK.value());
     }
 
+    @Test
+    void 모든_태그_조회_요청() {
+        // given
+        RequestSpecification requestSpecification = given().port(port);
+
+        // when
+        Response response = requestSpecification.when()
+                .get("/tags");
+
+        // then
+        response.then()
+                .statusCode(HttpStatus.OK.value());
+    }
+
 }
