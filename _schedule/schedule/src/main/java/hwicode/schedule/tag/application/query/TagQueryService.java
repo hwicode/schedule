@@ -20,13 +20,13 @@ public class TagQueryService {
     private final DailyTagRepository dailyTagRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyTagListQueryResponse> getDailyTagListQueryResponsePage(Long tagId, Long dailyTagListId) {
+    public List<DailyTagListQueryResponse> getDailyTagListQueryResponsePage(Long tagId, Long lastDailyTagListId) {
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
-        if (dailyTagListId == null) {
+        if (lastDailyTagListId == null) {
             return dailyTagRepository.getDailyTagListQueryResponseFirstPage(tagId, pageable);
         }
-        return dailyTagRepository.getDailyTagListQueryResponseNextPage(tagId, dailyTagListId, pageable);
+        return dailyTagRepository.getDailyTagListQueryResponseNextPage(tagId, lastDailyTagListId, pageable);
     }
 
 }
