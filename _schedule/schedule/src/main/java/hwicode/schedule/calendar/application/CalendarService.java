@@ -51,7 +51,7 @@ public class CalendarService {
     private List<CalendarGoal> addGoal(List<Calendar> calendars, Goal goal) {
         List<CalendarGoal> calendarGoals = new ArrayList<>();
         for (Calendar calendar : calendars) {
-            List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar);
+            List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar.getId());
             CalendarGoal calendarGoal = calendarGoalDomainService.addGoalToCalendar(calendar, goal, foundCalendarGoals);
             calendarGoals.add(calendarGoal);
         }
@@ -61,7 +61,7 @@ public class CalendarService {
     @Transactional
     public String changeGoalName(YearMonth yearMonth, String goalName, String newGoalName) {
         Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
-        List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar);
+        List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar.getId());
         return calendarGoalDomainService.changeGoalName(goalName, newGoalName, foundCalendarGoals);
     }
 

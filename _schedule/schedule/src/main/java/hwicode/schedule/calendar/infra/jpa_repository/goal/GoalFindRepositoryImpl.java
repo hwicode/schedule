@@ -1,6 +1,5 @@
 package hwicode.schedule.calendar.infra.jpa_repository.goal;
 
-import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
@@ -15,8 +14,8 @@ public class GoalFindRepositoryImpl implements GoalFindRepository {
     private final CalendarGoalRepository calendarGoalRepository;
 
     @Override
-    public List<Goal> findAllByCalendar(Calendar calendar) {
-        List<CalendarGoal> calendarGoals = calendarGoalRepository.findAllByCalendarWithGoal(calendar);
+    public List<Goal> findAllByCalendar(Long calendarId) {
+        List<CalendarGoal> calendarGoals = calendarGoalRepository.findAllByCalendarWithGoal(calendarId);
         return calendarGoals.stream()
                 .map(CalendarGoal::getGoal)
                 .collect(Collectors.toList());
