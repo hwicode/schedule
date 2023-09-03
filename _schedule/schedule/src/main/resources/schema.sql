@@ -31,6 +31,9 @@ create table daily_schedule (
    primary key (id)
 ) engine=InnoDB;
 
+CREATE INDEX idx_today
+   ON daily_schedule (today);
+
 create table sub_task (
    id bigint not null auto_increment,
    name varchar(255) not null,
@@ -63,10 +66,13 @@ create table learning_time (
 
 create table calendar (
    id bigint not null auto_increment,
-   year_and_month timestamp not null unique,
+   year_and_month timestamp not null,
    weekly_study_date tinyint,
    primary key (id)
 ) engine=InnoDB;
+
+CREATE INDEX idx_year_and_month
+   ON calendar (year_and_month);
 
 create table calendar_goal (
    id bigint not null auto_increment,
@@ -92,9 +98,12 @@ create table sub_goal (
 
 create table review_date (
    id bigint not null auto_increment,
-   date timestamp not null unique,
+   date timestamp not null,
    primary key (id)
 ) engine=InnoDB;
+
+CREATE INDEX idx_date
+   ON review_date (date);
 
 create table review_date_task (
    id bigint not null auto_increment,
@@ -112,9 +121,12 @@ create table review_cycle (
 
 create table tag (
    id bigint not null auto_increment,
-   name varchar(255) not null unique,
+   name varchar(255) not null,
    primary key (id)
 ) engine=InnoDB;
+
+CREATE INDEX idx_name
+   ON tag (name);
 
 create table memo (
    id bigint not null auto_increment,

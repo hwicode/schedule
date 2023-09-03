@@ -16,7 +16,6 @@ public interface ReviewDateTaskRepository extends JpaRepository<ReviewDateTask, 
     @Modifying(clearAutomatically = true, flushAutomatically = true)
     void deleteAllReviewDateTasksBy(@Param("id") Long reviewTaskId);
 
-    //todo: 쿼리 개선 필요
     @Query("SELECT r FROM ReviewDateTask r "
             + "JOIN FETCH r.reviewTask "
             + "JOIN FETCH r.reviewDate "

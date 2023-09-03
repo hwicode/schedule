@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import java.time.LocalDate;
 import java.util.Optional;
 
+// DailySchedule의 today에 세컨더리 인덱스 존재함
 public interface DailyScheduleRepository extends JpaRepository<DailySchedule, Long> {
 
     @Query("SELECT d FROM DailySchedule d "

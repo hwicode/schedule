@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface ReviewTaskRepository extends JpaRepository<ReviewTask, Long> {
 
-    //todo: ReviewDate까지 한 번에 쿼리 가능할까?
     @Query("SELECT r FROM ReviewTask r "
             + "LEFT JOIN FETCH r.reviewDateTasks "
             + "WHERE r.id = :id")
