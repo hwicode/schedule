@@ -11,12 +11,12 @@ public interface LearningTimeRepository extends JpaRepository<LearningTime, Long
     @Query("UPDATE LearningTime l "
             + "SET l.subjectOfTask = null "
             + "WHERE l.subjectOfTask.id = :id")
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void deleteSubjectOfTaskBelongingToLearningTime(@Param("id") Long subjectOfTaskId);
 
     @Query("UPDATE LearningTime l "
             + "SET l.subjectOfSubTask = null "
             + "WHERE l.subjectOfSubTask.id = :id")
-    @Modifying(clearAutomatically = true)
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
     void deleteSubjectOfSubTaskBelongingToLearningTime(@Param("id") Long subjectOfSubTaskId);
 }
