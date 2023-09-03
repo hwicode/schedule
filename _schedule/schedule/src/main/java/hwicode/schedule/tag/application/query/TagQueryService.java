@@ -52,8 +52,8 @@ public class TagQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<TagSearchQueryResponse> getTagSearchQueryResponses(String keywordPattern) {
-        return tagRepository.getTagSearchQueryResponses(keywordPattern);
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(String nameKeyword) {
+        return tagRepository.getTagSearchQueryResponses(nameKeyword);
     }
 
 }

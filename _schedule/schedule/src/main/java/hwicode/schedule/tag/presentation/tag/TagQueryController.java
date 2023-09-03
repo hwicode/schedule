@@ -45,8 +45,8 @@ public class TagQueryController {
 
     @GetMapping("/search/tags")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagSearchQueryResponse> getTagSearchQueryResponses(@RequestParam String keywordPattern) {
-        return tagQueryService.getTagSearchQueryResponses(keywordPattern);
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(@RequestParam String nameKeyword) {
+        return tagQueryService.getTagSearchQueryResponses(nameKeyword);
     }
 
 }

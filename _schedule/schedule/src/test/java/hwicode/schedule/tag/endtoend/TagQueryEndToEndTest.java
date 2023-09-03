@@ -77,10 +77,10 @@ class TagQueryEndToEndTest {
     @Test
     void 특정_키워드를_가진_태그_조회_요청() {
         // given
-        String keywordPattern = "a";
+        String nameKeyword = "a";
 
         RequestSpecification requestSpecification = given().port(port)
-                .queryParam("keywordPattern", keywordPattern);
+                .queryParam("nameKeyword", nameKeyword);
 
         // when
         Response response = requestSpecification.when()

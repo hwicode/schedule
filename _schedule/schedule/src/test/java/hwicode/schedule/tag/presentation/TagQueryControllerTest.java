@@ -111,14 +111,14 @@ class TagQueryControllerTest {
     @Test
     void 특정_키워드로_태그의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        String keywordPattern = "a";
+        String nameKeyword = "a";
 
         given(tagQueryService.getTagSearchQueryResponses(any()))
                 .willReturn(List.of());
 
         // when
         ResultActions perform = mockMvc.perform(get("/search/tags")
-                .queryParam("keywordPattern", keywordPattern));
+                .queryParam("nameKeyword", nameKeyword));
 
         // then
         perform.andExpect(status().isOk());
