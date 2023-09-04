@@ -23,7 +23,8 @@ public class DailyScheduleQueryRepository {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, emoji, main_tag_name "
                 + "FROM daily_schedule d "
-                + "WHERE d.today >= ? AND d.today < ? ";
+                + "WHERE d.today >= ? AND d.today < ? "
+                + "ORDER BY d.today ASC";
         return jdbcTemplate.query(sql, getDailyScheduleSummaryQueryResponseRowMapper(), start.atDay(1), end.atDay(1));
     }
 

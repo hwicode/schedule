@@ -16,9 +16,11 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
             + "WHERE m.id = :id")
     Optional<Memo> findMemoWithMemoTags(@Param("id") Long memoId);
 
+    // 여기부터 조회 기능
     @Query("SELECT "
-    + "new hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse(m.id, m.text) "
-    + "FROM Memo m "
-    + "WHERE m.dailyTagList.id = :dailyTagListId")
+            + "new hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse(m.id, m.text) "
+            + "FROM Memo m "
+            + "WHERE m.dailyTagList.id = :dailyTagListId "
+            + "ORDER BY m.id ASC")
     List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(@Param("dailyTagListId") Long dailyTagListId);
 }

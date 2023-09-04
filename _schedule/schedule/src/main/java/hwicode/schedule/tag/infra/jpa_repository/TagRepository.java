@@ -17,12 +17,14 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
 
     @Query("SELECT "
             + "new hwicode.schedule.tag.application.query.dto.TagQueryResponse(t.id, t.name) "
-            + "FROM Tag t")
+            + "FROM Tag t "
+            + "ORDER BY t.id ASC")
     List<TagQueryResponse> getTagQueryResponses();
 
     @Query("SELECT "
             + "new hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse(t.id, t.name) "
             + "FROM Tag t "
-            + "WHERE t.name LIKE :nameKeyword%")
+            + "WHERE t.name LIKE :nameKeyword% "
+            + "ORDER BY t.id ASC")
     List<TagSearchQueryResponse> getTagSearchQueryResponses(@Param("nameKeyword") String nameKeyword);
 }

@@ -11,6 +11,7 @@ public interface ReviewCycleRepository extends JpaRepository<ReviewCycle, Long> 
 
     @Query("SELECT "
             + "new hwicode.schedule.dailyschedule.review.application.query.dto.ReviewCycleQueryResponse(r.id, r.name, r.reviewCycleDates)"
-            + "FROM ReviewCycle r")
+            + "FROM ReviewCycle r "
+            + "ORDER BY r.id ASC")
     List<ReviewCycleQueryResponse> getReviewCycleQueryResponses();
 }

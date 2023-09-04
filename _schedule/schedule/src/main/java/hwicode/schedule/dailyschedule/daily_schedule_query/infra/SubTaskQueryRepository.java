@@ -24,8 +24,9 @@ public class SubTaskQueryRepository {
 
         String sql = "SELECT "
                 + "id, name, sub_task_status, task_id "
-                + "FROM sub_task "
-                + "WHERE task_id IN (:taskIds)";
+                + "FROM sub_task s "
+                + "WHERE task_id IN (:taskIds) "
+                + "ORDER BY s.id ASC";
 
         Map<String, Object> paramMap = new HashMap<>();
         paramMap.put("taskIds", taskIds);

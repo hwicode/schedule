@@ -22,7 +22,8 @@ public class TaskQueryRepository {
         String sql = "SELECT "
                 + "id, name, priority, importance, difficulty, task_status "
                 + "FROM task t "
-                + "WHERE t.daily_schedule_id = ?";
+                + "WHERE t.daily_schedule_id = ? "
+                + "ORDER BY t.id ASC";
         return jdbcTemplate.query(sql, getTaskQueryResponseRowMapper(), dailyScheduleId);
     }
 

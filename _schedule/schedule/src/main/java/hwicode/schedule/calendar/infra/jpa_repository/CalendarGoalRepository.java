@@ -15,9 +15,11 @@ public interface CalendarGoalRepository extends JpaRepository<CalendarGoal, Long
             + "WHERE c.calendar.id = :calendarId")
     List<CalendarGoal> findAllByCalendarWithGoal(@Param("calendarId") Long calendarId);
 
+    // 여기부터 조회기능
     @Query("SELECT new hwicode.schedule.calendar.application.query.dto.GoalQueryResponse(g.id, g.name, g.goalStatus) "
-    + "FROM CalendarGoal cg "
-    + "INNER JOIN cg.goal g "
-    + "WHERE cg.calendar.id = :calendarId")
+            + "FROM CalendarGoal cg "
+            + "INNER JOIN cg.goal g "
+            + "WHERE cg.calendar.id = :calendarId "
+            + "ORDER BY g.id ASC")
     List<GoalQueryResponse> findGoalQueryResponseBy(@Param("calendarId") Long calendarId);
 }
