@@ -5,6 +5,7 @@ import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDate;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,29 @@ class ReviewDateProviderServiceTest {
     void clearDatabase() {
         databaseCleanUp.execute();
     }
+
+    @Test
+    void 날짜로_복습_날짜를_가져올_수_있다() {
+        // given
+        ReviewDate reviewDate = new ReviewDate(START_DATE);
+        reviewDateRepository.save(reviewDate);
+
+        // when
+        ReviewDate result = reviewDateProviderService.provideReviewDate(START_DATE);
+
+        // then
+        assertThat(reviewDate.getId()).isEqualTo(result.getId());
+    }
+
+    @Test
+    void 날짜로_복습_날짜를_생성_후_가져올_수_있다() {
+        // when
+        ReviewDate reviewDate = reviewDateProviderService.provideReviewDate(START_DATE);
+
+        // then
+        assertThat(reviewDateRepository.existsById(reviewDate.getId())).isTrue();
+    }
+
 
     private static Stream<List<Integer>> createCycle() {
         return Stream.of(

@@ -18,6 +18,16 @@ public class ReviewDateProviderService {
 
     private final ReviewDateRepository reviewDateRepository;
 
+    public ReviewDate provideReviewDate(LocalDate date) {
+        return reviewDateRepository.findByDate(date)
+                .orElseGet(() -> saveReviewDate(date));
+    }
+
+    private ReviewDate saveReviewDate(LocalDate date) {
+        ReviewDate reviewDate = new ReviewDate(date);
+        return reviewDateRepository.save(reviewDate);
+    }
+
     public List<ReviewDate> provideReviewDates(ReviewCycle reviewCycle, LocalDate startDate) {
         List<LocalDate> dates = makeDates(reviewCycle, startDate);
         List<ReviewDate> reviewDates = new ArrayList<>();

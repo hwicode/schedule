@@ -6,7 +6,6 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public interface ReviewDateTaskRepository extends JpaRepository<ReviewDateTask, Long> {
@@ -19,6 +18,6 @@ public interface ReviewDateTaskRepository extends JpaRepository<ReviewDateTask, 
     @Query("SELECT r FROM ReviewDateTask r "
             + "JOIN FETCH r.reviewTask "
             + "JOIN FETCH r.reviewDate "
-            + "WHERE r.reviewDate.date = :date")
-    List<ReviewDateTask> findAllByDateWithReviewTask(@Param("date") LocalDate date);
+            + "WHERE r.reviewDate.id = :id")
+    List<ReviewDateTask> findAllReviewDateTaskBy(@Param("id") Long reviewDateId);
 }
