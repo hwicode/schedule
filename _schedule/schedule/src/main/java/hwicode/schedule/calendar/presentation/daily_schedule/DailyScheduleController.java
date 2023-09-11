@@ -17,7 +17,7 @@ public class DailyScheduleController {
 
     @GetMapping("/daily-todo-lists")
     public String provideDailyScheduleAndRedirect(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date);
+        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date, LocalDate.now());
         return "redirect:/dailyschedule/daily-todo-lists/" + dailyScheduleId;
     }
 

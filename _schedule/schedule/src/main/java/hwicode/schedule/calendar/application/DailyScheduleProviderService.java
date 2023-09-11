@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.DailySchedule;
+import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
 import hwicode.schedule.calendar.infra.jpa_repository.DailyScheduleRepository;
 import hwicode.schedule.calendar.infra.other_boundedcontext.DailySchedulePostSaveService;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,10 @@ public class DailyScheduleProviderService {
     private final DailySchedulePostSaveService dailySchedulePostSaveService;
     private final DailyScheduleRepository dailyScheduleRepository;
 
-    public Long provideDailyScheduleId(LocalDate date) {
+    public Long provideDailyScheduleId(LocalDate date, LocalDate now) {
+        if (!now.equals(date)) {
+            throw new DailyScheduleDateException();
+        }
         DailySchedule dailySchedule = dailyScheduleRepository.findByDate(date)
                 .orElseGet(() -> saveDailySchedule(date));
 

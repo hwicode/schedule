@@ -29,10 +29,11 @@ class DailyScheduleEndToEndTest {
         databaseCleanUp.execute();
     }
 
+    // 23시 59분 59.99초에 LocalDate.now()를 입력하면 컨트롤러에서 LocalDate.now()를 사용할 때 날짜가 달라질 수 있음
     @Test
     void 날짜로_계획표_조회_요청() {
         //given
-        LocalDate date = LocalDate.of(2023, 8, 23);
+        LocalDate date = LocalDate.now();
 
         RequestSpecification requestSpecification = given().port(port)
                 .param("date", String.valueOf(date));

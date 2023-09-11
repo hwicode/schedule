@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.presentation;
 
 import hwicode.schedule.calendar.application.DailyScheduleProviderService;
+import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
 import hwicode.schedule.calendar.presentation.daily_schedule.DailyScheduleController;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,7 @@ import java.time.LocalDate;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(DailyScheduleController.class)
 class DailyScheduleControllerTest {
@@ -32,7 +32,7 @@ class DailyScheduleControllerTest {
         LocalDate date = LocalDate.of(2023, 8, 23);
         Long dailyScheduleId = 1L;
 
-        given(dailyScheduleProviderService.provideDailyScheduleId(any()))
+        given(dailyScheduleProviderService.provideDailyScheduleId(any(), any()))
                 .willReturn(dailyScheduleId);
 
         // when
@@ -42,6 +42,24 @@ class DailyScheduleControllerTest {
         // then
         perform.andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/dailyschedule/daily-todo-lists/" + dailyScheduleId));
+    }
+
+    @Test
+    void 날짜로_계획표의_조회를_요청할_때_계획표를_생성하는_경우_당일이_아니라면_에러가_발생한다() throws Exception {
+        // given
+        LocalDate date = LocalDate.of(2023, 8, 23);
+
+        DailyScheduleDateException dailyScheduleDateException = new DailyScheduleDateException();
+        given(dailyScheduleProviderService.provideDailyScheduleId(any(), any()))
+                .willThrow(dailyScheduleDateException);
+
+        // when
+        ResultActions perform = mockMvc.perform(get("/daily-todo-lists")
+                .queryParam("date", String.valueOf(date)));
+
+        // then
+        perform.andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.message").value(dailyScheduleDateException.getMessage()));
     }
 
 }
