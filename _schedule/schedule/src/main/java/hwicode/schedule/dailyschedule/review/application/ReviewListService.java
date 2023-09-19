@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.review.application;
 
-import hwicode.schedule.dailyschedule.review.domain.ReviewDate;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDateTask;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
@@ -12,14 +11,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
 public class ReviewListService {
-
-    private final ReviewDateProviderService reviewDateProviderService;
 
     private final ReviewListRepository reviewListRepository;
     private final ReviewDateTaskRepository reviewDateTaskRepository;
@@ -30,8 +28,8 @@ public class ReviewListService {
         ReviewList reviewList = reviewListRepository.findById(reviewListId)
                 .orElseThrow(ReviewListNotFoundException::new);
 
-        ReviewDate reviewDate = reviewDateProviderService.provideReviewDate(reviewList.getToday());
-        List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllReviewDateTaskBy(reviewDate.getId());
+        LocalDate date = reviewList.getToday();
+        List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(date);
 
         List<ReviewTask> clonedReviewTasks = reviewDateTasks.stream()
                 .map(ReviewDateTask::getReviewTask)
