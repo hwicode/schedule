@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -38,10 +39,11 @@ class CalendarQueryEndToEndTest {
     @Test
     void 캘린더_조회_요청() {
         //given
-        YearMonth noneExistYearMonth = YearMonth.of(2023, 8);
+        YearMonth date = YearMonth.of(2023, 8);
+        calendarRepository.save(new Calendar(date));
 
         RequestSpecification requestSpecification = given().port(port)
-                .param("yearMonth", String.valueOf(noneExistYearMonth));
+                .param("yearMonth", String.valueOf(date));
 
         //when
         Response response = requestSpecification.when()
