@@ -1,24 +1,30 @@
 package hwicode.schedule.calendar.presentation.daily_schedule;
 
 import hwicode.schedule.calendar.application.DailyScheduleProviderService;
+import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
+import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class DailyScheduleController {
 
     private final DailyScheduleProviderService dailyScheduleProviderService;
 
-    @GetMapping("/daily-todo-lists")
-    public String provideDailyScheduleAndRedirect(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+    @PostMapping("/daily-todo-lists")
+    @ResponseStatus(HttpStatus.CREATED)
+    public DailyScheduleSaveResponse saveDailySchedule(@RequestBody @Valid DailyScheduleSaveRequest dailyScheduleSaveRequest) {
+        LocalDate date = dailyScheduleSaveRequest.getDate();
         Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date, LocalDate.now());
-        return "redirect:/dailyschedule/daily-todo-lists/" + dailyScheduleId;
+        return new DailyScheduleSaveResponse(dailyScheduleId, date);
     }
 
 }
