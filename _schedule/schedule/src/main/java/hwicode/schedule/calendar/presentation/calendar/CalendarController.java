@@ -5,6 +5,8 @@ import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAdd
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.CalendarSaveRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.CalendarSaveResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
+import java.time.YearMonth;
 
 @RequiredArgsConstructor
 @Validated
@@ -23,6 +26,14 @@ import javax.validation.constraints.Positive;
 public class CalendarController {
 
     private final CalendarService calendarService;
+
+    @PostMapping("/calendars")
+    @ResponseStatus(value =HttpStatus.CREATED)
+    public CalendarSaveResponse saveCalendar(@RequestBody @Valid CalendarSaveRequest calendarSaveRequest) {
+        YearMonth yearMonth = calendarSaveRequest.getYearMonth();
+        Long calendarId = calendarService.saveCalendar(yearMonth);
+        return new CalendarSaveResponse(calendarId, yearMonth);
+    }
 
     @PostMapping("/calendars/goals")
     @ResponseStatus(value = HttpStatus.CREATED)

@@ -43,6 +43,15 @@ class CalendarServiceTest {
     }
 
     @Test
+    void 캘린더를_추가할_수_있다() {
+        // when
+        Long calendarId = calendarService.saveCalendar(YEAR_MONTH);
+
+        // then
+        assertThat(calendarRepository.existsById(calendarId)).isTrue();
+    }
+
+    @Test
     void 기간을_정하고_목표를_추가하면_기간만큼_목표가_캘린더에_추가된다() {
         // given
         List<YearMonth> yearMonths = List.of(

@@ -1,6 +1,5 @@
 package hwicode.schedule.calendar.presentation.calendar;
 
-import hwicode.schedule.calendar.application.CalendarProviderService;
 import hwicode.schedule.calendar.application.query.CalendarQueryService;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +15,11 @@ import java.time.YearMonth;
 @RestController
 public class CalendarQueryController {
 
-    private final CalendarProviderService calendarProviderService;
     private final CalendarQueryService calendarQueryService;
 
     @GetMapping("/calendars")
     @ResponseStatus(value = HttpStatus.OK)
     public CalendarQueryResponse getCalendarQueryResponse(@RequestParam YearMonth yearMonth) {
-        calendarProviderService.provideCalendar(yearMonth);
         return calendarQueryService.getCalendarQueryResponse(yearMonth);
     }
 

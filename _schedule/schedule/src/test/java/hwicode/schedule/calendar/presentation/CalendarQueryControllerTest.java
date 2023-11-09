@@ -3,7 +3,6 @@ package hwicode.schedule.calendar.presentation;
 import hwicode.schedule.calendar.application.CalendarProviderService;
 import hwicode.schedule.calendar.application.query.CalendarQueryService;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
-import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.exception.application.CalendarNotFoundException;
 import hwicode.schedule.calendar.presentation.calendar.CalendarQueryController;
 import org.junit.jupiter.api.Test;
@@ -29,9 +28,6 @@ class CalendarQueryControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    CalendarProviderService calendarProviderService;
-
-    @MockBean
     CalendarQueryService calendarQueryService;
 
     @Test
@@ -39,8 +35,6 @@ class CalendarQueryControllerTest {
         // given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(calendarProviderService.provideCalendar(any()))
-                .willReturn(new Calendar(yearMonth));
         given(calendarQueryService.getCalendarQueryResponse(any()))
                 .willReturn(CalendarQueryResponse.builder().build());
 
@@ -51,7 +45,6 @@ class CalendarQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(calendarProviderService).provideCalendar(any());
         verify(calendarQueryService).getCalendarQueryResponse(any());
     }
 
@@ -62,8 +55,6 @@ class CalendarQueryControllerTest {
 
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(calendarProviderService.provideCalendar(any()))
-                .willReturn(new Calendar(yearMonth));
         given(calendarQueryService.getCalendarQueryResponse(any()))
                 .willThrow(calendarNotFoundException);
 
@@ -75,7 +66,6 @@ class CalendarQueryControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(calendarNotFoundException.getMessage()));
 
-        verify(calendarProviderService).provideCalendar(any());
         verify(calendarQueryService).getCalendarQueryResponse(any());
     }
 

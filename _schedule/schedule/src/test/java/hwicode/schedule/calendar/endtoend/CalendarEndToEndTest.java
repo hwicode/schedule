@@ -10,6 +10,7 @@ import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.CalendarSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
 import io.restassured.http.ContentType;
@@ -57,6 +58,26 @@ class CalendarEndToEndTest {
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
+    }
+
+    @Test
+    void 캘린더_생성_요청() {
+        //given
+        CalendarSaveRequest calendarSaveRequest = new CalendarSaveRequest(YEAR_MONTH);
+
+        RequestSpecification requestSpecification = given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(calendarSaveRequest);
+
+        //when
+        Response response = requestSpecification.when()
+                .post("/calendars");
+
+        response.then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        assertThat(calendarRepository.findAll()).hasSize(1);
     }
 
     @Test

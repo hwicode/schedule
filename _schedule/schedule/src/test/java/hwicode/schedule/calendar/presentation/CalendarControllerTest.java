@@ -12,6 +12,8 @@ import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAdd
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyResponse;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.CalendarSaveRequest;
+import hwicode.schedule.calendar.presentation.calendar.dto.save.CalendarSaveResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
@@ -49,6 +51,29 @@ class CalendarControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Test
+    void 캘린더_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+        // given
+        CalendarSaveRequest calendarSaveRequest = new CalendarSaveRequest(YEAR_MONTH);
+        CalendarSaveResponse calendarSaveResponse = new CalendarSaveResponse(CALENDAR_ID, YEAR_MONTH);
+
+        given(calendarService.saveCalendar(any()))
+                .willReturn(CALENDAR_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(post("/calendars")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(calendarSaveRequest)));
+
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(calendarSaveResponse)
+                ));
+
+        verify(calendarService).saveCalendar(any());
+    }
 
     @Test
     void 목표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {

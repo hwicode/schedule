@@ -25,6 +25,12 @@ public class CalendarService {
     private final CalendarGoalSaveAllRepository calendarGoalSaveAllRepository;
 
     @Transactional
+    public Long saveCalendar(YearMonth yearMonth) {
+        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+        return calendar.getId();
+    }
+
+    @Transactional
     public Long saveGoal(String name, List<YearMonth> yearMonths) {
         Goal goal = new Goal(name);
         goalRepository.save(goal);
