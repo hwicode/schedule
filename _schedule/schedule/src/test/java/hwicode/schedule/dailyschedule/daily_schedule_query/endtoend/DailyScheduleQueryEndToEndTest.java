@@ -41,7 +41,7 @@ class DailyScheduleQueryEndToEndTest {
     }
 
     @Test
-    void daily_schedule_요약본_조회_요청() {
+    void daily_schedule_한_달_치_요약본_조회_요청() {
         //given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
@@ -50,7 +50,7 @@ class DailyScheduleQueryEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .get("/dailyschedule/daily-todo-lists");
+                .get("/dailyschedule/calendar/daily-todo-lists");
 
         //then
         response.then()

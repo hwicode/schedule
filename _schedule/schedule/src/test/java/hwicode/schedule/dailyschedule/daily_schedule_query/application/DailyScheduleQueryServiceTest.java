@@ -58,7 +58,7 @@ class DailyScheduleQueryServiceTest {
 
     @MethodSource("providePlusDays")
     @ParameterizedTest
-    void daily_schedule_테이블에서_daily_schedule의_간략한_정보를_조회할_수_있다(List<Integer> plusDays) {
+    void daily_schedule_테이블에서_daily_schedule의_한_달_치_간략한_정보를_조회할_수_있다(List<Integer> plusDays) {
         // given
         LocalDate date = LocalDate.of(2023, 8, 1);
 
@@ -72,7 +72,7 @@ class DailyScheduleQueryServiceTest {
         }
 
         // when
-        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(YearMonth.from(date));
+        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(YearMonth.from(date));
 
         // then
         assertThat(result).isEqualTo(expectedResponses);

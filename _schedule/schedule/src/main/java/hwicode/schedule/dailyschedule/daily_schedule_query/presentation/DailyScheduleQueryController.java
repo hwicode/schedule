@@ -19,10 +19,10 @@ public class DailyScheduleQueryController {
 
     private final DailyScheduleQueryService dailyScheduleQueryService;
 
-    @GetMapping("/dailyschedule/daily-todo-lists")
+    @GetMapping("/dailyschedule/calendar/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
-    public List<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponses(@RequestParam YearMonth yearMonth) {
-        return dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(yearMonth);
+    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(@RequestParam YearMonth yearMonth) {
+        return dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(yearMonth);
     }
 
     @GetMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}")

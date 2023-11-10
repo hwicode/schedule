@@ -28,9 +28,9 @@ public class DailyScheduleQueryService {
     private final SubTaskQueryRepository subTaskQueryRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponses(YearMonth yearMonth) {
+    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(YearMonth yearMonth) {
         YearMonth nextMonth = yearMonth.plusMonths(1);
-        return dailyScheduleQueryRepository.findDailyScheduleSummaryQueryResponseBy(yearMonth, nextMonth);
+        return dailyScheduleQueryRepository.findMonthlyDailyScheduleQueryResponseBy(yearMonth, nextMonth);
     }
 
     @Transactional(readOnly = true)

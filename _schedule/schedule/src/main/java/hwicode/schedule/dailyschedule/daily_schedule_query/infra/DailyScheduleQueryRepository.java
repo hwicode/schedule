@@ -19,16 +19,16 @@ public class DailyScheduleQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<DailyScheduleSummaryQueryResponse> findDailyScheduleSummaryQueryResponseBy(YearMonth start, YearMonth end) {
+    public List<DailyScheduleSummaryQueryResponse> findMonthlyDailyScheduleQueryResponseBy(YearMonth start, YearMonth end) {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, emoji, main_tag_name "
                 + "FROM daily_schedule d "
                 + "WHERE d.today >= ? AND d.today < ? "
                 + "ORDER BY d.today ASC";
-        return jdbcTemplate.query(sql, getDailyScheduleSummaryQueryResponseRowMapper(), start.atDay(1), end.atDay(1));
+        return jdbcTemplate.query(sql, getMonthlyDailyScheduleQueryResponseRowMapper(), start.atDay(1), end.atDay(1));
     }
 
-    private RowMapper<DailyScheduleSummaryQueryResponse> getDailyScheduleSummaryQueryResponseRowMapper() {
+    private RowMapper<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponseRowMapper() {
         return (rs, rowNum) -> DailyScheduleSummaryQueryResponse.builder()
                 .id(rs.getLong("id"))
                 .yearAndMonthAndDay(rs.getTimestamp("today").toLocalDateTime().toLocalDate())

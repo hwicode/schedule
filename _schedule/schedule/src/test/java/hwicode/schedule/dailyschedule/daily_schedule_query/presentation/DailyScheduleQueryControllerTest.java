@@ -29,21 +29,21 @@ class DailyScheduleQueryControllerTest {
     DailyScheduleQueryService dailyScheduleQueryService;
 
     @Test
-    void daily_schedule_요약본의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
+    void daily_schedule_한_달_치_요약본의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(dailyScheduleQueryService.getDailyScheduleSummaryQueryResponses(any()))
+        given(dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(any()))
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
+        ResultActions perform = mockMvc.perform(get("/dailyschedule/calendar/daily-todo-lists")
                 .queryParam("yearMonth", String.valueOf(yearMonth)));
 
         // then
         perform.andExpect(status().isOk());
 
-        verify(dailyScheduleQueryService).getDailyScheduleSummaryQueryResponses(any());
+        verify(dailyScheduleQueryService).getMonthlyDailyScheduleQueryResponses(any());
     }
 
     @Test
