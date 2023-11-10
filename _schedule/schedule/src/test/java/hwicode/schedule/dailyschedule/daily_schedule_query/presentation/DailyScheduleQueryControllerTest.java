@@ -9,6 +9,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
@@ -49,11 +50,13 @@ class DailyScheduleQueryControllerTest {
     @Test
     void daily_schedule_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
+        LocalDate date = LocalDate.of(2023, 8, 1);
         given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any()))
                 .willReturn(null);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists/{dailyToDoListId}", 1));
+        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
+                .queryParam("date", String.valueOf(date)));
 
         // then
         perform.andExpect(status().isOk());
@@ -64,13 +67,15 @@ class DailyScheduleQueryControllerTest {
     @Test
     void daily_schedule_조회를_요청할_때_daily_schedule가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
+        LocalDate date = LocalDate.of(2023, 8, 1);
         DailyScheduleNotExistException dailyScheduleNotExistException = new DailyScheduleNotExistException();
 
         given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any()))
                 .willThrow(dailyScheduleNotExistException);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists/{dailyToDoListId}", 1));
+        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
+                .queryParam("date", String.valueOf(date)));
 
         // then
         perform.andExpect(status().isNotFound())

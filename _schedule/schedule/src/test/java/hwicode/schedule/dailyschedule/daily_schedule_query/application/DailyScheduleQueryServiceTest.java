@@ -112,7 +112,8 @@ class DailyScheduleQueryServiceTest {
     @ParameterizedTest
     void daily_schedule과_task_그리고_sub_task_테이블에서_직접_조회할_수_있다(int numberOfTask, int numberOfSubTask) {
         // given
-        DailyScheduleQueryResponse dailyScheduleQueryResponse = saveDailySchedule(LocalDate.of(2023, 8, 1));
+        LocalDate date = LocalDate.of(2023, 8, 1);
+        DailyScheduleQueryResponse dailyScheduleQueryResponse = saveDailySchedule(date);
 
         List<TaskQueryResponse> taskQueryResponses = new ArrayList<>();
         for (int i = 0; i < numberOfTask; i++) {
@@ -124,7 +125,7 @@ class DailyScheduleQueryServiceTest {
         dailyScheduleQueryResponse.setTaskQueryResponses(taskQueryResponses);
 
         // when
-        DailyScheduleQueryResponse result = dailyScheduleQueryService.getDailyScheduleQueryResponse(dailyScheduleQueryResponse.getId());
+        DailyScheduleQueryResponse result = dailyScheduleQueryService.getDailyScheduleQueryResponse(date);
 
         // then
         assertThat(dailyScheduleQueryResponse).isEqualTo(result);
@@ -208,10 +209,10 @@ class DailyScheduleQueryServiceTest {
     @Test
     void daily_schedule_테이블에서_daily_schedule을_조회할_때_존재하지_않으면_에러가_발생한다() {
         // given
-        Long noneExistId = 1L;
+        LocalDate noneExistDate = LocalDate.of(2023, 8, 1);
 
         // when then
-        assertThatThrownBy(() -> dailyScheduleQueryService.getDailyScheduleQueryResponse(noneExistId))
+        assertThatThrownBy(() -> dailyScheduleQueryService.getDailyScheduleQueryResponse(noneExistDate))
                 .isInstanceOf(DailyScheduleNotExistException.class);
     }
 

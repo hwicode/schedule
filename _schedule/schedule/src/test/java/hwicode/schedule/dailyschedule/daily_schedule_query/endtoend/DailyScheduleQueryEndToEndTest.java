@@ -60,13 +60,15 @@ class DailyScheduleQueryEndToEndTest {
     @Test
     void daily_schedule_조회_요청() {
         // given
-        Long dailyToDoListId = saveDailySchedule(LocalDate.of(2023, 8, 23));
+        LocalDate date = LocalDate.of(2023, 8, 23);
+        saveDailySchedule(date);
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .param("date", String.valueOf(date));
 
         // when
         Response response = requestSpecification.when()
-                .get("/dailyschedule/daily-todo-lists/{dailyToDoListId}", dailyToDoListId);
+                .get("/dailyschedule/daily-todo-lists");
 
         // then
         response.then()

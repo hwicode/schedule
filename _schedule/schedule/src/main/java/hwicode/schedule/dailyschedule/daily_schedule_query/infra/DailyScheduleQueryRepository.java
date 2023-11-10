@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Optional;
@@ -39,13 +40,13 @@ public class DailyScheduleQueryRepository {
                 .build();
     }
 
-    public Optional<DailyScheduleQueryResponse> findDailyScheduleQueryResponseBy(Long dailyScheduleId) {
+    public Optional<DailyScheduleQueryResponse> findDailyScheduleQueryResponseBy(LocalDate date) {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, total_learning_time, emoji, main_tag_name, review "
                 + "FROM daily_schedule d "
-                + "WHERE d.id = ?";
+                + "WHERE d.today = ?";
         try {
-            DailyScheduleQueryResponse dailyScheduleQueryResponse = jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), dailyScheduleId);
+            DailyScheduleQueryResponse dailyScheduleQueryResponse = jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), date);
             return Optional.ofNullable(dailyScheduleQueryResponse);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();

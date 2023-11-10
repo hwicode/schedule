@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
@@ -34,10 +35,10 @@ public class DailyScheduleQueryService {
     }
 
     @Transactional(readOnly = true)
-    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(Long dailyScheduleId) {
-        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(dailyScheduleId)
+    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(LocalDate date) {
+        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(date)
                 .orElseThrow(DailyScheduleNotExistException::new);
-        List<TaskQueryResponse> taskQueryResponses = taskQueryRepository.findTaskQueryResponsesBy(dailyScheduleId);
+        List<TaskQueryResponse> taskQueryResponses = taskQueryRepository.findTaskQueryResponsesBy(dailyScheduleQueryResponse.getId());
 
         List<Long> taskIds = getTaskIds(taskQueryResponses);
         Map<Long, List<SubTaskQueryResponse>> subTaskQueryResponseMap = subTaskQueryRepository.findSubTaskQueryResponsesBy(taskIds)
