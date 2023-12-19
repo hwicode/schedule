@@ -144,12 +144,9 @@ class TimeTableEndToEndTest {
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         timeTableRepository.save(timeTable);
 
-        LearningTimeDeleteRequest learningTimeDeleteRequest = new LearningTimeDeleteRequest(START_TIME);
-
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .contentType(ContentType.JSON)
-                .body(learningTimeDeleteRequest);
+                .queryParam("startTime", START_TIME);
 
         // when
         Response response = requestSpecification.when()

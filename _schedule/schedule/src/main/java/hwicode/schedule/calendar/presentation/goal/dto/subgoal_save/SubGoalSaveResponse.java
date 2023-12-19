@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SubGoalSaveResponse {
 
-    private Long goalId;
+    private Long subGoalId;
     private String subGoalName;
 }

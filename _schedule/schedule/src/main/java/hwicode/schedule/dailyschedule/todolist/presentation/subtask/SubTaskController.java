@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
@@ -33,7 +34,9 @@ public class SubTaskController {
     public void deleteSubTask(@PathVariable @Positive Long dailyToDoListId,
                               @PathVariable @Positive Long taskId,
                               @PathVariable @Positive Long subTaskId,
-                              @RequestBody @Valid SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskSaveAndDeleteService.delete(subTaskDeleteRequest.getSubTaskName(), subTaskDeleteRequest);
+                              @RequestParam @NotBlank String taskName,
+                              @RequestParam @NotBlank String subTaskName) {
+        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoListId, taskName, subTaskId, subTaskName);
+        subTaskSaveAndDeleteService.delete(subTaskName, subTaskDeleteRequest);
     }
 }

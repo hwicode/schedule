@@ -6,10 +6,10 @@ import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.*;
+import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
@@ -25,7 +25,7 @@ import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -88,12 +88,9 @@ class TaskEndToEndTest {
                 new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyToDoList.getId(), taskId, TASK_NAME);
-
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .contentType(ContentType.JSON)
-                .body(taskDeleteRequest);
+                .queryParam("taskName", TASK_NAME);
 
         //when
         Response response = requestSpecification.when()

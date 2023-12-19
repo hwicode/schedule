@@ -63,15 +63,13 @@ class SubTaskControllerTest {
 
     @Test
     void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
-
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
                         DAILY_TO_DO_LIST_ID, TASK_ID, SUB_TASK_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(subTaskDeleteRequest)));
+                        .param("taskName", TASK_NAME)
+                        .param("subTaskName", SUB_TASK_NAME)
+        );
 
         // then
         perform.andExpect(status().isNoContent());
@@ -115,10 +113,9 @@ class SubTaskControllerTest {
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
                         DAILY_TO_DO_LIST_ID, TASK_ID, SUB_TASK_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new SubTaskDeleteRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME)
-                        )));
+                        .param("taskName", TASK_NAME)
+                        .param("subTaskName", SUB_TASK_NAME)
+        );
 
         // then
         perform.andExpect(status().isNotFound())

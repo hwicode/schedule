@@ -9,7 +9,6 @@ import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import hwicode.schedule.calendar.presentation.goal.GoalController;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveRequest;
@@ -93,13 +92,9 @@ class GoalControllerTest {
 
     @Test
     void 서브_목표_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // given
-        SubGoalDeleteRequest subGoalDeleteRequest = new SubGoalDeleteRequest(SUB_GOAL_NAME);
-
         // when
-        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals/{subGoalId}", GOAL_ID, SUB_GOAL_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subGoalDeleteRequest)));
+        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals", GOAL_ID)
+                .param("subGoalName",SUB_GOAL_NAME));
 
         // then
         perform.andExpect(status().isNoContent());
@@ -269,12 +264,8 @@ class GoalControllerTest {
                 .willThrow(subGoalNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(
-                delete("/goals/{goalId}/sub-goals/{subGoalId}", GOAL_ID, SUB_GOAL_ID)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(
-                                new SubGoalDeleteRequest(SUB_GOAL_NAME)
-                        )));
+        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals", GOAL_ID)
+                .param("subGoalName",SUB_GOAL_NAME));
 
         // then
         perform.andExpect(status().isNotFound())

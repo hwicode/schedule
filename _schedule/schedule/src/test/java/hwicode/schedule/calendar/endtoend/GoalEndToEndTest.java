@@ -8,10 +8,9 @@ import hwicode.schedule.calendar.domain.SubGoal;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
-import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyRequest;
@@ -112,16 +111,13 @@ class GoalEndToEndTest {
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goalRepository.save(goal);
 
-        SubGoalDeleteRequest subGoalDeleteRequest = new SubGoalDeleteRequest(SUB_GOAL_NAME);
-
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .contentType(ContentType.JSON)
-                .body(subGoalDeleteRequest);
+                .queryParam("subGoalName", SUB_GOAL_NAME);
 
         // when
         Response response = requestSpecification.when()
-                .delete("/goals/{goalId}/sub-goals/{subGoalId}", goal.getId(), subGoal.getId());
+                .delete("/goals/{goalId}/sub-goals", goal.getId());
 
         // then
         response.then()

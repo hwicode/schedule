@@ -4,7 +4,6 @@ import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;
-import hwicode.schedule.calendar.presentation.goal.dto.subgoal_delete.SubGoalDeleteRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_name_modify.SubGoalNameModifyResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveRequest;
@@ -17,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
@@ -46,12 +46,11 @@ public class GoalController {
         return new SubGoalNameModifyResponse(goalId, changedSubGoalName);
     }
 
-    @DeleteMapping("/goals/{goalId}/sub-goals/{subGoalId}")
+    @DeleteMapping("/goals/{goalId}/sub-goals")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubGoal(@PathVariable @Positive Long goalId,
-                              @PathVariable @Positive Long subGoalId,
-                              @RequestBody @Valid SubGoalDeleteRequest subGoalDeleteRequest) {
-        goalAggregateService.deleteSubGoal(goalId, subGoalDeleteRequest.getSubGoalName());
+                              @RequestParam @NotBlank String subGoalName) {
+        goalAggregateService.deleteSubGoal(goalId, subGoalName);
     }
 
     @PatchMapping("/goals/{goalId}/sub-goals/{subGoalId}/status")

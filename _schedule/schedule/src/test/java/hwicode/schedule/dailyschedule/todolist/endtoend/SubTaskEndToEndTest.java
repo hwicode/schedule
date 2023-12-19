@@ -2,15 +2,14 @@ package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
-import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.SubTaskRepository;
-import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
@@ -97,12 +96,10 @@ class SubTaskEndToEndTest {
                 new SubTaskSaveRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_NAME)
         );
 
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(dailyToDoList.getId(), TASK_NAME, SUB_TASK_ID, SUB_TASK_NAME);
-
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .contentType(ContentType.JSON)
-                .body(subTaskDeleteRequest);
+                .queryParam("taskName", TASK_NAME)
+                .queryParam("subTaskName", SUB_TASK_NAME);
 
         //when
         Response response = requestSpecification.when()

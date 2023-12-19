@@ -1,7 +1,6 @@
 package hwicode.schedule.timetable.presentation.timetable;
 
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
-import hwicode.schedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -9,11 +8,13 @@ import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSa
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 
@@ -60,8 +61,8 @@ public class TimeTableController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteLearningTime(@PathVariable @Positive Long timeTableId,
                                    @PathVariable @Positive Long learningTimeId,
-                                   @RequestBody @Valid LearningTimeDeleteRequest learningTimeDeleteRequest) {
-        timeTableAggregateService.deleteLearningTime(timeTableId, learningTimeDeleteRequest.getStartTime());
+                                   @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @NotNull LocalDateTime startTime) {
+        timeTableAggregateService.deleteLearningTime(timeTableId, startTime);
     }
 
 }

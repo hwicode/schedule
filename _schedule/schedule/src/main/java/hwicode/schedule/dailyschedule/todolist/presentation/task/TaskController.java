@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
@@ -35,7 +36,8 @@ public class TaskController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteTask(@PathVariable @Positive Long dailyToDoListId,
                            @PathVariable @Positive Long taskId,
-                           @RequestBody @Valid TaskDeleteRequest taskDeleteRequest) {
+                           @RequestParam @NotBlank String taskName) {
+        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyToDoListId, taskId, taskName);
         taskSaveAndDeleteService.delete(taskDeleteRequest.getTaskName(), taskDeleteRequest);
     }
 
