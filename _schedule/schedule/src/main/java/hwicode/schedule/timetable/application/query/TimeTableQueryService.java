@@ -30,7 +30,7 @@ public class TimeTableQueryService {
 
     @Transactional(readOnly = true)
     public List<LearningTimeQueryResponse> getLearningTimeQueryResponses(LocalDate date) {
-        return timeTableRepository.findSubGoalQueryResponsesBy(date);
+        return timeTableRepository.findLearningTimeQueryResponsesBy(date);
     }
 
     @Transactional(readOnly = true)

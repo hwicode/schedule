@@ -21,8 +21,8 @@ public interface TimeTableRepository extends JpaRepository<TimeTable, Long> {
     @Query("SELECT "
             + "new hwicode.schedule.timetable.application.query.dto.LearningTimeQueryResponse(l.id, l.startTime, l.endTime, l.subject, l.subjectOfTask.id, l.subjectOfSubTask.id) "
             + "FROM TimeTable t "
-            + "LEFT JOIN t.learningTimes l "
+            + "Inner JOIN t.learningTimes l "
             + "WHERE t.validator.today = :today "
             + "ORDER BY l.id ASC")
-    List<LearningTimeQueryResponse> findSubGoalQueryResponsesBy(@Param("today") LocalDate date);
+    List<LearningTimeQueryResponse> findLearningTimeQueryResponsesBy(@Param("today") LocalDate date);
 }
