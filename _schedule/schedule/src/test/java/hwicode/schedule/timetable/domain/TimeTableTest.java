@@ -88,18 +88,39 @@ class TimeTableTest {
     }
 
     @Test
-    void 학습_시간의_끝나는_시간을_변경할_수_있다() {
+    void 학습_시간의_끝나는_시간을_변경할_때_시작_시간이_다른_학습_시간에_포함되면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
         TimeTable timeTable = new TimeTable(startTimeDate);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        LocalDateTime startTime = TimeTableDataHelper.START_TIME.plusMinutes(15);
+        timeTable.createLearningTime(startTime);
 
-        // when
-        LocalDateTime changedEndTime = timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.END_TIME);
+        timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
 
-        // then
-        assertThat(changedEndTime).isEqualTo(TimeTableDataHelper.END_TIME);
+        // when then
+        LocalDateTime endTime = TimeTableDataHelper.START_TIME.plusMinutes(40);
+        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(startTime, endTime))
+                .isInstanceOf(ContainOtherTimeException.class);
+    }
+
+    @Test
+    void 학습_시간의_끝나는_시간을_변경할_때_학습_시간이_다른_학습_시간을_포함하면_에러가_발생한다() {
+        // given
+        LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
+
+        timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        LocalDateTime startTime = TimeTableDataHelper.START_TIME.plusMinutes(15);
+        timeTable.createLearningTime(startTime);
+
+        timeTable.changeLearningTimeEndTime(startTime, TimeTableDataHelper.START_TIME.plusMinutes(30));
+
+        // when then
+        LocalDateTime endTime = TimeTableDataHelper.START_TIME.plusMinutes(40);
+        assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, endTime))
+                .isInstanceOf(ContainOtherTimeException.class);
     }
 
     @Test
@@ -126,6 +147,21 @@ class TimeTableTest {
         // when then
         assertThatThrownBy(() -> timeTable.createLearningTime(afterStartTime))
                 .isInstanceOf(InvalidDateValidException.class);
+    }
+
+    @Test
+    void 학습_시간의_끝나는_시간을_변경할_수_있다() {
+        // given
+        LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
+        TimeTable timeTable = new TimeTable(startTimeDate);
+
+        timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+
+        // when
+        LocalDateTime changedEndTime = timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.END_TIME);
+
+        // then
+        assertThat(changedEndTime).isEqualTo(TimeTableDataHelper.END_TIME);
     }
 
     @Test

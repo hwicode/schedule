@@ -77,11 +77,25 @@ public class LearningTime {
         return this.startTime.equals(startTime);
     }
 
+    boolean isSameEndTime(LocalDateTime endTime) {
+        if (this.endTime == null) {
+            return false;
+        }
+        return this.endTime.equals(endTime);
+    }
+
     boolean isContain(LocalDateTime time) {
         if (endTime == null) {
             return false;
         }
         return startTime.isBefore(time) && endTime.isAfter(time);
+    }
+
+    boolean isContained(LocalDateTime newStartTime, LocalDateTime newEndTime) {
+        if (endTime == null) {
+            return false;
+        }
+        return startTime.isAfter(newStartTime) && endTime.isBefore(newEndTime);
     }
 
     LocalDateTime changeStartTime(LocalDateTime newStartTime) {

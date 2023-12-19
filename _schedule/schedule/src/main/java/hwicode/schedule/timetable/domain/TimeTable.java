@@ -53,7 +53,7 @@ public class TimeTable {
     }
 
     public LocalDateTime changeLearningTimeEndTime(LocalDateTime startTime, LocalDateTime endTime) {
-        validator.validateEndTime(learningTimes, endTime);
+        validator.validateEndTime(learningTimes, startTime, endTime);
         LocalDateTime result = findLearningTimeBy(startTime).changeEndTime(endTime);
         calculateTotalLearningTime();
         return result;

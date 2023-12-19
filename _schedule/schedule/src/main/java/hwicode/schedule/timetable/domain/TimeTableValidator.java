@@ -1,6 +1,7 @@
 package hwicode.schedule.timetable.domain;
 
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.ContainOtherTimeException;
+import hwicode.schedule.timetable.exception.domain.timetablevalidator.EndTimeDuplicateException;
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.InvalidDateValidException;
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import lombok.AccessLevel;
@@ -23,13 +24,16 @@ public class TimeTableValidator {
 
     public void validateStartTime(List<LearningTime> learningTimes, LocalDateTime startTime) {
         validateDate(startTime);
-        validateBetweenTime(learningTimes, startTime);
+        validateBetweenTime(learningTimes, startTime, startTime);
         validateSameStartTime(learningTimes, startTime);
     }
 
-    public void validateEndTime(List<LearningTime> learningTimes, LocalDateTime endTime) {
+    public void validateEndTime(List<LearningTime> learningTimes, LocalDateTime startTime, LocalDateTime endTime) {
         validateDate(endTime);
-        validateBetweenTime(learningTimes, endTime);
+        validateBetweenTime(learningTimes, startTime, startTime);
+        validateBetweenTime(learningTimes, startTime, endTime);
+        validateContainedLearningTime(learningTimes, startTime, endTime);
+        validateSameEndTime(learningTimes, endTime);
     }
 
     private void validateDate(LocalDateTime time) {
@@ -42,9 +46,19 @@ public class TimeTableValidator {
         throw new InvalidDateValidException();
     }
 
-    private void validateBetweenTime(List<LearningTime> learningTimes, LocalDateTime time) {
+    private void validateBetweenTime(List<LearningTime> learningTimes, LocalDateTime startTime, LocalDateTime time) {
         boolean duplication = learningTimes.stream()
+                .filter(learningTime -> !learningTime.isSame(startTime))
                 .anyMatch(learningTime -> learningTime.isContain(time));
+
+        if (duplication) {
+            throw new ContainOtherTimeException();
+        }
+    }
+
+    private void validateContainedLearningTime(List<LearningTime> learningTimes, LocalDateTime startTime, LocalDateTime endTime) {
+        boolean duplication = learningTimes.stream()
+                .anyMatch(learningTime -> learningTime.isContained(startTime, endTime));
 
         if (duplication) {
             throw new ContainOtherTimeException();
@@ -57,6 +71,15 @@ public class TimeTableValidator {
 
         if (duplication) {
             throw new StartTimeDuplicateException();
+        }
+    }
+
+    private void validateSameEndTime(List<LearningTime> learningTimes, LocalDateTime endTime) {
+        boolean duplication = learningTimes.stream()
+                .anyMatch(learningTime -> learningTime.isSameEndTime(endTime));
+
+        if (duplication) {
+            throw new EndTimeDuplicateException();
         }
     }
 
