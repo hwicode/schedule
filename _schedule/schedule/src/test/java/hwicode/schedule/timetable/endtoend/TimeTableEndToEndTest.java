@@ -10,7 +10,6 @@ import hwicode.schedule.timetable.exception.domain.timetablevalidator.StartTimeD
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
-import hwicode.schedule.timetable.presentation.timetable.dto.delete.LearningTimeDeleteRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
@@ -146,7 +145,7 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("startTime", START_TIME);
+                .queryParam("startTime", String.valueOf(START_TIME));
 
         // when
         Response response = requestSpecification.when()
