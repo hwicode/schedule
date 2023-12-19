@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.infra.jpa_repository;
 
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
+import hwicode.schedule.tag.application.query.dto.MemoTagQueryResponse;
 import hwicode.schedule.tag.domain.MemoTag;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -32,4 +33,12 @@ public interface MemoTagRepository extends JpaRepository<MemoTag, Long> {
     List<MemoSearchQueryResponse> getMemoSearchQueryResponseNextPage(@Param("tagId") Long tagId,
                                                                      @Param("memoId") Long memoId,
                                                                      Pageable pageable);
+
+    @Query("SELECT "
+            + "new hwicode.schedule.tag.application.query.dto.MemoTagQueryResponse(mt.tag.id, mt.tag.name, m.id) "
+            + "FROM MemoTag mt "
+            + "INNER JOIN mt.memo m "
+            + "WHERE m.id IN (:memoIds) "
+            + "ORDER BY m.id ASC")
+    List<MemoTagQueryResponse> findMemoTagsQueryResponsesBy(@Param("memoIds") List<Long> memoIds);
 }
