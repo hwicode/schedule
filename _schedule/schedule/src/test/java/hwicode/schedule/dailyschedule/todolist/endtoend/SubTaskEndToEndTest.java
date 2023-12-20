@@ -1,17 +1,17 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.SubTaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.SubTaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -41,7 +41,7 @@ class SubTaskEndToEndTest {
     DailyToDoListRepository dailyToDoListRepository;
 
     @Autowired
-    TaskSaveAndDeleteService taskSaveAndDeleteService;
+    TaskCheckerSubService taskCheckerSubService;
 
     @Autowired
     SubTaskSaveAndDeleteService subTaskSaveAndDeleteService;
@@ -60,7 +60,7 @@ class SubTaskEndToEndTest {
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
-        taskSaveAndDeleteService.save(
+        taskCheckerSubService.saveTaskChecker(
                 new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
@@ -88,7 +88,7 @@ class SubTaskEndToEndTest {
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
         dailyToDoListRepository.save(dailyToDoList);
 
-        taskSaveAndDeleteService.save(
+        taskCheckerSubService.saveTaskChecker(
                 new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 

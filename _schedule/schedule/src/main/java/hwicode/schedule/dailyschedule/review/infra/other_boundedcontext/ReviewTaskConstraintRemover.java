@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.review.infra.other_boundedcontext;
 
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
-import hwicode.schedule.dailyschedule.todolist.infra.service_impl.TaskConstraintRemover;
+import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.TaskConstraintRemover;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

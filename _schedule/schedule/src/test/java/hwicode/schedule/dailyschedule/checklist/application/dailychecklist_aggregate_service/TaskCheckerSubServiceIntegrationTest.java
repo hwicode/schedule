@@ -1,16 +1,20 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
-import hwicode.schedule.dailyschedule.shared_domain.*;
-import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.difficulty_modify.TaskDifficultyModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.name_modify.TaskCheckerNameModifyRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyRequest;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Importance;
+import hwicode.schedule.dailyschedule.shared_domain.Priority;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,14 +71,17 @@ class TaskCheckerSubServiceIntegrationTest {
     @Test
     void 체크리스트에_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        TaskChecker taskChecker2 = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
+
         dailyChecklistRepository.save(dailyChecklist);
 
         // when
-        taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), TASK_CHECKER_NAME2);
+        taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2);
 
         // then
-        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), TASK_CHECKER_NAME2))
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
     }
 

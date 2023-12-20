@@ -17,6 +17,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 
 @RequiredArgsConstructor
@@ -34,14 +35,13 @@ public class TaskCheckerController {
         return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
     }
 
-//    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")
-//    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-//    public void deleteTask(@PathVariable @Positive Long dailyToDoListId,
-//                           @PathVariable @Positive Long taskId,
-//                           @RequestParam @NotBlank String taskName) {
-//        TaskDeleteRequest taskDeleteRequest = new TaskDeleteRequest(dailyToDoListId, taskId, taskName);
-//        taskCheckerSubService.deleteTaskChecker(taskDeleteRequest.getTaskName(), taskDeleteRequest);
-//    }
+    @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void deleteTask(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
+                           @PathVariable @Positive Long taskId,
+                           @RequestParam("taskName") @NotBlank String taskCheckerName) {
+        taskCheckerSubService.deleteTaskChecker(dailyChecklistId, taskId, taskCheckerName);
+    }
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status")
     @ResponseStatus(value = HttpStatus.OK)

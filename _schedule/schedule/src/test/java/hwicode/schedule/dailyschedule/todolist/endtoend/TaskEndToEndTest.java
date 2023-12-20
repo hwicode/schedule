@@ -1,17 +1,14 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -41,9 +38,6 @@ class TaskEndToEndTest {
     DailyToDoListRepository dailyToDoListRepository;
 
     @Autowired
-    TaskSaveAndDeleteService taskSaveAndDeleteService;
-
-    @Autowired
     TaskRepository taskRepository;
 
     @BeforeEach
@@ -52,39 +46,12 @@ class TaskEndToEndTest {
     }
 
     @Test
-    void 과제_삭제_요청() {
-        //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
-        dailyToDoListRepository.save(dailyToDoList);
-
-        Long taskId = taskSaveAndDeleteService.save(
-                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
-        );
-
-        RequestSpecification requestSpecification = given()
-                .port(port)
-                .queryParam("taskName", TASK_NAME);
-
-        //when
-        Response response = requestSpecification.when()
-                .delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", dailyToDoList.getId(), taskId);
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.NO_CONTENT.value());
-
-        assertThat(taskRepository.existsById(taskId)).isFalse();
-    }
-
-    @Test
     void 과제_정보_변경_요청() {
         //given
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+        Task task = new Task(dailyToDoList, TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
-
-        Long taskId = taskSaveAndDeleteService.save(
-                new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
-        );
+        taskRepository.save(task);
 
         TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(Priority.THIRD, Importance.THIRD);
 
@@ -95,14 +62,14 @@ class TaskEndToEndTest {
 
         //when
         Response response = requestSpecification.when()
-                .patch("/dailyschedule/tasks/{taskId}/information", taskId);
+                .patch("/dailyschedule/tasks/{taskId}/information", task.getId());
 
         //then
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Task task = taskRepository.findById(taskId).orElseThrow();
-        assertThat(task.changePriority(Priority.THIRD)).isFalse();
-        assertThat(task.changeImportance(Importance.THIRD)).isFalse();
+        Task savedTask = taskRepository.findById(task.getId()).orElseThrow();
+        assertThat(savedTask.changePriority(Priority.THIRD)).isFalse();
+        assertThat(savedTask.changeImportance(Importance.THIRD)).isFalse();
     }
 }

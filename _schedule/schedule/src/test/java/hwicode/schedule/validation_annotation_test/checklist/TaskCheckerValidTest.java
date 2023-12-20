@@ -1,14 +1,13 @@
-package hwicode.schedule.validation_annotation_test.todolist;
+package hwicode.schedule.validation_annotation_test.checklist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.common.exception.GlobalErrorCode;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.TaskCheckerController;
+import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -23,25 +22,22 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.DAILY_CHECKLIST_ID;
+import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.TASK_CHECKER_NAME;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(TaskController.class)
-class TaskValidTest {
+@WebMvcTest(TaskCheckerController.class)
+class TaskCheckerValidTest {
 
     @Autowired
     MockMvc mockMvc;
 
     @MockBean
-    TaskSaveAndDeleteService taskSaveAndDeleteService;
-
-    @MockBean
-    TaskAggregateService taskAggregateService;
+    TaskCheckerSubService taskCheckerSubService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -49,10 +45,10 @@ class TaskValidTest {
     @Test
     void 모든_필드가_있으면_통과된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -65,14 +61,14 @@ class TaskValidTest {
         // given
         String wrongTableId = "ww";
         String wrongTimeTableIdBody = String.format(
-                "{\"dailyToDoListId\":1," +
+                "{\"dailyToDoListId\":%s," +
                 "\"taskName\":\"taskName\"," +
-                "\"difficulty\":\"%s\"," +
+                "\"difficulty\":\"NORMAL\"," +
                 "\"priority\":\"SECOND\"," +
                 "\"importance\":\"SECOND\"}", wrongTableId);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongTimeTableIdBody));
 
@@ -81,7 +77,7 @@ class TaskValidTest {
                 .andExpect(jsonPath("$.message").value(BODY_TYPE_ERROR_MESSAGE));
     }
 
-    private static Stream<Arguments> provideWrongDailyToDoListId() {
+    private static Stream<Arguments> provideWrongDailyChecklistId() {
         return Stream.of(
                 arguments(null, NOT_NULL_ERROR_MESSAGE),
                 arguments(-1L, POSITIVE_ERROR_MESSAGE),
@@ -90,18 +86,18 @@ class TaskValidTest {
     }
 
     @ParameterizedTest
-    @MethodSource("provideWrongDailyToDoListId")
-    void 투두리스트의_id에_잘못된_값이_들어오면_400에러가_발생한다(Long dailyToDoListId, String errorMessage) throws Exception {
+    @MethodSource("provideWrongDailyChecklistId")
+    void 투두리스트의_id에_잘못된_값이_들어오면_400에러가_발생한다(Long dailyChecklistId, String errorMessage) throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoListId, TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklistId, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
         // then
-        String field = "dailyToDoListId";
+        String field = "dailyChecklistId";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
@@ -120,10 +116,10 @@ class TaskValidTest {
     @MethodSource("provideWrongTaskName")
     void 과제의_이름에_잘못된_값이_들어오면_400에러가_발생한다(String taskName, String errorMessage) throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -138,10 +134,10 @@ class TaskValidTest {
     @Test
     void 과제의_어려움에_null이_들어오면_400에러가_발생한다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_TO_DO_LIST_ID, TASK_NAME, null, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, null, Priority.SECOND, Importance.SECOND);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -165,7 +161,7 @@ class TaskValidTest {
                 "\"importance\":\"SECOND\"}", wrongDifficulty);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_TO_DO_LIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongDifficultyBody));
 

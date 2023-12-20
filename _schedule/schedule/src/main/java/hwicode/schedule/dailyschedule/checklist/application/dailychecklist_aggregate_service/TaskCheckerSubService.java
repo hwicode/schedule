@@ -3,7 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggr
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
-import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.TaskCheckerPostService;
+import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.TaskCheckerPrePostService;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.TaskCheckerSaveRepository;
@@ -21,7 +21,7 @@ public class TaskCheckerSubService {
 
     private final DailyChecklistFindRepository dailyChecklistFindRepository;
     private final TaskCheckerSaveRepository taskCheckerSaveRepository;
-    private final TaskCheckerPostService taskCheckerPostService;
+    private final TaskCheckerPrePostService taskCheckerPrePostService;
 
     @Transactional
     public Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
@@ -33,14 +33,16 @@ public class TaskCheckerSubService {
         );
         taskCheckerSaveRepository.save(taskChecker);
 
-        taskCheckerPostService.perform(taskChecker.getId(), taskSaveRequest);
+        taskCheckerPrePostService.performAfterSave(taskChecker.getId(), taskSaveRequest);
         return taskChecker.getId();
     }
 
     @Transactional
-    public void deleteTaskChecker(Long dailyChecklistId, String taskCheckerName) {
+    public Long deleteTaskChecker(Long dailyChecklistId, Long taskId, String taskCheckerName) {
+        taskCheckerPrePostService.performBeforeDelete(taskId);
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(dailyChecklistId);
         dailyChecklist.deleteTaskChecker(taskCheckerName);
+        return taskId;
     }
 
     @Transactional

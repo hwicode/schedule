@@ -35,8 +35,8 @@ import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -95,6 +95,39 @@ class TaskCheckerControllerTest {
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
         verify(taskCheckerSubService).saveTaskChecker(any());
+    }
+
+    @Test
+    void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                .param("taskName", TASK_CHECKER_NAME)
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(taskCheckerSubService).deleteTaskChecker(any(), any(), any());
+    }
+
+    @Test
+    void 과제를_삭제할_때_실패하면_에러가_발생한다() throws Exception {
+        // given
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
+
+        given(taskCheckerSubService.deleteTaskChecker(any(), any(), any()))
+                .willThrow(dailyChecklistNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                .param("taskName", TASK_CHECKER_NAME)
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
+
+        verify(taskCheckerSubService).deleteTaskChecker(any(), any(), any());
     }
 
     @Test

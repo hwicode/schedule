@@ -81,6 +81,31 @@ class TaskCheckerEndToEndTest {
     }
 
     @Test
+    void 과제_삭제_요청() {
+        //given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        dailyChecklistRepository.save(dailyChecklist);
+
+        Long taskId = taskCheckerSubService.saveTaskChecker(
+                new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+        );
+
+        RequestSpecification requestSpecification = given()
+                .port(port)
+                .queryParam("taskName", TASK_CHECKER_NAME);
+
+        //when
+        Response response = requestSpecification.when()
+                .delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", dailyChecklist.getId(), taskId);
+
+        //then
+        response.then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        Assertions.assertThat(taskCheckerRepository.existsById(taskId)).isFalse();
+    }
+
+    @Test
     void 과제체커_진행_상태_변경_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();

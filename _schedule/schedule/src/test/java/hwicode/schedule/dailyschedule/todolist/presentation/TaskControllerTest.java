@@ -1,11 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
-import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
@@ -19,11 +17,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.*;
+import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,26 +32,10 @@ class TaskControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    TaskSaveAndDeleteService taskSaveAndDeleteService;
-
-    @MockBean
     TaskAggregateService taskAggregateService;
 
     @Autowired
     ObjectMapper objectMapper;
-
-    @Test
-    void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
-        // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_TO_DO_LIST_ID, TASK_ID)
-                .param("taskName", TASK_NAME)
-        );
-
-        // then
-        perform.andExpect(status().isNoContent());
-
-        verify(taskSaveAndDeleteService).delete(any(), any());
-    }
 
     @Test
     void 과제의_정보_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
@@ -96,26 +78,6 @@ class TaskControllerTest {
                 .andExpect(jsonPath("$.message").value(taskNotExistException.getMessage()));
 
         verify(taskAggregateService).changeTaskInformation(any(), any());
-    }
-
-    @Test
-    void 과제를_삭제할_때_실패하면_에러가_발생한다() throws Exception {
-        // given
-        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
-
-        given(taskSaveAndDeleteService.delete(any(), any()))
-                .willThrow(dailyChecklistNotFoundException);
-
-        // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_TO_DO_LIST_ID, TASK_ID)
-                .param("taskName", TASK_NAME)
-        );
-
-        // then
-        perform.andExpect(status().isNotFound())
-                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
-
-        verify(taskSaveAndDeleteService).delete(any(), any());
     }
 
 }
