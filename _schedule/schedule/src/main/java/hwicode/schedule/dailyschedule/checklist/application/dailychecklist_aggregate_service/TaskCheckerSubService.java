@@ -40,6 +40,7 @@ public class TaskCheckerSubService {
     @Transactional
     public Long deleteTaskChecker(Long dailyChecklistId, Long taskId, String taskCheckerName) {
         taskCheckerPrePostService.performBeforeDelete(taskId);
+
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(dailyChecklistId);
         dailyChecklist.deleteTaskChecker(taskCheckerName);
         return taskId;

@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
+package hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext;
 
 public interface SubTaskConstraintRemover {
 

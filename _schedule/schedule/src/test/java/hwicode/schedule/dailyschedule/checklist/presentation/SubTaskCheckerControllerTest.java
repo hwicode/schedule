@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerAggregateService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save.SubTaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save.SubTaskSaveResponse;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
@@ -27,7 +29,7 @@ import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +47,93 @@ class SubTaskCheckerControllerTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Test
+    void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+        // given
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+        SubTaskSaveResponse subTaskSaveResponse = new SubTaskSaveResponse(SUB_TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME);
+
+        given(subTaskCheckerSubService.saveSubTaskChecker(any()))
+                .willReturn(SUB_TASK_CHECKER_ID);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
+        // then
+        perform.andExpect(status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(subTaskSaveResponse)
+                ));
+
+        verify(subTaskCheckerSubService).saveSubTaskChecker(any());
+    }
+
+    @Test
+    void 서브_과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .param("taskName", TASK_CHECKER_NAME)
+                        .param("subTaskName", SUB_TASK_CHECKER_NAME)
+        );
+
+        // then
+        perform.andExpect(status().isNoContent());
+
+        verify(subTaskCheckerSubService).deleteSubTaskChecker(any(), any());
+    }
+
+    @Test
+    void 서브_과제를_저장할_때_실패하면_에러가_발생한다() throws Exception {
+        // given
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
+
+        given(subTaskCheckerSubService.saveSubTaskChecker(any()))
+                .willThrow(dailyChecklistNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                        )));
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
+
+        verify(subTaskCheckerSubService).saveSubTaskChecker(any());
+    }
+
+    @Test
+    void 서브_과제를_삭제할_때_실패하면_에러가_발생한다() throws Exception {
+        // given
+        DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
+
+        given(subTaskCheckerSubService.deleteSubTaskChecker(any(), any()))
+                .willThrow(dailyChecklistNotFoundException);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
+                        DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .param("taskName", TASK_CHECKER_NAME)
+                        .param("subTaskName", SUB_TASK_CHECKER_NAME)
+        );
+
+        // then
+        perform.andExpect(status().isNotFound())
+                .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
+
+        verify(subTaskCheckerSubService).deleteSubTaskChecker(any(), any());
+    }
 
     @Test
     void 서브_과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {

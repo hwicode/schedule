@@ -9,12 +9,9 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.Sub
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
-import hwicode.schedule.dailyschedule.shared_domain.Importance;
-import hwicode.schedule.dailyschedule.shared_domain.Priority;
-import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
+import hwicode.schedule.dailyschedule.shared_domain.*;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -28,8 +25,8 @@ import org.springframework.http.HttpStatus;
 
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static io.restassured.RestAssured.given;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -59,6 +56,59 @@ class SubTaskCheckerEndToEndTest {
     }
 
     @Test
+    void 서브_과제_생성_요청() {
+        //given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+
+        RequestSpecification requestSpecification = given()
+                .port(port)
+                .contentType(ContentType.JSON)
+                .body(subTaskSaveRequest);
+
+        //when
+        Response response = requestSpecification.when()
+                .post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks", dailyChecklist.getId(), taskChecker.getId());
+
+        //then
+        response.then()
+                .statusCode(HttpStatus.CREATED.value());
+
+        assertThat(subTaskCheckerRepository.findAll()).hasSize(1);
+    }
+
+    @Test
+    void 서브_과제_삭제_요청() {
+        //given
+        DailyChecklist dailyChecklist = new DailyChecklist();
+        TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        Long subTaskId = subTaskCheckerSubService.saveSubTaskChecker(
+                new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+        );
+
+        RequestSpecification requestSpecification = given()
+                .port(port)
+                .queryParam("taskName", TASK_CHECKER_NAME)
+                .queryParam("subTaskName", SUB_TASK_CHECKER_NAME);
+
+        //when
+        Response response = requestSpecification.when()
+                .delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
+                        dailyChecklist.getId(), taskChecker.getId(), subTaskId);
+
+        //then
+        response.then()
+                .statusCode(HttpStatus.NO_CONTENT.value());
+
+        assertThat(subTaskCheckerRepository.existsById(subTaskId)).isFalse();
+    }
+
+    @Test
     void 서브_과제체커_진행_상태_변경_요청() {
         //given
         DailyChecklist dailyChecklist = new DailyChecklist();
@@ -66,7 +116,7 @@ class SubTaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(
-                new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
         );
 
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
@@ -100,7 +150,7 @@ class SubTaskCheckerEndToEndTest {
         );
 
         Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(
-                new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
         );
 
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(taskCheckerId, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
@@ -118,8 +168,8 @@ class SubTaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
-        assertThatThrownBy(() -> subTaskCheckerSubService.saveSubTaskChecker(subTaskCheckerSaveRequest))
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
+        assertThatThrownBy(() -> subTaskCheckerSubService.saveSubTaskChecker(subTaskSaveRequest))
                 .isInstanceOf(SubTaskCheckerNameDuplicationException.class);
     }
 

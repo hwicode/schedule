@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.save;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

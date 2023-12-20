@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation.subtask.dto.delete;
+package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -12,16 +12,14 @@ import javax.validation.constraints.Positive;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class SubTaskDeleteRequest {
+public class SubTaskSaveRequest {
 
-    @NotNull @Positive
-    private Long dailyToDoListId;
+    @NotNull
+    @Positive
+    private Long dailyChecklistId;
 
     @NotBlank
     private String taskName;
-
-    @NotNull @Positive
-    private Long subTaskId;
 
     @NotBlank
     private String subTaskName;

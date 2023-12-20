@@ -1,12 +1,13 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.SubTaskCheckerSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.domain.*;
+import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
+import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskCheckerRepository;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.delete.SubTaskDeleteRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save.SubTaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
@@ -57,10 +58,10 @@ class SubTaskCheckerSubServiceIntegrationTest {
         DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker();
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerSaveRequest subTaskCheckerSaveRequest = new SubTaskCheckerSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, NEW_SUB_TASK_CHECKER_NAME);
 
         // when
-        Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(subTaskCheckerSaveRequest);
+        Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(subTaskSaveRequest);
 
         // then
         assertThat(subTaskCheckerRepository.existsById(subTaskCheckerId)).isTrue();
@@ -69,10 +70,16 @@ class SubTaskCheckerSubServiceIntegrationTest {
     @Test
     void 체크리스트에_서브_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker();
+        DailyChecklist dailyChecklist = new DailyChecklist();
+
+        dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
+
+        SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+        dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME2);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskCheckerDeleteRequest subTaskCheckerDeleteRequest = new SubTaskCheckerDeleteRequest(dailyChecklist.getId(), TASK_CHECKER_NAME);
+        SubTaskDeleteRequest subTaskCheckerDeleteRequest = new SubTaskDeleteRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, subTaskChecker.getId(), SUB_TASK_CHECKER_NAME);
 
         // when
         subTaskCheckerSubService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskCheckerDeleteRequest);
