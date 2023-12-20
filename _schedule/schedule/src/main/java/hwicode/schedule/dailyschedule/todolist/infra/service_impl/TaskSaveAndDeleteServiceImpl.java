@@ -1,13 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.infra.service_impl;
 
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskCheckerSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.TaskSaveAndDeleteService;
-import hwicode.schedule.dailyschedule.todolist.domain.Task;
-import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,27 +21,29 @@ public class TaskSaveAndDeleteServiceImpl implements TaskSaveAndDeleteService {
 
     @Override
     @Transactional
-    public Long save(TaskSaveRequest taskSaveRequest) {
-        Long taskId = saveTaskChecker(taskSaveRequest);
-
-        Task task = taskRepository.findById(taskId)
-                .orElseThrow(TaskNotExistException::new);
-        task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
-        return taskId;
+    public Long save(hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest taskSaveRequest) {
+        return null;
     }
-
-    // Task를 생성하게 되면 Checklist 바운디드 컨텍스트에 영향을 주게 됨
-    private Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
-        TaskCheckerSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(taskSaveRequest);
-        return taskCheckerSubService.saveTaskChecker(taskCheckerSaveRequest);
-    }
-
-    private TaskCheckerSaveRequest createTaskCheckerSaveRequest(TaskSaveRequest taskSaveRequest) {
-        return new TaskCheckerSaveRequest(
-                taskSaveRequest.getDailyToDoListId(),
-                taskSaveRequest.getTaskName(),
-                taskSaveRequest.getDifficulty());
-    }
+//        Long taskId = saveTaskChecker(taskSaveRequest);
+//
+//        Task task = taskRepository.findById(taskId)
+//                .orElseThrow(TaskNotExistException::new);
+//        task.initialize(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
+//        return taskId;
+//    }
+//
+//    // Task를 생성하게 되면 Checklist 바운디드 컨텍스트에 영향을 주게 됨
+//    private Long saveTaskChecker(hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest taskSaveRequest) {
+//        TaskSaveRequest taskCheckerSaveRequest = createTaskCheckerSaveRequest(taskSaveRequest);
+//        return taskCheckerSubService.saveTaskChecker(taskCheckerSaveRequest);
+//    }
+//
+//    private TaskSaveRequest createTaskCheckerSaveRequest(hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest taskSaveRequest) {
+//        return new TaskSaveRequest(
+//                taskSaveRequest.getDailyToDoListId(),
+//                taskSaveRequest.getTaskName(),
+//                taskSaveRequest.getDifficulty());
+//    }
 
     @Override
     @Transactional

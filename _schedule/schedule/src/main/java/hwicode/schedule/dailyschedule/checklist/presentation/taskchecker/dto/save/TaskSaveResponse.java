@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save;
+package hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

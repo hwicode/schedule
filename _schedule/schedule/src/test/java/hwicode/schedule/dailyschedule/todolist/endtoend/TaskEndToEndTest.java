@@ -23,8 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
-import java.util.List;
-
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_NAME;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -51,31 +49,6 @@ class TaskEndToEndTest {
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
-    }
-
-    @Test
-    void 과제_생성_요청() {
-        //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
-        dailyToDoListRepository.save(dailyToDoList);
-
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
-
-        RequestSpecification requestSpecification = given()
-                .port(port)
-                .contentType(ContentType.JSON)
-                .body(taskSaveRequest);
-
-        //when
-        Response response = requestSpecification.when()
-                .post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", dailyToDoList.getId());
-
-        //then
-        response.then()
-                .statusCode(HttpStatus.CREATED.value());
-
-        List<Task> all = taskRepository.findAll();
-        assertThat(all).hasSize(1);
     }
 
     @Test

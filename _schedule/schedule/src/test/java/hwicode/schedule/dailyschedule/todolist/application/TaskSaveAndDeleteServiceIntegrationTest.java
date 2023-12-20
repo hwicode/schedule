@@ -41,21 +41,6 @@ class TaskSaveAndDeleteServiceIntegrationTest {
     }
 
     @Test
-    void 과제를_추가할_수_있다() {
-        // given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
-        dailyToDoListRepository.save(dailyToDoList);
-
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyToDoList.getId(), TASK_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
-
-        // when
-        Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
-
-        // then
-        assertThat(taskRepository.existsById(taskId)).isTrue();
-    }
-
-    @Test
     void 과제를_삭제할_수_있다() {
         // given
         DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);

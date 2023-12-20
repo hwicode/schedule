@@ -1,8 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskCheckerSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
+import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.TaskCheckerPostService;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.TaskCheckerSaveRepository;
@@ -20,18 +21,20 @@ public class TaskCheckerSubService {
 
     private final DailyChecklistFindRepository dailyChecklistFindRepository;
     private final TaskCheckerSaveRepository taskCheckerSaveRepository;
+    private final TaskCheckerPostService taskCheckerPostService;
 
     @Transactional
-    public Long saveTaskChecker(TaskCheckerSaveRequest taskCheckerSaveRequest) {
+    public Long saveTaskChecker(TaskSaveRequest taskSaveRequest) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
-                taskCheckerSaveRequest.getDailyChecklistId());
+                taskSaveRequest.getDailyChecklistId());
 
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(
-                taskCheckerSaveRequest.getTaskCheckerName(), taskCheckerSaveRequest.getDifficulty()
+                taskSaveRequest.getTaskName(), taskSaveRequest.getDifficulty()
         );
+        taskCheckerSaveRepository.save(taskChecker);
 
-        return taskCheckerSaveRepository.save(taskChecker)
-                .getId();
+        taskCheckerPostService.perform(taskChecker.getId(), taskSaveRequest);
+        return taskChecker.getId();
     }
 
     @Transactional

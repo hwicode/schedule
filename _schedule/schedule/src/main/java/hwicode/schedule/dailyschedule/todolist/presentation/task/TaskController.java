@@ -5,8 +5,6 @@ import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.delete.TaskDeleteRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.save.TaskSaveResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -23,14 +21,6 @@ public class TaskController {
 
     private final TaskSaveAndDeleteService taskSaveAndDeleteService;
     private final TaskAggregateService taskAggregateService;
-
-    @PostMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks")
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@PathVariable @Positive Long dailyToDoListId,
-                                     @RequestBody @Valid TaskSaveRequest taskSaveRequest) {
-        Long taskId = taskSaveAndDeleteService.save(taskSaveRequest);
-        return new TaskSaveResponse(taskId, taskSaveRequest.getTaskName());
-    }
 
     @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
