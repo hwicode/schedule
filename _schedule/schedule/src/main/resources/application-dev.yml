@@ -1,5 +1,8 @@
 # application-develop.yml
 spring:
+  config:
+    import: classpath:oauth.yml
+
   datasource:
     url: jdbc:mysql://localhost:3306/schedule?&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
