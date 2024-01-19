@@ -27,6 +27,8 @@ public class GoogleProperties {
     @NotEmpty
     private final String tokenUrl;
     @NotEmpty
+    private final String grantType;
+    @NotEmpty
     private final String redirectUri;
     @NotEmpty
     private final List<String> scopes;

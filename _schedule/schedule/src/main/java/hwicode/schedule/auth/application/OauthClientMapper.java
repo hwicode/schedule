@@ -1,7 +1,7 @@
 package hwicode.schedule.auth.application;
 
 import hwicode.schedule.auth.OauthProvider;
-import hwicode.schedule.auth.exception.OauthClientNotFoundException;
+import hwicode.schedule.auth.exception.application.OauthClientNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

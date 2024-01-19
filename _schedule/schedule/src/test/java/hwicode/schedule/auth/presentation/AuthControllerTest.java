@@ -29,7 +29,7 @@ class AuthControllerTest {
     @Test
     void 캘린더_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        given(authService.getAuthUrl(any()))
+        given(authService.getOauthLoginUrl(any()))
                 .willReturn(AUTH_URL);
 
         // when
@@ -41,7 +41,7 @@ class AuthControllerTest {
         perform.andExpect(status().isFound())
                 .andExpect(redirectedUrl((AUTH_URL)));
 
-        verify(authService).getAuthUrl(any());
+        verify(authService).getOauthLoginUrl(any());
     }
 
     @Test

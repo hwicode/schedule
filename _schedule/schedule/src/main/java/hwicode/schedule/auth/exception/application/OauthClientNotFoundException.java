@@ -1,4 +1,4 @@
-package hwicode.schedule.auth.exception;
+package hwicode.schedule.auth.exception.application;
 
 import hwicode.schedule.common.exception.BusinessException;
 import org.springframework.http.HttpStatus;
