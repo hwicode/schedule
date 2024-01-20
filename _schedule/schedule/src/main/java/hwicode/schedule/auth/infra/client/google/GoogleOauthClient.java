@@ -1,6 +1,6 @@
 package hwicode.schedule.auth.infra.client.google;
 
-import hwicode.schedule.auth.OauthProvider;
+import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
 import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.exception.infra.OauthServerException;

@@ -1,6 +1,6 @@
 package hwicode.schedule.auth.application;
 
-import hwicode.schedule.auth.OauthProvider;
+import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.domain.OauthUser;
 
 public interface OauthClient {

@@ -1,6 +1,5 @@
 package hwicode.schedule.auth.domain;
 
-import hwicode.schedule.auth.OauthProvider;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor

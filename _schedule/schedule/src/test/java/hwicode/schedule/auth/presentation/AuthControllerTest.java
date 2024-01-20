@@ -1,6 +1,6 @@
 package hwicode.schedule.auth.presentation;
 
-import hwicode.schedule.auth.OauthProvider;
+import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.AuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
