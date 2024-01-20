@@ -3,6 +3,7 @@ package hwicode.schedule.auth.application;
 import hwicode.schedule.auth.OauthProvider;
 import hwicode.schedule.auth.application.dto.SavedUserInfo;
 import hwicode.schedule.auth.application.dto.UserInfo;
+import hwicode.schedule.auth.infra.client.OauthClientMapper;
 import hwicode.schedule.auth.infra.other_boundedcontext.UserConnector;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

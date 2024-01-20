@@ -2,6 +2,7 @@ package hwicode.schedule.auth.application;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.OauthProvider;
+import hwicode.schedule.auth.infra.client.OauthClientMapper;
 import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
