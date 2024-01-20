@@ -15,6 +15,7 @@ drop table if exists tag cascade;
 drop table if exists memo cascade;
 drop table if exists daily_tag cascade;
 drop table if exists memo_tag cascade;
+drop table if exists user cascade;
 
 SET foreign_key_checks = 1;
 
@@ -148,6 +149,17 @@ create table memo_tag (
    tag_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
+
+create table user (
+   id bigint not null auto_increment,
+   name varchar(255) not null,
+   email varchar(255) not null,
+   oauth_provider varchar(255),
+   primary key (id)
+) engine=InnoDB;
+
+CREATE INDEX idx_today
+   ON user (email);
 
 alter table daily_schedule
    add constraint
