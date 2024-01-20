@@ -1,8 +1,7 @@
 package hwicode.schedule.auth.application;
 
 import hwicode.schedule.auth.OauthProvider;
-import hwicode.schedule.auth.application.dto.SavedUserInfo;
-import hwicode.schedule.auth.application.dto.UserInfo;
+import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.infra.client.OauthClientMapper;
 import hwicode.schedule.auth.infra.other_boundedcontext.UserConnector;
 import lombok.RequiredArgsConstructor;
@@ -21,9 +20,9 @@ public class AuthService {
 
     public void loginWithOauth(OauthProvider oauthProvider, String code) {
         OauthClient oauthClient = oauthClientMapper.getOauthClient(oauthProvider);
-        UserInfo userInfo = oauthClient.getUserInfo(code);
+        OauthUser oauthUser = oauthClient.getUserInfo(code);
 
-        SavedUserInfo savedUserInfo = userConnector.createOrUpdate(userInfo);
+        OauthUser savedOauthUser = userConnector.saveOrUpdate(oauthUser);
 
     }
 }

@@ -1,11 +1,11 @@
 package hwicode.schedule.auth.application;
 
 import hwicode.schedule.auth.OauthProvider;
-import hwicode.schedule.auth.application.dto.UserInfo;
+import hwicode.schedule.auth.domain.OauthUser;
 
 public interface OauthClient {
 
     OauthProvider getOauthProvider();
     String getAuthUrl();
-    UserInfo getUserInfo(String code);
+    OauthUser getUserInfo(String code);
 }

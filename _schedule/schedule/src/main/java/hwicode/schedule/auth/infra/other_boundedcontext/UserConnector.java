@@ -1,7 +1,6 @@
 package hwicode.schedule.auth.infra.other_boundedcontext;
 
-import hwicode.schedule.auth.application.dto.SavedUserInfo;
-import hwicode.schedule.auth.application.dto.UserInfo;
+import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.user.application.UserService;
 import hwicode.schedule.user.application.dto.UserSaveOrUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +12,13 @@ public class UserConnector {
 
     private final UserService userService;
 
-    public SavedUserInfo createOrUpdate(UserInfo userInfo) {
-        UserSaveOrUpdateRequest userSaveOrUpdateRequest = new UserSaveOrUpdateRequest(userInfo.getName(), userInfo.getEmail(), userInfo.getOauthProvider().name());
-        Long userId = userService.createOrUpdate(userSaveOrUpdateRequest);
-        return new SavedUserInfo(userId);
+    public OauthUser saveOrUpdate(OauthUser oauthUser) {
+        UserSaveOrUpdateRequest userSaveOrUpdateRequest = new UserSaveOrUpdateRequest(
+                oauthUser.getName(), oauthUser.getEmail(), oauthUser.getOauthProvider().name()
+        );
+
+        Long userId = userService.saveOrUpdate(userSaveOrUpdateRequest);
+        return new OauthUser(userId, oauthUser.getName(), oauthUser.getEmail(), oauthUser.getOauthProvider());
     }
 
 }

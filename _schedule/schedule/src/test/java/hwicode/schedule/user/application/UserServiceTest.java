@@ -42,7 +42,7 @@ class UserServiceTest {
         UserSaveOrUpdateRequest userSaveOrUpdateRequest = new UserSaveOrUpdateRequest(newName, email, oauthProvider);
 
         // when
-        userService.createOrUpdate(userSaveOrUpdateRequest);
+        userService.saveOrUpdate(userSaveOrUpdateRequest);
 
         // then
         User savedUser = userRepository.findById(user.getId()).orElseThrow();

@@ -14,7 +14,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Long createOrUpdate(UserSaveOrUpdateRequest userSaveOrUpdateRequest) {
+    public Long saveOrUpdate(UserSaveOrUpdateRequest userSaveOrUpdateRequest) {
         User user = userRepository.findByEmail(userSaveOrUpdateRequest.getEmail())
                 .orElseGet(() -> userRepository.save(userSaveOrUpdateRequest.toEntity()));
 

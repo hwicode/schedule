@@ -2,7 +2,7 @@ package hwicode.schedule.auth.infra.client.google;
 
 import hwicode.schedule.auth.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
-import hwicode.schedule.auth.application.dto.UserInfo;
+import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.exception.infra.OauthServerException;
 import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.dto.GoogleTokenResponse;
@@ -49,10 +49,10 @@ public class GoogleOauthClient implements OauthClient {
     }
 
     @Override
-    public UserInfo getUserInfo(String code) {
+    public OauthUser getUserInfo(String code) {
         GoogleTokenResponse googleTokenResponse = requestGoogleToken(code);
         Map<String, String> oauthUserInfo = oauthIdTokenDecoder.decode(googleTokenResponse.getIdToken());
-        return makeUserInfo(oauthUserInfo);
+        return makeOauthUser(oauthUserInfo);
     }
 
     private GoogleTokenResponse requestGoogleToken(String code) {
@@ -82,7 +82,7 @@ public class GoogleOauthClient implements OauthClient {
         }
     }
 
-    private UserInfo makeUserInfo(Map<String, String> oauthUserInfo) {
-        return new UserInfo(oauthUserInfo.get("name"), oauthUserInfo.get("email"), this.oauthProvider);
+    private OauthUser makeOauthUser(Map<String, String> oauthUserInfo) {
+        return new OauthUser(oauthUserInfo.get("name"), oauthUserInfo.get("email"), this.oauthProvider);
     }
 }
