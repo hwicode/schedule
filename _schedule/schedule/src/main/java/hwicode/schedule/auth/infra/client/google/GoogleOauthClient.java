@@ -1,14 +1,11 @@
 package hwicode.schedule.auth.infra.client.google;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
 import hwicode.schedule.auth.application.dto.UserInfo;
-import hwicode.schedule.auth.exception.infra.OauthIdTokenException;
 import hwicode.schedule.auth.exception.infra.OauthServerException;
+import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.dto.GoogleTokenResponse;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -19,20 +16,26 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
+import java.util.Map;
 
-@RequiredArgsConstructor
 @Component
 public class GoogleOauthClient implements OauthClient {
 
     private final GoogleProperties googleProperties;
     private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
+    private final OauthIdTokenDecoder oauthIdTokenDecoder;
+    private final OauthProvider oauthProvider;
+
+    public GoogleOauthClient(GoogleProperties googleProperties, RestTemplate restTemplate, OauthIdTokenDecoder oauthIdTokenDecoder) {
+        this.googleProperties = googleProperties;
+        this.restTemplate = restTemplate;
+        this.oauthIdTokenDecoder = oauthIdTokenDecoder;
+        this.oauthProvider = OauthProvider.GOOGLE;
+    }
 
     @Override
     public OauthProvider getOauthProvider() {
-        return OauthProvider.GOOGLE;
+        return this.oauthProvider;
     }
 
     @Override
@@ -48,7 +51,8 @@ public class GoogleOauthClient implements OauthClient {
     @Override
     public UserInfo getUserInfo(String code) {
         GoogleTokenResponse googleTokenResponse = requestGoogleToken(code);
-        return getUserInfo(googleTokenResponse);
+        Map<String, String> oauthUserInfo = oauthIdTokenDecoder.decode(googleTokenResponse.getIdToken());
+        return makeUserInfo(oauthUserInfo);
     }
 
     private GoogleTokenResponse requestGoogleToken(String code) {
@@ -78,14 +82,7 @@ public class GoogleOauthClient implements OauthClient {
         }
     }
 
-    private UserInfo getUserInfo(GoogleTokenResponse googleTokenResponse) {
-        // Jwt token
-        String payload = googleTokenResponse.getIdToken().split("\\.")[1];
-        String decodedPayload = new String(Base64.getUrlDecoder().decode(payload), StandardCharsets.UTF_8);
-        try {
-            return objectMapper.readValue(decodedPayload, UserInfo.class);
-        } catch (final JsonProcessingException e) {
-            throw new OauthIdTokenException();
-        }
+    private UserInfo makeUserInfo(Map<String, String> oauthUserInfo) {
+        return new UserInfo(oauthUserInfo.get("name"), oauthUserInfo.get("email"), this.oauthProvider);
     }
 }

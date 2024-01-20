@@ -1,9 +1,12 @@
 package hwicode.schedule.auth.application;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.OauthProvider;
+import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -16,7 +19,7 @@ class OauthClientMapperTest {
     void OauthProvider를_통해_OauthClient를_가져올_수_있다() {
         // given
         GoogleProperties googleProperties = mock(GoogleProperties.class);
-        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties);
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, new RestTemplate(), new OauthIdTokenDecoder(new ObjectMapper()));
         OauthClientMapper oauthClientMapper = new OauthClientMapper(List.of(googleOauthClient));
 
         // when

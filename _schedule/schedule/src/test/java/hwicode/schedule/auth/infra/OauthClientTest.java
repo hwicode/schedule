@@ -1,11 +1,14 @@
 package hwicode.schedule.auth.infra;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
 import hwicode.schedule.auth.application.OauthClientMapper;
+import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
 import org.junit.jupiter.api.Test;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
@@ -27,7 +30,7 @@ class OauthClientTest {
         when(googleProperties.getResponseType()).thenReturn(RESPONSE_TYPE);
         when(googleProperties.getScopes()).thenReturn(SCOPES);
 
-        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties);
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, new RestTemplate(), new OauthIdTokenDecoder(new ObjectMapper()));
 
         OauthClientMapper oauthClientMapper = new OauthClientMapper(List.of(googleOauthClient));
 

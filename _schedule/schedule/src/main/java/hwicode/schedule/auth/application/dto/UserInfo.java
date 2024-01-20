@@ -1,13 +1,14 @@
 package hwicode.schedule.auth.application.dto;
 
-import lombok.AccessLevel;
+import hwicode.schedule.auth.OauthProvider;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@RequiredArgsConstructor
 public class UserInfo {
 
-    private String name;
-    private String email;
+    private final String name;
+    private final String email;
+    private final OauthProvider oauthProvider;
 }
