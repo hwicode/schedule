@@ -2,7 +2,7 @@ package hwicode.schedule.auth.infra.token;
 
 import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.domain.RefreshToken;
-import hwicode.schedule.auth.exception.infra.OauthUserNotValidException;
+import hwicode.schedule.auth.exception.infra.token.OauthUserNotValidException;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

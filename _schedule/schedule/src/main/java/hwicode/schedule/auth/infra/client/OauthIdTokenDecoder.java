@@ -3,7 +3,7 @@ package hwicode.schedule.auth.infra.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.auth.exception.infra.OauthIdTokenException;
+import hwicode.schedule.auth.exception.infra.client.OauthIdTokenException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

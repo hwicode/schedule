@@ -2,7 +2,7 @@ package hwicode.schedule.auth.infra.token;
 
 import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.domain.RefreshToken;
-import hwicode.schedule.auth.exception.infra.OauthUserNotValidException;
+import hwicode.schedule.auth.exception.infra.token.OauthUserNotValidException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -65,6 +65,7 @@ public class TokenProvider {
     public DecodedAccessToken decodeAccessToken(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(secretKey)
+                .requireIssuer(issuer)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
