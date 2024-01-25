@@ -1,11 +1,15 @@
 package hwicode.schedule.auth.presentation;
 
+import hwicode.schedule.auth.application.dto.AuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.AuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.server.Cookie;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -14,8 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
 class AuthControllerTest {
@@ -27,7 +30,7 @@ class AuthControllerTest {
     AuthService authService;
 
     @Test
-    void 캘린더_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
+    void Oauth_Provider의_로그인_페이지를_요청하면_302코드가_리턴된다() throws Exception {
         // given
         given(authService.getOauthLoginUrl(any()))
                 .willReturn(AUTH_URL);
@@ -45,10 +48,61 @@ class AuthControllerTest {
     }
 
     @Test
-    void 존재하지_않는_OauthProvider를_요청하면_에러가_발생한다() throws Exception {
+    void Oauth_Provider의_로그인_페이지를_요청할_때_Oauth_Provider가_존재하지_않으면_에러가_발생한다() throws Exception {
         // when
         ResultActions perform = mockMvc.perform(
                 get("/oauth2/{oauthProvider}/login", "aaa")
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void Oauth_Provider을_통해_로그인을_요청하면_200코드가_리턴된다() throws Exception {
+        // given
+        AuthTokenResponse authTokenResponse = new AuthTokenResponse("accessToken", "refreshToken", 1000);
+        ResponseCookie cookieHeader = ResponseCookie.from("refreshToken", authTokenResponse.getRefreshToken())
+                .httpOnly(true)
+                .sameSite(Cookie.SameSite.STRICT.attributeValue())
+                .maxAge(authTokenResponse.getRefreshTokenExpiryMs() / 1000)
+                .path("/oauth2")
+                .build();
+
+        given(authService.loginWithOauth(any(), any()))
+                .willReturn(authTokenResponse);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                get("/oauth2/{oauthProvider}/callback", OauthProvider.GOOGLE.name())
+                        .param("code", "code")
+        );
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + authTokenResponse.getAccessToken()))
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookieHeader.toString()));
+
+        verify(authService).loginWithOauth(any(), any());
+    }
+
+    @Test
+    void Oauth_Provider을_통해_로그인을_요청할_때_Oauth_Provider가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                get("/oauth2/{oauthProvider}/callback", "aaa")
+                        .param("code", "code")
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void Oauth_Provider을_통해_로그인을_요청할_때_code가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                get("/oauth2/{oauthProvider}/callback", OauthProvider.GOOGLE.name())
         );
 
         // then

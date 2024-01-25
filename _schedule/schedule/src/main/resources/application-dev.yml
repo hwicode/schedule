@@ -35,8 +35,8 @@ spring:
 
 jwt:
   secret-key: dev:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
-  access-token-expiry: 100
-  refresh-token-expiry: 1000
+  access-token-expiry: 10000
+  refresh-token-expiry: 10000
   issuer: me
 
 logging:
