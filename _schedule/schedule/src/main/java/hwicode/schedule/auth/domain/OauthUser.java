@@ -1,7 +1,9 @@
 package hwicode.schedule.auth.domain;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
+@Getter
 @AllArgsConstructor
 public class OauthUser {
 
@@ -14,21 +16,5 @@ public class OauthUser {
         this.name = name;
         this.email = email;
         this.oauthProvider = oauthProvider;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public OauthProvider getOauthProvider() {
-        return oauthProvider;
     }
 }
