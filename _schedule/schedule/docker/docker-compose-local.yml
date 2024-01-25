@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  database:
+    image: mysql:8.0.22
+    container_name: mysql-schedule
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: schedule
+      MYSQL_ROOT_PASSWORD: hwi-schedule
+      TZ: Asia/Seoul
+      MYSQL_CHARSET: utf8mb4
+      MYSQL_COLLATION: utf8mb4_unicode_ci
+
+  redis:
+    image: "redis:7.2.4"
+    container_name: redis-schedule
+    ports:
+      - "6379:6379"

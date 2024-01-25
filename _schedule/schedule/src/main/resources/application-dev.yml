@@ -29,6 +29,16 @@ spring:
     init:
       mode: always
 
+  redis:
+    host: localhost
+    port: 6379
+
+jwt:
+  secret-key: dev:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+  access-token-expiry: 100
+  refresh-token-expiry: 1000
+  issuer: me
+
 logging:
   level:
     org.hibernate.SQL: debug
