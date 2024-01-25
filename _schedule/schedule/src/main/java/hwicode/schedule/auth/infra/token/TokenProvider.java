@@ -2,10 +2,9 @@ package hwicode.schedule.auth.infra.token;
 
 import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.domain.RefreshToken;
-import hwicode.schedule.auth.exception.infra.token.OauthUserNotValidException;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import hwicode.schedule.auth.exception.infra.token.InvalidAccessTokenException;
+import hwicode.schedule.auth.exception.infra.token.InvalidOauthUserException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -31,7 +30,7 @@ public class TokenProvider {
             @Value("${jwt.access-token-expiry}") long accessTokenExpiry,
             @Value("${jwt.refresh-token-expiry}") long refreshTokenExpiry,
             @Value("${jwt.secret-key}") String secretKey
-            ) {
+    ) {
         this.issuer = Objects.requireNonNull(issuer);
         this.accessTokenExpiryMs = accessTokenExpiry;
         this.refreshTokenExpiryMs = refreshTokenExpiry;
@@ -63,13 +62,44 @@ public class TokenProvider {
     }
 
     public DecodedAccessToken decodeAccessToken(String token) {
-        Claims claims = Jwts.parserBuilder()
-                .setSigningKey(secretKey)
-                .requireIssuer(issuer)
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        Claims claims = getClaims(token);
+        return makeDecodedAccessToken(claims);
+    }
 
+    private Claims getClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .requireIssuer(issuer)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidAccessTokenException();
+        }
+    }
+
+    public DecodedAccessToken decodeExpiredAccessToken(String token) {
+        Claims claims = getExpiredClaims(token);
+        return makeDecodedAccessToken(claims);
+    }
+
+    private Claims getExpiredClaims(String token) {
+        try {
+            return Jwts.parserBuilder()
+                    .setSigningKey(secretKey)
+                    .requireIssuer(issuer)
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new InvalidAccessTokenException();
+        }
+    }
+
+    private DecodedAccessToken makeDecodedAccessToken(Claims claims) {
         Long userId = claims.get("userId", Long.class);
         validateOauthUserId(userId);
         return new DecodedAccessToken(userId);
@@ -77,7 +107,7 @@ public class TokenProvider {
 
     private void validateOauthUserId(Long userId) {
         if (userId == null) {
-            throw new OauthUserNotValidException();
+            throw new InvalidOauthUserException();
         }
     }
 }
