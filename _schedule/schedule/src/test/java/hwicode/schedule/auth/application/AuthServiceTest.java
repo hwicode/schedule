@@ -90,7 +90,7 @@ class AuthServiceTest {
         refreshTokenRepository.save(oauthUser.getId(), refreshToken);
 
         // when
-        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAccessToken(accessToken, refreshToken.getToken());
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(accessToken, refreshToken.getToken());
 
         // then
         String reissuedRefreshToken = reissuedAuthTokenResponse.getRefreshToken();
@@ -110,7 +110,7 @@ class AuthServiceTest {
         String otherRefreshToken = tokenProvider.createRefreshToken(oauthUser).getToken();
 
         // when then
-        assertThatThrownBy(() -> authService.reissueAccessToken(accessToken, otherRefreshToken))
+        assertThatThrownBy(() -> authService.reissueAuthToken(accessToken, otherRefreshToken))
                 .isInstanceOf(InvalidRefreshTokenException.class);
         assertThatThrownBy(() -> refreshTokenRepository.get(oauthUserId))
                 .isInstanceOf(RefreshTokenNotFoundException.class);

@@ -1,6 +1,7 @@
 package hwicode.schedule.auth.presentation;
 
 import hwicode.schedule.auth.application.dto.AuthTokenResponse;
+import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 @RestController
 public class AuthController {
 
+    private static final String BEARER = "Bearer ";
     private final AuthService authService;
 
     @GetMapping("/oauth2/{oauthProvider}/login")
@@ -31,13 +33,29 @@ public class AuthController {
                                HttpServletResponse response) {
         AuthTokenResponse authTokenResponse = authService.loginWithOauth(oauthProvider, code);
 
-        ResponseCookie cookieHeader = ResponseCookie.from("refreshToken", authTokenResponse.getRefreshToken())
+        ResponseCookie cookie = makeRefreshTokenCookie(authTokenResponse.getRefreshToken(), authTokenResponse.getRefreshTokenExpiryMs());
+        response.setHeader(HttpHeaders.AUTHORIZATION, BEARER + authTokenResponse.getAccessToken());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    @PostMapping("/auth/token")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void reissueAuthToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
+                                 @CookieValue(value = "refreshToken") String refreshToken,
+                                 HttpServletResponse response) {
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(accessToken, refreshToken);
+
+        ResponseCookie cookie = makeRefreshTokenCookie(reissuedAuthTokenResponse.getRefreshToken(), reissuedAuthTokenResponse.getRefreshTokenExpiryMs());
+        response.setHeader(HttpHeaders.AUTHORIZATION, BEARER + reissuedAuthTokenResponse.getAccessToken());
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
+    private ResponseCookie makeRefreshTokenCookie(String refreshToken, long refreshTokenExpiryMs) {
+        return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
-                .maxAge(authTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/oauth2")
+                .maxAge(refreshTokenExpiryMs / 1000)
+                .path("/auth/token")
                 .build();
-        response.setHeader(HttpHeaders.AUTHORIZATION, "Bearer " + authTokenResponse.getAccessToken());
-        response.addHeader(HttpHeaders.SET_COOKIE, cookieHeader.toString());
     }
 }

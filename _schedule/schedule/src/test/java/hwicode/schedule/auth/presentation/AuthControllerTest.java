@@ -1,6 +1,7 @@
 package hwicode.schedule.auth.presentation;
 
 import hwicode.schedule.auth.application.dto.AuthTokenResponse;
+import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.AuthService;
 import org.junit.jupiter.api.Test;
@@ -18,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(AuthController.class)
@@ -66,7 +68,7 @@ class AuthControllerTest {
                 .httpOnly(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
                 .maxAge(authTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/oauth2")
+                .path("/auth/token")
                 .build();
 
         given(authService.loginWithOauth(any(), any()))
@@ -103,6 +105,59 @@ class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 get("/oauth2/{oauthProvider}/callback", OauthProvider.GOOGLE.name())
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void Auth_토큰의_재발급을_요청하면_200코드가_리턴된다() throws Exception {
+        // given
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = new ReissuedAuthTokenResponse("accessToken", "refreshToken", 1000);
+        ResponseCookie cookieHeader = ResponseCookie.from("refreshToken", reissuedAuthTokenResponse.getRefreshToken())
+                .httpOnly(true)
+                .sameSite(Cookie.SameSite.STRICT.attributeValue())
+                .maxAge(reissuedAuthTokenResponse.getRefreshTokenExpiryMs() / 1000)
+                .path("/auth/token")
+                .build();
+
+        given(authService.reissueAuthToken(any(), any()))
+                .willReturn(reissuedAuthTokenResponse);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/token")
+                        .header("Authorization", "Bearer " + "accessToken")
+                        .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
+        );
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedAuthTokenResponse.getAccessToken()))
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookieHeader.toString()));
+
+        verify(authService).reissueAuthToken(any(), any());
+    }
+
+    @Test
+    void Auth_토큰의_재발급을_요청할_때_Authentication이_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/token")
+                        .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void Auth_토큰의_재발급을_요청할_때_refreshToken_cookie가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/token")
+                        .header("Authorization", "Bearer " + "accessToken")
         );
 
         // then

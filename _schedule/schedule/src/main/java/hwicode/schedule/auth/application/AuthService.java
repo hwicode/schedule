@@ -41,7 +41,7 @@ public class AuthService {
         return new AuthTokenResponse(accessToken, refreshToken.getToken(), refreshToken.getExpiryMs());
     }
 
-    public ReissuedAuthTokenResponse reissueAccessToken(String accessToken, String refreshToken) {
+    public ReissuedAuthTokenResponse reissueAuthToken(String accessToken, String refreshToken) {
         DecodedAccessToken decodedAccessToken = tokenProvider.decodeExpiredAccessToken(accessToken);
 
         Long userId = decodedAccessToken.getUserId();
