@@ -1,6 +1,7 @@
 package hwicode.schedule.auth.infra.token;
 
 import hwicode.schedule.auth.domain.RefreshToken;
+import hwicode.schedule.auth.exception.infra.token.RefreshTokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -24,8 +25,14 @@ public class RefreshTokenRepository {
     public RefreshToken get(Long userId) {
         String token = redisTemplate.opsForValue()
                 .get(REFRESH_TOKEN + userId);
-
+        if (token == null) {
+            throw new RefreshTokenNotFoundException();
+        }
         Long expiryMs = redisTemplate.getExpire(REFRESH_TOKEN + userId, TimeUnit.MICROSECONDS);
         return new RefreshToken(token, expiryMs);
+    }
+
+    public void delete(Long userId) {
+        redisTemplate.delete(REFRESH_TOKEN + userId);
     }
 }
