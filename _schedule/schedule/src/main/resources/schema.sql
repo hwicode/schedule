@@ -153,7 +153,7 @@ create table memo_tag (
 create table user (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   email varchar(255) not null,
+   email varchar(255) not null unique,
    oauth_provider varchar(255),
    primary key (id)
 ) engine=InnoDB;
