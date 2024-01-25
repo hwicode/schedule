@@ -1,10 +1,8 @@
-package hwicode.schedule.auth.infra;
+package hwicode.schedule.auth.infra.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
-import hwicode.schedule.auth.infra.client.OauthClientMapper;
-import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
+import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
 import org.junit.jupiter.api.Test;

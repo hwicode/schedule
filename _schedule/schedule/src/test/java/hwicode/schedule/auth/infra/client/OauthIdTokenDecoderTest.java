@@ -1,8 +1,7 @@
-package hwicode.schedule.auth.infra;
+package hwicode.schedule.auth.infra.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.exception.infra.OauthIdTokenException;
-import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 
