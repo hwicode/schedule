@@ -49,12 +49,23 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 
+    @PostMapping("/auth/logout")
+    @ResponseStatus(value = HttpStatus.OK)
+    public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
+                       @CookieValue(value = "refreshToken") String refreshToken,
+                       HttpServletResponse response) {
+        authService.logout(refreshToken);
+
+        ResponseCookie cookie = makeRefreshTokenCookie(refreshToken, 0);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+    }
+
     private ResponseCookie makeRefreshTokenCookie(String refreshToken, long refreshTokenExpiryMs) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
                 .maxAge(refreshTokenExpiryMs / 1000)
-                .path("/auth/token")
+                .path("/auth")
                 .build();
     }
 }

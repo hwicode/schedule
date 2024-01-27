@@ -60,4 +60,11 @@ public class AuthService {
         return new ReissuedAuthTokenResponse(reissuedAccessToken, reissuedRefreshToken.getToken(), reissuedRefreshToken.getExpiryMs());
     }
 
+    public boolean logout(String refreshToken) {
+        DecodedToken decodedToken = tokenProvider.decodeToken(refreshToken);
+        Long userId = decodedToken.getUserId();
+        refreshTokenRepository.delete(userId);
+        return true;
+    }
+
 }

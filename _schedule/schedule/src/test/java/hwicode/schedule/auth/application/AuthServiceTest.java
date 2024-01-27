@@ -137,4 +137,20 @@ class AuthServiceTest {
                 .isInstanceOf(OauthUserNotFoundException.class);
     }
 
+    @Test
+    void 로그아웃을_할_수_있다() {
+        // given
+        OauthUser oauthUser = userConnector.saveOrUpdate(new OauthUser("name", "email", OauthProvider.GOOGLE));
+        Long oauthUserId = oauthUser.getId();
+        RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
+        refreshTokenRepository.save(oauthUserId, refreshToken);
+
+        // when
+        authService.logout(refreshToken.getToken());
+
+        // then
+        assertThatThrownBy(() -> refreshTokenRepository.get(oauthUserId))
+                .isInstanceOf(RefreshTokenNotFoundException.class);
+    }
+
 }

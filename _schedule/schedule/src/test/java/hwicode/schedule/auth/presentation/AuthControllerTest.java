@@ -68,7 +68,7 @@ class AuthControllerTest {
                 .httpOnly(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
                 .maxAge(authTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/auth/token")
+                .path("/auth")
                 .build();
 
         given(authService.loginWithOauth(any(), any()))
@@ -119,7 +119,7 @@ class AuthControllerTest {
                 .httpOnly(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
                 .maxAge(reissuedAuthTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/auth/token")
+                .path("/auth")
                 .build();
 
         given(authService.reissueAuthToken(any()))
@@ -144,6 +144,53 @@ class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/auth/token")
+                        .header("Authorization", "Bearer " + "accessToken")
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void 로그아웃을_요청하면_200코드가_리턴된다() throws Exception {
+        // given
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
+
+        given(authService.logout(any()))
+                .willReturn(true);
+
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/logout")
+                        .header("Authorization", "Bearer " + "accessToken")
+                        .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
+        );
+
+        // then
+        perform.andExpect(status().isOk())
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookie))
+                .andReturn();
+
+        verify(authService).logout(any());
+    }
+
+    @Test
+    void 로그아웃을_요청할_때_Authentication이_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/logout")
+                        .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
+        );
+
+        // then
+        perform.andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void 로그아웃을_요청할_때_refreshToken_cookie가_존재하지_않으면_에러가_발생한다() throws Exception {
+        // when
+        ResultActions perform = mockMvc.perform(
+                post("/auth/logout")
                         .header("Authorization", "Bearer " + "accessToken")
         );
 
