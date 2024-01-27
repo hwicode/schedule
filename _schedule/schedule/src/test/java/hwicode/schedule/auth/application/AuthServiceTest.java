@@ -71,7 +71,7 @@ class AuthServiceTest {
 
         // then
         String accessToken = authTokenResponse.getAccessToken();
-        Long userId = tokenProvider.decodeAccessToken(accessToken).getUserId();
+        Long userId = tokenProvider.decodeToken(accessToken).getUserId();
 
         OauthUser oauthUser = userConnector.saveOrUpdate(userInfo.toEntity());
         assertThat(userId).isEqualTo(oauthUser.getId());
@@ -85,17 +85,19 @@ class AuthServiceTest {
         // given
         OauthUser oauthUser = userConnector.saveOrUpdate(new OauthUser("name", "email", OauthProvider.GOOGLE));
 
-        String accessToken = tokenProvider.createAccessToken(oauthUser);
         RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
         refreshTokenRepository.save(oauthUser.getId(), refreshToken);
 
         // when
-        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(accessToken, refreshToken.getToken());
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(refreshToken.getToken());
 
         // then
         String reissuedRefreshToken = reissuedAuthTokenResponse.getRefreshToken();
         RefreshToken savedRefreshToken = refreshTokenRepository.get(oauthUser.getId());
         assertThat(reissuedRefreshToken).isEqualTo(savedRefreshToken.getToken());
+
+        String accessToken = reissuedAuthTokenResponse.getAccessToken();
+        assertThat(accessToken).isNotNull();
     }
 
     @Test
@@ -103,14 +105,13 @@ class AuthServiceTest {
         // given
         OauthUser oauthUser = userConnector.saveOrUpdate(new OauthUser("name", "email", OauthProvider.GOOGLE));
         Long oauthUserId = oauthUser.getId();
-        RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
+        RefreshToken refreshToken = new RefreshToken("token", 1000);
         refreshTokenRepository.save(oauthUserId, refreshToken);
 
-        String accessToken = tokenProvider.createAccessToken(oauthUser);
         String otherRefreshToken = tokenProvider.createRefreshToken(oauthUser).getToken();
 
         // when then
-        assertThatThrownBy(() -> authService.reissueAuthToken(accessToken, otherRefreshToken))
+        assertThatThrownBy(() -> authService.reissueAuthToken(otherRefreshToken))
                 .isInstanceOf(InvalidRefreshTokenException.class);
         assertThatThrownBy(() -> refreshTokenRepository.get(oauthUserId))
                 .isInstanceOf(RefreshTokenNotFoundException.class);

@@ -9,7 +9,7 @@ import hwicode.schedule.auth.exception.application.InvalidRefreshTokenException;
 import hwicode.schedule.auth.infra.client.OauthClientMapper;
 import hwicode.schedule.auth.infra.client.UserInfo;
 import hwicode.schedule.auth.infra.other_boundedcontext.UserConnector;
-import hwicode.schedule.auth.infra.token.DecodedAccessToken;
+import hwicode.schedule.auth.infra.token.DecodedToken;
 import hwicode.schedule.auth.infra.token.RefreshTokenRepository;
 import hwicode.schedule.auth.infra.token.TokenProvider;
 import lombok.RequiredArgsConstructor;
@@ -41,10 +41,10 @@ public class AuthService {
         return new AuthTokenResponse(accessToken, refreshToken.getToken(), refreshToken.getExpiryMs());
     }
 
-    public ReissuedAuthTokenResponse reissueAuthToken(String accessToken, String refreshToken) {
-        DecodedAccessToken decodedAccessToken = tokenProvider.decodeExpiredAccessToken(accessToken);
+    public ReissuedAuthTokenResponse reissueAuthToken(String refreshToken) {
+        DecodedToken decodedToken = tokenProvider.decodeToken(refreshToken);
 
-        Long userId = decodedAccessToken.getUserId();
+        Long userId = decodedToken.getUserId();
         RefreshToken savedRefreshToken = refreshTokenRepository.get(userId);
 
         if (!savedRefreshToken.isSameToken(refreshToken)) {
@@ -59,4 +59,5 @@ public class AuthService {
 
         return new ReissuedAuthTokenResponse(reissuedAccessToken, reissuedRefreshToken.getToken(), reissuedRefreshToken.getExpiryMs());
     }
+
 }

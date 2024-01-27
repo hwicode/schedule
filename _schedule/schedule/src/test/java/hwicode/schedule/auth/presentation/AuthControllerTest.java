@@ -122,13 +122,12 @@ class AuthControllerTest {
                 .path("/auth/token")
                 .build();
 
-        given(authService.reissueAuthToken(any(), any()))
+        given(authService.reissueAuthToken(any()))
                 .willReturn(reissuedAuthTokenResponse);
 
         // when
         ResultActions perform = mockMvc.perform(
                 post("/auth/token")
-                        .header("Authorization", "Bearer " + "accessToken")
                         .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
         );
 
@@ -137,19 +136,7 @@ class AuthControllerTest {
                 .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedAuthTokenResponse.getAccessToken()))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, cookieHeader.toString()));
 
-        verify(authService).reissueAuthToken(any(), any());
-    }
-
-    @Test
-    void Auth_토큰의_재발급을_요청할_때_Authentication이_존재하지_않으면_에러가_발생한다() throws Exception {
-        // when
-        ResultActions perform = mockMvc.perform(
-                post("/auth/token")
-                        .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
-        );
-
-        // then
-        perform.andExpect(status().isBadRequest());
+        verify(authService).reissueAuthToken(any());
     }
 
     @Test

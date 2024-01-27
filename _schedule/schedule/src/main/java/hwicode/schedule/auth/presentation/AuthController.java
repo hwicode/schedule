@@ -40,10 +40,9 @@ public class AuthController {
 
     @PostMapping("/auth/token")
     @ResponseStatus(value = HttpStatus.OK)
-    public void reissueAuthToken(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
-                                 @CookieValue(value = "refreshToken") String refreshToken,
+    public void reissueAuthToken(@CookieValue(value = "refreshToken") String refreshToken,
                                  HttpServletResponse response) {
-        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(accessToken, refreshToken);
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = authService.reissueAuthToken(refreshToken);
 
         ResponseCookie cookie = makeRefreshTokenCookie(reissuedAuthTokenResponse.getRefreshToken(), reissuedAuthTokenResponse.getRefreshTokenExpiryMs());
         response.setHeader(HttpHeaders.AUTHORIZATION, BEARER + reissuedAuthTokenResponse.getAccessToken());
