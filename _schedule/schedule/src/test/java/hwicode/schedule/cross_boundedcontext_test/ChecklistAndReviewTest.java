@@ -2,7 +2,7 @@ package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskDeleteCommand;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.TaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;

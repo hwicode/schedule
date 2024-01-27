@@ -1,4 +1,4 @@
-package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto;
+package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker;
 
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;

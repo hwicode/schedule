@@ -2,7 +2,7 @@ package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskSaveCommand;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.TaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;

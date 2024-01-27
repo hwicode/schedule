@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.*;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.*;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
