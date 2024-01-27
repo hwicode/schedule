@@ -58,7 +58,7 @@ class SubTaskCheckerEndToEndTest {
     @Test
     void 서브_과제_생성_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -83,7 +83,7 @@ class SubTaskCheckerEndToEndTest {
     @Test
     void 서브_과제_삭제_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -111,7 +111,7 @@ class SubTaskCheckerEndToEndTest {
     @Test
     void 서브_과제체커_진행_상태_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -142,7 +142,7 @@ class SubTaskCheckerEndToEndTest {
     @Test
     void 서브_과제체커_이름_변경_요청() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(

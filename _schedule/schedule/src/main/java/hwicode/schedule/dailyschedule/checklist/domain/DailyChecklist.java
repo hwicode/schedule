@@ -6,12 +6,14 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@NoArgsConstructor
 @Table(name = "daily_schedule")
 @Entity
 public class DailyChecklist {
@@ -28,12 +30,20 @@ public class DailyChecklist {
     @Column(nullable = false)
     private int todayDonePercent;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "dailyChecklist", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<TaskChecker> taskCheckers = new ArrayList<>();
 
-    public DailyChecklist() {
+    public DailyChecklist(Long userId) {
         this.totalDifficultyScore = 0;
         this.todayDonePercent = 0;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
@@ -43,7 +53,7 @@ public class DailyChecklist {
 
     public TaskChecker createTaskChecker(String taskName, Difficulty difficulty) {
         validateTaskCheckerDuplication(taskName);
-        TaskChecker taskChecker = new TaskChecker(this, taskName, difficulty);
+        TaskChecker taskChecker = new TaskChecker(this, taskName, difficulty, this.userId);
         taskCheckers.add(taskChecker);
         totalDifficultyScore += difficulty.getValue();
         calculateTodayDonePercent();

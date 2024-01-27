@@ -36,7 +36,7 @@ class TaskCheckerAggregateServiceIntegrationTest {
     @Test
     void 과제체커내에_있는_서브_과제체커의_이름을_변경할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
         dailyChecklist.createSubTaskChecker(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME2);

@@ -15,8 +15,8 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class TaskCheckerTest {
 
     private TaskChecker createTaskCheckerWithSubTaskChecker() {
-        DailyChecklist dailyChecklist = new DailyChecklist();
-        TaskChecker taskChecker = new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL);
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        TaskChecker taskChecker = new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, 1L);
         taskChecker.createSubTaskChecker(SUB_TASK_CHECKER_NAME);
         return taskChecker;
     }

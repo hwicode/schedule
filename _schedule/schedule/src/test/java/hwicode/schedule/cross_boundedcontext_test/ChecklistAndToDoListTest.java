@@ -47,7 +47,7 @@ class ChecklistAndToDoListTest {
     @MethodSource("provideTaskInformation")
     void 과제체커를_생성하면_과제의_긴급도와_중요도도_저장된다(Priority priority, Importance importance) {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, priority, importance);

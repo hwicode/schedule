@@ -41,7 +41,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
     }
 
     private DailyChecklist createDailyChecklistWithTwoTaskCheckerAndSubTaskChecker() {
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
 
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
@@ -70,7 +70,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
     @Test
     void 체크리스트에_서브_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
 
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);

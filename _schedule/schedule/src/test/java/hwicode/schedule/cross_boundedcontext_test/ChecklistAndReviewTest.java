@@ -59,10 +59,10 @@ class ChecklistAndReviewTest {
     @MethodSource("provideReviewCycleDates")
     void 과제와_연관된_복습_과제가_있더라도_과제를_삭제할_수_있다(List<Integer> cycle) {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskChecker savedTask = taskCheckerRepository.save(new TaskChecker(dailyChecklist, "name", Difficulty.NORMAL));
+        TaskChecker savedTask = taskCheckerRepository.save(new TaskChecker(dailyChecklist, "name", Difficulty.NORMAL, 1L));
         reviewTask(savedTask, cycle);
 
         // when

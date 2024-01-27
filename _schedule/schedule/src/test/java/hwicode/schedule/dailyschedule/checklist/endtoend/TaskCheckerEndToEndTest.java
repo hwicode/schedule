@@ -58,7 +58,7 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제_생성_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
@@ -83,7 +83,7 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제_삭제_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerSubService.saveTaskChecker(
@@ -108,7 +108,7 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_진행_상태_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
@@ -137,7 +137,7 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_어려움_점수_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
@@ -166,7 +166,7 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_이름_변경_요청() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(

@@ -90,7 +90,7 @@ class ChecklistAndTimeTableTest {
 
     private Long saveSubjectOfTask(Long timeTableId) {
         DailyChecklist dailyChecklist = dailyChecklistRepository.findById(timeTableId).orElseThrow();
-        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL));
+        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, 1L));
         return taskChecker.getId();
     }
 
@@ -127,8 +127,8 @@ class ChecklistAndTimeTableTest {
 
     private Long saveSubjectOfSubTask(Long timeTableId) {
         DailyChecklist dailyChecklist = dailyChecklistRepository.findById(timeTableId).orElseThrow();
-        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL));
-        SubTaskChecker subTaskChecker = subTaskCheckerRepository.save(new SubTaskChecker(taskChecker, SUB_TASK_CHECKER_NAME));
+        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, 1L));
+        SubTaskChecker subTaskChecker = subTaskCheckerRepository.save(new SubTaskChecker(taskChecker, SUB_TASK_CHECKER_NAME, 1L));
         return subTaskChecker.getId();
     }
 

@@ -21,7 +21,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 class DailyChecklistTest {
 
     private static DailyChecklist createDailyChecklistWithThreeTaskCheckers(Difficulty difficulty, Difficulty difficulty2, Difficulty difficulty3) {
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
 
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, difficulty);
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, difficulty2);
@@ -139,7 +139,7 @@ class DailyChecklistTest {
     @Test
     void 과제체커의_이름이_중복되면_에러가_발생한다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
         dailyChecklist.createTaskChecker(NEW_TASK_CHECKER_NAME, Difficulty.NORMAL);
 
         // when then
@@ -150,7 +150,7 @@ class DailyChecklistTest {
     @Test
     void 체크리스트에_존재하지_않는_과제체커를_조회하면_에러가_발생한다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
 
         // when then
         assertThatThrownBy(() -> dailyChecklist.deleteTaskChecker(NEW_TASK_CHECKER_NAME))
@@ -160,7 +160,7 @@ class DailyChecklistTest {
     @Test
     void 체크리스트에_과제체커가_없을_때_성취도를_체크하면_0이_된다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist();
+        DailyChecklist dailyChecklist = new DailyChecklist(1L);
 
         // when then
         assertThat(dailyChecklist.getTodayDonePercent()).isZero();

@@ -29,6 +29,7 @@ create table daily_schedule (
    review text,
    emoji varchar(255) DEFAULT 'NOT_BAD',
    calendar_id bigint,
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
@@ -39,6 +40,7 @@ create table sub_task (
    id bigint not null auto_increment,
    name varchar(255) not null,
    sub_task_status varchar(255) DEFAULT 'TODO',
+   user_id bigint,
    task_id bigint,
    primary key (id)
 ) engine=InnoDB;
@@ -50,6 +52,7 @@ create table task (
    importance varchar(255) DEFAULT 'SECOND',
    difficulty varchar(255) DEFAULT 'NORMAL',
    task_status varchar(255) DEFAULT 'TODO',
+   user_id bigint,
    daily_schedule_id bigint,
    primary key (id)
 ) engine=InnoDB;

@@ -38,14 +38,22 @@ public class TaskChecker {
     @Enumerated(value = EnumType.STRING)
     private Difficulty difficulty;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "taskChecker", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubTaskChecker> subTaskCheckers = new ArrayList<>();
 
-    public TaskChecker(DailyChecklist dailyChecklist, String name, Difficulty difficulty) {
+    public TaskChecker(DailyChecklist dailyChecklist, String name, Difficulty difficulty, Long userId) {
         this.dailyChecklist = dailyChecklist;
         this.name = name;
         this.taskStatus = TaskStatus.TODO;
         this.difficulty = difficulty;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public String changeSubTaskCheckerName(String subTaskCheckerName, String newSubTaskCheckerName) {
@@ -55,7 +63,7 @@ public class TaskChecker {
 
     SubTaskChecker createSubTaskChecker(String subTaskCheckerName) {
         validateSubTaskCheckerDuplication(subTaskCheckerName);
-        SubTaskChecker subTaskChecker = new SubTaskChecker(this, subTaskCheckerName);
+        SubTaskChecker subTaskChecker = new SubTaskChecker(this, subTaskCheckerName, userId);
         subTaskCheckers.add(subTaskChecker);
 
         if (this.taskStatus == TaskStatus.DONE) {

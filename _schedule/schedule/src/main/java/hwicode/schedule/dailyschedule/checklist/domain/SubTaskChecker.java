@@ -26,10 +26,14 @@ public class SubTaskChecker {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    public SubTaskChecker(TaskChecker taskChecker, String name) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public SubTaskChecker(TaskChecker taskChecker, String name, Long userId) {
         this.taskChecker = taskChecker;
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
+        this.userId = userId;
     }
 
     String changeName(String name) {
