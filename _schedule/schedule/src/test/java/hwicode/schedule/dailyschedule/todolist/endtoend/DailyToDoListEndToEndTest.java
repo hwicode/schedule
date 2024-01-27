@@ -40,7 +40,7 @@ class DailyToDoListEndToEndTest {
     @Test
     void 투두리스트_정보_변경_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD, 1L);
         dailyToDoListRepository.save(dailyToDoList);
 
         String review = "좋은데!";

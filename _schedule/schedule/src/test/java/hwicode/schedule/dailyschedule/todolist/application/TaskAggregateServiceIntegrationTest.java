@@ -41,7 +41,8 @@ class TaskAggregateServiceIntegrationTest {
     @Test
     void ToDo_리스트에_있는_과제의_정보를_변경할_수_있다() {
         // given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+        Long userId = 1L;
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD, userId);
         Task task = new Task(dailyToDoList, TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
         taskRepository.save(task);

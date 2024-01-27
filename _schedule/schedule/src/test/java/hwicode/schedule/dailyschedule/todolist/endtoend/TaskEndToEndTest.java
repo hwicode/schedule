@@ -48,7 +48,7 @@ class TaskEndToEndTest {
     @Test
     void 과제_정보_변경_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD);
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD, 1L);
         Task task = new Task(dailyToDoList, TASK_NAME);
         dailyToDoListRepository.save(dailyToDoList);
         taskRepository.save(task);

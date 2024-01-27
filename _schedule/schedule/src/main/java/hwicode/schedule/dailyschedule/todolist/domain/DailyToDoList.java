@@ -23,9 +23,17 @@ public class DailyToDoList {
     @Enumerated(value = EnumType.STRING)
     private Emoji emoji;
 
+    @Column(nullable = false)
+    private Long userId;
+
     // 테스트 코드에서만 사용되는 생성자!
-    public DailyToDoList(Emoji emoji) {
+    public DailyToDoList(Emoji emoji, Long userId) {
         this.emoji = emoji;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public boolean writeReview(String review) {

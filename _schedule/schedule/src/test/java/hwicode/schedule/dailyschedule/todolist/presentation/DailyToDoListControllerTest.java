@@ -69,14 +69,14 @@ class DailyToDoListControllerTest {
                         objectMapper.writeValueAsString(dailyToDoListInformationChangeResponse)
                 ));
 
-        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any(), any());
+        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any());
     }
 
     @Test
     void 투두리스트를_찾을_때_투두리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         DailyToDoListNotExistException dailyToDoListNotExistException = new DailyToDoListNotExistException();
-        given(dailyToDoListAggregateService.changeDailyToDoListInformation(any(), any()))
+        given(dailyToDoListAggregateService.changeDailyToDoListInformation(any()))
                 .willThrow(dailyToDoListNotExistException);
 
         // when
@@ -91,6 +91,6 @@ class DailyToDoListControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyToDoListNotExistException.getMessage()));
 
-        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any(), any());
+        verify(dailyToDoListAggregateService).changeDailyToDoListInformation(any());
     }
 }
