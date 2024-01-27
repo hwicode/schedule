@@ -2,7 +2,7 @@ package hwicode.schedule.auth.infra.token;
 
 import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.domain.RefreshToken;
-import hwicode.schedule.auth.exception.infra.token.InvalidAccessTokenException;
+import hwicode.schedule.auth.exception.infra.token.InvalidTokenException;
 import hwicode.schedule.auth.exception.infra.token.InvalidOauthUserException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -34,8 +34,8 @@ class TokenProviderTest {
         String accessToken = tokenProvider.createAccessToken(oauthUser);
 
         // then
-        DecodedAccessToken decodedAccessToken = tokenProvider.decodeAccessToken(accessToken);
-        assertThat(decodedAccessToken.getUserId()).isEqualTo(oauthUserId);
+        DecodedToken decodedToken = tokenProvider.decodeToken(accessToken);
+        assertThat(decodedToken.getUserId()).isEqualTo(oauthUserId);
     }
 
     @Test
@@ -47,18 +47,14 @@ class TokenProviderTest {
 
         // when
         RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
-        RefreshToken refreshToken2 = tokenProvider.createRefreshToken(oauthUser);
 
         // then
-        String token = refreshToken.getToken();
-        String token2 = refreshToken2.getToken();
-        assertThat(token).isNotEmpty();
-        assertThat(token2).isNotEmpty();
-        assertThat(token).isNotEqualTo(token2);
+        DecodedToken decodedToken = tokenProvider.decodeToken(refreshToken.getToken());
+        assertThat(decodedToken.getUserId()).isEqualTo(oauthUserId);
     }
 
     @Test
-    void 유효한_유저가_아닌_경우_에러가_발생한다() {
+    void 토큰을_생성_시_유효한_유저가_아닌_경우_에러가_발생한다() {
         // given
         TokenProvider tokenProvider = createTokenProvider();
         OauthUser oauthUser = new OauthUser(null, null, null, null);
@@ -69,75 +65,94 @@ class TokenProviderTest {
     }
 
     @Test
-    void decodeAccessToken_메서드를_통해_만료된_Access_토큰을_디코드하면_에러가_발생한다() {
+    void 토큰을_디코드할_수_있다() {
         // given
-        TokenProvider tokenProvider = new TokenProvider("issuer", 0, 0, "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
-        Long oauthUserId = 1L;
-        OauthUser oauthUser = new OauthUser(oauthUserId, null, null, null);
-
-        String accessToken = tokenProvider.createAccessToken(oauthUser);
-
-        // when then
-        assertThatThrownBy(() -> tokenProvider.decodeAccessToken(accessToken))
-                .isInstanceOf(InvalidAccessTokenException.class);
-    }
-
-    @Test
-    void decodeExpiredAccessToken_메서드를_통해_만료된_Access_토큰을_디코드할_수_있다() {
-        // given
-        TokenProvider tokenProvider = new TokenProvider("issuer", 0, 0, "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+        TokenProvider tokenProvider = createTokenProvider();
         Long oauthUserId = 1L;
         OauthUser oauthUser = new OauthUser(oauthUserId, null, null, null);
 
         String accessToken = tokenProvider.createAccessToken(oauthUser);
 
         // when
-        DecodedAccessToken decodedAccessToken = tokenProvider.decodeExpiredAccessToken(accessToken);
+        DecodedToken decodedToken = tokenProvider.decodeToken(accessToken);
 
         // then
-        assertThat(decodedAccessToken.getUserId()).isEqualTo(oauthUserId);
+        assertThat(decodedToken.getUserId()).isEqualTo(oauthUserId);
+    }
+
+    @Test
+    void 만료된_토큰을_디코드하면_에러가_발생한다() {
+        // given
+        TokenProvider tokenProvider = new TokenProvider("issuer", 0, 0, "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww");
+        Long oauthUserId = 1L;
+        OauthUser oauthUser = new OauthUser(oauthUserId, null, null, null);
+
+        String accessToken = tokenProvider.createAccessToken(oauthUser);
+
+        // when then
+        assertThatThrownBy(() -> tokenProvider.decodeToken(accessToken))
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @ParameterizedTest
     @ValueSource(strings = {"iefnda", "dsin.ddw.dfsf", "funeewqsada.fdsfccc", ""})
-    void Access_토큰_디코드시에_jwt가_아니라면_에러가_발생한다(String token) {
+    void 토큰_디코드시에_jwt가_아니라면_에러가_발생한다(String token) {
         // given
         TokenProvider tokenProvider = createTokenProvider();
 
         // when then
-        assertThatThrownBy(() -> tokenProvider.decodeAccessToken(token))
-                .isInstanceOf(InvalidAccessTokenException.class);
+        assertThatThrownBy(() -> tokenProvider.decodeToken(token))
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @Test
-    void Access_토큰_디코드시에_null이_인자로_들어오면_에러가_발생한다() {
+    void 토큰_디코드시에_null이_인자로_들어오면_에러가_발생한다() {
         // given
         TokenProvider tokenProvider = createTokenProvider();
 
         // when then
-        assertThatThrownBy(() -> tokenProvider.decodeAccessToken(null))
-                .isInstanceOf(InvalidAccessTokenException.class);
+        assertThatThrownBy(() -> tokenProvider.decodeToken(null))
+                .isInstanceOf(InvalidTokenException.class);
     }
 
     @Test
-    void Access_토큰_디코드시에_발행자가_다르면_에러가_발생한다() {
+    void 토큰_디코드시에_발행자가_다르면_에러가_발생한다() {
         // given
         String secretKey = "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
-        TokenProvider tokenProvider = new TokenProvider("issuer", 1000, 1000, secretKey);
+        TokenProvider tokenProvider = new TokenProvider("issuer", 100000, 100000, secretKey);
 
         Long userId = 1L;
         Date now = new Date();
         String token = Jwts.builder()
                 .setIssuer("aaa")
                 .setIssuedAt(now)
-                .setExpiration(new Date(now.getTime() + 1000))
+                .setExpiration(new Date(now.getTime() + 100000))
                 .claim("userId", userId)
                 .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
                 .compact();
 
         // when then
-        assertThatThrownBy(() -> tokenProvider.decodeAccessToken(token))
-                .isInstanceOf(InvalidAccessTokenException.class);
+        assertThatThrownBy(() -> tokenProvider.decodeToken(token))
+                .isInstanceOf(InvalidTokenException.class);
+    }
+
+    @Test
+    void 토큰을_디코드할_때_유저_id가_존재하지_않으면_에러가_발생한다() {
+        // given
+        String secretKey = "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww";
+        TokenProvider tokenProvider = new TokenProvider("issuer", 100000, 100000, secretKey);
+
+        Date now = new Date();
+        String token = Jwts.builder()
+                .setIssuer("issuer")
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + 100000))
+                .signWith(Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8)), SignatureAlgorithm.HS256)
+                .compact();
+
+        // when then
+        assertThatThrownBy(() -> tokenProvider.decodeToken(token))
+                .isInstanceOf(InvalidOauthUserException.class);
     }
 
 }

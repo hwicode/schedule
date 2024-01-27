@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class DecodedAccessToken {
+public class DecodedToken {
 
     private final Long userId;
 }
