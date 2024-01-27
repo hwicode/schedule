@@ -2,6 +2,7 @@ package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
@@ -59,17 +60,20 @@ class ChecklistAndReviewTest {
     @MethodSource("provideReviewCycleDates")
     void 과제와_연관된_복습_과제가_있더라도_과제를_삭제할_수_있다(List<Integer> cycle) {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskChecker savedTask = taskCheckerRepository.save(new TaskChecker(dailyChecklist, "name", Difficulty.NORMAL, 1L));
         reviewTask(savedTask, cycle);
 
+        TaskDeleteCommand command = new TaskDeleteCommand(userId, dailyChecklist.getId(), savedTask.getId(), "name");
+
         // when
-        taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), savedTask.getId(), "name");
+        taskCheckerSubService.deleteTaskChecker(command);
 
         // then
-        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), savedTask.getId(), "name"))
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
         assertThat(reviewDateTaskRepository.findAll()).isEmpty();
     }

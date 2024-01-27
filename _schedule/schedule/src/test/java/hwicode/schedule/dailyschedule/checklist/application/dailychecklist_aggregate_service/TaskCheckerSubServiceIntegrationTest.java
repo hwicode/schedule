@@ -1,16 +1,14 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.*;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.difficulty_modify.TaskDifficultyModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.name_modify.TaskCheckerNameModifyRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
@@ -44,8 +42,8 @@ class TaskCheckerSubServiceIntegrationTest {
         databaseCleanUp.execute();
     }
 
-    private DailyChecklist createDailyChecklistWithTwoTaskChecker() {
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+    private DailyChecklist createDailyChecklistWithTwoTaskChecker(Long userId) {
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
 
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
@@ -56,45 +54,87 @@ class TaskCheckerSubServiceIntegrationTest {
     @Test
     void 체크리스트에_과제체커를_추가할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveCommand command = new TaskSaveCommand(
+                userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME,
+                Difficulty.NORMAL, Priority.SECOND, Importance.SECOND
+        );
 
         // when
-        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(taskSaveRequest);
+        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(command);
 
         // then
         assertThat(taskCheckerRepository.existsById(taskCheckerId)).isTrue();
     }
 
     @Test
+    void 체크리스트에_과제체커를_추가할_때_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        TaskSaveCommand command = new TaskSaveCommand(
+                2L, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME,
+                Difficulty.NORMAL, Priority.SECOND, Importance.SECOND
+        );
+
+        // when then
+        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(command))
+                .isInstanceOf(ChecklistForbiddenException.class);
+    }
+
+    @Test
     void 체크리스트에_과제체커를_삭제할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         TaskChecker taskChecker2 = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
 
         dailyChecklistRepository.save(dailyChecklist);
 
+        TaskDeleteCommand command = new TaskDeleteCommand(userId, dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2);
+
         // when
-        taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2);
+        taskCheckerSubService.deleteTaskChecker(command);
 
         // then
-        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2))
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
+    }
+
+    @Test
+    void 체크리스트에_과제체커를_삭제할_때_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
+        dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
+        TaskChecker taskChecker2 = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME2, Difficulty.NORMAL);
+
+        dailyChecklistRepository.save(dailyChecklist);
+
+        TaskDeleteCommand command = new TaskDeleteCommand(2L, dailyChecklist.getId(), taskChecker2.getId(), TASK_CHECKER_NAME2);
+
+        // when then
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
+                .isInstanceOf(ChecklistForbiddenException.class);
     }
 
     @Test
     void 체크리스트내에_있는_과제체커의_어려움_점수를_수정할_수_있다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME2, Difficulty.HARD);
+        TaskDifficultyModifyCommand command = new TaskDifficultyModifyCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME2, Difficulty.HARD);
 
         // when
-        taskCheckerSubService.changeTaskDifficulty(TASK_CHECKER_NAME2, taskDifficultyModifyRequest);
+        taskCheckerSubService.changeTaskDifficulty(command);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
@@ -102,15 +142,30 @@ class TaskCheckerSubServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트내에_있는_과제체커의_진행상태를_수정할_수_있다() {
+    void 체크리스트내에_있는_과제체커의_어려움_점수를_수정할_때_소유자가_아니면_에러가_발생한다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, TaskStatus.DONE);
+        TaskDifficultyModifyCommand command = new TaskDifficultyModifyCommand(2L, dailyChecklist.getId(), TASK_CHECKER_NAME2, Difficulty.HARD);
+
+        // when then
+        assertThatThrownBy(() -> taskCheckerSubService.changeTaskDifficulty(command))
+                .isInstanceOf(ChecklistForbiddenException.class);
+    }
+
+    @Test
+    void 체크리스트내에_있는_과제체커의_진행상태를_수정할_수_있다() {
+        // given
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        TaskStatusModifyCommand command = new TaskStatusModifyCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, TaskStatus.DONE);
 
         // when
-        taskCheckerSubService.changeTaskStatus(TASK_CHECKER_NAME, taskStatusModifyRequest);
+        taskCheckerSubService.changeTaskStatus(command);
 
         // then
         DailyChecklist savedDailyChecklist = dailyChecklistRepository.findDailyChecklistWithTaskCheckers(dailyChecklist.getId()).orElseThrow();
@@ -118,20 +173,52 @@ class TaskCheckerSubServiceIntegrationTest {
     }
 
     @Test
-    void 체크리스트내에_있는_과제체커의_이름을_수정할_수_있다() {
+    void 체크리스트내에_있는_과제체커의_진행상태를_수정할_때_소유자가_아니면_에러가_발생한다() {
         // given
-        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker();
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+        TaskStatusModifyCommand command = new TaskStatusModifyCommand(2L, dailyChecklist.getId(), TASK_CHECKER_NAME, TaskStatus.DONE);
+
+        // when then
+        assertThatThrownBy(() -> taskCheckerSubService.changeTaskStatus(command))
+                .isInstanceOf(ChecklistForbiddenException.class);
+    }
+
+    @Test
+    void 체크리스트내에_있는_과제체커의_이름을_수정할_수_있다() {
+        // given
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        TaskCheckerNameModifyCommand taskCheckerNameModifyCommand = new TaskCheckerNameModifyCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
 
         // when
-        taskCheckerSubService.changeTaskCheckerName(TASK_CHECKER_NAME, taskCheckerNameModifyRequest);
+        taskCheckerSubService.changeTaskCheckerName(taskCheckerNameModifyCommand);
 
         // then
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
-        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(taskSaveRequest))
+        TaskSaveCommand taskSaveCommand = new TaskSaveCommand(
+                userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME,
+                Difficulty.NORMAL, Priority.SECOND, Importance.SECOND
+        );
+        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(taskSaveCommand))
                 .isInstanceOf(TaskCheckerNameDuplicationException.class);
+    }
+
+    @Test
+    void 체크리스트내에_있는_과제체커의_이름을_수정할_때_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = createDailyChecklistWithTwoTaskChecker(userId);
+        dailyChecklistRepository.save(dailyChecklist);
+
+        TaskCheckerNameModifyCommand command = new TaskCheckerNameModifyCommand(2L, dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+
+        // when then
+        assertThatThrownBy(() -> taskCheckerSubService.changeTaskCheckerName(command))
+                .isInstanceOf(ChecklistForbiddenException.class);
     }
 
 }

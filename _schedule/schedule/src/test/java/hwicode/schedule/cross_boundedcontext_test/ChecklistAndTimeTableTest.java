@@ -3,6 +3,7 @@ package hwicode.schedule.cross_boundedcontext_test;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
@@ -78,11 +79,13 @@ class ChecklistAndTimeTableTest {
         learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
         learningTimeAggregateService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
+        TaskDeleteCommand command = new TaskDeleteCommand(1L, timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
+
         // when
-        taskCheckerSubService.deleteTaskChecker(timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
+        taskCheckerSubService.deleteTaskChecker(command);
 
         // then
-        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME))
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
         checkSubjectOfTaskIsDelete(learningTime.getId());
         checkSubjectOfTaskIsDelete(learningTime2.getId());

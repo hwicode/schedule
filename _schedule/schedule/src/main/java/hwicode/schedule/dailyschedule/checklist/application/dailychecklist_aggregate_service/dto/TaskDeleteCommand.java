@@ -1,0 +1,14 @@
+package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+
+@Getter
+@RequiredArgsConstructor
+public class TaskDeleteCommand {
+
+    private final Long userId;
+    private final Long dailyChecklistId;
+    private final Long taskId;
+    private final String taskCheckName;
+}

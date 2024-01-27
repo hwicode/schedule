@@ -1,6 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext;
 
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
+import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.dto.TaskCheckerAfterSaveRequest;
 import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import lombok.RequiredArgsConstructor;
@@ -15,9 +15,9 @@ public class TaskCheckerPrePostService {
     private final TaskAggregateService taskAggregateService;
     private final List<TaskConstraintRemover> taskConstraintRemovers;
 
-    public void performAfterSave(Long taskId, TaskSaveRequest taskSaveRequest) {
-        TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(taskSaveRequest.getPriority(), taskSaveRequest.getImportance());
-        taskAggregateService.changeTaskInformation(taskId, taskInformationModifyRequest);
+    public void performAfterSave(TaskCheckerAfterSaveRequest request) {
+        TaskInformationModifyRequest taskInformationModifyRequest = new TaskInformationModifyRequest(request.getPriority(), request.getImportance());
+        taskAggregateService.changeTaskInformation(request.getTaskCheckerId(), taskInformationModifyRequest);
     }
 
     public Long performBeforeDelete(Long taskId) {

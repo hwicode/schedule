@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
@@ -83,11 +84,12 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제_삭제_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskId = taskCheckerSubService.saveTaskChecker(
-                new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                new TaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         RequestSpecification requestSpecification = given()
@@ -108,11 +110,12 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_진행_상태_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
-                new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                new TaskSaveCommand(userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, TaskStatus.DONE);
@@ -137,11 +140,12 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_어려움_점수_변경_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
-                new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                new TaskSaveCommand(userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.HARD);
@@ -166,11 +170,12 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제체커_이름_변경_요청() {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
-                new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                new TaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
@@ -188,8 +193,8 @@ class TaskCheckerEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
-        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(taskSaveRequest))
+        TaskSaveCommand command = new TaskSaveCommand(userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(command))
                 .isInstanceOf(TaskCheckerNameDuplicationException.class);
     }
 

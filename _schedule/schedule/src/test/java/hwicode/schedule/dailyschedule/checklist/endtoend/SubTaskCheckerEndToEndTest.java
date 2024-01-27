@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.endtoend;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.domain.*;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
@@ -146,7 +147,7 @@ class SubTaskCheckerEndToEndTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         Long taskCheckerId = taskCheckerSubService.saveTaskChecker(
-                new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                new TaskSaveCommand(1L, dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
         Long subTaskCheckerId = subTaskCheckerSubService.saveSubTaskChecker(

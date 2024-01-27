@@ -2,9 +2,9 @@ package hwicode.schedule.cross_boundedcontext_test;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.TaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
@@ -47,13 +47,14 @@ class ChecklistAndToDoListTest {
     @MethodSource("provideTaskInformation")
     void 과제체커를_생성하면_과제의_긴급도와_중요도도_저장된다(Priority priority, Importance importance) {
         // given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, priority, importance);
+        TaskSaveCommand command = new TaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, priority, importance);
 
         // when
-        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(taskSaveRequest);
+        Long taskCheckerId = taskCheckerSubService.saveTaskChecker(command);
 
         // then
         Task task = taskRepository.findById(taskCheckerId).orElseThrow();
