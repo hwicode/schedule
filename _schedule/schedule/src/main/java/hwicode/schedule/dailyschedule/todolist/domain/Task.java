@@ -32,10 +32,18 @@ public class Task {
     @Enumerated(value = EnumType.STRING)
     private Importance importance;
 
+    @Column(nullable = false)
+    private Long userId;
+
     // 테스트 코드에서만 사용되는 생성자!
-    public Task(DailyToDoList dailyToDoList, String name) {
+    public Task(DailyToDoList dailyToDoList, String name, Long userId) {
         this.dailyToDoList = dailyToDoList;
         this.name = name;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public void initialize(Priority priority, Importance importance) {

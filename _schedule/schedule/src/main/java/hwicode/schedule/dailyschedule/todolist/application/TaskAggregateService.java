@@ -1,8 +1,9 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
+import hwicode.schedule.dailyschedule.todolist.exception.application.ToDoListForbiddenException;
 import hwicode.schedule.dailyschedule.todolist.infra.limited_repository.TaskFindRepository;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,11 +15,15 @@ public class TaskAggregateService {
     private final TaskFindRepository taskFindRepository;
 
     @Transactional
-    public Long changeTaskInformation(Long taskId, TaskInformationModifyRequest taskInformationModifyRequest) {
-        Task task = taskFindRepository.findById(taskId);
+    public Long changeTaskInformation(TaskInformationCommand command) {
+        Task task = taskFindRepository.findById(command.getTaskId());
 
-        task.changePriority(taskInformationModifyRequest.getPriority());
-        task.changeImportance(taskInformationModifyRequest.getImportance());
-        return taskId;
+        if (!task.isOwner(command.getUserId())) {
+            throw new ToDoListForbiddenException();
+        }
+
+        task.changePriority(command.getPriority());
+        task.changeImportance(command.getImportance());
+        return command.getTaskId();
     }
 }

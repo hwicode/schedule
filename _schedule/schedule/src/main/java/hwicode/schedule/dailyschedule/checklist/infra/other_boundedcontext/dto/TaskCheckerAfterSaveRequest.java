@@ -12,4 +12,5 @@ public class TaskCheckerAfterSaveRequest {
     private final Long taskCheckerId;
     private final Priority priority;
     private final Importance importance;
+    private final Long userId;
 }

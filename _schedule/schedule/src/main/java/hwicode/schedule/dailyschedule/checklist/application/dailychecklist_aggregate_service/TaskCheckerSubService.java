@@ -34,7 +34,9 @@ public class TaskCheckerSubService {
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(command.getTaskCheckerName(), command.getDifficulty());
         taskCheckerSaveRepository.save(taskChecker);
 
-        TaskCheckerAfterSaveRequest request = new TaskCheckerAfterSaveRequest(taskChecker.getId(), command.getPriority(), command.getImportance());
+        TaskCheckerAfterSaveRequest request = new TaskCheckerAfterSaveRequest(
+                taskChecker.getId(), command.getPriority(), command.getImportance(), command.getUserId()
+        );
         taskCheckerPrePostService.performAfterSave(request);
 
         return taskChecker.getId();

@@ -55,14 +55,14 @@ class TaskControllerTest {
                         objectMapper.writeValueAsString(taskInformationModifyResponse)
                 ));
 
-        verify(taskAggregateService).changeTaskInformation(any(), any());
+        verify(taskAggregateService).changeTaskInformation(any());
     }
 
     @Test
     void 과제를_찾을_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskNotExistException taskNotExistException = new TaskNotExistException();
-        given(taskAggregateService.changeTaskInformation(any(), any()))
+        given(taskAggregateService.changeTaskInformation(any()))
                 .willThrow(taskNotExistException);
 
         // when
@@ -77,7 +77,7 @@ class TaskControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskNotExistException.getMessage()));
 
-        verify(taskAggregateService).changeTaskInformation(any(), any());
+        verify(taskAggregateService).changeTaskInformation(any());
     }
 
 }

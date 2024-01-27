@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task;
 
 import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
+import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +22,13 @@ public class TaskController {
     @PatchMapping("/dailyschedule/tasks/{taskId}/information")
     @ResponseStatus(value = HttpStatus.OK)
     public TaskInformationModifyResponse changeTaskInformation(@PathVariable @Positive Long taskId,
-                                                               @RequestBody @Valid TaskInformationModifyRequest taskInformationModifyRequest) {
-        taskAggregateService.changeTaskInformation(taskId, taskInformationModifyRequest);
+                                                               @RequestBody @Valid TaskInformationModifyRequest request) {
+        TaskInformationCommand command = new TaskInformationCommand(1L, taskId, request.getPriority(), request.getImportance());
+        taskAggregateService.changeTaskInformation(command);
         return new TaskInformationModifyResponse(
                 taskId,
-                taskInformationModifyRequest.getPriority(),
-                taskInformationModifyRequest.getImportance()
+                command.getPriority(),
+                command.getImportance()
         );
     }
 }
