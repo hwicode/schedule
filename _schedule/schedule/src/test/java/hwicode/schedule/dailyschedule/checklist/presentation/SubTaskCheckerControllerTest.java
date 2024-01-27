@@ -166,7 +166,7 @@ class SubTaskCheckerControllerTest {
         SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = new SubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
-        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any()))
                 .willReturn(NEW_SUB_TASK_CHECKER_NAME);
 
         // when
@@ -182,7 +182,7 @@ class SubTaskCheckerControllerTest {
                         objectMapper.writeValueAsString(subTaskCheckerNameModifyResponse)
                 ));
 
-        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any());
     }
 
     @Test
@@ -235,7 +235,7 @@ class SubTaskCheckerControllerTest {
     void 과제체커를_조회할_때_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         TaskCheckerNotFoundException taskCheckerNotFoundException = new TaskCheckerNotFoundException();
-        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any()))
                 .willThrow(taskCheckerNotFoundException);
 
         // when
@@ -251,14 +251,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(taskCheckerNotFoundException.getMessage()));
 
-        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any());
     }
 
     @Test
     void 서브_과제체커의_이름_변경을_요청할_때_서브_과제체커의_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNameDuplicationException subTaskCheckerNameDuplicationException = new SubTaskCheckerNameDuplicationException();
-        given(taskCheckerAggregateService.changeSubTaskCheckerName(any(), any()))
+        given(taskCheckerAggregateService.changeSubTaskCheckerName(any()))
                 .willThrow(subTaskCheckerNameDuplicationException);
 
         // when
@@ -274,7 +274,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNameDuplicationException.getMessage()));
 
-        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any(), any());
+        verify(taskCheckerAggregateService).changeSubTaskCheckerName(any());
     }
 
 }

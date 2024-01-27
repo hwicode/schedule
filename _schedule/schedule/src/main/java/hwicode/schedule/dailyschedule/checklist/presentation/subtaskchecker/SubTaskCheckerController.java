@@ -3,6 +3,7 @@ package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerAggregateService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskNameModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyRequest;
@@ -71,10 +72,11 @@ public class SubTaskCheckerController {
     @ResponseStatus(value = HttpStatus.OK)
     public SubTaskCheckerNameModifyResponse changeSubTaskCheckerName(@PathVariable("taskId") @Positive Long taskCheckerId,
                                                                      @PathVariable("subTaskId") @Positive Long subTaskCheckerId,
-                                                                     @RequestBody @Valid SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest) {
-        String newSubTaskCheckerName = taskCheckerAggregateService.changeSubTaskCheckerName(
-                subTaskCheckerNameModifyRequest.getSubTaskCheckerName(), subTaskCheckerNameModifyRequest
+                                                                     @RequestBody @Valid SubTaskCheckerNameModifyRequest request) {
+        SubTaskNameModifyCommand command = new SubTaskNameModifyCommand(
+                1L, taskCheckerId, request.getSubTaskCheckerName(), request.getNewSubTaskCheckerName()
         );
-        return new SubTaskCheckerNameModifyResponse(subTaskCheckerNameModifyRequest.getTaskCheckerId(), newSubTaskCheckerName);
+        String newSubTaskCheckerName = taskCheckerAggregateService.changeSubTaskCheckerName(command);
+        return new SubTaskCheckerNameModifyResponse(command.getTaskCheckerId(), newSubTaskCheckerName);
     }
 }
