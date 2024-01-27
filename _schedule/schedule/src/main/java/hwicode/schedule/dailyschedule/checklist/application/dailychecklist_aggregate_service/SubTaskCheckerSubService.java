@@ -1,13 +1,14 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskSaveCommand;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
+import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.SubTaskCheckerSaveRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.SubTaskCheckerPrePostService;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.delete.SubTaskDeleteRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.save.SubTaskSaveRequest;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,36 +23,46 @@ public class SubTaskCheckerSubService {
     private final SubTaskCheckerPrePostService subTaskCheckerPrePostService;
 
     @Transactional
-    public Long saveSubTaskChecker(SubTaskSaveRequest subTaskSaveRequest) {
-        DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(subTaskSaveRequest.getDailyChecklistId());
+    public Long saveSubTaskChecker(SubTaskSaveCommand command) {
+        DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(command.getDailyChecklistId());
 
-        SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(
-                subTaskSaveRequest.getTaskName(), subTaskSaveRequest.getSubTaskName()
-        );
+        if (!dailyChecklist.isOwner(command.getUserId())) {
+            throw new ChecklistForbiddenException();
+        }
 
+        SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
         return subTaskCheckerSaveRepository.save(subTaskChecker)
                 .getId();
     }
 
     @Transactional
-    public Long deleteSubTaskChecker(String subTaskCheckerName, SubTaskDeleteRequest subTaskDeleteRequest) {
-        subTaskCheckerPrePostService.performBeforeDelete(subTaskDeleteRequest.getSubTaskId());
+    public Long deleteSubTaskChecker(SubTaskDeleteCommand command) {
+        subTaskCheckerPrePostService.performBeforeDelete(command.getSubTaskCheckerId());
 
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
-                subTaskDeleteRequest.getDailyChecklistId());
-        dailyChecklist.deleteSubTaskChecker(subTaskDeleteRequest.getTaskName(), subTaskCheckerName);
-        return subTaskDeleteRequest.getSubTaskId();
+                command.getDailyChecklistId());
+
+        if (!dailyChecklist.isOwner(command.getUserId())) {
+            throw new ChecklistForbiddenException();
+        }
+
+        dailyChecklist.deleteSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
+        return command.getSubTaskCheckerId();
     }
 
     @Transactional
-    public TaskStatus changeSubTaskStatus(String subTaskCheckerName, SubTaskStatusModifyRequest subTaskStatusModifyRequest) {
+    public TaskStatus changeSubTaskStatus(SubTaskStatusModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
-                subTaskStatusModifyRequest.getDailyChecklistId());
+                command.getDailyChecklistId());
+
+        if (!dailyChecklist.isOwner(command.getUserId())) {
+            throw new ChecklistForbiddenException();
+        }
 
         return dailyChecklist.changeSubTaskStatus(
-                subTaskStatusModifyRequest.getTaskCheckerName(),
-                subTaskCheckerName,
-                subTaskStatusModifyRequest.getSubTaskStatus());
+                command.getTaskCheckerName(),
+                command.getSubTaskCheckerName(),
+                command.getSubTaskStatus());
     }
 
 }

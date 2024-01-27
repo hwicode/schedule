@@ -31,7 +31,7 @@ public class TaskCheckerSubService {
             throw new ChecklistForbiddenException();
         }
 
-        TaskChecker taskChecker = dailyChecklist.createTaskChecker(command.getTaskName(), command.getDifficulty());
+        TaskChecker taskChecker = dailyChecklist.createTaskChecker(command.getTaskCheckerName(), command.getDifficulty());
         taskCheckerSaveRepository.save(taskChecker);
 
         TaskCheckerAfterSaveRequest request = new TaskCheckerAfterSaveRequest(taskChecker.getId(), command.getPriority(), command.getImportance());

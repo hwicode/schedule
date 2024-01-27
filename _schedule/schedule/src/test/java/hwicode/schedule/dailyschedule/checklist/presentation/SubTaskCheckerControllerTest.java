@@ -85,7 +85,7 @@ class SubTaskCheckerControllerTest {
         // then
         perform.andExpect(status().isNoContent());
 
-        verify(subTaskCheckerSubService).deleteSubTaskChecker(any(), any());
+        verify(subTaskCheckerSubService).deleteSubTaskChecker(any());
     }
 
     @Test
@@ -117,7 +117,7 @@ class SubTaskCheckerControllerTest {
         // given
         DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
 
-        given(subTaskCheckerSubService.deleteSubTaskChecker(any(), any()))
+        given(subTaskCheckerSubService.deleteSubTaskChecker(any()))
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
@@ -132,7 +132,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
-        verify(subTaskCheckerSubService).deleteSubTaskChecker(any(), any());
+        verify(subTaskCheckerSubService).deleteSubTaskChecker(any());
     }
 
     @Test
@@ -141,7 +141,7 @@ class SubTaskCheckerControllerTest {
         SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         SubTaskStatusModifyResponse subTaskStatusModifyResponse = new SubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
-        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any()))
                 .willReturn(TaskStatus.PROGRESS);
 
         // when
@@ -157,7 +157,7 @@ class SubTaskCheckerControllerTest {
                         objectMapper.writeValueAsString(subTaskStatusModifyResponse)
                 ));
 
-        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any());
     }
 
     @Test
@@ -189,7 +189,7 @@ class SubTaskCheckerControllerTest {
     void 서브_과제체커를_찾을_때_서브_과제체커가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubTaskCheckerNotFoundException subTaskCheckerNotFoundException = new SubTaskCheckerNotFoundException();
-        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any()))
                 .willThrow(subTaskCheckerNotFoundException);
 
         // when
@@ -205,14 +205,14 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(subTaskCheckerNotFoundException.getMessage()));
 
-        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any());
     }
 
     @Test
     void 체크리스트를_조회할_때_체크리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         DailyChecklistNotFoundException dailyChecklistNotFoundException = new DailyChecklistNotFoundException();
-        given(subTaskCheckerSubService.changeSubTaskStatus(any(), any()))
+        given(subTaskCheckerSubService.changeSubTaskStatus(any()))
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
@@ -228,7 +228,7 @@ class SubTaskCheckerControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyChecklistNotFoundException.getMessage()));
 
-        verify(subTaskCheckerSubService).changeSubTaskStatus(any(), any());
+        verify(subTaskCheckerSubService).changeSubTaskStatus(any());
     }
 
     @Test

@@ -3,6 +3,7 @@ package hwicode.schedule.cross_boundedcontext_test;
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
+import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.TaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
@@ -12,7 +13,6 @@ import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.Sub
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskCheckerRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
-import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.delete.SubTaskDeleteRequest;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.timetable.domain.LearningTime;
@@ -116,13 +116,13 @@ class ChecklistAndTimeTableTest {
         learningTimeAggregateService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTaskId);
         learningTimeAggregateService.changeSubjectOfSubTask(learningTime2.getId(), subjectOfSubTaskId);
 
-        SubTaskDeleteRequest subTaskDeleteRequest = new SubTaskDeleteRequest(timeTable.getId(), TASK_CHECKER_NAME, subjectOfSubTaskId, SUB_TASK_CHECKER_NAME);
+        SubTaskDeleteCommand command = new SubTaskDeleteCommand(1L, timeTable.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, subjectOfSubTaskId);
 
         // when
-        subTaskCheckerSubService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskDeleteRequest);
+        subTaskCheckerSubService.deleteSubTaskChecker(command);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(SUB_TASK_CHECKER_NAME, subTaskDeleteRequest))
+        assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(command))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
         checkSubjectOfSubTaskIsDelete(learningTime.getId());
         checkSubjectOfSubTaskIsDelete(learningTime2.getId());

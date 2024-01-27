@@ -38,7 +38,7 @@ public class TaskCheckerController {
                 request.getDifficulty(), request.getPriority(), request.getImportance()
         );
         Long taskId = taskCheckerSubService.saveTaskChecker(command);
-        return new TaskSaveResponse(taskId, command.getTaskName());
+        return new TaskSaveResponse(taskId, command.getTaskCheckerName());
     }
 
     @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")

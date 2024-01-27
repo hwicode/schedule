@@ -12,7 +12,7 @@ public class TaskSaveCommand {
 
     private final Long userId;
     private final Long dailyChecklistId;
-    private final String taskName;
+    private final String taskCheckerName;
     private final Difficulty difficulty;
     private final Priority priority;
     private final Importance importance;
