@@ -1,8 +1,12 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.tag.application.dto.tag.TagDeleteCommand;
+import hwicode.schedule.tag.application.dto.tag.TagModifyNameCommand;
+import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
 import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
+import hwicode.schedule.tag.exception.application.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import hwicode.schedule.tag.infra.limited_repository.DailyTagConstraintRepository;
 import hwicode.schedule.tag.infra.limited_repository.MemoTagConstraintRepository;
@@ -20,20 +24,23 @@ public class TagService {
     private final MemoTagConstraintRepository memoTagConstraintRepository;
 
     @Transactional
-    public Long saveTag(String name) {
-        validateTagName(name);
-        Tag tag = new Tag(name, 1L);
+    public Long saveTag(TagSaveCommand command) {
+        validateTagName(command.getName());
+        Tag tag = new Tag(command.getName(), command.getUserId());
         tagRepository.save(tag);
         return tag.getId();
     }
 
     @Transactional
-    public String changeTagName(Long tagId, String newTagName) {
-        validateTagName(newTagName);
-        Tag tag = TagFindService.findById(tagRepository, tagId);
+    public String changeTagName(TagModifyNameCommand command) {
+        validateTagName(command.getNewName());
+        Tag tag = TagFindService.findById(tagRepository, command.getTagId());
 
-        tag.changeName(newTagName);
-        return newTagName;
+        if (!tag.isOwner(command.getUserId())) {
+            throw new TagForbiddenException();
+        }
+        tag.changeName(command.getNewName());
+        return command.getNewName();
     }
 
     private void validateTagName(String name) {
@@ -44,11 +51,15 @@ public class TagService {
     }
 
     @Transactional
-    public Long deleteTag(Long tagId) {
-        Tag tag = TagFindService.findById(tagRepository, tagId);
-        deleteForeignKeyConstraint(tagId);
+    public Long deleteTag(TagDeleteCommand command) {
+        Tag tag = TagFindService.findById(tagRepository, command.getTagId());
+
+        if (!tag.isOwner(command.getUserId())) {
+            throw new TagForbiddenException();
+        }
+        deleteForeignKeyConstraint(command.getTagId());
         tagRepository.delete(tag);
-        return tagId;
+        return command.getTagId();
     }
 
     private void deleteForeignKeyConstraint(Long tagId) {

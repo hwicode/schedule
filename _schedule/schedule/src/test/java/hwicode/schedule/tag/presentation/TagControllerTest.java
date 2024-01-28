@@ -67,7 +67,7 @@ class TagControllerTest {
         TagNameModifyRequest tagNameModifyRequest = new TagNameModifyRequest(NEW_TAG_NAME);
         TagNameModifyResponse tagNameModifyResponse = new TagNameModifyResponse(TAG_ID, NEW_TAG_NAME);
 
-        given(tagService.changeTagName(any(), any()))
+        given(tagService.changeTagName(any()))
                 .willReturn(NEW_TAG_NAME);
 
         // when
@@ -81,7 +81,7 @@ class TagControllerTest {
                         objectMapper.writeValueAsString(tagNameModifyResponse)
                 ));
 
-        verify(tagService).changeTagName(any(), any());
+        verify(tagService).changeTagName(any());
     }
 
     @Test

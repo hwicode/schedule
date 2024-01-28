@@ -2,6 +2,7 @@ package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.TagService;
+import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyRequest;
@@ -64,7 +65,9 @@ class TagEndToEndTest {
     @Test
     void 태그_이름_변경_요청() {
         // given
-        Long tagId = tagService.saveTag(TAG_NAME);
+        Long userId = 1L;
+        TagSaveCommand command = new TagSaveCommand(userId, TAG_NAME);
+        Long tagId = tagService.saveTag(command);
 
         TagNameModifyRequest tagNameModifyRequest = new TagNameModifyRequest(NEW_TAG_NAME);
 
@@ -87,7 +90,9 @@ class TagEndToEndTest {
     @Test
     void 태그_삭제_요청() {
         // given
-        Long tagId = tagService.saveTag(TAG_NAME);
+        Long userId = 1L;
+        TagSaveCommand command = new TagSaveCommand(userId, TAG_NAME);
+        Long tagId = tagService.saveTag(command);
 
         RequestSpecification requestSpecification = given().port(port);
 
