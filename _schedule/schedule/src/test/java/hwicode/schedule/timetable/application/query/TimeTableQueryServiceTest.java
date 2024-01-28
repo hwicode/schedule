@@ -67,9 +67,9 @@ class TimeTableQueryServiceTest {
         subjectOfSubTaskRepository.save(subjectOfSubTask);
 
         LocalDateTime startTime = date.atStartOfDay();
-        LearningTimeQueryResponse learningTimeQueryResponse = createLearningTimeWithSubjectOfTask(timeTable, startTime, subjectOfTask);
-        LearningTimeQueryResponse learningTimeQueryResponse2 = createLearningTimeWithSubjectOfSubTask(timeTable, startTime.plusHours(1), subjectOfSubTask);
-        LearningTimeQueryResponse learningTimeQueryResponse3 = createLearningTimeWithSubject(timeTable, startTime.plusHours(2), SUBJECT);
+        LearningTimeQueryResponse learningTimeQueryResponse = createLearningTimeWithSubjectOfTask(timeTable, startTime, subjectOfTask, userId);
+        LearningTimeQueryResponse learningTimeQueryResponse2 = createLearningTimeWithSubjectOfSubTask(timeTable, startTime.plusHours(1), subjectOfSubTask, userId);
+        LearningTimeQueryResponse learningTimeQueryResponse3 = createLearningTimeWithSubject(timeTable, startTime.plusHours(2), SUBJECT, userId);
 
         // when
         List<LearningTimeQueryResponse> result = timeTableQueryService.getLearningTimeQueryResponses(date);
@@ -79,8 +79,8 @@ class TimeTableQueryServiceTest {
         assertThat(result).isEqualTo(expectedResponses);
     }
 
-    private LearningTimeQueryResponse createLearningTimeWithSubjectOfTask(TimeTable timeTable, LocalDateTime startTime, SubjectOfTask subjectOfTask) {
-        LearningTime learningTime = new LearningTime(timeTable, startTime);
+    private LearningTimeQueryResponse createLearningTimeWithSubjectOfTask(TimeTable timeTable, LocalDateTime startTime, SubjectOfTask subjectOfTask, Long userId) {
+        LearningTime learningTime = new LearningTime(timeTable, startTime, userId);
         learningTime.changeSubjectOfTask(subjectOfTask);
 
         learningTimeRepository.save(learningTime);
@@ -93,8 +93,8 @@ class TimeTableQueryServiceTest {
                 .build();
     }
 
-    private LearningTimeQueryResponse createLearningTimeWithSubjectOfSubTask(TimeTable timeTable, LocalDateTime startTime, SubjectOfSubTask subjectOfSubTask) {
-        LearningTime learningTime = new LearningTime(timeTable, startTime);
+    private LearningTimeQueryResponse createLearningTimeWithSubjectOfSubTask(TimeTable timeTable, LocalDateTime startTime, SubjectOfSubTask subjectOfSubTask, Long userId) {
+        LearningTime learningTime = new LearningTime(timeTable, startTime, userId);
         learningTime.changeSubjectOfSubTask(subjectOfSubTask);
 
         learningTimeRepository.save(learningTime);
@@ -107,8 +107,8 @@ class TimeTableQueryServiceTest {
                 .build();
     }
 
-    private LearningTimeQueryResponse createLearningTimeWithSubject(TimeTable timeTable, LocalDateTime startTime, String subject) {
-        LearningTime learningTime = new LearningTime(timeTable, startTime);
+    private LearningTimeQueryResponse createLearningTimeWithSubject(TimeTable timeTable, LocalDateTime startTime, String subject, Long userId) {
+        LearningTime learningTime = new LearningTime(timeTable, startTime, userId);
         learningTime.changeSubject(subject);
 
         learningTimeRepository.save(learningTime);

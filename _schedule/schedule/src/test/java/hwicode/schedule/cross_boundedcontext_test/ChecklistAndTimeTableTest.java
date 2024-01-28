@@ -15,6 +15,8 @@ import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskChec
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.timetable.application.LearningTimeAggregateService;
+import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectOfSubTaskCommand;
+import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectOfTaskCommand;
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
@@ -77,16 +79,19 @@ class ChecklistAndTimeTableTest {
 
         Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId(), userId);
 
-        learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
-        learningTimeAggregateService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
+        LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(userId, learningTime.getId(), subjectOfTaskId);
+        LearningTimeModifySubjectOfTaskCommand command2 = new LearningTimeModifySubjectOfTaskCommand(userId, learningTime.getId(), subjectOfTaskId);
 
-        TaskDeleteCommand command = new TaskDeleteCommand(userId, timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
+        learningTimeAggregateService.changeSubjectOfTask(command);
+        learningTimeAggregateService.changeSubjectOfTask(command2);
+
+        TaskDeleteCommand deleteCommand = new TaskDeleteCommand(userId, timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
 
         // when
-        taskCheckerSubService.deleteTaskChecker(command);
+        taskCheckerSubService.deleteTaskChecker(deleteCommand);
 
         // then
-        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
+        assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(deleteCommand))
                 .isInstanceOf(TaskCheckerNotFoundException.class);
         checkSubjectOfTaskIsDelete(learningTime.getId());
         checkSubjectOfTaskIsDelete(learningTime2.getId());
@@ -115,16 +120,19 @@ class ChecklistAndTimeTableTest {
 
         Long subjectOfSubTaskId = saveSubjectOfSubTask(timeTable.getId(), userId);
 
-        learningTimeAggregateService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTaskId);
-        learningTimeAggregateService.changeSubjectOfSubTask(learningTime2.getId(), subjectOfSubTaskId);
+        LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(userId, learningTime.getId(), subjectOfSubTaskId);
+        LearningTimeModifySubjectOfSubTaskCommand command2 = new LearningTimeModifySubjectOfSubTaskCommand(userId, learningTime2.getId(), subjectOfSubTaskId);
 
-        SubTaskDeleteCommand command = new SubTaskDeleteCommand(userId, timeTable.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, subjectOfSubTaskId);
+        learningTimeAggregateService.changeSubjectOfSubTask(command);
+        learningTimeAggregateService.changeSubjectOfSubTask(command2);
+
+        SubTaskDeleteCommand deleteCommand = new SubTaskDeleteCommand(userId, timeTable.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, subjectOfSubTaskId);
 
         // when
-        subTaskCheckerSubService.deleteSubTaskChecker(command);
+        subTaskCheckerSubService.deleteSubTaskChecker(deleteCommand);
 
         // then
-        assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(command))
+        assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(deleteCommand))
                 .isInstanceOf(SubTaskCheckerNotFoundException.class);
         checkSubjectOfSubTaskIsDelete(learningTime.getId());
         checkSubjectOfSubTaskIsDelete(learningTime2.getId());

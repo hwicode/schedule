@@ -31,6 +31,9 @@ public class LearningTime {
     @OneToOne(fetch = FetchType.LAZY)
     private SubjectOfTask subjectOfTask;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @JoinColumn(name = "sub_task_id")
     @OneToOne(fetch = FetchType.LAZY)
     private SubjectOfSubTask subjectOfSubTask;
@@ -40,9 +43,14 @@ public class LearningTime {
         this.startTime = startTime;
     }
 
-    public LearningTime(TimeTable timeTable, LocalDateTime startTime) {
+    public LearningTime(TimeTable timeTable, LocalDateTime startTime, Long userId) {
         this.timeTable = timeTable;
         this.startTime = startTime;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public boolean deleteSubject() {

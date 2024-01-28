@@ -64,6 +64,7 @@ create table learning_time (
    subject varchar(255),
    task_id bigint,
    sub_task_id bigint,
+   user_id bigint,
    daily_schedule_id bigint not null,
    primary key (id)
 ) engine=InnoDB;

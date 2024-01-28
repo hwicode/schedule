@@ -47,7 +47,7 @@ public class TimeTable {
     public LearningTime createLearningTime(LocalDateTime startTime) {
         validator.validateStartTime(learningTimes, startTime);
 
-        LearningTime learningTime = new LearningTime(this, startTime);
+        LearningTime learningTime = new LearningTime(this, startTime, this.userId);
         learningTimes.add(learningTime);
 
         return learningTime;
