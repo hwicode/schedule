@@ -138,6 +138,7 @@ create table memo (
    id bigint not null auto_increment,
    text text not null,
    daily_schedule_id bigint,
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 

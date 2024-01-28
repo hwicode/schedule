@@ -84,11 +84,12 @@ class DailyTagListQueryServiceTest {
     @Test
     void 계획표에_존재하는_메모들을_조회할_수_있다() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         for (int i = 0; i < 3; i++) {
-            Memo memo = new Memo(MEMO_TEXT + i, dailyTagList);
+            Memo memo = dailyTagList.createMemo(MEMO_TEXT + i);
             memoRepository.save(memo);
         }
 

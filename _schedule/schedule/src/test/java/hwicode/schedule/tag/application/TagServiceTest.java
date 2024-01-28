@@ -2,6 +2,7 @@ package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
+import hwicode.schedule.tag.application.dto.memo.MemoAddTagsCommand;
 import hwicode.schedule.tag.application.dto.tag.TagDeleteCommand;
 import hwicode.schedule.tag.application.dto.tag.TagModifyNameCommand;
 import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
@@ -9,8 +10,8 @@ import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
-import hwicode.schedule.tag.exception.application.TagForbiddenException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
+import hwicode.schedule.tag.exception.domain.tag.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -199,16 +200,20 @@ class TagServiceTest {
 
         Long tagId = tagService.saveTag(saveCommand);
 
-        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);
+        Memo memo = dailyTagList.createMemo(MEMO_TEXT);
+        Memo memo2 = dailyTagList.createMemo(MEMO_TEXT2);
         memoRepository.save(memo);
         memoRepository.save(memo2);
 
-        memoService.addTagsToMemo(memo.getId(), List.of(tagId));
-        memoService.addTagsToMemo(memo2.getId(), List.of(tagId));
+        memoService.addTagsToMemo(
+                new MemoAddTagsCommand(userId, memo.getId(), List.of(tagId))
+        );
+        memoService.addTagsToMemo(
+                new MemoAddTagsCommand(userId, memo2.getId(), List.of(tagId))
+        );
 
         TagDeleteCommand command = new TagDeleteCommand(userId, tagId);
 
@@ -242,13 +247,17 @@ class TagServiceTest {
                 new DailyTagListSaveTagCommand(userId, dailyTagList2.getId(), tagId)
         );
 
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);
+        Memo memo = dailyTagList.createMemo(MEMO_TEXT);
+        Memo memo2 = dailyTagList.createMemo(MEMO_TEXT2);
         memoRepository.save(memo);
         memoRepository.save(memo2);
 
-        memoService.addTagsToMemo(memo.getId(), List.of(tagId));
-        memoService.addTagsToMemo(memo2.getId(), List.of(tagId));
+        memoService.addTagsToMemo(
+                new MemoAddTagsCommand(userId, memo.getId(), List.of(tagId))
+        );
+        memoService.addTagsToMemo(
+                new MemoAddTagsCommand(userId, memo2.getId(), List.of(tagId))
+        );
 
         TagDeleteCommand command = new TagDeleteCommand(userId, tagId);
 

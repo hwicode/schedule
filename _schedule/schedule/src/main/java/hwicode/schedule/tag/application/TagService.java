@@ -6,7 +6,6 @@ import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
 import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
-import hwicode.schedule.tag.exception.application.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import hwicode.schedule.tag.infra.limited_repository.DailyTagConstraintRepository;
 import hwicode.schedule.tag.infra.limited_repository.MemoTagConstraintRepository;
@@ -34,11 +33,10 @@ public class TagService {
     @Transactional
     public String changeTagName(TagModifyNameCommand command) {
         validateTagName(command.getNewName());
-        Tag tag = TagFindService.findById(tagRepository, command.getTagId());
 
-        if (!tag.isOwner(command.getUserId())) {
-            throw new TagForbiddenException();
-        }
+        Tag tag = TagFindService.findById(tagRepository, command.getTagId());
+        tag.checkOwnership(command.getUserId());
+
         tag.changeName(command.getNewName());
         return command.getNewName();
     }
@@ -53,10 +51,8 @@ public class TagService {
     @Transactional
     public Long deleteTag(TagDeleteCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
+        tag.checkOwnership(command.getUserId());
 
-        if (!tag.isOwner(command.getUserId())) {
-            throw new TagForbiddenException();
-        }
         deleteForeignKeyConstraint(command.getTagId());
         tagRepository.delete(tag);
         return command.getTagId();

@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.domain;
 
 import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
+import hwicode.schedule.tag.exception.domain.memo.MemoForbiddenException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import lombok.AccessLevel;
@@ -26,12 +27,22 @@ public class Memo {
     @ManyToOne(fetch = FetchType.LAZY)
     private DailyTagList dailyTagList;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "memo", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<MemoTag> memoTags = new ArrayList<>();
 
-    public Memo(String text, DailyTagList dailyTagList) {
+    Memo(String text, DailyTagList dailyTagList, Long userId) {
         this.text = text;
         this.dailyTagList = dailyTagList;
+        this.userId = userId;
+    }
+
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new MemoForbiddenException();
+        }
     }
 
     public boolean changeText(String text) {

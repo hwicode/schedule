@@ -8,7 +8,6 @@ import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.DailyTag;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Tag;
-import hwicode.schedule.tag.exception.application.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
@@ -27,11 +26,11 @@ public class DailyTagListService {
     @Transactional
     public Long addTagToDailyTagList(DailyTagListSaveTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        tag.checkOwnership(command.getUserId());
 
-        if (!dailyTagList.isOwner(command.getUserId()) || !tag.isOwner(command.getUserId())) {
-            throw new TagForbiddenException();
-        }
+        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        dailyTagList.checkOwnership(command.getUserId());
+
         DailyTag dailyTag = dailyTagList.addTag(tag);
         dailyTagRepository.save(dailyTag);
         return dailyTag.getId();
@@ -40,11 +39,11 @@ public class DailyTagListService {
     @Transactional
     public Long deleteTagToDailyTagList(DailyTagListDeleteTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        tag.checkOwnership(command.getUserId());
 
-        if (!dailyTagList.isOwner(command.getUserId()) || !tag.isOwner(command.getUserId())) {
-            throw new TagForbiddenException();
-        }
+        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        dailyTagList.checkOwnership(command.getUserId());
+
         dailyTagList.deleteTag(tag);
         return dailyTagList.getId();
     }
@@ -52,11 +51,11 @@ public class DailyTagListService {
     @Transactional
     public String changeMainTag(DailyTagListModifyMainTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        tag.checkOwnership(command.getUserId());
 
-        if (!dailyTagList.isOwner(command.getUserId()) || !tag.isOwner(command.getUserId())) {
-            throw new TagForbiddenException();
-        }
+        DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
+        dailyTagList.checkOwnership(command.getUserId());
+
         return dailyTagList.changeMainTag(tag);
     }
 

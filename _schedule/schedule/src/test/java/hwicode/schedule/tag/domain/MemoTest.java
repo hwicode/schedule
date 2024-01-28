@@ -20,7 +20,7 @@ class MemoTest {
     void Memo의_내용을_수정할_때_내용이_동일하면_변경이_없으므로_false가_리턴된다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
 
         // when
         boolean isChange = memo.changeText(MEMO_TEXT);
@@ -33,7 +33,7 @@ class MemoTest {
     void Memo의_내용을_수정할_때_내용이_다르면_변경이_있으므로_true가_리턴된다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
 
         // when
         boolean isChange = memo.changeText(NEW_MEMO_TEXT);
@@ -56,7 +56,7 @@ class MemoTest {
     void Memo에_Tag를_추가할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
 
         for (Tag tag : tags) {
             // when
@@ -71,7 +71,7 @@ class MemoTest {
     void Memo에_추가하는_Tag의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
         List<Tag> tags = List.of(
                 new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L)
         );
@@ -89,7 +89,7 @@ class MemoTest {
     void Memo에_Tag를_삭제할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
         memo.addTags(tags);
 
         for (Tag tag : tags) {
@@ -106,7 +106,7 @@ class MemoTest {
     void Memo에_존재하지_않는_Tag를_조회하면_에러가_발생한다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
         Tag tag = new Tag(TAG_NAME, 1L);
 
         // when then
@@ -119,7 +119,7 @@ class MemoTest {
     void Memo에_여러_개의_Tag를_추가할_수_있다(List<Tag> tags) {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
 
         // when
         List<MemoTag> memoTags = memo.addTags(tags);
@@ -136,7 +136,7 @@ class MemoTest {
     void Memo에_10보다_큰_수의_Tag를_추가하면_에러가_발생한다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Memo memo = new Memo(MEMO_TEXT, dailyTagList);
+        Memo memo = new Memo(MEMO_TEXT, dailyTagList, 1L);
         List<Tag> tags = List.of(
                 new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L),
                 new Tag(TAG_NAME4, 1L), new Tag(TAG_NAME5, 1L), new Tag(TAG_NAME6, 1L),

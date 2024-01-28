@@ -1,5 +1,6 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.tag.application.dto.memo.*;
 import hwicode.schedule.tag.application.find_service.DailyTagListFindService;
 import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.domain.DailyTagList;
@@ -27,24 +28,31 @@ public class MemoService {
     private final MemoTagRepository memoTagRepository;
 
     @Transactional
-    public Long saveMemo(Long dailyTagListId, String text) {
-        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, dailyTagListId);
-        Memo memo = new Memo(text, dailyTagList);
+    public Long saveMemo(MemoSaveCommand command) {
+        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, command.getDailyTagListId());
+        dailyTagList.checkOwnership(command.getUserId());
+
+        Memo memo = dailyTagList.createMemo(command.getText());
         memoRepository.save(memo);
         return memo.getId();
     }
 
     @Transactional
-    public String changeMemoText(Long memoId, String text) {
-        Memo memo = findMemoBy(memoId);
-        memo.changeText(text);
-        return text;
+    public String changeMemoText(MemoModifyTextCommand command) {
+        Memo memo = findMemoBy(command.getMemoId());
+        memo.checkOwnership(command.getUserId());
+
+        memo.changeText(command.getText());
+        return command.getText();
     }
 
     @Transactional
-    public Long addTagsToMemo(Long memoId, List<Long> tagIds) {
-        Memo memo = findMemoWithMemoTagsBy(memoId);
-        List<Tag> tags = tagRepository.findAllById(tagIds);
+    public Long addTagsToMemo(MemoAddTagsCommand command) {
+        Memo memo = findMemoWithMemoTagsBy(command.getMemoId());
+        memo.checkOwnership(command.getUserId());
+
+        List<Tag> tags = tagRepository.findAllById(command.getTagIds());
+        tags.forEach(tag -> tag.checkOwnership(command.getUserId()));
 
         List<MemoTag> memoTags = memo.addTags(tags);
         memoTagRepository.saveAll(memoTags);
@@ -52,28 +60,35 @@ public class MemoService {
     }
 
     @Transactional
-    public Long saveMemoWithTags(Long dailyTagListId, String text, List<Long> tagIds) {
-        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, dailyTagListId);
-        List<Tag> tags = tagRepository.findAllById(tagIds);
+    public Long saveMemoWithTags(MemoSaveWithTagsCommand command) {
+        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, command.getDailyTagListId());
+        dailyTagList.checkOwnership(command.getUserId());
 
-        Memo memo = new Memo(text, dailyTagList);
+        List<Tag> tags = tagRepository.findAllById(command.getTagIds());
+        tags.forEach(tag -> tag.checkOwnership(command.getUserId()));
+
+        Memo memo = dailyTagList.createMemo(command.getText());
         memo.addTags(tags);
         memoRepository.save(memo);
         return memo.getId();
     }
 
     @Transactional
-    public Long deleteTagToMemo(Long memoId, Long tagId) {
-        Memo memo = findMemoWithMemoTagsBy(memoId);
-        Tag tag = TagFindService.findById(tagRepository, tagId);
+    public Long deleteTagToMemo(MemoDeleteTagCommand command) {
+        Memo memo = findMemoWithMemoTagsBy(command.getMemoId());
+        memo.checkOwnership(command.getUserId());
+
+        Tag tag = TagFindService.findById(tagRepository, command.getTagId());
+        tag.checkOwnership(command.getUserId());
 
         memo.deleteTag(tag);
-        return memoId;
+        return memo.getId();
     }
 
     @Transactional
-    public Long deleteMemo(Long memoId) {
-        Memo memo = findMemoBy(memoId);
+    public Long deleteMemo(MemoDeleteCommand command) {
+        Memo memo = findMemoWithMemoTagsBy(command.getMemoId());
+        memo.checkOwnership(command.getUserId());
         memoRepository.delete(memo);
         return memo.getId();
     }

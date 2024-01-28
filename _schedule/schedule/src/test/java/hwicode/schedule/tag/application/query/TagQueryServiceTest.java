@@ -108,10 +108,10 @@ class TagQueryServiceTest {
 
         String text = "a";
         for (int i = 1; i <= 10; i++) {
-            DailyTagList dailyTagList = new DailyTagList();
+            DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
             dailyTagListRepository.save(dailyTagList);
 
-            Memo memo = new Memo(text + i, dailyTagList);
+            Memo memo = dailyTagList.createMemo(text + i);
             MemoTag memoTag = new MemoTag(memo, tag);
             memoRepository.save(memo);
             memoTagRepository.save(memoTag);
@@ -135,10 +135,10 @@ class TagQueryServiceTest {
 
         String text = "a";
         for (int i = 1; i <= 20; i++) {
-            DailyTagList dailyTagList = new DailyTagList();
+            DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
             dailyTagListRepository.save(dailyTagList);
 
-            Memo memo = new Memo(text + i, dailyTagList);
+            Memo memo = dailyTagList.createMemo(text + i);
             MemoTag memoTag = new MemoTag(memo, tag);
             memoRepository.save(memo);
             memoTagRepository.save(memoTag);

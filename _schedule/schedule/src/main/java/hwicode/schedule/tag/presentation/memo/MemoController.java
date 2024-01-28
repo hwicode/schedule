@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.presentation.memo;
 
 import hwicode.schedule.tag.application.MemoService;
+import hwicode.schedule.tag.application.dto.memo.*;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveRequest;
 import hwicode.schedule.tag.presentation.memo.dto.save.MemoSaveResponse;
 import hwicode.schedule.tag.presentation.memo.dto.save_with_tags.MemoSaveWithTagsRequest;
@@ -16,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Validated
@@ -27,50 +27,55 @@ public class MemoController {
 
     @PostMapping("/dailyschedule/memos")
     @ResponseStatus(HttpStatus.CREATED)
-    public MemoSaveResponse saveMemo(@RequestBody @Valid MemoSaveRequest memoSaveRequest) {
-        Long dailyTagListId = memoSaveRequest.getDailyTagListId();
-        String text = memoSaveRequest.getText();
-        Long memoId = memoService.saveMemo(dailyTagListId, text);
-        return new MemoSaveResponse(dailyTagListId, memoId, text);
+    public MemoSaveResponse saveMemo(@RequestBody @Valid MemoSaveRequest request) {
+        MemoSaveCommand command = new MemoSaveCommand(
+                1L, request.getDailyTagListId(), request.getText()
+        );
+        Long memoId = memoService.saveMemo(command);
+        return new MemoSaveResponse(command.getDailyTagListId(), memoId, command.getText());
     }
 
     @PatchMapping("/dailyschedule/memos/{memoId}")
     @ResponseStatus(HttpStatus.OK)
     public MemoTextModifyResponse changeMemoText(@PathVariable @Positive Long memoId,
-                                                 @RequestBody @Valid MemoTextModifyRequest memoTextModifyRequest) {
-        memoService.changeMemoText(memoId, memoTextModifyRequest.getNewText());
-        return new MemoTextModifyResponse(memoId, memoTextModifyRequest.getNewText());
+                                                 @RequestBody @Valid MemoTextModifyRequest request) {
+        MemoModifyTextCommand command = new MemoModifyTextCommand(1L, memoId, request.getNewText());
+        memoService.changeMemoText(command);
+        return new MemoTextModifyResponse(memoId, command.getText());
     }
 
     @PostMapping("/dailyschedule/memos/{memoId}/tags")
     @ResponseStatus(HttpStatus.CREATED)
     public MemoTagsAddResponse addTagsToMemo(@PathVariable @Positive Long memoId,
-                                             @RequestBody @Valid MemoTagsAddRequest memoTagsAddRequest) {
-        List<Long> tagIds = memoTagsAddRequest.getTagIds();
-        memoService.addTagsToMemo(memoId, tagIds);
-        return new MemoTagsAddResponse(memoId, tagIds);
+                                             @RequestBody @Valid MemoTagsAddRequest request) {
+        MemoAddTagsCommand command = new MemoAddTagsCommand(1L, memoId, request.getTagIds());
+        memoService.addTagsToMemo(command);
+        return new MemoTagsAddResponse(memoId, command.getTagIds());
     }
 
     @PostMapping("/dailyschedule/memos/tags")
     @ResponseStatus(HttpStatus.CREATED)
-    public MemoSaveWithTagsResponse saveMemoWithTags(@RequestBody @Valid MemoSaveWithTagsRequest memoSaveWithTagsRequest) {
-        Long dailyTagListId = memoSaveWithTagsRequest.getDailyTagListId();
-        List<Long> tagIds = memoSaveWithTagsRequest.getTagIds();
-        Long memoId = memoService.saveMemoWithTags(dailyTagListId, memoSaveWithTagsRequest.getText(), tagIds);
-        return new MemoSaveWithTagsResponse(dailyTagListId, memoId, memoSaveWithTagsRequest.getText(), tagIds);
+    public MemoSaveWithTagsResponse saveMemoWithTags(@RequestBody @Valid MemoSaveWithTagsRequest request) {
+        MemoSaveWithTagsCommand command = new MemoSaveWithTagsCommand(
+                1L, request.getDailyTagListId(), request.getTagIds(), request.getText()
+        );
+        Long memoId = memoService.saveMemoWithTags(command);
+        return new MemoSaveWithTagsResponse(command.getDailyTagListId(), memoId, command.getText(), command.getTagIds());
     }
 
     @DeleteMapping("/dailyschedule/memos/{memoId}/tags/{tagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTagToMemo(@PathVariable @Positive Long memoId,
                                 @PathVariable @Positive Long tagId) {
-        memoService.deleteTagToMemo(memoId, tagId);
+        MemoDeleteTagCommand command = new MemoDeleteTagCommand(1L, memoId, tagId);
+        memoService.deleteTagToMemo(command);
     }
 
     @DeleteMapping("/dailyschedule/memos/{memoId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteMemo(@PathVariable @Positive Long memoId) {
-        memoService.deleteMemo(memoId);
+        MemoDeleteCommand command = new MemoDeleteCommand(1L, memoId);
+        memoService.deleteMemo(command);
     }
 
 }

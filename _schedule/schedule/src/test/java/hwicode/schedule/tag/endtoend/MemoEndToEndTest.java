@@ -2,6 +2,7 @@ package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.MemoService;
+import hwicode.schedule.tag.application.dto.memo.MemoSaveWithTagsCommand;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
@@ -23,6 +24,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -63,7 +65,8 @@ class MemoEndToEndTest {
     @Test
     void 메모_생성_요청() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         MemoSaveRequest memoSaveRequest = new MemoSaveRequest(dailyTagList.getId(), MEMO_TEXT);
@@ -86,10 +89,12 @@ class MemoEndToEndTest {
     @Test
     void 메모의_내용_변경_요청() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
-        dailyTagListRepository.save(dailyTagList);
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        Memo memo = dailyTagList.createMemo(MEMO_TEXT);
 
-        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
+        dailyTagListRepository.save(dailyTagList);
+        memoRepository.save(memo);
 
         MemoTextModifyRequest memoTextModifyRequest = new MemoTextModifyRequest(NEW_MEMO_TEXT);
 
@@ -99,13 +104,13 @@ class MemoEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .patch("/dailyschedule/memos/{memoId}", memoId);
+                .patch("/dailyschedule/memos/{memoId}", memo.getId());
 
         // then
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Memo savedMemo = memoRepository.findById(memoId).orElseThrow();
+        Memo savedMemo = memoRepository.findById(memo.getId()).orElseThrow();
         assertThat(savedMemo.changeText(NEW_MEMO_TEXT)).isFalse();
     }
 
@@ -113,8 +118,12 @@ class MemoEndToEndTest {
     void 메모에_여러_개의_태그_추가_요청() {
         // given
         Long userId = 1L;
-        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        Memo memo = dailyTagList.createMemo(MEMO_TEXT);
+
         dailyTagListRepository.save(dailyTagList);
+        memoRepository.save(memo);
+
 
         List<Tag> tags = List.of(
                 new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
@@ -125,8 +134,6 @@ class MemoEndToEndTest {
                 .map(Tag::getId)
                 .collect(Collectors.toSet());
 
-        Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
-
         MemoTagsAddRequest memoTagsAddRequest = new MemoTagsAddRequest(tagIds);
 
         RequestSpecification requestSpecification = given().port(port)
@@ -135,7 +142,7 @@ class MemoEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .post("/dailyschedule/memos/{memoId}/tags", memoId);
+                .post("/dailyschedule/memos/{memoId}/tags", memo.getId());
 
         // then
         response.then()
@@ -148,7 +155,7 @@ class MemoEndToEndTest {
     void 메모를_생성하며_여러_개의_태그_추가_요청() {
         // given
         Long userId = 1L;
-        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
@@ -182,7 +189,7 @@ class MemoEndToEndTest {
     void 메모에_태그_삭제_요청() {
         // given
         Long userId = 1L;
-        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
@@ -193,7 +200,9 @@ class MemoEndToEndTest {
                 .map(Tag::getId)
                 .collect(Collectors.toList());
 
-        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+        Long memoId = memoService.saveMemoWithTags(
+                new MemoSaveWithTagsCommand(userId, dailyTagList.getId(), tagIds, MEMO_TEXT)
+        );
 
         RequestSpecification requestSpecification = given().port(port);
 
@@ -215,7 +224,7 @@ class MemoEndToEndTest {
     void 메모_삭제_요청() {
         // given
         Long userId = 1L;
-        DailyTagList dailyTagList = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
@@ -226,7 +235,9 @@ class MemoEndToEndTest {
                 .map(Tag::getId)
                 .collect(Collectors.toList());
 
-        Long memoId = memoService.saveMemoWithTags(dailyTagList.getId(), MEMO_TEXT, tagIds);
+        Long memoId = memoService.saveMemoWithTags(
+                new MemoSaveWithTagsCommand(userId, dailyTagList.getId(), tagIds, MEMO_TEXT)
+        );
 
         RequestSpecification requestSpecification = given().port(port);
 
