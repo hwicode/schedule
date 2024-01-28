@@ -82,6 +82,40 @@ class DailyTagListServiceTest {
     }
 
     @Test
+    void DailyTagList에_태그를_추가할_때_DailyTagList의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), 2L);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListSaveTagCommand command = new DailyTagListSaveTagCommand(userId, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.addTagToDailyTagList(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
+    void DailyTagList에_태그를_추가할_때_태그의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, 2L);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListSaveTagCommand command = new DailyTagListSaveTagCommand(userId, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.addTagToDailyTagList(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
     void DailyTagList에_태그를_삭제할_수_있다() {
         // given
         Long userId = 1L;
@@ -128,6 +162,40 @@ class DailyTagListServiceTest {
     }
 
     @Test
+    void DailyTagList에_태그를_삭제할_때_DailyTagList의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), 2L);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListDeleteTagCommand command = new DailyTagListDeleteTagCommand(userId, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
+    void DailyTagList에_태그를_삭제할_때_태그의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, 2L);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListDeleteTagCommand command = new DailyTagListDeleteTagCommand(userId, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
     void DailyTagList에_메인_태그를_변경할_수_있다() {
         // given
         Long userId = 1L;
@@ -165,6 +233,40 @@ class DailyTagListServiceTest {
         dailyTagListService.addTagToDailyTagList(saveCommand);
 
         DailyTagListModifyMainTagCommand command = new DailyTagListModifyMainTagCommand(2L, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
+    void DailyTagList에_메인_태그를_변경할_때_DailyTagList의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), 2L);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListModifyMainTagCommand command = new DailyTagListModifyMainTagCommand(userId, dailyTagList.getId(), tag.getId());
+
+        // when then
+        assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
+                .isInstanceOf(TagForbiddenException.class);
+    }
+
+    @Test
+    void DailyTagList에_메인_태그를_변경할_때_태그의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, 2L);
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+
+        tagRepository.save(tag);
+        dailyTagListRepository.save(dailyTagList);
+
+        DailyTagListModifyMainTagCommand command = new DailyTagListModifyMainTagCommand(userId, dailyTagList.getId(), tag.getId());
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
