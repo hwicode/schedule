@@ -2,6 +2,7 @@ package hwicode.schedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
+import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
@@ -59,7 +60,8 @@ class TimeTableEndToEndTest {
     @Test
     void 학습_시간_생성_요청() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         timeTableRepository.save(timeTable);
 
         LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
@@ -77,14 +79,16 @@ class TimeTableEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.CREATED.value());
 
-        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(timeTable.getId(), START_TIME))
+        LearningTimeSaveCommand command = new LearningTimeSaveCommand(userId, timeTable.getId(), START_TIME);
+        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(command))
                 .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
     void 학습_시간_시작_시간_변경_요청() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -104,14 +108,16 @@ class TimeTableEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(timeTable.getId(), NEW_START_TIME))
+        LearningTimeSaveCommand command = new LearningTimeSaveCommand(userId, timeTable.getId(), NEW_START_TIME);
+        assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(command))
                 .isInstanceOf(StartTimeDuplicateException.class);
     }
 
     @Test
     void 학습_시간_끝나는_시간_변경_요청() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -138,7 +144,8 @@ class TimeTableEndToEndTest {
     @Test
     void 학습_시간_삭제_요청() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
         timeTableRepository.save(timeTable);
@@ -162,7 +169,8 @@ class TimeTableEndToEndTest {
     @Test
     void 특정_학습_주제_총_학습_시간_요청() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
@@ -188,7 +196,8 @@ class TimeTableEndToEndTest {
         // given
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
@@ -214,7 +223,8 @@ class TimeTableEndToEndTest {
         // given
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));

@@ -55,7 +55,8 @@ class LearningTimeEndToEndTest {
     @Test
     void 학습_주제_삭제_요청() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         learningTime.changeSubject(TimeTableDataHelper.SUBJECT);
         timeTableRepository.save(timeTable);
@@ -80,7 +81,8 @@ class LearningTimeEndToEndTest {
     @Test
     void 학습_주제_수정_요청() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -107,7 +109,8 @@ class LearningTimeEndToEndTest {
     @Test
     void Task_학습_주제_수정_요청() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -137,7 +140,8 @@ class LearningTimeEndToEndTest {
     @Test
     void SubTask_학습_주제_수정_요청() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 

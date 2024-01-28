@@ -52,7 +52,7 @@ class TimeTableControllerTest {
         LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
         LearningTimeSaveResponse learningTimeSaveResponse = new LearningTimeSaveResponse(LEARNING_TIME_ID, START_TIME);
 
-        given(timeTableAggregateService.saveLearningTime(any(), any()))
+        given(timeTableAggregateService.saveLearningTime(any()))
                 .willReturn(LEARNING_TIME_ID);
 
         // when
@@ -70,7 +70,7 @@ class TimeTableControllerTest {
                         objectMapper.writeValueAsString(learningTimeSaveResponse)
                 ));
 
-        verify(timeTableAggregateService).saveLearningTime(any(), any());
+        verify(timeTableAggregateService).saveLearningTime(any());
     }
 
     @Test
@@ -79,7 +79,7 @@ class TimeTableControllerTest {
         StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
         StartTimeModifyResponse startTimeModifyResponse = new StartTimeModifyResponse(NEW_START_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeStartTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeStartTime(any()))
                 .willReturn(NEW_START_TIME);
 
         // when
@@ -97,7 +97,7 @@ class TimeTableControllerTest {
                         objectMapper.writeValueAsString(startTimeModifyResponse)
                 ));
 
-        verify(timeTableAggregateService).changeLearningTimeStartTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeStartTime(any());
     }
 
     @Test
@@ -106,7 +106,7 @@ class TimeTableControllerTest {
         EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
         EndTimeModifyResponse endTimeModifyResponse = new EndTimeModifyResponse(END_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeEndTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeEndTime(any()))
                 .willReturn(END_TIME);
 
         // when
@@ -124,7 +124,7 @@ class TimeTableControllerTest {
                         objectMapper.writeValueAsString(endTimeModifyResponse)
                 ));
 
-        verify(timeTableAggregateService).changeLearningTimeEndTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeEndTime(any());
     }
 
     @Test
@@ -138,7 +138,7 @@ class TimeTableControllerTest {
         // then
         perform.andExpect(status().isNoContent());
 
-        verify(timeTableAggregateService).deleteLearningTime(any(), any());
+        verify(timeTableAggregateService).deleteLearningTime(any());
     }
 
     @Test
@@ -147,7 +147,7 @@ class TimeTableControllerTest {
         TimeTableNotFoundException timeTableNotFoundException = new TimeTableNotFoundException();
         LearningTimeSaveRequest learningTimeSaveRequest = new LearningTimeSaveRequest(START_TIME);
 
-        given(timeTableAggregateService.saveLearningTime(any(), any()))
+        given(timeTableAggregateService.saveLearningTime(any()))
                 .willThrow(timeTableNotFoundException);
 
         // when
@@ -163,7 +163,7 @@ class TimeTableControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(timeTableNotFoundException.getMessage()));
 
-        verify(timeTableAggregateService).saveLearningTime(any(), any());
+        verify(timeTableAggregateService).saveLearningTime(any());
     }
 
     @Test
@@ -172,7 +172,7 @@ class TimeTableControllerTest {
         EndTimeNotValidException endTimeNotValidException = new EndTimeNotValidException();
         EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeEndTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeEndTime(any()))
                 .willThrow(endTimeNotValidException);
 
         // when
@@ -188,7 +188,7 @@ class TimeTableControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(endTimeNotValidException.getMessage()));
 
-        verify(timeTableAggregateService).changeLearningTimeEndTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeEndTime(any());
     }
 
     @Test
@@ -197,7 +197,7 @@ class TimeTableControllerTest {
         LearningTimeNotFoundException learningTimeNotFoundException = new LearningTimeNotFoundException();
         EndTimeModifyRequest endTimeModifyRequest = new EndTimeModifyRequest(START_TIME, END_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeEndTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeEndTime(any()))
                 .willThrow(learningTimeNotFoundException);
 
         // when
@@ -213,7 +213,7 @@ class TimeTableControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(learningTimeNotFoundException.getMessage()));
 
-        verify(timeTableAggregateService).changeLearningTimeEndTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeEndTime(any());
     }
 
     @Test
@@ -222,7 +222,7 @@ class TimeTableControllerTest {
         ContainOtherTimeException containOtherTimeException = new ContainOtherTimeException();
         StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeStartTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeStartTime(any()))
                 .willThrow(containOtherTimeException);
 
         // when
@@ -238,7 +238,7 @@ class TimeTableControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(containOtherTimeException.getMessage()));
 
-        verify(timeTableAggregateService).changeLearningTimeStartTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeStartTime(any());
     }
 
     @Test
@@ -247,7 +247,7 @@ class TimeTableControllerTest {
         InvalidDateValidException invalidDateValidException = new InvalidDateValidException();
         StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeStartTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeStartTime(any()))
                 .willThrow(invalidDateValidException);
 
         // when
@@ -263,7 +263,7 @@ class TimeTableControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(invalidDateValidException.getMessage()));
 
-        verify(timeTableAggregateService).changeLearningTimeStartTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeStartTime(any());
     }
 
     @Test
@@ -272,7 +272,7 @@ class TimeTableControllerTest {
         StartTimeDuplicateException startTimeDuplicateException = new StartTimeDuplicateException();
         StartTimeModifyRequest startTimeModifyRequest = new StartTimeModifyRequest(START_TIME, NEW_START_TIME);
 
-        given(timeTableAggregateService.changeLearningTimeStartTime(any(), any(), any()))
+        given(timeTableAggregateService.changeLearningTimeStartTime(any()))
                 .willThrow(startTimeDuplicateException);
 
         // when
@@ -288,6 +288,6 @@ class TimeTableControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(startTimeDuplicateException.getMessage()));
 
-        verify(timeTableAggregateService).changeLearningTimeStartTime(any(), any(), any());
+        verify(timeTableAggregateService).changeLearningTimeStartTime(any());
     }
 }

@@ -27,13 +27,21 @@ public class TimeTable {
     @Embedded
     private TimeTableValidator validator;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "timeTable", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<LearningTime> learningTimes = new ArrayList<>();
 
     // 테스트 코드에서만 사용되는 생성자!
-    public TimeTable(LocalDate today) {
+    public TimeTable(LocalDate today, Long userId) {
         validator = new TimeTableValidator(today);
         totalLearningTime = 0;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public LearningTime createLearningTime(LocalDateTime startTime) {

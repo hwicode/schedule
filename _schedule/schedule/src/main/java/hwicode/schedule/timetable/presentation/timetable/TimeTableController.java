@@ -1,6 +1,10 @@
 package hwicode.schedule.timetable.presentation.timetable;
 
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
+import hwicode.schedule.timetable.application.dto.time_table.LearningTimeDeleteCommand;
+import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyEndTimeCommand;
+import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyStartTimeCommand;
+import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyResponse;
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -28,21 +32,23 @@ public class TimeTableController {
     @PostMapping("/dailyschedule/timetables/{timeTableId}/learning-times")
     @ResponseStatus(value = HttpStatus.CREATED)
     public LearningTimeSaveResponse saveLearningTime(@PathVariable @Positive Long timeTableId,
-                                                     @RequestBody @Valid LearningTimeSaveRequest learningTimeSaveRequest) {
-        Long learningTimeId = timeTableAggregateService.saveLearningTime(
-                timeTableId, learningTimeSaveRequest.getStartTime()
+                                                     @RequestBody @Valid LearningTimeSaveRequest request) {
+        LearningTimeSaveCommand command = new LearningTimeSaveCommand(
+                1L, timeTableId, request.getStartTime()
         );
-        return new LearningTimeSaveResponse(learningTimeId, learningTimeSaveRequest.getStartTime());
+        Long learningTimeId = timeTableAggregateService.saveLearningTime(command);
+        return new LearningTimeSaveResponse(learningTimeId, command.getStartTime());
     }
 
     @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time")
     @ResponseStatus(value = HttpStatus.OK)
     public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @Positive Long timeTableId,
                                                                @PathVariable @Positive Long learningTimeId,
-                                                               @RequestBody @Valid StartTimeModifyRequest startTimeModifyRequest) {
-        LocalDateTime newStartTime = timeTableAggregateService.changeLearningTimeStartTime(
-                timeTableId, startTimeModifyRequest.getStartTime(), startTimeModifyRequest.getNewStartTime()
+                                                               @RequestBody @Valid StartTimeModifyRequest request) {
+        LearningTimeModifyStartTimeCommand command = new LearningTimeModifyStartTimeCommand(
+                1L, timeTableId, request.getStartTime(), request.getNewStartTime()
         );
+        LocalDateTime newStartTime = timeTableAggregateService.changeLearningTimeStartTime(command);
         return new StartTimeModifyResponse(newStartTime);
     }
 
@@ -50,10 +56,11 @@ public class TimeTableController {
     @ResponseStatus(value = HttpStatus.OK)
     public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @Positive Long timeTableId,
                                                            @PathVariable @Positive Long learningTimeId,
-                                                           @RequestBody @Valid EndTimeModifyRequest endTimeModifyRequest) {
-        LocalDateTime endTime = timeTableAggregateService.changeLearningTimeEndTime(
-                timeTableId, endTimeModifyRequest.getStartTime(), endTimeModifyRequest.getEndTime()
+                                                           @RequestBody @Valid EndTimeModifyRequest request) {
+        LearningTimeModifyEndTimeCommand command = new LearningTimeModifyEndTimeCommand(
+                1L, timeTableId, request.getStartTime(), request.getEndTime()
         );
+        LocalDateTime endTime = timeTableAggregateService.changeLearningTimeEndTime(command);
         return new EndTimeModifyResponse(endTime);
     }
 
@@ -62,7 +69,8 @@ public class TimeTableController {
     public void deleteLearningTime(@PathVariable @Positive Long timeTableId,
                                    @PathVariable @Positive Long learningTimeId,
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @NotNull LocalDateTime startTime) {
-        timeTableAggregateService.deleteLearningTime(timeTableId, startTime);
+        LearningTimeDeleteCommand command = new LearningTimeDeleteCommand(1L, timeTableId, startTime);
+        timeTableAggregateService.deleteLearningTime(command);
     }
 
 }

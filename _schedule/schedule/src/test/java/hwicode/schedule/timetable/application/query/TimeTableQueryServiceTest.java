@@ -56,7 +56,8 @@ class TimeTableQueryServiceTest {
         // given
         LocalDate date = LocalDate.of(2023, 8, 24);
 
-        TimeTable timeTable = new TimeTable(date);
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(date, userId);
         timeTableRepository.save(timeTable);
 
         SubjectOfTask subjectOfTask = new SubjectOfTask(SUBJECT);
@@ -123,7 +124,8 @@ class TimeTableQueryServiceTest {
     @Test
     void 타임_테이블에_존재하는_특정_학습_주제의_총_학습_시간을_계산할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
@@ -143,7 +145,8 @@ class TimeTableQueryServiceTest {
         // given
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
 
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
@@ -163,7 +166,8 @@ class TimeTableQueryServiceTest {
         // given
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
 
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));

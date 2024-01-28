@@ -69,17 +69,18 @@ class ChecklistAndTimeTableTest {
     @Test
     void 과제와_연관된_학습_시간이_있더라도_과제를_삭제할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
         timeTableRepository.save(timeTable);
 
-        Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId());
+        Long subjectOfTaskId = saveSubjectOfTask(timeTable.getId(), userId);
 
         learningTimeAggregateService.changeSubjectOfTask(learningTime.getId(), subjectOfTaskId);
         learningTimeAggregateService.changeSubjectOfTask(learningTime2.getId(), subjectOfTaskId);
 
-        TaskDeleteCommand command = new TaskDeleteCommand(1L, timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
+        TaskDeleteCommand command = new TaskDeleteCommand(userId, timeTable.getId(), subjectOfTaskId, TASK_CHECKER_NAME);
 
         // when
         taskCheckerSubService.deleteTaskChecker(command);
@@ -91,9 +92,9 @@ class ChecklistAndTimeTableTest {
         checkSubjectOfTaskIsDelete(learningTime2.getId());
     }
 
-    private Long saveSubjectOfTask(Long timeTableId) {
+    private Long saveSubjectOfTask(Long timeTableId, Long userId) {
         DailyChecklist dailyChecklist = dailyChecklistRepository.findById(timeTableId).orElseThrow();
-        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, 1L));
+        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, userId));
         return taskChecker.getId();
     }
 
@@ -106,17 +107,18 @@ class ChecklistAndTimeTableTest {
     @Test
     void 서브_과제와_연관된_학습_시간이_있더라도_서브_과제를_삭제할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         LearningTime learningTime2 = timeTable.createLearningTime(NEW_START_TIME);
         timeTableRepository.save(timeTable);
 
-        Long subjectOfSubTaskId = saveSubjectOfSubTask(timeTable.getId());
+        Long subjectOfSubTaskId = saveSubjectOfSubTask(timeTable.getId(), userId);
 
         learningTimeAggregateService.changeSubjectOfSubTask(learningTime.getId(), subjectOfSubTaskId);
         learningTimeAggregateService.changeSubjectOfSubTask(learningTime2.getId(), subjectOfSubTaskId);
 
-        SubTaskDeleteCommand command = new SubTaskDeleteCommand(1L, timeTable.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, subjectOfSubTaskId);
+        SubTaskDeleteCommand command = new SubTaskDeleteCommand(userId, timeTable.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, subjectOfSubTaskId);
 
         // when
         subTaskCheckerSubService.deleteSubTaskChecker(command);
@@ -128,10 +130,10 @@ class ChecklistAndTimeTableTest {
         checkSubjectOfSubTaskIsDelete(learningTime2.getId());
     }
 
-    private Long saveSubjectOfSubTask(Long timeTableId) {
+    private Long saveSubjectOfSubTask(Long timeTableId, Long userId) {
         DailyChecklist dailyChecklist = dailyChecklistRepository.findById(timeTableId).orElseThrow();
-        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, 1L));
-        SubTaskChecker subTaskChecker = subTaskCheckerRepository.save(new SubTaskChecker(taskChecker, SUB_TASK_CHECKER_NAME, 1L));
+        TaskChecker taskChecker = taskCheckerRepository.save(new TaskChecker(dailyChecklist, TASK_CHECKER_NAME, Difficulty.NORMAL, userId));
+        SubTaskChecker subTaskChecker = subTaskCheckerRepository.save(new SubTaskChecker(taskChecker, SUB_TASK_CHECKER_NAME, userId));
         return subTaskChecker.getId();
     }
 

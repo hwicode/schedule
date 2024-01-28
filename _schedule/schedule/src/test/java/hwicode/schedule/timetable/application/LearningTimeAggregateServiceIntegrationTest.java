@@ -48,7 +48,8 @@ class LearningTimeAggregateServiceIntegrationTest {
     @Test
     void 학습_시간의_학습_주제를_삭제할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         learningTime.changeSubject(TimeTableDataHelper.SUBJECT);
         timeTableRepository.save(timeTable);
@@ -65,7 +66,8 @@ class LearningTimeAggregateServiceIntegrationTest {
     @Test
     void 학습_시간의_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -81,7 +83,8 @@ class LearningTimeAggregateServiceIntegrationTest {
     @Test
     void 학습_시간의_Task_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
@@ -99,7 +102,8 @@ class LearningTimeAggregateServiceIntegrationTest {
     @Test
     void 학습_시간의_SubTask_학습_주제를_수정할_수_있다() {
         // given
-        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate());
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 

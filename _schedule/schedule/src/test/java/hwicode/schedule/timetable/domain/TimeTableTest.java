@@ -19,7 +19,7 @@ class TimeTableTest {
     void 학습_시간을_생성할_때_시작_시간에_중복이_없으면_학습_시간은_생성된다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         // when
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
@@ -33,7 +33,7 @@ class TimeTableTest {
     void 학습_시간을_생성할_때_시작_시간이_중복되면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
 
@@ -46,7 +46,7 @@ class TimeTableTest {
     void 학습_시간의_시작_시간을_변경할_때_중복이_없으면_시작_시간이_변경된다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
 
@@ -62,7 +62,7 @@ class TimeTableTest {
     void 학습_시간의_시작_시간을_변경할_때_시작_시간이_중복되면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTable.createLearningTime(TimeTableDataHelper.NEW_START_TIME);
@@ -76,7 +76,7 @@ class TimeTableTest {
     void 학습_시간이_다른_학습_시간과_겹치면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(60));
@@ -91,7 +91,7 @@ class TimeTableTest {
     void 학습_시간의_끝나는_시간을_변경할_때_시작_시간이_다른_학습_시간에_포함되면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         LocalDateTime startTime = TimeTableDataHelper.START_TIME.plusMinutes(15);
@@ -109,7 +109,7 @@ class TimeTableTest {
     void 학습_시간의_끝나는_시간을_변경할_때_학습_시간이_다른_학습_시간을_포함하면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         LocalDateTime startTime = TimeTableDataHelper.START_TIME.plusMinutes(15);
@@ -127,7 +127,7 @@ class TimeTableTest {
     void 타임_테이블의_날짜보다_이전의_날짜를_가진_학습_시간을_추가하면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         LocalDateTime beforeStartTime = TimeTableDataHelper.START_TIME.minusDays(3);
 
@@ -140,7 +140,7 @@ class TimeTableTest {
     void 타임_테이블의_날짜보다_2일_이후의_날짜를_가진_학습_시간을_추가하면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         LocalDateTime afterStartTime = TimeTableDataHelper.START_TIME.plusDays(3);
 
@@ -153,7 +153,7 @@ class TimeTableTest {
     void 학습_시간의_끝나는_시간을_변경할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
 
@@ -168,7 +168,7 @@ class TimeTableTest {
     void 시작_시간에_해당하는_학습_시간이_없으면_에러가_발생한다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         // when then
         assertThatThrownBy(() -> timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.END_TIME))
@@ -179,7 +179,7 @@ class TimeTableTest {
     void 학습_시간을_삭제할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
 
@@ -195,7 +195,7 @@ class TimeTableTest {
     void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간은_0이_된다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
 
@@ -210,7 +210,7 @@ class TimeTableTest {
     void 학습_시간의_끝나는_시간이_정해지지_않으면_총_학습_시간에_포함되지_않는다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTable.changeLearningTimeEndTime(TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(50));
@@ -227,7 +227,7 @@ class TimeTableTest {
     void 타임_테이블은_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(40L));
         addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(45L), TimeTableDataHelper.START_TIME.plusMinutes(80L));
@@ -245,7 +245,7 @@ class TimeTableTest {
     void 같은_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
@@ -268,7 +268,7 @@ class TimeTableTest {
     void 같은_Task_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
@@ -291,7 +291,7 @@ class TimeTableTest {
     void 같은_SubTask_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate);
+        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
