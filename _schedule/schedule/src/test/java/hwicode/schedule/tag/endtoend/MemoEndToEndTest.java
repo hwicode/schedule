@@ -112,11 +112,12 @@ class MemoEndToEndTest {
     @Test
     void 메모에_여러_개의_태그_추가_요청() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         tagRepository.saveAll(tags);
 
@@ -146,11 +147,12 @@ class MemoEndToEndTest {
     @Test
     void 메모를_생성하며_여러_개의_태그_추가_요청() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         tagRepository.saveAll(tags);
 
@@ -179,11 +181,12 @@ class MemoEndToEndTest {
     @Test
     void 메모에_태그_삭제_요청() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()
@@ -211,11 +214,12 @@ class MemoEndToEndTest {
     @Test
     void 메모_삭제_요청() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()

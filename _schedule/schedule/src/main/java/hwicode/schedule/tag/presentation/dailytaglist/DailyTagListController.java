@@ -1,6 +1,9 @@
 package hwicode.schedule.tag.presentation.dailytaglist;
 
 import hwicode.schedule.tag.application.DailyTagListService;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListModifyMainTagCommand;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.main_tag_modify.DailyTagListMainTagModifyResponse;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddRequest;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddResponse;
@@ -22,23 +25,32 @@ public class DailyTagListController {
     @PostMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags")
     @ResponseStatus(HttpStatus.CREATED)
     public DailyTagListTagAddResponse addTagToDailyTagList(@PathVariable @Positive Long dailyTagListId,
-                                                           @RequestBody @Valid DailyTagListTagAddRequest dailyTagListTagAddRequest) {
-        dailyTagListService.addTagToDailyTagList(dailyTagListId, dailyTagListTagAddRequest.getTagId());
-        return new DailyTagListTagAddResponse(dailyTagListId, dailyTagListTagAddRequest.getTagId());
+                                                           @RequestBody @Valid DailyTagListTagAddRequest request) {
+        DailyTagListSaveTagCommand command = new DailyTagListSaveTagCommand(
+                1L, dailyTagListId, request.getTagId()
+        );
+        dailyTagListService.addTagToDailyTagList(command);
+        return new DailyTagListTagAddResponse(dailyTagListId, command.getTagId());
     }
 
     @DeleteMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTagToDailyTagList(@PathVariable @Positive Long dailyTagListId,
                                         @PathVariable @Positive Long tagId) {
-        dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tagId);
+        DailyTagListDeleteTagCommand command = new DailyTagListDeleteTagCommand(
+                1L, dailyTagListId, tagId
+        );
+        dailyTagListService.deleteTagToDailyTagList(command);
     }
 
     @PatchMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}")
     @ResponseStatus(HttpStatus.OK)
     public DailyTagListMainTagModifyResponse changeMainTag(@PathVariable @Positive Long dailyTagListId,
                                                            @PathVariable @Positive Long tagId) {
-        String mainTagName = dailyTagListService.changeMainTag(dailyTagListId, tagId);
+        DailyTagListModifyMainTagCommand command = new DailyTagListModifyMainTagCommand(
+                1L, dailyTagListId, tagId
+        );
+        String mainTagName = dailyTagListService.changeMainTag(command);
         return new DailyTagListMainTagModifyResponse(dailyTagListId, tagId, mainTagName);
     }
 

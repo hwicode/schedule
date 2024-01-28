@@ -18,10 +18,10 @@ class DailyTagListTest {
 
     private static Stream<List<Tag>> provideTags() {
         return Stream.of(
-                List.of(new Tag(TAG_NAME)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3), new Tag(TAG_NAME4))
+                List.of(new Tag(TAG_NAME, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L), new Tag(TAG_NAME4, 1L))
         );
     }
 
@@ -44,7 +44,7 @@ class DailyTagListTest {
     void DailyTagList에_추가하는_Tag의_이름이_중복되면_에러가_발생한다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        List<Tag> tags = List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3));
+        List<Tag> tags = List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L));
         dailyTagList.addTag(tags.get(0));
         dailyTagList.addTag(tags.get(1));
         dailyTagList.addTag(tags.get(2));
@@ -117,7 +117,7 @@ class DailyTagListTest {
     void DailyTagList에_존재하지_않는_Tag를_조회하면_에러가_발생한다() {
         // given
         DailyTagList dailyTagList = new DailyTagList();
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, 1L);
 
         // when then
         assertThatThrownBy(() -> dailyTagList.deleteTag(tag))

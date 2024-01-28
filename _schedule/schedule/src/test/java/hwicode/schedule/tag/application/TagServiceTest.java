@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
@@ -14,6 +15,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -103,10 +105,10 @@ class TagServiceTest {
 
     private static Stream<List<DailyTagList>> provideDailyTagLists() {
         return Stream.of(
-                List.of(new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList()),
-                List.of(new DailyTagList(), new DailyTagList(), new DailyTagList(), new DailyTagList())
+                List.of(new DailyTagList(LocalDate.now(), 1L)),
+                List.of(new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L)),
+                List.of(new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L)),
+                List.of(new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L), new DailyTagList(LocalDate.now(), 1L))
         );
     }
 
@@ -114,11 +116,14 @@ class TagServiceTest {
     @MethodSource("provideDailyTagLists")
     void 태그를_삭제할_때_DailyTag도_같이_삭제할_수_있다(List<DailyTagList> dailyTagLists) {
         // given
+        Long userId = 1L;
         Long tagId = tagService.saveTag(TAG_NAME);
 
         dailyTagListRepository.saveAll(dailyTagLists);
         dailyTagLists.forEach(
-                dailyTagList -> dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tagId)
+                dailyTagList -> dailyTagListService.addTagToDailyTagList(
+                        new DailyTagListSaveTagCommand(userId, dailyTagList.getId(), tagId)
+                )
         );
 
         // when
@@ -160,15 +165,20 @@ class TagServiceTest {
     @Test
     void 태그를_삭제할_때_DailyTag와_MemoTag도_같이_삭제할_수_있다() {
         // given
+        Long userId = 1L;
         Long tagId = tagService.saveTag(TAG_NAME);
 
-        DailyTagList dailyTagList = new DailyTagList();
-        DailyTagList dailyTagList2 = new DailyTagList();
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        DailyTagList dailyTagList2 = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
         dailyTagListRepository.save(dailyTagList2);
 
-        dailyTagListService.addTagToDailyTagList(dailyTagList.getId(), tagId);
-        dailyTagListService.addTagToDailyTagList(dailyTagList2.getId(), tagId);
+        dailyTagListService.addTagToDailyTagList(
+                new DailyTagListSaveTagCommand(userId, dailyTagList.getId(), tagId)
+        );
+        dailyTagListService.addTagToDailyTagList(
+                new DailyTagListSaveTagCommand(userId, dailyTagList2.getId(), tagId)
+        );
 
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
         Memo memo2 = new Memo(MEMO_TEXT2, dailyTagList);

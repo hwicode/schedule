@@ -11,7 +11,7 @@ class TagTest {
     @Test
     void 태그의_이름을_수정할_때_이름이_동일하면_변경이_없으므로_false가_리턴된다() {
         // given
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, 1L);
 
         // when
         boolean isChange = tag.changeName(TAG_NAME);
@@ -23,7 +23,7 @@ class TagTest {
     @Test
     void 태그의_이름을_수정할_때_이름이_다르면_변경이_있으므로_true가_리턴된다() {
         // given
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, 1L);
 
         // when
         boolean isChange = tag.changeName(NEW_TAG_NAME);

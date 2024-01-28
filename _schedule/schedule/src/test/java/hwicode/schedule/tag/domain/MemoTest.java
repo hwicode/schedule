@@ -44,10 +44,10 @@ class MemoTest {
 
     private static Stream<List<Tag>> provideTags() {
         return Stream.of(
-                List.of(new Tag(TAG_NAME)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3), new Tag(TAG_NAME4))
+                List.of(new Tag(TAG_NAME, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L), new Tag(TAG_NAME4, 1L))
         );
     }
 
@@ -73,7 +73,7 @@ class MemoTest {
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L)
         );
 
         memo.addTags(tags);
@@ -107,7 +107,7 @@ class MemoTest {
         // given
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, 1L);
 
         // when then
         assertThatThrownBy(() -> memo.deleteTag(tag))
@@ -138,10 +138,10 @@ class MemoTest {
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3),
-                new Tag(TAG_NAME4), new Tag(TAG_NAME5), new Tag(TAG_NAME6),
-                new Tag(TAG_NAME7), new Tag(TAG_NAME8), new Tag(TAG_NAME9),
-                new Tag(TAG_NAME10), new Tag(TAG_NAME11)
+                new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L),
+                new Tag(TAG_NAME4, 1L), new Tag(TAG_NAME5, 1L), new Tag(TAG_NAME6, 1L),
+                new Tag(TAG_NAME7, 1L), new Tag(TAG_NAME8, 1L), new Tag(TAG_NAME9, 1L),
+                new Tag(TAG_NAME10, 1L), new Tag(TAG_NAME11, 1L)
         );
 
         // when then

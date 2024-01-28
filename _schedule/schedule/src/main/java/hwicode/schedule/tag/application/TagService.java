@@ -22,7 +22,7 @@ public class TagService {
     @Transactional
     public Long saveTag(String name) {
         validateTagName(name);
-        Tag tag = new Tag(name);
+        Tag tag = new Tag(name, 1L);
         tagRepository.save(tag);
         return tag.getId();
     }

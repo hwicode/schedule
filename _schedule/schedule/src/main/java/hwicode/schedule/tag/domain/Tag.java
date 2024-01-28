@@ -16,8 +16,16 @@ public class Tag {
     @Column(nullable = false)
     private String name;
 
-    public Tag(String name) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public Tag(String name, Long userId) {
         this.name = name;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public boolean changeName(String name) {

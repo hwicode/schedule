@@ -44,7 +44,7 @@ class DailyTagListControllerTest {
         DailyTagListTagAddRequest dailyTagListTagAddRequest = new DailyTagListTagAddRequest(TAG_ID);
         DailyTagListTagAddResponse dailyTagListTagAddResponse = new DailyTagListTagAddResponse(DAILY_TAG_LIST_ID, TAG_ID);
 
-        given(dailyTagListService.addTagToDailyTagList(any(), any()))
+        given(dailyTagListService.addTagToDailyTagList(any()))
                 .willReturn(DAILY_TAG_LIST_ID);
 
         // when
@@ -59,14 +59,14 @@ class DailyTagListControllerTest {
                         objectMapper.writeValueAsString(dailyTagListTagAddResponse)
                 ));
 
-        verify(dailyTagListService).addTagToDailyTagList(any(), any());
+        verify(dailyTagListService).addTagToDailyTagList(any());
     }
 
     @Test
     void 오늘의_태그_리스트를_찾을_때_오늘의_태그_리스트가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         DailyTagListNotFoundException dailyTagListNotFoundException = new DailyTagListNotFoundException();
-        given(dailyTagListService.addTagToDailyTagList(any(), any()))
+        given(dailyTagListService.addTagToDailyTagList(any()))
                 .willThrow(dailyTagListNotFoundException);
 
         // when
@@ -81,14 +81,14 @@ class DailyTagListControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyTagListNotFoundException.getMessage()));
 
-        verify(dailyTagListService).addTagToDailyTagList(any(), any());
+        verify(dailyTagListService).addTagToDailyTagList(any());
     }
 
     @Test
     void 오늘의_태그_리스트에_태그를_추가할_때_이미_존재하는_태그라면_에러가_발생한다() throws Exception {
         // given
         DailyTagDuplicateException dailyTagDuplicateException = new DailyTagDuplicateException();
-        given(dailyTagListService.addTagToDailyTagList(any(), any()))
+        given(dailyTagListService.addTagToDailyTagList(any()))
                 .willThrow(dailyTagDuplicateException);
 
         // when
@@ -103,13 +103,13 @@ class DailyTagListControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(dailyTagDuplicateException.getMessage()));
 
-        verify(dailyTagListService).addTagToDailyTagList(any(), any());
+        verify(dailyTagListService).addTagToDailyTagList(any());
     }
 
     @Test
     void 오늘의_태그_리스트에_태그의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
+        given(dailyTagListService.deleteTagToDailyTagList(any()))
                 .willReturn(DAILY_TAG_LIST_ID);
 
         // when
@@ -120,14 +120,14 @@ class DailyTagListControllerTest {
         // then
         perform.andExpect(status().isNoContent());
 
-        verify(dailyTagListService).deleteTagToDailyTagList(any(), any());
+        verify(dailyTagListService).deleteTagToDailyTagList(any());
     }
 
     @Test
     void 오늘의_태그_리스트에_태그의_삭제할_때_태그가_존재하지_않는다면_에러가_발생한다() throws Exception {
         // given
         DailyTagNotFoundException dailyTagNotFoundException = new DailyTagNotFoundException();
-        given(dailyTagListService.deleteTagToDailyTagList(any(), any()))
+        given(dailyTagListService.deleteTagToDailyTagList(any()))
                 .willThrow(dailyTagNotFoundException);
 
         // when
@@ -139,7 +139,7 @@ class DailyTagListControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyTagNotFoundException.getMessage()));
 
-        verify(dailyTagListService).deleteTagToDailyTagList(any(), any());
+        verify(dailyTagListService).deleteTagToDailyTagList(any());
     }
 
     @Test
@@ -147,7 +147,7 @@ class DailyTagListControllerTest {
         // given
         DailyTagListMainTagModifyResponse dailyTagListMainTagModifyResponse = new DailyTagListMainTagModifyResponse(DAILY_TAG_LIST_ID, TAG_ID, TAG_NAME);
 
-        given(dailyTagListService.changeMainTag(any(), any()))
+        given(dailyTagListService.changeMainTag(any()))
                 .willReturn(TAG_NAME);
 
         // when
@@ -161,7 +161,7 @@ class DailyTagListControllerTest {
                         objectMapper.writeValueAsString(dailyTagListMainTagModifyResponse)
                 ));
 
-        verify(dailyTagListService).changeMainTag(any(), any());
+        verify(dailyTagListService).changeMainTag(any());
     }
 
 }

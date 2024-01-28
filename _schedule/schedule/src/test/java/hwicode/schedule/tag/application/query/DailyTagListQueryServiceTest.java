@@ -51,13 +51,14 @@ class DailyTagListQueryServiceTest {
     @Test
     void 특정_날짜의_태그들을_조회할_수_있다() {
         // given
+        Long userId = 1L;
         LocalDate date = LocalDate.of(2023, 8, 24);
 
-        DailyTagList dailyTagList = new DailyTagList(date);
+        DailyTagList dailyTagList = new DailyTagList(date, userId);
         dailyTagListRepository.save(dailyTagList);
 
-        DailyTagQueryResponse dailyTagQueryResponse = createTagWithDailyTag(dailyTagList, TAG_NAME);
-        DailyTagQueryResponse dailyTagQueryResponse2 = createTagWithDailyTag(dailyTagList, TAG_NAME2);
+        DailyTagQueryResponse dailyTagQueryResponse = createTagWithDailyTag(dailyTagList, TAG_NAME, userId);
+        DailyTagQueryResponse dailyTagQueryResponse2 = createTagWithDailyTag(dailyTagList, TAG_NAME2, userId);
 
         // when
         List<DailyTagQueryResponse> result = dailyTagListQueryService.getDailyTagQueryResponses(date);
@@ -67,8 +68,8 @@ class DailyTagListQueryServiceTest {
         assertThat(result).isEqualTo(expectedResponses);
     }
 
-    private DailyTagQueryResponse createTagWithDailyTag(DailyTagList dailyTagList, String tagName) {
-        Tag tag = new Tag(tagName);
+    private DailyTagQueryResponse createTagWithDailyTag(DailyTagList dailyTagList, String tagName, Long userId) {
+        Tag tag = new Tag(tagName, userId);
         tagRepository.save(tag);
 
         DailyTag dailyTag = new DailyTag(dailyTagList, tag);

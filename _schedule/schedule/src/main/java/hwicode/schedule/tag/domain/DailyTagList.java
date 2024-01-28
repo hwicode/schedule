@@ -23,12 +23,20 @@ public class DailyTagList {
 
     private String mainTagName;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "dailyTagList", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DailyTag> dailyTags = new ArrayList<>();
 
     // 테스트 코드에서만 사용되는 생성자
-    public DailyTagList(LocalDate today) {
+    public DailyTagList(LocalDate today, Long userId) {
         this.today = today;
+        this.userId = userId;
+    }
+
+    public boolean isOwner(Long userId) {
+        return this.userId.equals(userId);
     }
 
     public DailyTag addTag(Tag tag) {

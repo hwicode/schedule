@@ -2,6 +2,8 @@ package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.tag.application.DailyTagListService;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
+import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
@@ -18,6 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
+
+import java.time.LocalDate;
 
 import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
 import static io.restassured.RestAssured.given;
@@ -53,8 +57,9 @@ class DailyTagListEndToEndTest {
     @Test
     void 오늘의_태그_리스트에_태그_추가_요청() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        Tag tag = new Tag(TAG_NAME, userId);
 
         dailyTagListRepository.save(dailyTagList);
         tagRepository.save(tag);
@@ -81,15 +86,18 @@ class DailyTagListEndToEndTest {
     @Test
     void 오늘의_태그_리스트에_태그_삭제_요청() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        Tag tag = new Tag(TAG_NAME, userId);
 
         dailyTagListRepository.save(dailyTagList);
         tagRepository.save(tag);
 
         Long dailyTagListId = dailyTagList.getId();
         Long tagId = tag.getId();
-        dailyTagListService.addTagToDailyTagList(dailyTagListId, tagId);
+        dailyTagListService.addTagToDailyTagList(
+                new DailyTagListSaveTagCommand(userId, dailyTagListId, tagId)
+        );
 
         RequestSpecification requestSpecification = given().port(port);
 
@@ -101,7 +109,8 @@ class DailyTagListEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.NO_CONTENT.value());
 
-        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(dailyTagListId, tagId))
+        DailyTagListDeleteTagCommand command = new DailyTagListDeleteTagCommand(userId, dailyTagListId, tagId);
+        assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
                 .isInstanceOf(DailyTagNotFoundException.class);
         assertThat(dailyTagRepository.findAll()).isEmpty();
     }
@@ -109,15 +118,18 @@ class DailyTagListEndToEndTest {
     @Test
     void 오늘의_태그_리스트에_메인_태그_변경_요청() {
         // given
-        DailyTagList dailyTagList = new DailyTagList();
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+        Tag tag = new Tag(TAG_NAME, userId);
 
         dailyTagListRepository.save(dailyTagList);
         tagRepository.save(tag);
 
         Long dailyTagListId = dailyTagList.getId();
         Long tagId = tag.getId();
-        dailyTagListService.addTagToDailyTagList(dailyTagListId, tagId);
+        dailyTagListService.addTagToDailyTagList(
+                new DailyTagListSaveTagCommand(userId, dailyTagListId, tagId)
+        );
 
         RequestSpecification requestSpecification = given().port(port);
 

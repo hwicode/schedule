@@ -94,6 +94,7 @@ class MemoServiceTest {
     @Test
     void 메모에_태그를_여러_개_추가할_수_있다() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         Memo memo = new Memo(MEMO_TEXT, dailyTagList);
 
@@ -101,7 +102,7 @@ class MemoServiceTest {
         memoRepository.save(memo);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()
@@ -118,11 +119,12 @@ class MemoServiceTest {
     @Test
     void 메모에_존재하는_태그를_삭제할_수_있다() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         List<Tag> tags = List.of(
-                new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3)
+                new Tag(TAG_NAME, userId), new Tag(TAG_NAME2, userId), new Tag(TAG_NAME3, userId)
         );
         List<Long> tagIds = tagRepository.saveAll(tags)
                 .stream()
@@ -157,16 +159,17 @@ class MemoServiceTest {
 
     private static Stream<List<Tag>> provideTags() {
         return Stream.of(
-                List.of(new Tag(TAG_NAME)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2)),
-                List.of(new Tag(TAG_NAME), new Tag(TAG_NAME2), new Tag(TAG_NAME3))
+                List.of(new Tag(TAG_NAME, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L)),
+                List.of(new Tag(TAG_NAME, 1L), new Tag(TAG_NAME2, 1L), new Tag(TAG_NAME3, 1L))
         );
     }
 
-    @MethodSource("provideTags")
+    @MethodSource({"provideTags"})
     @ParameterizedTest
     void 메모와_태그를_여러_개를_같이_생성할_수_있다(List<Tag> tags) {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
@@ -243,12 +246,13 @@ class MemoServiceTest {
     @Test
     void 메모에_태그를_여러_개_추가할_때_tagIds에_null이_존재하면_null인_값은_무시된다() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
         Long memoId = memoService.saveMemo(dailyTagList.getId(), MEMO_TEXT);
 
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         List<Long> tagIds = new ArrayList<>();
@@ -266,10 +270,11 @@ class MemoServiceTest {
     @Test
     void 메모와_태그를_여러_개를_같이_생성할_때_tagIds에_null이_존재하면_null인_값은_무시된다() {
         // given
+        Long userId = 1L;
         DailyTagList dailyTagList = new DailyTagList();
         dailyTagListRepository.save(dailyTagList);
 
-        Tag tag = new Tag(TAG_NAME);
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         List<Long> tagIds = new ArrayList<>();

@@ -50,13 +50,14 @@ class TagQueryServiceTest {
     @Test
     void 데일리_태그_리스트의_첫_번째_페이지_조회를_요청할_수_있다() {
         //given
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         LocalDate date = LocalDate.of(2023, 8, 27);
         int size = 10;
         for (int i = 1; i <= size; i++) {
-            DailyTagList dailyTagList = new DailyTagList(date.plusDays(i));
+            DailyTagList dailyTagList = new DailyTagList(date.plusDays(i), userId);
             DailyTag dailyTag = new DailyTag(dailyTagList, tag);
 
             dailyTagListRepository.save(dailyTagList);
@@ -75,13 +76,14 @@ class TagQueryServiceTest {
     @Test
     void 데일리_태그_리스트의_두_번째_페이지_조회를_요청할_수_있다() {
         // given
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         LocalDate date = LocalDate.of(2023, 8, 27);
 
         for (int i = 1; i <= 20; i++) {
-            DailyTagList dailyTagList = new DailyTagList(date.plusDays(i));
+            DailyTagList dailyTagList = new DailyTagList(date.plusDays(i), userId);
             DailyTag dailyTag = new DailyTag(dailyTagList, tag);
 
             dailyTagListRepository.save(dailyTagList);
@@ -100,7 +102,8 @@ class TagQueryServiceTest {
     @Test
     void 메모의_첫_번째_페이지_조회를_요청할_수_있다() {
         //given
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         String text = "a";
@@ -126,7 +129,8 @@ class TagQueryServiceTest {
     @Test
     void 메모의_두_번째_페이지_조회를_요청할_수_있다() {
         // given
-        Tag tag = new Tag(TAG_NAME);
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
         tagRepository.save(tag);
 
         String text = "a";
@@ -152,8 +156,9 @@ class TagQueryServiceTest {
     @Test
     void 모든_태그를_조회할_수_있다() {
         // given
+        Long userId = 1L;
         for (int i = 0; i < 5; i++) {
-            Tag tag = new Tag(TAG_NAME + i);
+            Tag tag = new Tag(TAG_NAME + i, userId);
             tagRepository.save(tag);
         }
 
@@ -170,12 +175,13 @@ class TagQueryServiceTest {
     @Test
     void 검색_키워드로_시작하는_태그_이름을_가진_태그들을_조회할_수_있다() {
         // given
+        Long userId = 1L;
         for (int i = 0; i < 5; i++) {
-            Tag tag = new Tag(TAG_NAME + i);
+            Tag tag = new Tag(TAG_NAME + i, userId);
             tagRepository.save(tag);
         }
         for (int i = 0; i < 5; i++) {
-            Tag tag = new Tag(i + TAG_NAME);
+            Tag tag = new Tag(i + TAG_NAME, userId);
             tagRepository.save(tag);
         }
 
