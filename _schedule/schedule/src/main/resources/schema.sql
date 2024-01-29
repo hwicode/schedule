@@ -104,6 +104,7 @@ create table sub_goal (
 create table review_date (
    id bigint not null auto_increment,
    date timestamp not null,
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
@@ -121,6 +122,7 @@ create table review_cycle (
    id bigint not null auto_increment,
    name varchar(255) not null,
    review_cycle_dates text not null,
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 

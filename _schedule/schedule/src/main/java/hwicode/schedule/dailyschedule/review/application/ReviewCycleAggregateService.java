@@ -1,5 +1,9 @@
 package hwicode.schedule.dailyschedule.review.application;
 
+import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleDeleteCommand;
+import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyCycleCommand;
+import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyNameCommand;
+import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleSaveCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
@@ -16,32 +20,36 @@ public class ReviewCycleAggregateService {
     private final ReviewCycleRepository reviewCycleRepository;
 
     @Transactional
-    public Long saveReviewCycle(String reviewCycleName, List<Integer> cycle) {
-        ReviewCycle reviewCycle = new ReviewCycle(reviewCycleName, cycle);
+    public Long saveReviewCycle(ReviewCycleSaveCommand command) {
+        ReviewCycle reviewCycle = new ReviewCycle(command.getName(), command.getCycle(), command.getUserId());
         reviewCycleRepository.save(reviewCycle);
         return reviewCycle.getId();
     }
 
     @Transactional
-    public String changeReviewCycleName(Long reviewCycleId, String newName) {
-        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
+    public String changeReviewCycleName(ReviewCycleModifyNameCommand command) {
+        ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
+        reviewCycle.checkOwnership(command.getUserId());
 
-        reviewCycle.changeName(newName);
-        return newName;
+        reviewCycle.changeName(command.getNewName());
+        return command.getNewName();
     }
 
     @Transactional
-    public List<Integer> changeCycle(Long reviewCycleId, List<Integer> cycle) {
-        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
+    public List<Integer> changeCycle(ReviewCycleModifyCycleCommand command) {
+        ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
+        reviewCycle.checkOwnership(command.getUserId());
 
-        return reviewCycle.changeCycle(cycle);
+        return reviewCycle.changeCycle(command.getCycle());
     }
 
     @Transactional
-    public Long deleteReviewCycle(Long reviewCycleId) {
-        ReviewCycle reviewCycle = findReviewCycle(reviewCycleId);
+    public Long deleteReviewCycle(ReviewCycleDeleteCommand command) {
+        ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
+        reviewCycle.checkOwnership(command.getUserId());
+
         reviewCycleRepository.delete(reviewCycle);
-        return reviewCycleId;
+        return command.getReviewCycleId();
     }
 
     private ReviewCycle findReviewCycle(Long reviewCycleId) {

@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
+import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleSaveCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.cycle_modify.ReviewCycleCycleModifyRequest;
@@ -70,8 +71,10 @@ class ReviewCycleEndToEndTest {
     @Test
     void 복습_주기_이름_변경_요청() {
         // given
+        Long userId = 1L;
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
-        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
+        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(saveCommand);
 
         ReviewCycleNameModifyRequest reviewCycleNameModifyRequest = new ReviewCycleNameModifyRequest(NEW_REVIEW_CYCLE_NAME);
 
@@ -93,8 +96,10 @@ class ReviewCycleEndToEndTest {
     @Test
     void 복습_주기_주기_변경_요청() {
         // given
+        Long userId = 1L;
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
-        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
+        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(saveCommand);
 
         Set<Integer> newCycle = Set.of(2, 4, 5, 8, 13, 20);
         ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest = new ReviewCycleCycleModifyRequest(newCycle);
@@ -120,8 +125,10 @@ class ReviewCycleEndToEndTest {
     @Test
     void 복습_주기_삭제_요청() {
         // given
+        Long userId = 1L;
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
-        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
+        Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(saveCommand);
 
         RequestSpecification requestSpecification = given().port(this.port);
 

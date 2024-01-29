@@ -50,11 +50,12 @@ class ReviewDateProviderServiceTest {
     @MethodSource("createCycle")
     void 복습_주기와_시작_날짜로_복습_날짜들을_가져올_수_있다(List<Integer> cycle) {
         // given
+        Long userId = 1L;
         for (Integer day : cycle) {
-            reviewDateRepository.save(new ReviewDate(START_DATE.plusDays(day)));
+            reviewDateRepository.save(new ReviewDate(START_DATE.plusDays(day), userId));
         }
 
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         // when
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, START_DATE);
@@ -70,12 +71,13 @@ class ReviewDateProviderServiceTest {
     @MethodSource("createCycle")
     void 복습_주기와_시작_날짜로_복습_날짜를_가져올_때_존재하지_않는_복습_날짜는_생성해서_가져올_수_있다(List<Integer> cycle) {
         // given
+        Long userId = 1L;
         for (int i = 0; i < cycle.size(); i += 2) {
             Integer day = cycle.get(i);
-            reviewDateRepository.save(new ReviewDate(START_DATE.plusDays(day)));
+            reviewDateRepository.save(new ReviewDate(START_DATE.plusDays(day), userId));
         }
 
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         // when
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, START_DATE);
@@ -91,7 +93,8 @@ class ReviewDateProviderServiceTest {
     @MethodSource("createCycle")
     void 복습_주기와_시작_날짜로_복습_날짜들을_생성_후_가져올_수_있다(List<Integer> cycle) {
         // given
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        Long userId = 1L;
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         // when
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, START_DATE);
@@ -107,7 +110,8 @@ class ReviewDateProviderServiceTest {
     @MethodSource("createCycle")
     void provideReviewDates_메서드를_사용하면_복습_날짜들이_복습_주기에_맞게_DB에_존재해야_한다(List<Integer> cycle) {
         // given
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        Long userId = 1L;
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         // when
         reviewDateProviderService.provideReviewDates(reviewCycle, START_DATE);

@@ -43,7 +43,7 @@ class ReviewTaskControllerTest {
         TaskReviewRequest taskReviewRequest = new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE);
         TaskReviewResponse taskReviewResponse = new TaskReviewResponse(REVIEW_TASK_ID);
 
-        given(reviewTaskService.reviewTask(any(), any(), any()))
+        given(reviewTaskService.reviewTask(any()))
                 .willReturn(REVIEW_TASK_ID);
 
         // when
@@ -59,7 +59,7 @@ class ReviewTaskControllerTest {
                         objectMapper.writeValueAsString(taskReviewResponse)
                 ));
 
-        verify(reviewTaskService).reviewTask(any(), any(), any());
+        verify(reviewTaskService).reviewTask(any());
     }
 
     @Test
@@ -82,7 +82,7 @@ class ReviewTaskControllerTest {
     void 과제의_복습을_요청할_때_과제가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         ReviewTaskNotFoundException reviewTaskNotFoundException = new ReviewTaskNotFoundException();
-        given(reviewTaskService.reviewTask(any(), any(), any()))
+        given(reviewTaskService.reviewTask(any()))
                 .willThrow(reviewTaskNotFoundException);
 
         // when
@@ -98,14 +98,14 @@ class ReviewTaskControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(reviewTaskNotFoundException.getMessage()));
 
-        verify(reviewTaskService).reviewTask(any(), any(), any());
+        verify(reviewTaskService).reviewTask(any());
     }
 
     @Test
     void 과제의_복습을_요청할_때_복습_주기가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         ReviewCycleNotFoundException reviewCycleNotFoundException = new ReviewCycleNotFoundException();
-        given(reviewTaskService.reviewTask(any(), any(), any()))
+        given(reviewTaskService.reviewTask(any()))
                 .willThrow(reviewCycleNotFoundException);
 
         // when
@@ -121,7 +121,7 @@ class ReviewTaskControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(reviewCycleNotFoundException.getMessage()));
 
-        verify(reviewTaskService).reviewTask(any(), any(), any());
+        verify(reviewTaskService).reviewTask(any());
     }
 
 }

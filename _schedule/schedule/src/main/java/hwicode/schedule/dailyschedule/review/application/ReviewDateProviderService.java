@@ -28,7 +28,7 @@ public class ReviewDateProviderService {
 
             reviewDate.ifPresentOrElse(
                     reviewDates::add,
-                    () -> unSavedReviewDates.add(new ReviewDate(date))
+                    () -> unSavedReviewDates.add(new ReviewDate(date, reviewCycle.getUserId()))
             );
         }
 

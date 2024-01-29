@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.review.application;
 
+import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCancellationCommand;
+import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDate;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDateTask;
@@ -13,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -27,12 +28,16 @@ public class ReviewTaskService {
     private final ReviewDateTaskSaveAllOrDeleteAllRepository reviewDateTaskSaveAllOrDeleteAllRepository;
 
     @Transactional
-    public Long reviewTask(Long reviewTaskId, Long reviewCycleId, LocalDate startDate) {
-        ReviewTask reviewTask = reviewTaskRepository.findReviewTaskWithReviewDateTasks(reviewTaskId)
+    public Long reviewTask(TaskReviewCommand command) {
+        ReviewTask reviewTask = reviewTaskRepository.findReviewTaskWithReviewDateTasks(command.getReviewTaskId())
                 .orElseThrow(ReviewTaskNotFoundException::new);
-        ReviewCycle reviewCycle = reviewCycleRepository.findById(reviewCycleId)
+        reviewTask.checkOwnership(command.getUserId());
+
+        ReviewCycle reviewCycle = reviewCycleRepository.findById(command.getReviewCycleId())
                 .orElseThrow(ReviewCycleNotFoundException::new);
-        List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, startDate);
+        reviewCycle.checkOwnership(command.getUserId());
+
+        List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, command.getStartDate());
 
         List<ReviewDateTask> reviewDateTasks = reviewTask.review(reviewDates);
         reviewDateTaskSaveAllOrDeleteAllRepository.saveAll(reviewDateTasks);
@@ -40,9 +45,13 @@ public class ReviewTaskService {
     }
 
     @Transactional
-    public Long cancelReviewedTask(Long reviewTaskId) {
-        reviewDateTaskSaveAllOrDeleteAllRepository.deleteAllReviewDateTasksBy(reviewTaskId);
-        return reviewTaskId;
+    public Long cancelReviewedTask(TaskReviewCancellationCommand command) {
+        ReviewTask reviewTask = reviewTaskRepository.findById(command.getReviewTaskId())
+                .orElseThrow(ReviewTaskNotFoundException::new);
+        reviewTask.checkOwnership(command.getUserId());
+
+        reviewDateTaskSaveAllOrDeleteAllRepository.deleteAllReviewDateTasksBy(command.getReviewTaskId());
+        return command.getReviewTaskId();
     }
 
 }

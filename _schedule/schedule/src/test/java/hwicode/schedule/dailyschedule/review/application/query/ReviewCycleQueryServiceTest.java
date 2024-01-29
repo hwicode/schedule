@@ -34,13 +34,14 @@ class ReviewCycleQueryServiceTest {
     @Test
     void 모든_복습_주기의_조회를_요청할_수_있다() {
         // given
+        Long userId = 1L;
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
         List<Integer> reviewCycleDates2 = List.of(4, 5, 6, 10, 20, 50);
         List<Integer> reviewCycleDates3 = List.of(2, 5, 7, 8, 9, 12, 30);
 
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
-        ReviewCycle reviewCycle2 = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates2);
-        ReviewCycle reviewCycle3 = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates3);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, userId);
+        ReviewCycle reviewCycle2 = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates2, userId);
+        ReviewCycle reviewCycle3 = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates3, userId);
 
         reviewCycleRepository.saveAll(List.of(reviewCycle, reviewCycle2, reviewCycle3));
 

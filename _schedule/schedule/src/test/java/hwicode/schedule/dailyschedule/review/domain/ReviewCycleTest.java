@@ -32,7 +32,7 @@ class ReviewCycleTest {
     @MethodSource("provideReviewCycleDates")
     void 복습_주기를_생성할_수_있다(List<Integer> reviewCycleDates) {
         // when
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         // then
         assertThat(reviewCycle).isInstanceOf(ReviewCycle.class);
@@ -45,7 +45,7 @@ class ReviewCycleTest {
         reviewCycleDates.add(null);
 
         // when then
-        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
+        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L))
                 .isInstanceOf(ReviewCycleNullException.class);
     }
 
@@ -56,7 +56,7 @@ class ReviewCycleTest {
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60, noneValidDate);
 
         // when then
-        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates))
+        assertThatThrownBy(() -> new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L))
                 .isInstanceOf(InvalidReviewCycleDateException.class);
     }
 
@@ -64,7 +64,7 @@ class ReviewCycleTest {
     void 복습_주기의_이름을_변경하면_true가_리턴된다() {
         // given
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         // when
         boolean isChanged = reviewCycle.changeName(NEW_REVIEW_CYCLE_NAME);
@@ -77,7 +77,7 @@ class ReviewCycleTest {
     void 복습_주기의_이름을_변경하지_못하면_false가_리턴된다() {
         // given
         List<Integer> reviewCycleDates = List.of(1, 2, 4, 7, 14, 60);
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         // when
         boolean isChanged = reviewCycle.changeName(REVIEW_CYCLE_NAME);
@@ -107,7 +107,7 @@ class ReviewCycleTest {
     @MethodSource("provideReviewCycles")
     void 복습_주기의_주기를_변경할_수_있다(List<Integer> reviewCycleDates, List<Integer> newReviewCycleDates) {
         // given
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         // when
         List<Integer> result = reviewCycle.changeCycle(newReviewCycleDates);
@@ -122,7 +122,7 @@ class ReviewCycleTest {
     void 복습_주기를_생성할_때_입력된_리스트가_변해도_복습_주기는_변화가_없다() {
         // given
         List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         // when
         reviewCycleDates.add(10);
@@ -135,7 +135,7 @@ class ReviewCycleTest {
     void 복습_주기의_주기를_변경할_때_입력된_리스트가_변해도_복습_주기는_변화가_없다() {
         // given
         List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         List<Integer> newReviewCycleDates = new ArrayList<>(List.of(1, 5, 10, 20));
         reviewCycle.changeCycle(newReviewCycleDates);
@@ -151,7 +151,7 @@ class ReviewCycleTest {
     void 복습_주기의_주기를_변경할_때_리턴된_리스트가_변해도_복습_주기는_변화가_없다() {
         // given
         List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         List<Integer> newReviewCycleDates = new ArrayList<>(List.of(1, 5, 10, 20));
         List<Integer> result = reviewCycle.changeCycle(newReviewCycleDates);
@@ -167,7 +167,7 @@ class ReviewCycleTest {
     void 복습_주기의_주기를_가져올_때_가져온_리스트에_값을_추가하면_에러가_발생한다() {
         // given
         List<Integer> reviewCycleDates = new ArrayList<>(List.of(1, 2, 4));
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, reviewCycleDates, 1L);
 
         List<Integer> cycle = reviewCycle.getCycle();
 

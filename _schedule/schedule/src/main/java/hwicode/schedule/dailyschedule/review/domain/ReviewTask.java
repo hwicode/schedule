@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
+import hwicode.schedule.dailyschedule.review.exception.domain.review_task.ReviewTaskForbiddenException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
@@ -47,23 +48,33 @@ public class ReviewTask {
     @Enumerated(value = EnumType.STRING)
     private TaskStatus taskStatus;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "reviewTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewDateTask> reviewDateTasks = new ArrayList<>();
 
     @OneToMany(mappedBy = "reviewTask", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
 
-    public ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty) {
+    public ReviewTask(ReviewList reviewList, String name, Priority priority, Importance importance, Difficulty difficulty, Long userId) {
         this.reviewList = reviewList;
         this.name = name;
         this.priority = priority;
         this.importance = importance;
         this.difficulty = difficulty;
         this.taskStatus = TaskStatus.TODO;
+        this.userId = userId;
+    }
+
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new ReviewTaskForbiddenException();
+        }
     }
 
     public ReviewTask cloneTask(ReviewList reviewList) {
-        ReviewTask clonedTask = new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty);
+        ReviewTask clonedTask = new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty, this.userId);
         List<ReviewSubTask> clonedReviewSubTasks = this.reviewSubTasks.stream()
                 .map(reviewSubTask -> reviewSubTask.cloneSubTask(clonedTask))
                 .collect(Collectors.toList());
@@ -71,7 +82,7 @@ public class ReviewTask {
         return clonedTask;
     }
 
-    public void addAllToReviewSubTasks(List<ReviewSubTask> clonedReviewSubTasks) {
+    void addAllToReviewSubTasks(List<ReviewSubTask> clonedReviewSubTasks) {
         this.reviewSubTasks.addAll(clonedReviewSubTasks);
     }
 

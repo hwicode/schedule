@@ -52,7 +52,7 @@ class ReviewCycleControllerTest {
         ReviewCycleSaveRequest reviewCycleSaveRequest = new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, cycle);
         ReviewCycleSaveResponse reviewCycleSaveResponse = new ReviewCycleSaveResponse(REVIEW_CYCLE_ID, REVIEW_CYCLE_NAME, new ArrayList<>(cycle));
 
-        given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
+        given(reviewCycleAggregateService.saveReviewCycle(any()))
                 .willReturn(REVIEW_CYCLE_ID);
 
         // when
@@ -67,14 +67,14 @@ class ReviewCycleControllerTest {
                         objectMapper.writeValueAsString(reviewCycleSaveResponse)
                 ));
 
-        verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+        verify(reviewCycleAggregateService).saveReviewCycle(any());
     }
 
     @Test
     void 복습_주기를_생성을_요청할_때_복습_주기에_null값이_있으면_에러가_발생한다() throws Exception {
         // given
         ReviewCycleNullException reviewCycleNullException = new ReviewCycleNullException();
-        given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
+        given(reviewCycleAggregateService.saveReviewCycle(any()))
                 .willThrow(reviewCycleNullException);
 
         Set<Integer> set = new HashSet<>();
@@ -92,14 +92,14 @@ class ReviewCycleControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(reviewCycleNullException.getMessage()));
 
-        verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+        verify(reviewCycleAggregateService).saveReviewCycle(any());
     }
 
     @Test
     void 복습_주기를_생성을_요청할_때_복습_주기의_크기가_유효하지_않으면_에러가_발생한다() throws Exception {
         // given
         InvalidReviewCycleDateException invalidReviewCycleDateException = new InvalidReviewCycleDateException();
-        given(reviewCycleAggregateService.saveReviewCycle(any(), any()))
+        given(reviewCycleAggregateService.saveReviewCycle(any()))
                 .willThrow(invalidReviewCycleDateException);
 
         Set<Integer> overSizeReviewCycle = Set.of(1);
@@ -116,7 +116,7 @@ class ReviewCycleControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(invalidReviewCycleDateException.getMessage()));
 
-        verify(reviewCycleAggregateService).saveReviewCycle(any(), any());
+        verify(reviewCycleAggregateService).saveReviewCycle(any());
     }
 
     @Test
@@ -125,7 +125,7 @@ class ReviewCycleControllerTest {
         ReviewCycleNameModifyRequest reviewCycleNameModifyRequest = new ReviewCycleNameModifyRequest(NEW_REVIEW_CYCLE_NAME);
         ReviewCycleNameModifyResponse reviewCycleNameModifyResponse = new ReviewCycleNameModifyResponse(REVIEW_CYCLE_ID, NEW_REVIEW_CYCLE_NAME);
 
-        given(reviewCycleAggregateService.changeReviewCycleName(any(), any()))
+        given(reviewCycleAggregateService.changeReviewCycleName(any()))
                 .willReturn(NEW_REVIEW_CYCLE_NAME);
 
         // when
@@ -141,7 +141,7 @@ class ReviewCycleControllerTest {
                         objectMapper.writeValueAsString(reviewCycleNameModifyResponse)
                 ));
 
-        verify(reviewCycleAggregateService).changeReviewCycleName(any(), any());
+        verify(reviewCycleAggregateService).changeReviewCycleName(any());
     }
 
     @Test
@@ -151,7 +151,7 @@ class ReviewCycleControllerTest {
         ReviewCycleCycleModifyRequest reviewCycleCycleModifyRequest = new ReviewCycleCycleModifyRequest(cycle);
         ReviewCycleCycleModifyResponse reviewCycleCycleModifyResponse = new ReviewCycleCycleModifyResponse(REVIEW_CYCLE_ID, new ArrayList<>(cycle));
 
-        given(reviewCycleAggregateService.changeCycle(any(), any()))
+        given(reviewCycleAggregateService.changeCycle(any()))
                 .willReturn(new ArrayList<>(cycle));
 
         // when
@@ -165,13 +165,13 @@ class ReviewCycleControllerTest {
                         objectMapper.writeValueAsString(reviewCycleCycleModifyResponse)
                 ));
 
-        verify(reviewCycleAggregateService).changeCycle(any(), any());
+        verify(reviewCycleAggregateService).changeCycle(any());
     }
 
     @Test
     void 복습_주기의_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // given
-        given(reviewCycleAggregateService.deleteReviewCycle(REVIEW_CYCLE_ID))
+        given(reviewCycleAggregateService.deleteReviewCycle(any()))
                 .willReturn(REVIEW_CYCLE_ID);
 
         // when
@@ -189,7 +189,7 @@ class ReviewCycleControllerTest {
         // given
         ReviewCycleNotFoundException reviewCycleNotFoundException = new ReviewCycleNotFoundException();
 
-        given(reviewCycleAggregateService.deleteReviewCycle(REVIEW_CYCLE_ID))
+        given(reviewCycleAggregateService.deleteReviewCycle(any()))
                 .willThrow(reviewCycleNotFoundException);
 
         // when

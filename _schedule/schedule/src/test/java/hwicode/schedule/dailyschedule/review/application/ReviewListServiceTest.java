@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.review.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
@@ -52,14 +53,15 @@ class ReviewListServiceTest {
     @ValueSource(ints = {2, 4, 5, 7, 10})
     void 복습_리스트에_복습할_과제들을_추가할_수_있다(int numberOfTasks) {
         // given
-        ReviewList reviewList = new ReviewList(START_DATE.plusDays(1));
+        Long userId = 1L;
+        ReviewList reviewList = new ReviewList(START_DATE.plusDays(1), userId);
         reviewListRepository.save(reviewList);
 
         // 복습 주기를 하루로 해서, 다음날에 복습할 과제만 추가하도록 만듦
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, List.of(1));
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, List.of(1), userId);
         reviewCycleRepository.save(reviewCycle);
 
-        int numberOfReviewedTasks = createReviewedTasks(reviewCycle, numberOfTasks);
+        int numberOfReviewedTasks = createReviewedTasks(reviewCycle, numberOfTasks, userId);
 
         // when
         reviewListService.addReviewTasks(reviewList.getId());
@@ -68,16 +70,18 @@ class ReviewListServiceTest {
         assertThat(reviewTaskRepository.findAll()).hasSize(numberOfTasks + numberOfReviewedTasks);
     }
 
-    private int createReviewedTasks(ReviewCycle reviewCycle, int numberOfTasks) {
+    private int createReviewedTasks(ReviewCycle reviewCycle, int numberOfTasks, Long userId) {
         for (int i = 0; i < numberOfTasks; i++) {
-            ReviewTask task = createTask(REVIEW_TASK_NAME + i);
-            reviewTaskService.reviewTask(task.getId(), reviewCycle.getId(), START_DATE);
+            ReviewTask task = createTask(REVIEW_TASK_NAME + i, userId);
+
+            TaskReviewCommand command = new TaskReviewCommand(userId, task.getId(), reviewCycle.getId(), START_DATE);
+            reviewTaskService.reviewTask(command);
         }
         return numberOfTasks;
     }
 
-    private ReviewTask createTask(String reviewTaskName) {
-        ReviewTask reviewTask = new ReviewTask(null, reviewTaskName, null, null, null);
+    private ReviewTask createTask(String reviewTaskName, Long userId) {
+        ReviewTask reviewTask = new ReviewTask(null, reviewTaskName, null, null, null, userId);
         reviewTaskRepository.save(reviewTask);
         return reviewTask;
     }

@@ -43,10 +43,10 @@ class ReviewTaskTest {
         assertThat(clonedTask).isEqualTo(reviewTask);
     }
 
-    private List<ReviewDate> createReviewDate(LocalDate startDate, List<Integer> cycle) {
+    private List<ReviewDate> createReviewDate(LocalDate startDate, List<Integer> cycle, Long userId) {
         return cycle.stream()
                 .map(startDate::plusDays)
-                .map(ReviewDate::new)
+                .map(date -> new ReviewDate(date, userId))
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +55,7 @@ class ReviewTaskTest {
         // given
         ReviewTask reviewTask = new ReviewTask();
         List<Integer> cycle = List.of(1, 2, 5, 10, 20);
-        List<ReviewDate> reviewDates = createReviewDate(START_DATE, cycle);
+        List<ReviewDate> reviewDates = createReviewDate(START_DATE, cycle, 1L);
 
         // when
         List<ReviewDateTask> result = reviewTask.review(reviewDates);
@@ -90,12 +90,13 @@ class ReviewTaskTest {
     @MethodSource("provideReviewCyclesAndNewSize")
     void 과제를_복습할_때_중복되는_날짜들을_제외하고_날짜들을_생성할_수_있다(List<Integer> firstCycle, List<Integer> secondCycle, int newDatesSize) {
         // given
+        Long userId = 1L;
         ReviewTask reviewTask = new ReviewTask();
 
-        List<ReviewDate> firstReviewDates = createReviewDate(START_DATE, firstCycle);
+        List<ReviewDate> firstReviewDates = createReviewDate(START_DATE, firstCycle, userId);
         List<ReviewDateTask> firstResult = reviewTask.review(firstReviewDates);
 
-        List<ReviewDate> secondReviewDate = createReviewDate(START_DATE, secondCycle);
+        List<ReviewDate> secondReviewDate = createReviewDate(START_DATE, secondCycle, userId);
 
         // when
         List<ReviewDateTask> secondResult = reviewTask.review(secondReviewDate);

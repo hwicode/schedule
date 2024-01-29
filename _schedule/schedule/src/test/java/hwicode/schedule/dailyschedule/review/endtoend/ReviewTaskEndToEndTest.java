@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
+import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
@@ -53,9 +54,10 @@ class ReviewTaskEndToEndTest {
     @Test
     void 과제_복습_요청() {
         // given
-        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
+        Long userId = 1L;
+        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);
         List<Integer> cycle = List.of(1, 2, 4);
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         reviewTaskRepository.save(reviewTask);
         reviewCycleRepository.save(reviewCycle);
@@ -80,14 +82,17 @@ class ReviewTaskEndToEndTest {
     @Test
     void 과제_복습_취소_요청() {
         // given
+        Long userId = 1L;
         List<Integer> cycle = List.of(1, 2, 4);
-        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null);
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+        ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
 
         reviewTaskRepository.save(reviewTask);
         reviewCycleRepository.save(reviewCycle);
 
-        reviewTaskService.reviewTask(reviewTask.getId(), reviewCycle.getId(), START_DATE);
+        TaskReviewCommand command = new TaskReviewCommand(userId, reviewTask.getId(), reviewCycle.getId(), START_DATE);
+
+        reviewTaskService.reviewTask(command);
 
         RequestSpecification requestSpecification = given()
                 .port(port);

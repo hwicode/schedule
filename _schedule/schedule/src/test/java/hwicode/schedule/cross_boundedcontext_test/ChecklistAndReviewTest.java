@@ -9,6 +9,7 @@ import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundExc
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
+import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
@@ -65,7 +66,7 @@ class ChecklistAndReviewTest {
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskChecker savedTask = taskCheckerRepository.save(new TaskChecker(dailyChecklist, "name", Difficulty.NORMAL, 1L));
-        reviewTask(savedTask, cycle);
+        reviewTask(savedTask, cycle, userId);
 
         TaskDeleteCommand command = new TaskDeleteCommand(userId, dailyChecklist.getId(), savedTask.getId(), "name");
 
@@ -78,11 +79,12 @@ class ChecklistAndReviewTest {
         assertThat(reviewDateTaskRepository.findAll()).isEmpty();
     }
 
-    private void reviewTask(TaskChecker taskChecker, List<Integer> cycle) {
-        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle);
+    private void reviewTask(TaskChecker taskChecker, List<Integer> cycle, Long userId) {
+        ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
         reviewCycleRepository.save(reviewCycle);
 
-        reviewTaskService.reviewTask(taskChecker.getId(), reviewCycle.getId(), START_DATE);
+        TaskReviewCommand command = new TaskReviewCommand(userId, taskChecker.getId(), reviewCycle.getId(), START_DATE);
+        reviewTaskService.reviewTask(command);
     }
 
     private static Stream<List<Integer>> provideReviewCycleDates() {

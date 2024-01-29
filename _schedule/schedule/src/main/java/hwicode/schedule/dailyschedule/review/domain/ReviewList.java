@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
+import hwicode.schedule.dailyschedule.review.exception.domain.review_list.ReviewListForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -18,8 +19,18 @@ public class ReviewList {
     @Column(nullable = false)
     private LocalDate today;
 
-    public ReviewList(LocalDate today) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public ReviewList(LocalDate today, Long userId) {
         this.today = today;
+        this.userId = userId;
+    }
+
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new ReviewListForbiddenException();
+        }
     }
 
     public Long getId() {
