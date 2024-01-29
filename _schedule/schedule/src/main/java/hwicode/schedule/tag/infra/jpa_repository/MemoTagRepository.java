@@ -35,10 +35,10 @@ public interface MemoTagRepository extends JpaRepository<MemoTag, Long> {
                                                                      Pageable pageable);
 
     @Query("SELECT "
-            + "new hwicode.schedule.tag.application.query.dto.MemoTagQueryResponse(mt.tag.id, mt.tag.name, m.id) "
+            + "new hwicode.schedule.tag.application.query.dto.MemoTagQueryResponse(t.id, t.name, mt.memo.id) "
             + "FROM MemoTag mt "
-            + "INNER JOIN mt.memo m "
-            + "WHERE m.id IN (:memoIds) "
-            + "ORDER BY m.id ASC")
+            + "INNER JOIN mt.tag t "
+            + "WHERE mt.memo.id IN (:memoIds) "
+            + "ORDER BY mt.memo.id ASC")
     List<MemoTagQueryResponse> findMemoTagsQueryResponsesBy(@Param("memoIds") List<Long> memoIds);
 }
