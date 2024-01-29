@@ -7,7 +7,6 @@ import hwicode.schedule.auth.domain.OauthUser;
 import hwicode.schedule.auth.domain.RefreshToken;
 import hwicode.schedule.auth.exception.application.InvalidRefreshTokenException;
 import hwicode.schedule.auth.infra.client.OauthClientMapper;
-import hwicode.schedule.auth.infra.client.UserInfo;
 import hwicode.schedule.auth.infra.other_boundedcontext.UserConnector;
 import hwicode.schedule.auth.infra.token.DecodedToken;
 import hwicode.schedule.auth.infra.token.RefreshTokenRepository;
@@ -30,13 +29,13 @@ public class AuthService {
 
     public AuthTokenResponse loginWithOauth(OauthProvider oauthProvider, String code) {
         OauthClient oauthClient = oauthClientMapper.getOauthClient(oauthProvider);
-        UserInfo userInfo = oauthClient.getUserInfo(code);
+        OauthUser oauthUser = oauthClient.getUserInfo(code);
 
-        OauthUser oauthUser = userConnector.saveOrUpdate(userInfo.toEntity());
+        OauthUser savedOauthUser = userConnector.saveOrUpdate(oauthUser);
 
-        String accessToken = tokenProvider.createAccessToken(oauthUser);
-        RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
-        refreshTokenRepository.save(oauthUser.getId(), refreshToken);
+        String accessToken = tokenProvider.createAccessToken(savedOauthUser);
+        RefreshToken refreshToken = tokenProvider.createRefreshToken(savedOauthUser);
+        refreshTokenRepository.save(savedOauthUser.getId(), refreshToken);
 
         return new AuthTokenResponse(accessToken, refreshToken.getToken(), refreshToken.getExpiryMs());
     }

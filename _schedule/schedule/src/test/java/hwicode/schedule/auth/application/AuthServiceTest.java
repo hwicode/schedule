@@ -10,7 +10,6 @@ import hwicode.schedule.auth.exception.application.InvalidRefreshTokenException;
 import hwicode.schedule.auth.exception.infra.other_boundedcontext.OauthUserNotFoundException;
 import hwicode.schedule.auth.exception.infra.token.RefreshTokenNotFoundException;
 import hwicode.schedule.auth.infra.client.OauthClientMapper;
-import hwicode.schedule.auth.infra.client.UserInfo;
 import hwicode.schedule.auth.infra.other_boundedcontext.UserConnector;
 import hwicode.schedule.auth.infra.token.RefreshTokenRepository;
 import hwicode.schedule.auth.infra.token.TokenProvider;
@@ -61,9 +60,9 @@ class AuthServiceTest {
     @Test
     void OAuth를_통해_로그인할_수_있다() {
         // given
-        UserInfo userInfo = new UserInfo("name", "email", OauthProvider.GOOGLE);
+        OauthUser oauthUser = new OauthUser("name", "email", OauthProvider.GOOGLE);
         OauthClient client = mock(OauthClient.class);
-        when(client.getUserInfo(any())).thenReturn(userInfo);
+        when(client.getUserInfo(any())).thenReturn(oauthUser);
         when(oauthClientMapper.getOauthClient(any())).thenReturn(client);
 
         // when
@@ -73,8 +72,8 @@ class AuthServiceTest {
         String accessToken = authTokenResponse.getAccessToken();
         Long userId = tokenProvider.decodeToken(accessToken).getUserId();
 
-        OauthUser oauthUser = userConnector.saveOrUpdate(userInfo.toEntity());
-        assertThat(userId).isEqualTo(oauthUser.getId());
+        OauthUser savedOauthUser = userConnector.saveOrUpdate(oauthUser);
+        assertThat(userId).isEqualTo(savedOauthUser.getId());
 
         RefreshToken refreshToken = refreshTokenRepository.get(userId);
         assertThat(authTokenResponse.getRefreshToken()).isEqualTo(refreshToken.getToken());
