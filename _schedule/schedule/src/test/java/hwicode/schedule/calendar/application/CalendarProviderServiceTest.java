@@ -38,10 +38,11 @@ class CalendarProviderServiceTest {
     @Test
     void YearMonth로_캘린더를_가져올_수_있다() {
         // given
-        Calendar savedCalendar = calendarRepository.save(new Calendar(YEAR_MONTH));
+        Long userId = 1L;
+        Calendar savedCalendar = calendarRepository.save(new Calendar(YEAR_MONTH, userId));
 
         // when
-        Calendar providedCalendar = calendarProviderService.provideCalendar(YEAR_MONTH);
+        Calendar providedCalendar = calendarProviderService.provideCalendar(userId, YEAR_MONTH);
 
         // then
         assertThat(savedCalendar.getId()).isEqualTo(providedCalendar.getId());
@@ -50,17 +51,19 @@ class CalendarProviderServiceTest {
     @Test
     void YearMonth로_캘린더를_생성_후_가져올_수_있다() {
         // when
-        Calendar calendar = calendarProviderService.provideCalendar(YEAR_MONTH);
+        Long userId = 1L;
+        Calendar savedCalendar = calendarRepository.save(new Calendar(YEAR_MONTH, userId));
 
         // then
-        assertThat(calendarRepository.existsById(calendar.getId())).isTrue();
+        assertThat(calendarRepository.existsById(savedCalendar.getId())).isTrue();
     }
 
     @Test
     void YearMonth의_리스트로_캘린더들을_가져올_수_있다() {
         // given
-        calendarRepository.save(new Calendar(YEAR_MONTH));
-        calendarRepository.save(new Calendar(YEAR_MONTH.plusMonths(1)));
+        Long userId = 1L;
+        calendarRepository.save(new Calendar(YEAR_MONTH, userId));
+        calendarRepository.save(new Calendar(YEAR_MONTH.plusMonths(1), userId));
 
         List<YearMonth> yearMonths = List.of(
                 YEAR_MONTH,
@@ -68,7 +71,7 @@ class CalendarProviderServiceTest {
         );
 
         // when
-        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<Calendar> calendars = calendarProviderService.provideCalendars(userId, yearMonths);
 
         // then
         assertThat(calendars).hasSize(2);
@@ -79,8 +82,9 @@ class CalendarProviderServiceTest {
     @Test
     void YearMonth의_리스트로_존재하지_않는_캘린더는_생성해서_가져올_수_있다() {
         // given
-        calendarRepository.save(new Calendar(YEAR_MONTH));
-        calendarRepository.save(new Calendar(YEAR_MONTH.plusMonths(1)));
+        Long userId = 1L;
+        calendarRepository.save(new Calendar(YEAR_MONTH, userId));
+        calendarRepository.save(new Calendar(YEAR_MONTH.plusMonths(1), userId));
 
         List<YearMonth> yearMonths = List.of(
                 YEAR_MONTH,
@@ -89,7 +93,7 @@ class CalendarProviderServiceTest {
         );
 
         // when
-        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<Calendar> calendars = calendarProviderService.provideCalendars(userId, yearMonths);
 
         // then
         assertThat(calendars).hasSize(3);
@@ -102,6 +106,7 @@ class CalendarProviderServiceTest {
     @Test
     void YearMonth의_리스트로_캘린더들을_생성_후_가져올_수_있다() {
         // given
+        Long userId = 1L;
         List<YearMonth> yearMonths = List.of(
                 YEAR_MONTH,
                 YEAR_MONTH.plusMonths(1),
@@ -109,7 +114,7 @@ class CalendarProviderServiceTest {
         );
 
         // when
-        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<Calendar> calendars = calendarProviderService.provideCalendars(userId, yearMonths);
 
         // then
         assertThat(calendars).hasSize(3);
@@ -134,7 +139,7 @@ class CalendarProviderServiceTest {
         );
 
         // when then
-        assertThatThrownBy(() -> calendarProviderService.provideCalendars(yearMonths))
+        assertThatThrownBy(() -> calendarProviderService.provideCalendars(1L, yearMonths))
                 .isInstanceOf(YearMonthsSizeNotValidException.class);
         assertThat(yearMonths).hasSize(25);
     }
@@ -146,7 +151,7 @@ class CalendarProviderServiceTest {
         yearMonths.add(null);
 
         // when then
-        assertThatThrownBy(() -> calendarProviderService.provideCalendars(yearMonths))
+        assertThatThrownBy(() -> calendarProviderService.provideCalendars(1L, yearMonths))
                 .isInstanceOf(YearMonthNullException.class);
     }
 

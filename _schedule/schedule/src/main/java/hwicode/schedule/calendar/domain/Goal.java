@@ -24,15 +24,25 @@ public class Goal {
     @Enumerated(value = EnumType.STRING)
     private GoalStatus goalStatus;
 
+    @Column(nullable = false)
+    private Long userId;
+
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<CalendarGoal> calendarGoals = new ArrayList<>();
 
     @OneToMany(mappedBy = "goal", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<SubGoal> subGoals = new ArrayList<>();
 
-    public Goal(String name) {
+    public Goal(String name, Long userId) {
         this.name = name;
         this.goalStatus = GoalStatus.TODO;
+        this.userId = userId;
+    }
+
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new GoalForbiddenException();
+        }
     }
 
     public String changeSubGoalName(String subGoalName, String newSubGoalName) {

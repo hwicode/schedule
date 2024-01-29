@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class GoalTest {
 
     private Goal createGoal() {
-        return new Goal(GOAL_NAME);
+        return new Goal(GOAL_NAME, 1L);
     }
 
     @Test

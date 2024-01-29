@@ -82,7 +82,7 @@ class CalendarControllerTest {
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
         GoalSaveResponse goalSaveResponse = new GoalSaveResponse(GOAL_ID, GOAL_NAME);
 
-        given(calendarService.saveGoal(any(), any()))
+        given(calendarService.saveGoal(any()))
                 .willReturn(GOAL_ID);
 
         // when
@@ -96,7 +96,7 @@ class CalendarControllerTest {
                         objectMapper.writeValueAsString(goalSaveResponse)
                 ));
 
-        verify(calendarService).saveGoal(any(), any());
+        verify(calendarService).saveGoal(any());
     }
 
     @Test
@@ -106,7 +106,7 @@ class CalendarControllerTest {
         GoalAddToCalendarsRequest goalAddToCalendarsRequest = new GoalAddToCalendarsRequest(yearMonths);
         GoalAddToCalendarsResponse goalAddToCalendarsResponse = new GoalAddToCalendarsResponse(GOAL_ID, goalAddToCalendarsRequest.getYearMonths());
 
-        given(calendarService.addGoalToCalendars(any(), any()))
+        given(calendarService.addGoalToCalendars(any()))
                 .willReturn(GOAL_ID);
 
         // when
@@ -120,7 +120,7 @@ class CalendarControllerTest {
                         objectMapper.writeValueAsString(goalAddToCalendarsResponse)
                 ));
 
-        verify(calendarService).addGoalToCalendars(any(), any());
+        verify(calendarService).addGoalToCalendars(any());
     }
 
     @Test
@@ -129,7 +129,7 @@ class CalendarControllerTest {
         GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
         GoalNameModifyResponse goalNameModifyResponse = new GoalNameModifyResponse(CALENDAR_ID, NEW_GOAL_NAME);
 
-        given(calendarService.changeGoalName(any(), any(), any()))
+        given(calendarService.changeGoalName(any()))
                 .willReturn(NEW_GOAL_NAME);
 
         // when
@@ -143,7 +143,7 @@ class CalendarControllerTest {
                         objectMapper.writeValueAsString(goalNameModifyResponse)
                 ));
 
-        verify(calendarService).changeGoalName(any(), any(), any());
+        verify(calendarService).changeGoalName(any());
     }
 
     @Test
@@ -153,7 +153,7 @@ class CalendarControllerTest {
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, weeklyStudyDate);
         WeeklyStudyDateModifyResponse weeklyStudyDateModifyResponse = new WeeklyStudyDateModifyResponse(CALENDAR_ID, weeklyStudyDate);
 
-        given(calendarService.changeWeeklyStudyDate(any(), anyInt()))
+        given(calendarService.changeWeeklyStudyDate(any()))
                 .willReturn(weeklyStudyDate);
 
         // when
@@ -167,14 +167,14 @@ class CalendarControllerTest {
                         objectMapper.writeValueAsString(weeklyStudyDateModifyResponse)
                 ));
 
-        verify(calendarService).changeWeeklyStudyDate(any(), anyInt());
+        verify(calendarService).changeWeeklyStudyDate(any());
     }
 
     @Test
     void 목표의_이름_변경을_요청할_때_캘린더에_목표가_존재하지_않는다면_에러가_발생한다() throws Exception {
         // given
         GoalNotFoundException goalNotFoundException = new GoalNotFoundException();
-        given(calendarService.changeGoalName(any(), any(), any()))
+        given(calendarService.changeGoalName(any()))
                 .willThrow(goalNotFoundException);
 
         // when
@@ -190,14 +190,14 @@ class CalendarControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(goalNotFoundException.getMessage()));
 
-        verify(calendarService).changeGoalName(any(), any(), any());
+        verify(calendarService).changeGoalName(any());
     }
 
     @Test
     void 캘린더에_목표_추가를_요청할_때_목표의_이름이_중복되면_에러가_발생한다() throws Exception {
         // given
         CalendarGoalDuplicateException calendarGoalDuplicateException = new CalendarGoalDuplicateException();
-        given(calendarService.saveGoal(any(), anyList()))
+        given(calendarService.saveGoal(any()))
                 .willThrow(calendarGoalDuplicateException);
 
         // when
@@ -217,7 +217,7 @@ class CalendarControllerTest {
     void 캘린더의_일주일간_공부일_수정을_요청할_때_0에서_7을_벗어나면_에러가_발생한다() throws Exception {
         // given
         WeeklyDateNotValidException weeklyDateNotValidException = new WeeklyDateNotValidException();
-        given(calendarService.changeWeeklyStudyDate(any(), anyInt()))
+        given(calendarService.changeWeeklyStudyDate(any()))
                 .willThrow(weeklyDateNotValidException);
 
         // when
@@ -242,7 +242,7 @@ class CalendarControllerTest {
         Set<YearMonth> overSizeYearMonths = Set.of(YEAR_MONTH);
 
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, overSizeYearMonths);
-        given(calendarService.saveGoal(any(), any()))
+        given(calendarService.saveGoal(any()))
                 .willThrow(yearMonthsSizeNotValidException);
 
         // when
@@ -264,7 +264,7 @@ class CalendarControllerTest {
         yearMonths.add(null);
 
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
-        given(calendarService.saveGoal(any(), any()))
+        given(calendarService.saveGoal(any()))
                 .willThrow(yearMonthNullException);
 
         // when

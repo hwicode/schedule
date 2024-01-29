@@ -1,5 +1,6 @@
 package hwicode.schedule.calendar.application;
 
+import hwicode.schedule.calendar.application.dto.calendar.*;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.CalendarGoal;
 import hwicode.schedule.calendar.domain.Goal;
@@ -10,7 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,17 +25,17 @@ public class CalendarService {
     private final CalendarGoalSaveAllRepository calendarGoalSaveAllRepository;
 
     @Transactional
-    public Long saveCalendar(YearMonth yearMonth) {
-        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+    public Long saveCalendar(CalendarSaveCommand command) {
+        Calendar calendar = calendarProviderService.provideCalendar(command.getUserId(), command.getYearMonth());
         return calendar.getId();
     }
 
     @Transactional
-    public Long saveGoal(String name, List<YearMonth> yearMonths) {
-        Goal goal = new Goal(name);
+    public Long saveGoal(GoalSaveCommand command) {
+        Goal goal = new Goal(command.getName(), command.getUserId());
         goalRepository.save(goal);
 
-        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<Calendar> calendars = calendarProviderService.provideCalendars(command.getUserId(), command.getYearMonths());
         List<CalendarGoal> calendarGoals = addGoal(calendars, goal);
 
         calendarGoalSaveAllRepository.saveAll(calendarGoals);
@@ -43,11 +43,12 @@ public class CalendarService {
     }
 
     @Transactional
-    public Long addGoalToCalendars(Long goalId, List<YearMonth> yearMonths) {
-        Goal goal = goalRepository.findById(goalId)
+    public Long addGoalToCalendars(GoalAddToCalendersCommand command) {
+        Goal goal = goalRepository.findById(command.getGoalId())
                 .orElseThrow(GoalNotFoundException::new);
+        goal.checkOwnership(command.getUserId());
 
-        List<Calendar> calendars = calendarProviderService.provideCalendars(yearMonths);
+        List<Calendar> calendars = calendarProviderService.provideCalendars(command.getUserId(), command.getYearMonths());
         List<CalendarGoal> calendarGoals = addGoal(calendars, goal);
 
         calendarGoalSaveAllRepository.saveAll(calendarGoals);
@@ -65,17 +66,19 @@ public class CalendarService {
     }
 
     @Transactional
-    public String changeGoalName(YearMonth yearMonth, String goalName, String newGoalName) {
-        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+    public String changeGoalName(GoalModifyNameCommand command) {
+        Calendar calendar = calendarProviderService.provideCalendar(command.getUserId(), command.getYearMonth());
+
         List<Goal> foundCalendarGoals = goalRepository.findAllByCalendar(calendar.getId());
-        return calendarGoalDomainService.changeGoalName(goalName, newGoalName, foundCalendarGoals);
+        return calendarGoalDomainService.changeGoalName(command.getName(), command.getNewName(), foundCalendarGoals);
     }
 
     @Transactional
-    public int changeWeeklyStudyDate(YearMonth yearMonth, int weeklyStudyDate) {
-        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
-        calendar.changeWeeklyStudyDate(weeklyStudyDate);
-        return weeklyStudyDate;
+    public int changeWeeklyStudyDate(CalendarModifyStudyDateCommand command) {
+        Calendar calendar = calendarProviderService.provideCalendar(command.getUserId(), command.getYearMonth());
+
+        calendar.changeWeeklyStudyDate(command.getWeeklyStudyDate());
+        return command.getWeeklyStudyDate();
     }
 
 }

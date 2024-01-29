@@ -57,7 +57,8 @@ class GoalEndToEndTest {
     @Test
     void 서브_목표_생성_요청() {
         //given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
         SubGoalSaveRequest subGoalSaveRequest = new SubGoalSaveRequest(SUB_GOAL_NAME);
 
@@ -80,7 +81,8 @@ class GoalEndToEndTest {
     @Test
     void 서브_목표_이름_변경_요청() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goalRepository.save(goal);
 
@@ -107,7 +109,8 @@ class GoalEndToEndTest {
     @Test
     void 서브_목표_삭제_요청() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goalRepository.save(goal);
 
@@ -130,7 +133,8 @@ class GoalEndToEndTest {
     @Test
     void 서브_목표_진행_상태_변경_요청() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goalRepository.save(goal);
@@ -157,7 +161,8 @@ class GoalEndToEndTest {
     @Test
     void 목표_진행_상태_변경_요청() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         GoalStatusModifyRequest goalStatusModifyRequest = new GoalStatusModifyRequest(GoalStatus.PROGRESS);
@@ -182,7 +187,8 @@ class GoalEndToEndTest {
     @Test
     void 목표_삭제_요청() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         RequestSpecification requestSpecification = given()

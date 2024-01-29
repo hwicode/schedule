@@ -73,6 +73,7 @@ create table calendar (
    id bigint not null auto_increment,
    year_and_month timestamp not null,
    weekly_study_date tinyint,
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 
@@ -90,6 +91,7 @@ create table goal (
    id bigint not null auto_increment,
    name varchar(255) not null,
    goal_status varchar(255) DEFAULT 'TODO',
+   user_id bigint,
    primary key (id)
 ) engine=InnoDB;
 

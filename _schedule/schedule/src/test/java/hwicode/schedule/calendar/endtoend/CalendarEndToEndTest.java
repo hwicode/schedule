@@ -2,6 +2,8 @@ package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.application.CalendarService;
+import hwicode.schedule.calendar.application.dto.calendar.GoalAddToCalendersCommand;
+import hwicode.schedule.calendar.application.dto.calendar.GoalSaveCommand;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
@@ -30,8 +32,7 @@ import java.util.Set;
 
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -110,7 +111,8 @@ class CalendarEndToEndTest {
     @Test
     void 캘린더에_목표_추가_요청() {
         //given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         Set<YearMonth> yearMonths = Set.of(
@@ -139,13 +141,16 @@ class CalendarEndToEndTest {
     @Test
     void 목표_이름_변경_요청() {
         // given
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = new Goal(GOAL_NAME, userId);
 
         goalRepository.save(goal);
         calendarRepository.save(calendar);
 
-        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
+        calendarService.addGoalToCalendars(
+                new GoalAddToCalendersCommand(userId, goal.getId(), List.of(YEAR_MONTH))
+        );
 
         GoalNameModifyRequest goalNameModifyRequest = new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME);
 
@@ -162,15 +167,16 @@ class CalendarEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        List<YearMonth> yearMonths = List.of(YEAR_MONTH);
-        assertThatThrownBy(() -> calendarService.saveGoal(NEW_GOAL_NAME, yearMonths))
+        GoalSaveCommand saveCommand = new GoalSaveCommand(userId, NEW_GOAL_NAME, List.of(YEAR_MONTH));
+        assertThatThrownBy(() -> calendarService.saveGoal(saveCommand))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
 
     @Test
     void 일주일간_공부일_수정_요청() {
         // given
-        Calendar calendar = new Calendar(YEAR_MONTH);
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
         calendarRepository.save(calendar);
 
         WeeklyStudyDateModifyRequest weeklyStudyDateModifyRequest = new WeeklyStudyDateModifyRequest(YEAR_MONTH, 6);

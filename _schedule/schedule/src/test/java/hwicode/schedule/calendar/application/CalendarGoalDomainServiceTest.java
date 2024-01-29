@@ -19,8 +19,9 @@ class CalendarGoalDomainServiceTest {
         // given
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
 
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = new Goal(GOAL_NAME, userId);
         List<Goal> calendarGoals = new ArrayList<>();
 
         // when
@@ -35,8 +36,10 @@ class CalendarGoalDomainServiceTest {
     void 캘린더에_목표를_추가할_때_이미_존재하는_이름이면_에러가_발생한다() {
         // given
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
+
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = new Goal(GOAL_NAME, userId);
         List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
@@ -50,8 +53,10 @@ class CalendarGoalDomainServiceTest {
     void 캘린더는_목표의_이름을_변경할_수_있다() {
         // given
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
+
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = new Goal(GOAL_NAME, userId);
         List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);
@@ -60,7 +65,7 @@ class CalendarGoalDomainServiceTest {
         String changedGoalName = calendarGoalDomainService.changeGoalName(GOAL_NAME, GOAL_NAME2, calendarGoals);
 
         // then
-        Goal duplicatedGoal = new Goal(changedGoalName);
+        Goal duplicatedGoal = new Goal(changedGoalName, userId);
         assertThatThrownBy(() -> calendarGoalDomainService.addGoalToCalendar(calendar, duplicatedGoal, calendarGoals))
                 .isInstanceOf(CalendarGoalDuplicateException.class);
     }
@@ -80,9 +85,11 @@ class CalendarGoalDomainServiceTest {
     void 캘린더는_목표의_이름을_변경할_때_이미_존재하는_이름이면_에러가_발생한다() {
         // given
         CalendarGoalDomainService calendarGoalDomainService = new CalendarGoalDomainService();
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = new Goal(GOAL_NAME);
-        Goal goal2 = new Goal(GOAL_NAME2);
+
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = new Goal(GOAL_NAME, userId);
+        Goal goal2 = new Goal(GOAL_NAME2, userId);
         List<Goal> calendarGoals = new ArrayList<>();
 
         calendarGoalDomainService.addGoalToCalendar(calendar, goal, calendarGoals);

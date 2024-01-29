@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.calendar.application.dto.calendar.GoalAddToCalendersCommand;
 import hwicode.schedule.calendar.domain.*;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
@@ -49,8 +50,8 @@ class GoalAggregateServiceTest {
         databaseCleanUp.execute();
     }
 
-    private Goal createGoalWithSubGoal(String subGoalName) {
-        Goal goal = new Goal(GOAL_NAME);
+    private Goal createGoalWithSubGoal(String subGoalName, Long userId) {
+        Goal goal = new Goal(GOAL_NAME, userId);
         goal.createSubGoal(subGoalName);
         return goal;
     }
@@ -58,7 +59,8 @@ class GoalAggregateServiceTest {
     @Test
     void 목표에서_서브_목표를_추가할_수_있다() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         // when
@@ -71,7 +73,8 @@ class GoalAggregateServiceTest {
     @Test
     void 목표에서_서브_목표의_이름을_변경할_수_있다() {
         // given
-        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME, userId);
         goalRepository.save(goal);
 
         // when
@@ -86,7 +89,8 @@ class GoalAggregateServiceTest {
     @Test
     void 목표에서_서브_목표를_제거할_수_있다() {
         // given
-        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME, userId);
         goalRepository.save(goal);
 
         // when
@@ -101,7 +105,8 @@ class GoalAggregateServiceTest {
     @Test
     void 목표에서_서브_목표의_진행_상태를_변경할_수_있다() {
         // given
-        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME, userId);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
         goalRepository.save(goal);
 
@@ -117,7 +122,8 @@ class GoalAggregateServiceTest {
     @Test
     void 목표는_진행_상태를_변경할_수_있다() {
         // given
-        Goal goal = new Goal(GOAL_NAME);
+        Long userId = 1L;
+        Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         // when
@@ -131,13 +137,15 @@ class GoalAggregateServiceTest {
     @Test
     void 목표를_삭제하면_목표와_연관된_서브_목표와_캘린더에_연관된_목표도_전부_삭제된다() {
         // given
-        Calendar calendar = new Calendar(YEAR_MONTH);
-        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME);
+        Long userId = 1L;
+        Calendar calendar = new Calendar(YEAR_MONTH, userId);
+        Goal goal = createGoalWithSubGoal(SUB_GOAL_NAME, userId);
 
         calendarRepository.save(calendar);
         goalRepository.save(goal);
 
-        calendarService.addGoalToCalendars(goal.getId(), List.of(YEAR_MONTH));
+        GoalAddToCalendersCommand command = new GoalAddToCalendersCommand(userId, goal.getId(), List.of(YEAR_MONTH));
+        calendarService.addGoalToCalendars(command);
 
         // when
         goalAggregateService.deleteGoal(goal.getId());

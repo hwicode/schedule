@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CalendarTest {
 
     private Calendar createCalendar() {
-        return new Calendar(YEAR_MONTH);
+        return new Calendar(YEAR_MONTH, 1L);
     }
 
     @Test

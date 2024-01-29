@@ -43,7 +43,8 @@ class DailyScheduleProviderServiceTest {
     @Test
     void 날짜로_DailySchedule를_가져올_수_있다() {
         // given
-        Calendar calendar = calendarProviderService.provideCalendar(YEAR_MONTH);
+        Long userId = 1L;
+        Calendar calendar = calendarProviderService.provideCalendar(userId, YEAR_MONTH);
 
         LocalDate date = YEAR_MONTH.atDay(1);
 

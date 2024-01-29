@@ -20,9 +20,13 @@ public class Calendar {
 
     private int weeklyStudyDate;
 
-    public Calendar(YearMonth yearMonth) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public Calendar(YearMonth yearMonth, Long userId) {
         this.yearAndMonth = yearMonth;
         weeklyStudyDate = 5;
+        this.userId = userId;
     }
 
     public boolean changeWeeklyStudyDate(int weeklyDate) {

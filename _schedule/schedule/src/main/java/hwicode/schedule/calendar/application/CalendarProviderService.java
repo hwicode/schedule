@@ -18,17 +18,17 @@ public class CalendarProviderService {
 
     private final CalendarRepository calendarRepository;
 
-    public Calendar provideCalendar(YearMonth yearMonth) {
+    public Calendar provideCalendar(Long userId, YearMonth yearMonth) {
         return calendarRepository.findByYearAndMonth(yearMonth)
-                .orElseGet(() -> saveCalendar(yearMonth));
+                .orElseGet(() -> saveCalendar(yearMonth, userId));
     }
 
-    private Calendar saveCalendar(YearMonth yearMonth) {
-        Calendar calendar = new Calendar(yearMonth);
+    private Calendar saveCalendar(YearMonth yearMonth, Long userId) {
+        Calendar calendar = new Calendar(yearMonth, userId);
         return calendarRepository.save(calendar);
     }
 
-    public List<Calendar> provideCalendars(List<YearMonth> yearMonths) {
+    public List<Calendar> provideCalendars(Long userId, List<YearMonth> yearMonths) {
         validateYearMonths(yearMonths);
         List<Calendar> calendars = new ArrayList<>();
         List<Calendar> noneSavedCalendars = new ArrayList<>();
@@ -38,7 +38,7 @@ public class CalendarProviderService {
 
             calendar.ifPresentOrElse(
                     calendars::add,
-                    () -> noneSavedCalendars.add(new Calendar(yearMonth))
+                    () -> noneSavedCalendars.add(new Calendar(yearMonth, userId))
             );
         }
 

@@ -39,8 +39,9 @@ class CalendarQueryEndToEndTest {
     @Test
     void 캘린더_조회_요청() {
         //given
+        Long userId = 1L;
         YearMonth date = YearMonth.of(2023, 8);
-        calendarRepository.save(new Calendar(date));
+        calendarRepository.save(new Calendar(date, userId));
 
         RequestSpecification requestSpecification = given().port(port)
                 .param("yearMonth", String.valueOf(date));

@@ -31,7 +31,7 @@ public class DailyScheduleProviderService {
 
     private DailySchedule saveDailySchedule(LocalDate date) {
         YearMonth yearMonth = YearMonth.from(date);
-        Calendar calendar = calendarProviderService.provideCalendar(yearMonth);
+        Calendar calendar = calendarProviderService.provideCalendar(1L, yearMonth);
 
         DailySchedule dailySchedule = new DailySchedule(calendar, date);
         dailyScheduleRepository.save(dailySchedule);
