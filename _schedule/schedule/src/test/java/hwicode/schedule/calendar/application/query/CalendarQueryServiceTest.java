@@ -4,6 +4,7 @@ import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.application.CalendarService;
 import hwicode.schedule.calendar.application.GoalAggregateService;
 import hwicode.schedule.calendar.application.dto.calendar.GoalSaveCommand;
+import hwicode.schedule.calendar.application.dto.goal.SubGoalSaveCommand;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.GoalQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.SubGoalQueryResponse;
@@ -58,8 +59,12 @@ class CalendarQueryServiceTest {
         Long goalId = calendarService.saveGoal(
                 new GoalSaveCommand(userId, GOAL_NAME, List.of(now))
         );
-        Long subGoalId = goalAggregateService.saveSubGoal(goalId, SUB_GOAL_NAME);
-        Long subGoalId2 = goalAggregateService.saveSubGoal(goalId, SUB_GOAL_NAME2);
+        Long subGoalId = goalAggregateService.saveSubGoal(
+                new SubGoalSaveCommand(userId, goalId, SUB_GOAL_NAME)
+        );
+        Long subGoalId2 = goalAggregateService.saveSubGoal(
+                new SubGoalSaveCommand(userId, goalId, SUB_GOAL_NAME2)
+        );
 
         // when
         CalendarQueryResponse result = calendarQueryService.getCalendarQueryResponse(now);

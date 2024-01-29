@@ -1,9 +1,9 @@
 package hwicode.schedule.calendar.application;
 
+import hwicode.schedule.calendar.application.dto.goal.*;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;
-import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.infra.limited_repository.GoalFindAndDeleteRepository;
 import hwicode.schedule.calendar.infra.limited_repository.SubGoalSaveRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,43 +18,55 @@ public class GoalAggregateService {
     private final SubGoalSaveRepository subGoalSaveRepository;
 
     @Transactional
-    public Long saveSubGoal(Long goalId, String subGoalName) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
-        SubGoal subGoal = goal.createSubGoal(subGoalName);
+    public Long saveSubGoal(SubGoalSaveCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
+        SubGoal subGoal = goal.createSubGoal(command.getName());
         return subGoalSaveRepository.save(subGoal)
                 .getId();
     }
 
     @Transactional
-    public String changeSubGoalName(Long goalId, String subGoalName, String newSubGoalName) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
-        return goal.changeSubGoalName(subGoalName, newSubGoalName);
+    public String changeSubGoalName(SubGoalModifyNameCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
+        return goal.changeSubGoalName(command.getName(), command.getNewName());
     }
 
     @Transactional
-    public String deleteSubGoal(Long goalId, String subGoalName) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
-        goal.deleteSubGoal(subGoalName);
-        return subGoalName;
+    public String deleteSubGoal(SubGoalDeleteCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
+        goal.deleteSubGoal(command.getName());
+        return command.getName();
     }
     
     @Transactional
-    public GoalStatus changeSubGoalStatus(Long goalId, String subGoalName, SubGoalStatus subGoalStatus) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
-        return goal.changeSubGoalStatus(subGoalName, subGoalStatus);
+    public GoalStatus changeSubGoalStatus(SubGoalModifyStatusCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
+        return goal.changeSubGoalStatus(command.getName(), command.getSubGoalStatus());
     }
 
     @Transactional
-    public GoalStatus changeGoalStatus(Long goalId, GoalStatus goalStatus) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
-        return goal.changeGoalStatus(goalStatus);
+    public GoalStatus changeGoalStatus(GoalModifyStatusCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
+        return goal.changeGoalStatus(command.getGoalStatus());
     }
 
     @Transactional
-    public Long deleteGoal(Long goalId) {
-        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(goalId);
+    public Long deleteGoal(GoalDeleteCommand command) {
+        Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
+        goal.checkOwnership(command.getUserId());
+
         goalFindAndDeleteRepository.delete(goal);
-        return goalId;
+        return command.getGoalId();
     }
 
 }

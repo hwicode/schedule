@@ -2,6 +2,7 @@ package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.calendar.application.GoalAggregateService;
+import hwicode.schedule.calendar.application.dto.goal.SubGoalSaveCommand;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;
@@ -101,8 +102,8 @@ class GoalEndToEndTest {
         response.then()
                 .statusCode(HttpStatus.OK.value());
 
-        Long goalId = goal.getId();
-        assertThatThrownBy(() -> goalAggregateService.saveSubGoal(goalId, NEW_SUB_GOAL_NAME))
+        SubGoalSaveCommand command = new SubGoalSaveCommand(userId, goal.getId(), NEW_SUB_GOAL_NAME);
+        assertThatThrownBy(() -> goalAggregateService.saveSubGoal(command))
                 .isInstanceOf(SubGoalDuplicateException.class);
     }
 

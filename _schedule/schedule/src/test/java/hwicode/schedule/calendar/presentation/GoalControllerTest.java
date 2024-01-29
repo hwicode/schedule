@@ -50,7 +50,7 @@ class GoalControllerTest {
         SubGoalSaveRequest subGoalSaveRequest = new SubGoalSaveRequest(SUB_GOAL_NAME);
         SubGoalSaveResponse subGoalSaveResponse = new SubGoalSaveResponse(GOAL_ID, SUB_GOAL_NAME);
 
-        given(goalAggregateService.saveSubGoal(any(), any()))
+        given(goalAggregateService.saveSubGoal(any()))
                 .willReturn(SUB_GOAL_ID);
 
         // when
@@ -64,7 +64,7 @@ class GoalControllerTest {
                         objectMapper.writeValueAsString(subGoalSaveResponse)
                 ));
 
-        verify(goalAggregateService).saveSubGoal(any(), any());
+        verify(goalAggregateService).saveSubGoal(any());
     }
 
     @Test
@@ -73,7 +73,7 @@ class GoalControllerTest {
         SubGoalNameModifyRequest subGoalNameModifyRequest = new SubGoalNameModifyRequest(SUB_GOAL_NAME, NEW_SUB_GOAL_NAME);
         SubGoalNameModifyResponse subGoalNameModifyResponse = new SubGoalNameModifyResponse(GOAL_ID, NEW_SUB_GOAL_NAME);
 
-        given(goalAggregateService.changeSubGoalName(any(), any(), any()))
+        given(goalAggregateService.changeSubGoalName(any()))
                 .willReturn(NEW_SUB_GOAL_NAME);
 
         // when
@@ -87,7 +87,7 @@ class GoalControllerTest {
                         objectMapper.writeValueAsString(subGoalNameModifyResponse)
                 ));
 
-        verify(goalAggregateService).changeSubGoalName(any(), any(), any());
+        verify(goalAggregateService).changeSubGoalName(any());
     }
 
     @Test
@@ -99,7 +99,7 @@ class GoalControllerTest {
         // then
         perform.andExpect(status().isNoContent());
 
-        verify(goalAggregateService).deleteSubGoal(any(), any());
+        verify(goalAggregateService).deleteSubGoal(any());
     }
 
     @Test
@@ -108,7 +108,7 @@ class GoalControllerTest {
         SubGoalStatusModifyRequest subGoalStatusModifyRequest = new SubGoalStatusModifyRequest(SUB_GOAL_NAME, SubGoalStatus.DONE);
         SubGoalStatusModifyResponse subGoalStatusModifyResponse = new SubGoalStatusModifyResponse(SUB_GOAL_NAME, GoalStatus.PROGRESS, SubGoalStatus.DONE);
 
-        given(goalAggregateService.changeSubGoalStatus(any(), any(), any()))
+        given(goalAggregateService.changeSubGoalStatus(any()))
                 .willReturn(GoalStatus.PROGRESS);
 
         // when
@@ -122,7 +122,7 @@ class GoalControllerTest {
                         objectMapper.writeValueAsString(subGoalStatusModifyResponse)
                 ));
 
-        verify(goalAggregateService).changeSubGoalStatus(any(), any(), any());
+        verify(goalAggregateService).changeSubGoalStatus(any());
     }
 
     @Test
@@ -131,7 +131,7 @@ class GoalControllerTest {
         GoalStatusModifyRequest goalStatusModifyRequest = new GoalStatusModifyRequest(GoalStatus.DONE);
         GoalStatusModifyResponse goalStatusModifyResponse = new GoalStatusModifyResponse(GOAL_ID, GoalStatus.DONE);
 
-        given(goalAggregateService.changeGoalStatus(any(), any()))
+        given(goalAggregateService.changeGoalStatus(any()))
                 .willReturn(GoalStatus.DONE);
 
         // when
@@ -145,7 +145,7 @@ class GoalControllerTest {
                         objectMapper.writeValueAsString(goalStatusModifyResponse)
                 ));
 
-        verify(goalAggregateService).changeGoalStatus(any(), any());
+        verify(goalAggregateService).changeGoalStatus(any());
     }
 
     @Test
@@ -179,7 +179,7 @@ class GoalControllerTest {
     void 목표의_진행_상태_변경을_요청할_때_존재하지_않는_진행_상태면_에러가_발생한다() throws Exception {
         // given
         GoalStatusNotFoundException goalStatusNotFoundException = new GoalStatusNotFoundException();
-        given(goalAggregateService.changeGoalStatus(any(), any()))
+        given(goalAggregateService.changeGoalStatus(any()))
                 .willThrow(goalStatusNotFoundException);
 
         // when
@@ -200,7 +200,7 @@ class GoalControllerTest {
     void 서브_목표_생성을_요청할_때_서브_목표가_중복되면_에러가_발생한다() throws Exception {
         // given
         SubGoalDuplicateException subGoalDuplicateException = new SubGoalDuplicateException();
-        given(goalAggregateService.saveSubGoal(any(), any()))
+        given(goalAggregateService.saveSubGoal(any()))
                 .willThrow(subGoalDuplicateException);
 
         // when
@@ -220,7 +220,7 @@ class GoalControllerTest {
     void 목표의_진행_상태를_DONE으로_변경을_요청할_때_서브_목표가_모두_DONE이_아니면_에러가_발생한다() throws Exception {
         // given
         SubGoalNotAllDoneException subGoalNotAllDoneException = new SubGoalNotAllDoneException();
-        given(goalAggregateService.changeGoalStatus(any(), any()))
+        given(goalAggregateService.changeGoalStatus(any()))
                 .willThrow(subGoalNotAllDoneException);
 
         // when
@@ -240,7 +240,7 @@ class GoalControllerTest {
     void 목표의_진행_상태를_TODO로_변경을_요청할_때_서브_목표가_모두_TODO가_아니면_에러가_발생한다() throws Exception {
         // given
         SubGoalNotAllTodoException subGoalNotAllTodoException = new SubGoalNotAllTodoException();
-        given(goalAggregateService.changeGoalStatus(any(), any()))
+        given(goalAggregateService.changeGoalStatus(any()))
                 .willThrow(subGoalNotAllTodoException);
 
         // when
@@ -260,7 +260,7 @@ class GoalControllerTest {
     void 서브_목표의_삭제를_요청할_때_서브_목표가_존재하지_않으면_에러가_발생한다() throws Exception {
         // given
         SubGoalNotFoundException subGoalNotFoundException = new SubGoalNotFoundException();
-        given(goalAggregateService.deleteSubGoal(any(), any()))
+        given(goalAggregateService.deleteSubGoal(any()))
                 .willThrow(subGoalNotFoundException);
 
         // when
