@@ -34,7 +34,7 @@ class LearningTimeTest {
     void 학습_시간에서_Task_학습_주제가_삭제되면_true가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when then
         assertThat(learningTime.deleteSubject()).isTrue();
@@ -44,7 +44,7 @@ class LearningTimeTest {
     void 학습_시간에서_SubTask_학습_주제가_삭제되면_true가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when then
         assertThat(learningTime.deleteSubject()).isTrue();
@@ -76,7 +76,7 @@ class LearningTimeTest {
     void 학습_시간의_Task_학습_주제를_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when
         String changedSubject = learningTime.changeSubject(NEW_SUBJECT);
@@ -89,7 +89,7 @@ class LearningTimeTest {
     void 학습_시간의_SubTask_학습_주제를_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when
         String changedSubject = learningTime.changeSubject(NEW_SUBJECT);
@@ -105,7 +105,7 @@ class LearningTimeTest {
         learningTime.changeSubject(SUBJECT);
 
         // when
-        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -115,10 +115,10 @@ class LearningTimeTest {
     void 학습_시간의_Task_학습_주제를_Task_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when
-        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -128,10 +128,10 @@ class LearningTimeTest {
     void 학습_시간의_SubTask_학습_주제를_Task_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when
-        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfTask(new SubjectOfTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -144,7 +144,7 @@ class LearningTimeTest {
         learningTime.changeSubject(SUBJECT);
 
         // when
-        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -154,10 +154,10 @@ class LearningTimeTest {
     void 학습_시간의_Task_학습_주제를_SubTask_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when
-        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -167,10 +167,10 @@ class LearningTimeTest {
     void 학습_시간의_SubTask_학습_주제를_SubTask_학습_주제로_수정할_수_있다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when
-        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT));
+        String changedSubject = learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(changedSubject).isEqualTo(NEW_SUBJECT);
@@ -286,10 +286,10 @@ class LearningTimeTest {
     void 학습_시간의_Task_학습_주제가_같으면_true가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // then
         assertThat(isSame).isTrue();
@@ -299,10 +299,10 @@ class LearningTimeTest {
     void 학습_시간의_Task_학습_주제가_다르면_false가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT));
+        learningTime.changeSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(NEW_SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(isSame).isFalse();
@@ -314,7 +314,7 @@ class LearningTimeTest {
         LearningTime learningTime = createLearningTime();
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfTask(new SubjectOfTask(SUBJECT, 1L));
 
         // then
         assertThat(isSame).isFalse();
@@ -324,10 +324,10 @@ class LearningTimeTest {
     void 학습_시간의_SubTask_학습_주제가_같으면_true가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // then
         assertThat(isSame).isTrue();
@@ -337,10 +337,10 @@ class LearningTimeTest {
     void 학습_시간의_SubTask_학습_주제가_다르면_false가_리턴된다() {
         // given
         LearningTime learningTime = createLearningTime();
-        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        learningTime.changeSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(NEW_SUBJECT, 1L));
 
         // then
         assertThat(isSame).isFalse();
@@ -352,7 +352,7 @@ class LearningTimeTest {
         LearningTime learningTime = createLearningTime();
 
         // when
-        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(SUBJECT));
+        boolean isSame = learningTime.isSameSubjectOfSubTask(new SubjectOfSubTask(SUBJECT, 1L));
 
         // then
         assertThat(isSame).isFalse();

@@ -6,8 +6,8 @@ import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyE
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyStartTimeCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.domain.TimeTable;
-import hwicode.schedule.timetable.exception.application.TimeTableForbiddenException;
 import hwicode.schedule.timetable.exception.application.TimeTableNotFoundException;
+import hwicode.schedule.timetable.exception.domain.timetable.TimeTableForbiddenException;
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;

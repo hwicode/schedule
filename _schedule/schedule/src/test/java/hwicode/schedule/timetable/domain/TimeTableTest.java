@@ -245,7 +245,8 @@ class TimeTableTest {
     void 같은_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(startTimeDate, userId);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
@@ -254,8 +255,8 @@ class TimeTableTest {
 
         learningTime1.changeSubject(TimeTableDataHelper.SUBJECT);
         learningTime2.changeSubject(TimeTableDataHelper.SUBJECT);
-        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
-        learningTime4.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
+        learningTime4.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         // when
         int totalLearningTime = timeTable.getSubjectTotalLearningTime(TimeTableDataHelper.SUBJECT);
@@ -267,21 +268,22 @@ class TimeTableTest {
     @Test
     void 같은_Task_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
+        Long userId = 1L;
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
+        TimeTable timeTable = new TimeTable(startTimeDate, userId);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
         LearningTime learningTime3 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(100), TimeTableDataHelper.START_TIME.plusMinutes(130));
         LearningTime learningTime4 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(140), TimeTableDataHelper.START_TIME.plusMinutes(230));
 
-        learningTime1.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        learningTime1.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
         learningTime2.changeSubject(TimeTableDataHelper.SUBJECT);
-        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
-        learningTime4.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
+        learningTime4.changeSubjectOfTask(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         // when
-        int totalLearningTime = timeTable.getSubjectOfTaskTotalLearningTime(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        int totalLearningTime = timeTable.getSubjectOfTaskTotalLearningTime(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         // then
         assertThat(totalLearningTime).isEqualTo(120);
@@ -290,21 +292,22 @@ class TimeTableTest {
     @Test
     void 같은_SubTask_학습_주제를_가진_학습_시간의_총_학습_시간을_계산할_수_있다() {
         // given
+        Long userId = 1L;
         LocalDate startTimeDate = TimeTableDataHelper.START_TIME.toLocalDate();
-        TimeTable timeTable = new TimeTable(startTimeDate, 1L);
+        TimeTable timeTable = new TimeTable(startTimeDate, userId);
 
         LearningTime learningTime1 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME, TimeTableDataHelper.START_TIME.plusMinutes(30));
         LearningTime learningTime2 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(40), TimeTableDataHelper.START_TIME.plusMinutes(80));
         LearningTime learningTime3 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(100), TimeTableDataHelper.START_TIME.plusMinutes(130));
         LearningTime learningTime4 = addLearningTime(timeTable, TimeTableDataHelper.START_TIME.plusMinutes(140), TimeTableDataHelper.START_TIME.plusMinutes(230));
 
-        learningTime1.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        learningTime1.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
         learningTime2.changeSubject(TimeTableDataHelper.SUBJECT);
-        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
-        learningTime4.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        learningTime3.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
+        learningTime4.changeSubjectOfSubTask(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
 
         // when
-        int totalLearningTime = timeTable.getSubjectOfSubTaskTotalLearningTime(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        int totalLearningTime = timeTable.getSubjectOfSubTaskTotalLearningTime(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
 
         // then
         assertThat(totalLearningTime).isEqualTo(150);

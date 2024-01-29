@@ -7,7 +7,6 @@ import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModi
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
-import hwicode.schedule.timetable.exception.application.TimeTableForbiddenException;
 import hwicode.schedule.timetable.infra.limited_repository.LearningTimeFindRepository;
 import hwicode.schedule.timetable.infra.limited_repository.SubjectOfSubTaskFindRepository;
 import hwicode.schedule.timetable.infra.limited_repository.SubjectOfTaskFindRepository;
@@ -26,42 +25,36 @@ public class LearningTimeAggregateService {
     @Transactional
     public boolean deleteSubject(LearningTimeDeleteSubjectCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
+        learningTime.checkOwnership(command.getUserId());
 
-        if (!learningTime.isOwner(command.getUserId())) {
-            throw new TimeTableForbiddenException();
-        }
         return learningTime.deleteSubject();
     }
 
     @Transactional
     public String changeSubject(LearningTimeModifySubjectCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
+        learningTime.checkOwnership(command.getUserId());
 
-        if (!learningTime.isOwner(command.getUserId())) {
-            throw new TimeTableForbiddenException();
-        }
         return learningTime.changeSubject(command.getSubject());
     }
 
     @Transactional
     public String changeSubjectOfTask(LearningTimeModifySubjectOfTaskCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
+        learningTime.checkOwnership(command.getUserId());
 
-        if (!learningTime.isOwner(command.getUserId())) {
-            throw new TimeTableForbiddenException();
-        }
         SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(command.getSubjectOfTaskId());
+        subjectOfTask.checkOwnership(command.getUserId());
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
 
     @Transactional
     public String changeSubjectOfSubTask(LearningTimeModifySubjectOfSubTaskCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
+        learningTime.checkOwnership(command.getUserId());
 
-        if (!learningTime.isOwner(command.getUserId())) {
-            throw new TimeTableForbiddenException();
-        }
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(command.getSubjectOfSubTaskId());
+        subjectOfSubTask.checkOwnership(command.getUserId());
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
     }
 }

@@ -1,6 +1,7 @@
 package hwicode.schedule.timetable.domain;
 
 import hwicode.schedule.timetable.exception.domain.learningtime.EndTimeNotValidException;
+import hwicode.schedule.timetable.exception.domain.learningtime.LearningTimeForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -49,8 +50,10 @@ public class LearningTime {
         this.userId = userId;
     }
 
-    public boolean isOwner(Long userId) {
-        return this.userId.equals(userId);
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new LearningTimeForbiddenException();
+        }
     }
 
     public boolean deleteSubject() {

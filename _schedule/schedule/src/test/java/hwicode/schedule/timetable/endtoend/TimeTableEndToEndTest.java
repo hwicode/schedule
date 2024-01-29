@@ -194,9 +194,9 @@ class TimeTableEndToEndTest {
     @Test
     void Task_학습_주제_총_학습_시간_요청() {
         // given
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT));
-
         Long userId = 1L;
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT, userId));
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
@@ -221,9 +221,9 @@ class TimeTableEndToEndTest {
     @Test
     void SubTask_학습_주제_총_학습_시간_요청() {
         // given
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT));
-
         Long userId = 1L;
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT, userId));
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);

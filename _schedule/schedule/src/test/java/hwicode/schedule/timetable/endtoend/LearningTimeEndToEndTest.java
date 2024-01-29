@@ -114,7 +114,7 @@ class LearningTimeEndToEndTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeSubjectOfTaskModifyRequest learningTimeSubjectOfTaskModifyRequest = new LearningTimeSubjectOfTaskModifyRequest(
                 subjectOfTask.getId());
@@ -145,7 +145,7 @@ class LearningTimeEndToEndTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeSubjectOfSubTaskModifyRequest learningTimeSubjectOfSubTaskModifyRequest = new LearningTimeSubjectOfSubTaskModifyRequest(
                 subjectOfSubTask.getId());

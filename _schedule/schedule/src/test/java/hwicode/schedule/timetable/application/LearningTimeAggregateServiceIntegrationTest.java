@@ -11,7 +11,9 @@ import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
-import hwicode.schedule.timetable.exception.application.TimeTableForbiddenException;
+import hwicode.schedule.timetable.exception.domain.learningtime.LearningTimeForbiddenException;
+import hwicode.schedule.timetable.exception.domain.subject_of_subtask.SubjectOfSubTaskForbiddenException;
+import hwicode.schedule.timetable.exception.domain.subject_of_task.SubjectOfTaskForbiddenException;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
@@ -83,7 +85,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.deleteSubject(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(LearningTimeForbiddenException.class);
     }
 
     @Test
@@ -117,7 +119,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubject(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(LearningTimeForbiddenException.class);
     }
 
     @Test
@@ -128,7 +130,7 @@ class LearningTimeAggregateServiceIntegrationTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(userId, learningTime.getId(), subjectOfTask.getId());
 
@@ -149,13 +151,47 @@ class LearningTimeAggregateServiceIntegrationTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(2L, learningTime.getId(), subjectOfTask.getId());
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(LearningTimeForbiddenException.class);
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제를_수정할_때_학습_시간의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), 2L);
+        LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        timeTableRepository.save(timeTable);
+
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT, userId));
+
+        LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(userId, learningTime.getId(), subjectOfTask.getId());
+
+        // when then
+        assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
+                .isInstanceOf(LearningTimeForbiddenException.class);
+    }
+
+    @Test
+    void 학습_시간의_Task_학습_주제를_수정할_때_Task의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
+        LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        timeTableRepository.save(timeTable);
+
+        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(TimeTableDataHelper.SUBJECT, 2L));
+
+        LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(userId, learningTime.getId(), subjectOfTask.getId());
+
+        // when then
+        assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
+                .isInstanceOf(SubjectOfTaskForbiddenException.class);
     }
 
     @Test
@@ -166,7 +202,7 @@ class LearningTimeAggregateServiceIntegrationTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(userId, learningTime.getId(), subjectOfSubTask.getId());
 
@@ -187,13 +223,47 @@ class LearningTimeAggregateServiceIntegrationTest {
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
 
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT));
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
 
         LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(2L, learningTime.getId(), subjectOfSubTask.getId());
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(LearningTimeForbiddenException.class);
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제를_수정할_때_학습_시간의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), 2L);
+        LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        timeTableRepository.save(timeTable);
+
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, userId));
+
+        LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(userId, learningTime.getId(), subjectOfSubTask.getId());
+
+        // when then
+        assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
+                .isInstanceOf(LearningTimeForbiddenException.class);
+    }
+
+    @Test
+    void 학습_시간의_SubTask_학습_주제를_수정할_때_SubTask의_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
+        LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
+        timeTableRepository.save(timeTable);
+
+        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(TimeTableDataHelper.SUBJECT, 2L));
+
+        LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(userId, learningTime.getId(), subjectOfSubTask.getId());
+
+        // when then
+        assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
+                .isInstanceOf(SubjectOfSubTaskForbiddenException.class);
     }
 
     @Test

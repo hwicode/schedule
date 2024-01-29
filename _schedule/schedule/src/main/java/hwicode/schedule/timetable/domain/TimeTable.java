@@ -1,6 +1,7 @@
 package hwicode.schedule.timetable.domain;
 
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
+import hwicode.schedule.timetable.exception.domain.timetable.TimeTableForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -40,8 +41,10 @@ public class TimeTable {
         this.userId = userId;
     }
 
-    public boolean isOwner(Long userId) {
-        return this.userId.equals(userId);
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new TimeTableForbiddenException();
+        }
     }
 
     public LearningTime createLearningTime(LocalDateTime startTime) {
