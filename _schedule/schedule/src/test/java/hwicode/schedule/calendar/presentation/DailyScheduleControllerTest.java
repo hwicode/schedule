@@ -45,7 +45,7 @@ class DailyScheduleControllerTest {
         DailyScheduleSaveRequest dailyScheduleSaveRequest = new DailyScheduleSaveRequest(date);
         DailyScheduleSaveResponse dailyScheduleSaveResponse = new DailyScheduleSaveResponse(dailyScheduleId, date);
 
-        given(dailyScheduleProviderService.provideDailyScheduleId(any(), any()))
+        given(dailyScheduleProviderService.provideDailyScheduleId(any()))
                 .willReturn(dailyScheduleId);
 
         // when
@@ -59,7 +59,7 @@ class DailyScheduleControllerTest {
                         objectMapper.writeValueAsString(dailyScheduleSaveResponse)
                 ));
 
-        verify(dailyScheduleProviderService).provideDailyScheduleId(any(), any());
+        verify(dailyScheduleProviderService).provideDailyScheduleId(any());
     }
 
     @Test
@@ -69,7 +69,7 @@ class DailyScheduleControllerTest {
         DailyScheduleSaveRequest dailyScheduleSaveRequest = new DailyScheduleSaveRequest(date);
 
         DailyScheduleDateException dailyScheduleDateException = new DailyScheduleDateException();
-        given(dailyScheduleProviderService.provideDailyScheduleId(any(), any()))
+        given(dailyScheduleProviderService.provideDailyScheduleId(any()))
                 .willThrow(dailyScheduleDateException);
 
         // when

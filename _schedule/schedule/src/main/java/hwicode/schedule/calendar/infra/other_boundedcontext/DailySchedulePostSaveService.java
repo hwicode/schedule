@@ -10,8 +10,8 @@ public class DailySchedulePostSaveService {
 
     private final ReviewListService reviewListService;
 
-    public void perform(Long dailyScheduleId) {
-        reviewListService.addReviewTasks(dailyScheduleId);
+    public void perform(Long useId, Long dailyScheduleId) {
+        reviewListService.addReviewTasks(useId, dailyScheduleId);
     }
 
 }

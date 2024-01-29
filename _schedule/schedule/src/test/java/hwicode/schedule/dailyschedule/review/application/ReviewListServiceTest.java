@@ -6,6 +6,7 @@ import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewListNotFoundException;
+import hwicode.schedule.dailyschedule.review.exception.domain.review_list.ReviewListForbiddenException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewListRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
@@ -64,7 +65,7 @@ class ReviewListServiceTest {
         int numberOfReviewedTasks = createReviewedTasks(reviewCycle, numberOfTasks, userId);
 
         // when
-        reviewListService.addReviewTasks(reviewList.getId());
+        reviewListService.addReviewTasks(userId, reviewList.getId());
 
         // then
         assertThat(reviewTaskRepository.findAll()).hasSize(numberOfTasks + numberOfReviewedTasks);
@@ -89,11 +90,25 @@ class ReviewListServiceTest {
     @Test
     void 존재하지_않는_복습_리스트를_조회하면_에러가_발생한다() {
         // given
+        Long userId = 1L;
         Long noneExistId = 1L;
 
         // when then
-        assertThatThrownBy(() -> reviewListService.addReviewTasks(noneExistId))
+        assertThatThrownBy(() -> reviewListService.addReviewTasks(userId, noneExistId))
                 .isInstanceOf(ReviewListNotFoundException.class);
+    }
+
+    @Test
+    void 복습_리스트에_복습할_과제들을_추가할_때_소유자가_아니라면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        ReviewList reviewList = new ReviewList(START_DATE.plusDays(1), userId);
+        reviewListRepository.save(reviewList);
+
+        // when then
+        Long reviewListId = reviewList.getId();
+        assertThatThrownBy(() -> reviewListService.addReviewTasks(2L, reviewListId))
+                .isInstanceOf(ReviewListForbiddenException.class);
     }
 
 }

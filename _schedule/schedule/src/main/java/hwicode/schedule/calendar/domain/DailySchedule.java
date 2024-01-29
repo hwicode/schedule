@@ -22,9 +22,13 @@ public class DailySchedule {
     @Column(nullable = false)
     private LocalDate today;
 
-    public DailySchedule(Calendar calendar, LocalDate today) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public DailySchedule(Calendar calendar, LocalDate today, Long userId) {
         this.calendar = calendar;
         this.today = today;
+        this.userId = userId;
     }
 
     public Long getId() {

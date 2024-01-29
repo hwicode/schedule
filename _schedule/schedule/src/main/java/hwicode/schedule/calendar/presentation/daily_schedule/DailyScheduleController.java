@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.presentation.daily_schedule;
 
 import hwicode.schedule.calendar.application.DailyScheduleProviderService;
+import hwicode.schedule.calendar.application.dto.daily_schedule.DailyScheduleProvideCommand;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveResponse;
 import lombok.RequiredArgsConstructor;
@@ -21,10 +22,12 @@ public class DailyScheduleController {
 
     @PostMapping("/daily-todo-lists")
     @ResponseStatus(HttpStatus.CREATED)
-    public DailyScheduleSaveResponse saveDailySchedule(@RequestBody @Valid DailyScheduleSaveRequest dailyScheduleSaveRequest) {
-        LocalDate date = dailyScheduleSaveRequest.getDate();
-        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(date, LocalDate.now());
-        return new DailyScheduleSaveResponse(dailyScheduleId, date);
+    public DailyScheduleSaveResponse saveDailySchedule(@RequestBody @Valid DailyScheduleSaveRequest request) {
+        DailyScheduleProvideCommand command = new DailyScheduleProvideCommand(
+                1L, request.getDate(), LocalDate.now()
+        );
+        Long dailyScheduleId = dailyScheduleProviderService.provideDailyScheduleId(command);
+        return new DailyScheduleSaveResponse(dailyScheduleId, command.getDate());
     }
 
 }

@@ -24,9 +24,10 @@ public class ReviewListService {
     private final ReviewTaskRepository reviewTaskRepository;
 
     @Transactional
-    public void addReviewTasks(Long reviewListId) {
+    public void addReviewTasks(Long userId, Long reviewListId) {
         ReviewList reviewList = reviewListRepository.findById(reviewListId)
                 .orElseThrow(ReviewListNotFoundException::new);
+        reviewList.checkOwnership(userId);
 
         LocalDate date = reviewList.getToday();
         List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(date);
