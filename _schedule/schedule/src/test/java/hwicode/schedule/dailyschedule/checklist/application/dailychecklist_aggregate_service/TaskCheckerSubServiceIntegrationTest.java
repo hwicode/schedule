@@ -5,7 +5,7 @@ import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggre
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.DailyChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.TaskCheckerRepository;
@@ -84,7 +84,7 @@ class TaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerSubService.saveTaskChecker(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -121,7 +121,7 @@ class TaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerSubService.deleteTaskChecker(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -152,7 +152,7 @@ class TaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerSubService.changeTaskDifficulty(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -183,7 +183,7 @@ class TaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerSubService.changeTaskStatus(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -218,7 +218,7 @@ class TaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerSubService.changeTaskCheckerName(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
 }

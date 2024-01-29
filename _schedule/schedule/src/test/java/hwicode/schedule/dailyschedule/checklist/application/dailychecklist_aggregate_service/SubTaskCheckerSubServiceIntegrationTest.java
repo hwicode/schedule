@@ -6,7 +6,7 @@ import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggre
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
-import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.DailyChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskCheckerRepository;
@@ -80,7 +80,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.saveSubTaskChecker(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -123,7 +123,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
     @Test
@@ -158,7 +158,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.changeSubTaskStatus(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(DailyChecklistForbiddenException.class);
     }
 
 }

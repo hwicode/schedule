@@ -2,6 +2,7 @@ package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.TaskForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -42,8 +43,10 @@ public class Task {
         this.userId = userId;
     }
 
-    public boolean isOwner(Long userId) {
-        return this.userId.equals(userId);
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new TaskForbiddenException();
+        }
     }
 
     public void initialize(Priority priority, Importance importance) {

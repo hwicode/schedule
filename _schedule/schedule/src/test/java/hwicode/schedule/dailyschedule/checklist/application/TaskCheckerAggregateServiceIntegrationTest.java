@@ -5,8 +5,8 @@ import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggre
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.TaskCheckerForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import org.junit.jupiter.api.BeforeEach;
@@ -83,7 +83,7 @@ class TaskCheckerAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskCheckerAggregateService.changeSubTaskCheckerName(command))
-                .isInstanceOf(ChecklistForbiddenException.class);
+                .isInstanceOf(TaskCheckerForbiddenException.class);
     }
 
 }

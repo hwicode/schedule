@@ -5,7 +5,6 @@ import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggre
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
-import hwicode.schedule.dailyschedule.checklist.exception.application.ChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.DailyChecklistFindRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.SubTaskCheckerSaveRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.other_boundedcontext.SubTaskCheckerPrePostService;
@@ -25,10 +24,7 @@ public class SubTaskCheckerSubService {
     @Transactional
     public Long saveSubTaskChecker(SubTaskSaveCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(command.getDailyChecklistId());
-
-        if (!dailyChecklist.isOwner(command.getUserId())) {
-            throw new ChecklistForbiddenException();
-        }
+        dailyChecklist.checkOwnership(command.getUserId());
 
         SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
         return subTaskCheckerSaveRepository.save(subTaskChecker)
@@ -41,10 +37,7 @@ public class SubTaskCheckerSubService {
 
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-
-        if (!dailyChecklist.isOwner(command.getUserId())) {
-            throw new ChecklistForbiddenException();
-        }
+        dailyChecklist.checkOwnership(command.getUserId());
 
         dailyChecklist.deleteSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
         return command.getSubTaskCheckerId();
@@ -54,10 +47,7 @@ public class SubTaskCheckerSubService {
     public TaskStatus changeSubTaskStatus(SubTaskStatusModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-
-        if (!dailyChecklist.isOwner(command.getUserId())) {
-            throw new ChecklistForbiddenException();
-        }
+        dailyChecklist.checkOwnership(command.getUserId());
 
         return dailyChecklist.changeSubTaskStatus(
                 command.getTaskCheckerName(),

@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.DailyChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
@@ -42,8 +43,10 @@ public class DailyChecklist {
         this.userId = userId;
     }
 
-    public boolean isOwner(Long userId) {
-        return this.userId.equals(userId);
+    public void checkOwnership(Long userId) {
+        if (!this.userId.equals(userId)) {
+            throw new DailyChecklistForbiddenException();
+        }
     }
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {

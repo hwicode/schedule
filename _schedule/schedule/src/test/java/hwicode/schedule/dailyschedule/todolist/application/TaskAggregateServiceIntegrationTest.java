@@ -5,12 +5,12 @@ import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationCommand;
-import hwicode.schedule.dailyschedule.todolist.domain.*;
+import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
+import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExistException;
-import hwicode.schedule.dailyschedule.todolist.exception.application.ToDoListForbiddenException;
+import hwicode.schedule.dailyschedule.todolist.exception.domain.TaskForbiddenException;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.TaskRepository;
-import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ class TaskAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> taskAggregateService.changeTaskInformation(command))
-                .isInstanceOf(ToDoListForbiddenException.class);
+                .isInstanceOf(TaskForbiddenException.class);
     }
 
     @Test
