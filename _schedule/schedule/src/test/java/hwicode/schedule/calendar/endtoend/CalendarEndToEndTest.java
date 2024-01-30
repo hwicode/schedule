@@ -1,9 +1,9 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.CalendarService;
-import hwicode.schedule.calendar.application.dto.calendar.GoalAddToCalendersCommand;
-import hwicode.schedule.calendar.application.dto.calendar.GoalSaveCommand;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
+import hwicode.schedule.calendar.application.calendar.dto.GoalAddToCalendersCommand;
+import hwicode.schedule.calendar.application.calendar.dto.GoalSaveCommand;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;

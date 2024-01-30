@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.application;
+package hwicode.schedule.calendar.application.calendar;
 
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.exception.application.YearMonthNullException;

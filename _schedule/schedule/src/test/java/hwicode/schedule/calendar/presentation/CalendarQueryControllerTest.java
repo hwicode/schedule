@@ -1,6 +1,5 @@
 package hwicode.schedule.calendar.presentation;
 
-import hwicode.schedule.calendar.application.CalendarProviderService;
 import hwicode.schedule.calendar.application.query.CalendarQueryService;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import hwicode.schedule.calendar.exception.application.CalendarNotFoundException;

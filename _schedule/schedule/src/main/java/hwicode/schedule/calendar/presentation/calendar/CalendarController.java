@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.presentation.calendar;
 
-import hwicode.schedule.calendar.application.CalendarService;
-import hwicode.schedule.calendar.application.dto.calendar.*;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
+import hwicode.schedule.calendar.application.calendar.dto.*;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.calendar_goal.GoalAddToCalendarsResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.goal_name_modify.GoalNameModifyRequest;

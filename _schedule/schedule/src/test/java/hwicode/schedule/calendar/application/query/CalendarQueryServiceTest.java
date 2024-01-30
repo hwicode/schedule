@@ -1,10 +1,10 @@
 package hwicode.schedule.calendar.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.CalendarService;
-import hwicode.schedule.calendar.application.GoalAggregateService;
-import hwicode.schedule.calendar.application.dto.calendar.GoalSaveCommand;
-import hwicode.schedule.calendar.application.dto.goal.SubGoalSaveCommand;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
+import hwicode.schedule.calendar.application.goal.GoalAggregateService;
+import hwicode.schedule.calendar.application.calendar.dto.GoalSaveCommand;
+import hwicode.schedule.calendar.application.goal.dto.SubGoalSaveCommand;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.GoalQueryResponse;
 import hwicode.schedule.calendar.application.query.dto.SubGoalQueryResponse;

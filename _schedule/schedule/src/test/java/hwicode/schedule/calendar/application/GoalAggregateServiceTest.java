@@ -1,17 +1,22 @@
 package hwicode.schedule.calendar.application;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.dto.calendar.GoalAddToCalendersCommand;
-import hwicode.schedule.calendar.application.dto.goal.*;
-import hwicode.schedule.calendar.domain.*;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
+import hwicode.schedule.calendar.application.calendar.dto.GoalAddToCalendersCommand;
+import hwicode.schedule.calendar.application.goal.GoalAggregateService;
+import hwicode.schedule.calendar.application.goal.dto.*;
+import hwicode.schedule.calendar.domain.Calendar;
+import hwicode.schedule.calendar.domain.Goal;
+import hwicode.schedule.calendar.domain.GoalStatus;
+import hwicode.schedule.calendar.domain.SubGoalStatus;
 import hwicode.schedule.calendar.exception.domain.goal.GoalForbiddenException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
-import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
+import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

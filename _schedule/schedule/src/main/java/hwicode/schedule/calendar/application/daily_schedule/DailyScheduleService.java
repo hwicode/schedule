@@ -1,6 +1,6 @@
 package hwicode.schedule.calendar.application.daily_schedule;
 
-import hwicode.schedule.calendar.application.CalendarProviderService;
+import hwicode.schedule.calendar.application.calendar.CalendarProviderService;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.DailySchedule;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;

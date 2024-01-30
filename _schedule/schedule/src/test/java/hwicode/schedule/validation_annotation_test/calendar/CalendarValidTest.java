@@ -1,7 +1,7 @@
 package hwicode.schedule.validation_annotation_test.calendar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.calendar.application.CalendarService;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
 import hwicode.schedule.calendar.presentation.calendar.CalendarController;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;

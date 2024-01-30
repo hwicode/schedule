@@ -1,6 +1,6 @@
-package hwicode.schedule.calendar.application;
+package hwicode.schedule.calendar.application.goal;
 
-import hwicode.schedule.calendar.application.dto.goal.*;
+import hwicode.schedule.calendar.application.goal.dto.*;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;

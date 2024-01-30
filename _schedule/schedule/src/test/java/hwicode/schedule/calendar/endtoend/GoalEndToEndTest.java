@@ -1,8 +1,8 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
-import hwicode.schedule.calendar.application.GoalAggregateService;
-import hwicode.schedule.calendar.application.dto.goal.SubGoalSaveCommand;
+import hwicode.schedule.calendar.application.goal.GoalAggregateService;
+import hwicode.schedule.calendar.application.goal.dto.SubGoalSaveCommand;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;

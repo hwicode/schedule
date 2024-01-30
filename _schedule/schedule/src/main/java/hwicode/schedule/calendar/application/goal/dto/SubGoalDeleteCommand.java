@@ -1,11 +1,11 @@
-package hwicode.schedule.calendar.application.dto.goal;
+package hwicode.schedule.calendar.application.goal.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class SubGoalSaveCommand {
+public class SubGoalDeleteCommand {
 
     private final Long userId;
     private final Long goalId;

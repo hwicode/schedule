@@ -1,4 +1,4 @@
-package hwicode.schedule.calendar.application.dto.calendar;
+package hwicode.schedule.calendar.application.calendar.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

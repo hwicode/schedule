@@ -1,16 +1,16 @@
-package hwicode.schedule.calendar.application.dto.calendar;
+package hwicode.schedule.calendar.application.calendar.dto;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.time.YearMonth;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class GoalSaveCommand {
+public class GoalModifyNameCommand {
 
     private final Long userId;
+    private final YearMonth yearMonth;
     private final String name;
-    private final List<YearMonth> yearMonths;
+    private final String newName;
 }

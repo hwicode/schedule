@@ -1,5 +1,6 @@
 package hwicode.schedule.calendar.application;
 
+import hwicode.schedule.calendar.application.calendar.CalendarGoalDomainService;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;

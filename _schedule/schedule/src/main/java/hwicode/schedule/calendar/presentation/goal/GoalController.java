@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.presentation.goal;
 
-import hwicode.schedule.calendar.application.GoalAggregateService;
-import hwicode.schedule.calendar.application.dto.goal.*;
+import hwicode.schedule.calendar.application.goal.GoalAggregateService;
+import hwicode.schedule.calendar.application.goal.dto.*;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.goal_status_modify.GoalStatusModifyResponse;

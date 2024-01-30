@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.calendar.application.CalendarService;
+import hwicode.schedule.calendar.application.calendar.CalendarService;
 import hwicode.schedule.calendar.exception.application.YearMonthNullException;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
