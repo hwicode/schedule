@@ -1,16 +1,14 @@
 package hwicode.schedule.auth.presentation;
 
+import hwicode.schedule.auth.application.AuthService;
 import hwicode.schedule.auth.application.dto.AuthTokenResponse;
 import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
-import hwicode.schedule.auth.application.AuthService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.ResponseCookie;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -63,13 +61,8 @@ class AuthControllerTest {
     @Test
     void Oauth_Provider을_통해_로그인을_요청하면_200코드가_리턴된다() throws Exception {
         // given
-        AuthTokenResponse authTokenResponse = new AuthTokenResponse("accessToken", "refreshToken", 1000);
-        ResponseCookie cookieHeader = ResponseCookie.from("refreshToken", authTokenResponse.getRefreshToken())
-                .httpOnly(true)
-                .sameSite(Cookie.SameSite.STRICT.attributeValue())
-                .maxAge(authTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/auth")
-                .build();
+        AuthTokenResponse authTokenResponse = new AuthTokenResponse("accessToken", "refreshToken", 0);
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
 
         given(authService.loginWithOauth(any(), any()))
                 .willReturn(authTokenResponse);
@@ -83,7 +76,7 @@ class AuthControllerTest {
         // then
         perform.andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + authTokenResponse.getAccessToken()))
-                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookieHeader.toString()));
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookie));
 
         verify(authService).loginWithOauth(any(), any());
     }
@@ -114,13 +107,8 @@ class AuthControllerTest {
     @Test
     void Auth_토큰의_재발급을_요청하면_200코드가_리턴된다() throws Exception {
         // given
-        ReissuedAuthTokenResponse reissuedAuthTokenResponse = new ReissuedAuthTokenResponse("accessToken", "refreshToken", 1000);
-        ResponseCookie cookieHeader = ResponseCookie.from("refreshToken", reissuedAuthTokenResponse.getRefreshToken())
-                .httpOnly(true)
-                .sameSite(Cookie.SameSite.STRICT.attributeValue())
-                .maxAge(reissuedAuthTokenResponse.getRefreshTokenExpiryMs() / 1000)
-                .path("/auth")
-                .build();
+        ReissuedAuthTokenResponse reissuedAuthTokenResponse = new ReissuedAuthTokenResponse("accessToken", "refreshToken", 0);
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
 
         given(authService.reissueAuthToken(any()))
                 .willReturn(reissuedAuthTokenResponse);
@@ -134,7 +122,7 @@ class AuthControllerTest {
         // then
         perform.andExpect(status().isOk())
                 .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedAuthTokenResponse.getAccessToken()))
-                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookieHeader.toString()));
+                .andExpect(header().string(HttpHeaders.SET_COOKIE, cookie));
 
         verify(authService).reissueAuthToken(any());
     }
