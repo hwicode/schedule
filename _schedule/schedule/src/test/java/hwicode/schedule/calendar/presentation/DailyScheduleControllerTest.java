@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.calendar.application.DailyScheduleProviderService;
+import hwicode.schedule.calendar.application.DailyScheduleService;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
 import hwicode.schedule.calendar.presentation.daily_schedule.DailyScheduleController;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
@@ -31,7 +31,7 @@ class DailyScheduleControllerTest {
     MockMvc mockMvc;
 
     @MockBean
-    DailyScheduleProviderService dailyScheduleProviderService;
+    DailyScheduleService dailyScheduleService;
 
     @Autowired
     ObjectMapper objectMapper;
@@ -45,7 +45,7 @@ class DailyScheduleControllerTest {
         DailyScheduleSaveRequest dailyScheduleSaveRequest = new DailyScheduleSaveRequest(date);
         DailyScheduleSaveResponse dailyScheduleSaveResponse = new DailyScheduleSaveResponse(dailyScheduleId, date);
 
-        given(dailyScheduleProviderService.provideDailyScheduleId(any()))
+        given(dailyScheduleService.saveDailySchedule(any()))
                 .willReturn(dailyScheduleId);
 
         // when
@@ -59,7 +59,7 @@ class DailyScheduleControllerTest {
                         objectMapper.writeValueAsString(dailyScheduleSaveResponse)
                 ));
 
-        verify(dailyScheduleProviderService).provideDailyScheduleId(any());
+        verify(dailyScheduleService).saveDailySchedule(any());
     }
 
     @Test
@@ -69,7 +69,7 @@ class DailyScheduleControllerTest {
         DailyScheduleSaveRequest dailyScheduleSaveRequest = new DailyScheduleSaveRequest(date);
 
         DailyScheduleDateException dailyScheduleDateException = new DailyScheduleDateException();
-        given(dailyScheduleProviderService.provideDailyScheduleId(any()))
+        given(dailyScheduleService.saveDailySchedule(any()))
                 .willThrow(dailyScheduleDateException);
 
         // when

@@ -1,9 +1,10 @@
 package hwicode.schedule.calendar.application;
 
-import hwicode.schedule.calendar.application.dto.daily_schedule.DailyScheduleProvideCommand;
+import hwicode.schedule.calendar.application.dto.daily_schedule.DailyScheduleSaveCommand;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.DailySchedule;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
+import hwicode.schedule.calendar.exception.application.DailyScheduleExistException;
 import hwicode.schedule.calendar.infra.jpa_repository.DailyScheduleRepository;
 import hwicode.schedule.calendar.infra.other_boundedcontext.DailySchedulePostSaveService;
 import lombok.RequiredArgsConstructor;
@@ -14,22 +15,28 @@ import java.time.YearMonth;
 
 @RequiredArgsConstructor
 @Service
-public class DailyScheduleProviderService {
+public class DailyScheduleService {
 
     private final CalendarProviderService calendarProviderService;
     private final DailySchedulePostSaveService dailySchedulePostSaveService;
     private final DailyScheduleRepository dailyScheduleRepository;
 
-    public Long provideDailyScheduleId(DailyScheduleProvideCommand command) {
-        LocalDate now = command.getNow();
+    public Long saveDailySchedule(DailyScheduleSaveCommand command) {
+        validateDate(command.getNow(), command.getDate());
+
         LocalDate date = command.getDate();
+        if (dailyScheduleRepository.findByDate(date).isPresent()) {
+            throw new DailyScheduleExistException();
+        }
+
+        DailySchedule dailySchedule = saveDailySchedule(date, command.getUserId());
+        return dailySchedule.getId();
+    }
+
+    private void validateDate(LocalDate now, LocalDate date) {
         if (!now.equals(date)) {
             throw new DailyScheduleDateException();
         }
-        DailySchedule dailySchedule = dailyScheduleRepository.findByDate(date)
-                .orElseGet(() -> saveDailySchedule(date, command.getUserId()));
-
-        return dailySchedule.getId();
     }
 
     private DailySchedule saveDailySchedule(LocalDate date, Long userId) {

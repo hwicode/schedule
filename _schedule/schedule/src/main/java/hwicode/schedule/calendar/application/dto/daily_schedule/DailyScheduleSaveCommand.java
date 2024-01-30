@@ -7,9 +7,9 @@ import java.time.LocalDate;
 
 @Getter
 @RequiredArgsConstructor
-public class DailyScheduleProvideCommand {
+public class DailyScheduleSaveCommand {
 
     private final Long userId;
-    private final LocalDate date;
     private final LocalDate now;
+    private final LocalDate date;
 }
