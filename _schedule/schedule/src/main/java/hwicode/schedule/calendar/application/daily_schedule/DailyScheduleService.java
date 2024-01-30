@@ -1,6 +1,6 @@
-package hwicode.schedule.calendar.application;
+package hwicode.schedule.calendar.application.daily_schedule;
 
-import hwicode.schedule.calendar.application.dto.daily_schedule.DailyScheduleSaveCommand;
+import hwicode.schedule.calendar.application.CalendarProviderService;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.DailySchedule;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
@@ -20,11 +20,12 @@ public class DailyScheduleService {
     private final CalendarProviderService calendarProviderService;
     private final DailySchedulePostSaveService dailySchedulePostSaveService;
     private final DailyScheduleRepository dailyScheduleRepository;
+    private final Time time;
 
     public Long saveDailySchedule(DailyScheduleSaveCommand command) {
-        validateDate(command.getNow(), command.getDate());
-
         LocalDate date = command.getDate();
+        validateDate(time.now(), date);
+
         if (dailyScheduleRepository.findByDate(date).isPresent()) {
             throw new DailyScheduleExistException();
         }

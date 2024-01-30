@@ -1,7 +1,7 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hwicode.schedule.calendar.application.DailyScheduleService;
+import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleService;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
 import hwicode.schedule.calendar.presentation.daily_schedule.DailyScheduleController;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
