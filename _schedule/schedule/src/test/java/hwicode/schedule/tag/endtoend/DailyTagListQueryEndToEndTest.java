@@ -54,7 +54,9 @@ class DailyTagListQueryEndToEndTest {
     @Test
     void 계획표의_메모들_조회_요청() {
         //given
-        DailyTagList dailyTagList = new DailyTagList();
+        LocalDate date = LocalDate.of(2023, 8, 24);
+
+        DailyTagList dailyTagList = new DailyTagList(date, 1L);
         dailyTagListRepository.save(dailyTagList);
 
         RequestSpecification requestSpecification = given().port(port);

@@ -29,19 +29,19 @@ create table daily_schedule (
    review text,
    emoji varchar(255) DEFAULT 'NOT_BAD',
    calendar_id bigint,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
 CREATE INDEX idx_today
-   ON daily_schedule (today);
+   ON daily_schedule (user_id, today);
 
 create table sub_task (
    id bigint not null auto_increment,
    name varchar(255) not null,
    sub_task_status varchar(255) DEFAULT 'TODO',
-   user_id bigint,
    task_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
@@ -52,8 +52,8 @@ create table task (
    importance varchar(255) DEFAULT 'SECOND',
    difficulty varchar(255) DEFAULT 'NORMAL',
    task_status varchar(255) DEFAULT 'TODO',
-   user_id bigint,
    daily_schedule_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
@@ -64,8 +64,8 @@ create table learning_time (
    subject varchar(255),
    task_id bigint,
    sub_task_id bigint,
-   user_id bigint,
    daily_schedule_id bigint not null,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
@@ -73,12 +73,12 @@ create table calendar (
    id bigint not null auto_increment,
    year_and_month timestamp not null,
    weekly_study_date tinyint,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
 CREATE INDEX idx_year_and_month
-   ON calendar (year_and_month);
+   ON calendar (user_id, year_and_month);
 
 create table calendar_goal (
    id bigint not null auto_increment,
@@ -91,7 +91,7 @@ create table goal (
    id bigint not null auto_increment,
    name varchar(255) not null,
    goal_status varchar(255) DEFAULT 'TODO',
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
@@ -106,12 +106,12 @@ create table sub_goal (
 create table review_date (
    id bigint not null auto_increment,
    date timestamp not null,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
 CREATE INDEX idx_date
-   ON review_date (date);
+   ON review_date (user_id, date);
 
 create table review_date_task (
    id bigint not null auto_increment,
@@ -124,25 +124,28 @@ create table review_cycle (
    id bigint not null auto_increment,
    name varchar(255) not null,
    review_cycle_dates text not null,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
+
+CREATE INDEX idx_user_id
+   ON review_cycle (user_id);
 
 create table tag (
    id bigint not null auto_increment,
    name varchar(255) not null,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 
 CREATE INDEX idx_name
-   ON tag (name);
+   ON tag (user_id, name);
 
 create table memo (
    id bigint not null auto_increment,
    text text not null,
    daily_schedule_id bigint,
-   user_id bigint,
+   user_id bigint not null,
    primary key (id)
 ) engine=InnoDB;
 

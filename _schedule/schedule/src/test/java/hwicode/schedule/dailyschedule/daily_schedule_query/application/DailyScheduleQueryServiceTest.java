@@ -89,6 +89,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("total_learning_time", 180);
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
+        parameters.put("user_id", 1);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return DailyScheduleSummaryQueryResponse.builder()
@@ -151,6 +152,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
         parameters.put("review", "review");
+        parameters.put("user_id", 1);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return DailyScheduleQueryResponse.builder()
@@ -176,6 +178,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("difficulty", Difficulty.NORMAL.name());
         parameters.put("task_status", TaskStatus.TODO.name());
         parameters.put("daily_schedule_id", dailyScheduleId);
+        parameters.put("user_id", 1);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return TaskQueryResponse.builder()
@@ -196,6 +199,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("name", "name");
         parameters.put("sub_task_status", SubTaskStatus.TODO.name());
         parameters.put("task_id", taskId);
+        parameters.put("user_id", 1);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return SubTaskQueryResponse.builder()

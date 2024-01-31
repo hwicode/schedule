@@ -87,6 +87,7 @@ class DailyScheduleQueryEndToEndTest {
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
         parameters.put("review", "review");
+        parameters.put("user_id", 1);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return key.longValue();
