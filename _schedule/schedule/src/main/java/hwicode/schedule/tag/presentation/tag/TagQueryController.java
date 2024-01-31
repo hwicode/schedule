@@ -40,13 +40,13 @@ public class TagQueryController {
     @GetMapping("/tags")
     @ResponseStatus(HttpStatus.OK)
     public List<TagQueryResponse> getTagQueryResponses() {
-        return tagQueryService.getTagQueryResponses();
+        return tagQueryService.getTagQueryResponses(1L);
     }
 
     @GetMapping("/search/tags")
     @ResponseStatus(HttpStatus.OK)
     public List<TagSearchQueryResponse> getTagSearchQueryResponses(@RequestParam String nameKeyword) {
-        return tagQueryService.getTagSearchQueryResponses(nameKeyword);
+        return tagQueryService.getTagSearchQueryResponses(1L, nameKeyword);
     }
 
 }

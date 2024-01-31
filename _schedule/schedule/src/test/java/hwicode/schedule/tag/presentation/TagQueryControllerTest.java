@@ -96,7 +96,7 @@ class TagQueryControllerTest {
     @Test
     void 모든_태그의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getTagQueryResponses())
+        given(tagQueryService.getTagQueryResponses(any()))
                 .willReturn(List.of());
 
         // when
@@ -105,7 +105,7 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getTagQueryResponses();
+        verify(tagQueryService).getTagQueryResponses(any());
     }
 
     @Test
@@ -113,7 +113,7 @@ class TagQueryControllerTest {
         // given
         String nameKeyword = "a";
 
-        given(tagQueryService.getTagSearchQueryResponses(any()))
+        given(tagQueryService.getTagSearchQueryResponses(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -123,7 +123,7 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getTagSearchQueryResponses(any());
+        verify(tagQueryService).getTagSearchQueryResponses(any(), any());
     }
 
 }

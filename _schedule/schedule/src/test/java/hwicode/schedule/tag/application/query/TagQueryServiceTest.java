@@ -163,7 +163,7 @@ class TagQueryServiceTest {
         }
 
         // when
-        List<TagQueryResponse> tagQueryResponses = tagQueryService.getTagQueryResponses();
+        List<TagQueryResponse> tagQueryResponses = tagQueryService.getTagQueryResponses(userId);
 
         // then
         assertThat(tagQueryResponses).hasSize(5);
@@ -186,7 +186,7 @@ class TagQueryServiceTest {
         }
 
         // when
-        List<TagSearchQueryResponse> tagSearchQueryResponses = tagQueryService.getTagSearchQueryResponses(TAG_NAME);
+        List<TagSearchQueryResponse> tagSearchQueryResponses = tagQueryService.getTagSearchQueryResponses(userId, TAG_NAME);
 
         // then
         assertThat(tagSearchQueryResponses).hasSize(5);

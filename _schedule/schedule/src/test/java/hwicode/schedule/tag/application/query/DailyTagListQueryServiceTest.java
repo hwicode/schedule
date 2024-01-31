@@ -61,7 +61,7 @@ class DailyTagListQueryServiceTest {
         DailyTagQueryResponse dailyTagQueryResponse2 = createTagWithDailyTag(dailyTagList, TAG_NAME2, userId);
 
         // when
-        List<DailyTagQueryResponse> result = dailyTagListQueryService.getDailyTagQueryResponses(date);
+        List<DailyTagQueryResponse> result = dailyTagListQueryService.getDailyTagQueryResponses(userId, date);
 
         // then
         List<DailyTagQueryResponse> expectedResponses = List.of(dailyTagQueryResponse, dailyTagQueryResponse2);

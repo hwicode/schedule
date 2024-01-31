@@ -23,7 +23,7 @@ public interface DailyTagListRepository extends JpaRepository<DailyTagList, Long
             + "FROM DailyTagList d "
             + "LEFT JOIN d.dailyTags dt "
             + "INNER JOIN dt.tag t "
-            + "WHERE d.today = :today "
+            + "WHERE d.userId = :userId AND d.today = :today "
             + "ORDER BY t.id ASC")
-    List<DailyTagQueryResponse> findDailyTagQueryResponsesBy(@Param("today") LocalDate date);
+    List<DailyTagQueryResponse> findDailyTagQueryResponsesBy(@Param("userId") Long userId, @Param("today") LocalDate date);
 }

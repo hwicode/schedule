@@ -23,7 +23,7 @@ public class DailyTagListQueryController {
     @GetMapping("/dailyschedule/daily-tag-lists")
     @ResponseStatus(HttpStatus.OK)
     public List<DailyTagQueryResponse> getDailyTagQueryResponses(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return dailyTagListQueryService.getDailyTagQueryResponses(date);
+        return dailyTagListQueryService.getDailyTagQueryResponses(1L, date);
     }
 
     @GetMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos")

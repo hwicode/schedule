@@ -26,8 +26,8 @@ public class DailyTagListQueryService {
     private final MemoTagRepository memoTagRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyTagQueryResponse> getDailyTagQueryResponses(LocalDate date) {
-        return dailyTagListRepository.findDailyTagQueryResponsesBy(date);
+    public List<DailyTagQueryResponse> getDailyTagQueryResponses(Long userId, LocalDate date) {
+        return dailyTagListRepository.findDailyTagQueryResponsesBy(userId, date);
     }
 
     @Transactional(readOnly = true)

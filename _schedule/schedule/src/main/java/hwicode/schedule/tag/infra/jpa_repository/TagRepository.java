@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-// Tag의 name에 세컨더리 인덱스 존재함
 public interface TagRepository extends JpaRepository<Tag, Long> {
 
     Optional<Tag> findByName(String name);
@@ -18,12 +17,13 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     @Query("SELECT "
             + "new hwicode.schedule.tag.application.query.dto.TagQueryResponse(t.id, t.name) "
             + "FROM Tag t "
+            + "WHERE t.userId = :userId "
             + "ORDER BY t.id ASC")
-    List<TagQueryResponse> getTagQueryResponses();
+    List<TagQueryResponse> getTagQueryResponses(@Param("userId") Long userId);
 
     @Query("SELECT "
             + "new hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse(t.id, t.name) "
             + "FROM Tag t "
-            + "WHERE t.name LIKE :nameKeyword%")
-    List<TagSearchQueryResponse> getTagSearchQueryResponses(@Param("nameKeyword") String nameKeyword);
+            + "WHERE t.userId = :userId AND t.name LIKE :nameKeyword%")
+    List<TagSearchQueryResponse> getTagSearchQueryResponses(@Param("userId") Long userId, @Param("nameKeyword") String nameKeyword);
 }

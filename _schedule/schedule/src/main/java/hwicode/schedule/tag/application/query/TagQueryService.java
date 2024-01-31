@@ -47,13 +47,13 @@ public class TagQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<TagQueryResponse> getTagQueryResponses() {
-        return tagRepository.getTagQueryResponses();
+    public List<TagQueryResponse> getTagQueryResponses(Long userId) {
+        return tagRepository.getTagQueryResponses(userId);
     }
 
     @Transactional(readOnly = true)
-    public List<TagSearchQueryResponse> getTagSearchQueryResponses(String nameKeyword) {
-        return tagRepository.getTagSearchQueryResponses(nameKeyword);
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(Long userId, String nameKeyword) {
+        return tagRepository.getTagSearchQueryResponses(userId, nameKeyword);
     }
 
 }
