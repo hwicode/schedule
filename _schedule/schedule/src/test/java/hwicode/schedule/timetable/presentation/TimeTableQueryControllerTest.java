@@ -37,7 +37,7 @@ class TimeTableQueryControllerTest {
         // given
         LocalDate date = LocalDate.of(2023, 8, 23);
 
-        given(timeTableQueryService.getLearningTimeQueryResponses(any()))
+        given(timeTableQueryService.getLearningTimeQueryResponses(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -47,7 +47,7 @@ class TimeTableQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(timeTableQueryService).getLearningTimeQueryResponses(any());
+        verify(timeTableQueryService).getLearningTimeQueryResponses(any(), any());
     }
 
     @Test

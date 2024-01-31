@@ -72,7 +72,7 @@ class TimeTableQueryServiceTest {
         LearningTimeQueryResponse learningTimeQueryResponse3 = createLearningTimeWithSubject(timeTable, startTime.plusHours(2), SUBJECT, userId);
 
         // when
-        List<LearningTimeQueryResponse> result = timeTableQueryService.getLearningTimeQueryResponses(date);
+        List<LearningTimeQueryResponse> result = timeTableQueryService.getLearningTimeQueryResponses(userId, date);
 
         // then
         List<LearningTimeQueryResponse> expectedResponses = List.of(learningTimeQueryResponse, learningTimeQueryResponse2, learningTimeQueryResponse3);

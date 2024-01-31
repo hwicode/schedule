@@ -29,8 +29,8 @@ public class TimeTableQueryService {
     private final SubjectOfSubTaskFindRepository subjectOfSubTaskFindRepository;
 
     @Transactional(readOnly = true)
-    public List<LearningTimeQueryResponse> getLearningTimeQueryResponses(LocalDate date) {
-        return timeTableRepository.findLearningTimeQueryResponsesBy(date);
+    public List<LearningTimeQueryResponse> getLearningTimeQueryResponses(Long userId, LocalDate date) {
+        return timeTableRepository.findLearningTimeQueryResponsesBy(userId, date);
     }
 
     @Transactional(readOnly = true)

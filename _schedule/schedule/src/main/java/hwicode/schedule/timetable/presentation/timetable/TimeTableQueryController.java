@@ -26,7 +26,7 @@ public class TimeTableQueryController {
     @GetMapping("/dailyschedule/timetables")
     @ResponseStatus(value = HttpStatus.OK)
     public List<LearningTimeQueryResponse> getLearningTimeQueryResponses(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return timeTableQueryService.getLearningTimeQueryResponses(date);
+        return timeTableQueryService.getLearningTimeQueryResponses(1L, date);
     }
 
     @GetMapping("/dailyschedule/timetables/{timeTableId}/subject-total-time")
