@@ -11,6 +11,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -28,7 +29,7 @@ class ReviewCycleQueryControllerTest {
     @Test
     void 모든_복습_주기의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(reviewCycleQueryService.getReviewCycleQueryResponses())
+        given(reviewCycleQueryService.getReviewCycleQueryResponses(any()))
                 .willReturn(List.of());
 
         // when
@@ -37,7 +38,7 @@ class ReviewCycleQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(reviewCycleQueryService).getReviewCycleQueryResponses();
+        verify(reviewCycleQueryService).getReviewCycleQueryResponses(any());
     }
 
 }

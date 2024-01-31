@@ -19,7 +19,7 @@ public class ReviewCycleQueryController {
     @GetMapping("/dailyschedule/review-cycles")
     @ResponseStatus(HttpStatus.OK)
     public List<ReviewCycleQueryResponse> getReviewCycleQueryResponses() {
-        return reviewCycleQueryService.getReviewCycleQueryResponses();
+        return reviewCycleQueryService.getReviewCycleQueryResponses(1L);
     }
 
 }

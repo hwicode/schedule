@@ -24,7 +24,7 @@ public class ReviewDateProviderService {
         List<ReviewDate> unSavedReviewDates = new ArrayList<>();
 
         for (LocalDate date : dates) {
-            Optional<ReviewDate> reviewDate = reviewDateRepository.findByDate(date);
+            Optional<ReviewDate> reviewDate = reviewDateRepository.findByDate(reviewCycle.getUserId(), date);
 
             reviewDate.ifPresentOrElse(
                     reviewDates::add,

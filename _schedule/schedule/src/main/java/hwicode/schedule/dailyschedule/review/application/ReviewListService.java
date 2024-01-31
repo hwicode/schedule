@@ -30,7 +30,7 @@ public class ReviewListService {
         reviewList.checkOwnership(userId);
 
         LocalDate date = reviewList.getToday();
-        List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(date);
+        List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(userId, date);
 
         List<ReviewTask> clonedReviewTasks = reviewDateTasks.stream()
                 .map(ReviewDateTask::getReviewTask)

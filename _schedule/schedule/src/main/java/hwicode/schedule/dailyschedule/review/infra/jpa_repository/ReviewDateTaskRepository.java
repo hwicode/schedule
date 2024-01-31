@@ -18,7 +18,7 @@ public interface ReviewDateTaskRepository extends JpaRepository<ReviewDateTask, 
 
     @Query("SELECT r FROM ReviewDateTask r "
             + "JOIN FETCH r.reviewTask "
-            + "JOIN FETCH r.reviewDate "
-            + "WHERE r.reviewDate.date = :date")
-    List<ReviewDateTask> findAllByDateWithReviewTask(@Param("date") LocalDate date);
+            + "JOIN FETCH r.reviewDate rd "
+            + "WHERE rd.userId = :userId AND rd.date = :date")
+    List<ReviewDateTask> findAllByDateWithReviewTask(@Param("userId") Long userId, @Param("date") LocalDate date);
 }

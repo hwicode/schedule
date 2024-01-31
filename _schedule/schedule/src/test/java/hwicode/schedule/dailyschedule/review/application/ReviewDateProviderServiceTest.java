@@ -119,7 +119,7 @@ class ReviewDateProviderServiceTest {
         // then
         for (Integer day : cycle) {
             LocalDate newDate = START_DATE.plusDays(day);
-            assertThat(reviewDateRepository.findByDate(newDate)).isPresent();
+            assertThat(reviewDateRepository.findByDate(userId, newDate)).isPresent();
         }
     }
 

@@ -15,8 +15,8 @@ public class ReviewCycleQueryService {
     private final ReviewCycleRepository reviewCycleRepository;
 
     @Transactional(readOnly = true)
-    public List<ReviewCycleQueryResponse> getReviewCycleQueryResponses() {
-        return reviewCycleRepository.getReviewCycleQueryResponses();
+    public List<ReviewCycleQueryResponse> getReviewCycleQueryResponses(Long userId) {
+        return reviewCycleRepository.getReviewCycleQueryResponses(userId);
     }
 
 }

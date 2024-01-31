@@ -46,7 +46,7 @@ class ReviewCycleQueryServiceTest {
         reviewCycleRepository.saveAll(List.of(reviewCycle, reviewCycle2, reviewCycle3));
 
         // when
-        List<ReviewCycleQueryResponse> reviewCycleQueryResponses = reviewCycleQueryService.getReviewCycleQueryResponses();
+        List<ReviewCycleQueryResponse> reviewCycleQueryResponses = reviewCycleQueryService.getReviewCycleQueryResponses(userId);
 
         // then
         assertThat(reviewCycleQueryResponses.get(0).getReviewCycleDates()).isEqualTo(reviewCycleDates);
