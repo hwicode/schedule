@@ -26,11 +26,11 @@ public class DailyScheduleService {
         LocalDate date = command.getDate();
         validateDate(time.now(), date);
 
-        if (dailyScheduleRepository.findByDate(date).isPresent()) {
+        if (dailyScheduleRepository.findByDate(command.getUserId(), date).isPresent()) {
             throw new DailyScheduleExistException();
         }
 
-        DailySchedule dailySchedule = saveDailySchedule(date, command.getUserId());
+        DailySchedule dailySchedule = saveDailySchedule(command.getUserId(), date);
         return dailySchedule.getId();
     }
 
@@ -40,7 +40,7 @@ public class DailyScheduleService {
         }
     }
 
-    private DailySchedule saveDailySchedule(LocalDate date, Long userId) {
+    private DailySchedule saveDailySchedule(Long userId, LocalDate date) {
         YearMonth yearMonth = YearMonth.from(date);
         Calendar calendar = calendarProviderService.provideCalendar(userId, yearMonth);
 

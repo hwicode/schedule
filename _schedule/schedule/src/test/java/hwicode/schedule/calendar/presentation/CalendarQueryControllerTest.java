@@ -34,7 +34,7 @@ class CalendarQueryControllerTest {
         // given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(calendarQueryService.getCalendarQueryResponse(any()))
+        given(calendarQueryService.getCalendarQueryResponse(any(), any()))
                 .willReturn(CalendarQueryResponse.builder().build());
 
         // when
@@ -44,7 +44,7 @@ class CalendarQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(calendarQueryService).getCalendarQueryResponse(any());
+        verify(calendarQueryService).getCalendarQueryResponse(any(), any());
     }
 
     @Test
@@ -54,7 +54,7 @@ class CalendarQueryControllerTest {
 
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(calendarQueryService.getCalendarQueryResponse(any()))
+        given(calendarQueryService.getCalendarQueryResponse(any(), any()))
                 .willThrow(calendarNotFoundException);
 
         // when
@@ -65,7 +65,7 @@ class CalendarQueryControllerTest {
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(calendarNotFoundException.getMessage()));
 
-        verify(calendarQueryService).getCalendarQueryResponse(any());
+        verify(calendarQueryService).getCalendarQueryResponse(any(), any());
     }
 
 }

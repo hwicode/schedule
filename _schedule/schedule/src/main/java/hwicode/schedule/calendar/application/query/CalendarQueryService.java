@@ -27,8 +27,8 @@ public class CalendarQueryService {
     private final GoalRepository goalRepository;
 
     @Transactional(readOnly = true)
-    public CalendarQueryResponse getCalendarQueryResponse(YearMonth yearMonth) {
-        CalendarQueryResponse calendarQueryResponse = calendarRepository.findCalendarQueryResponseBy(yearMonth)
+    public CalendarQueryResponse getCalendarQueryResponse(Long userId, YearMonth yearMonth) {
+        CalendarQueryResponse calendarQueryResponse = calendarRepository.findCalendarQueryResponseBy(userId, yearMonth)
                 .orElseThrow(CalendarNotFoundException::new);
 
         List<GoalQueryResponse> goalQueryResponses = calendarGoalRepository.findGoalQueryResponseBy(calendarQueryResponse.getId());

@@ -20,7 +20,7 @@ public class CalendarQueryController {
     @GetMapping("/calendars")
     @ResponseStatus(value = HttpStatus.OK)
     public CalendarQueryResponse getCalendarQueryResponse(@RequestParam YearMonth yearMonth) {
-        return calendarQueryService.getCalendarQueryResponse(yearMonth);
+        return calendarQueryService.getCalendarQueryResponse(1L, yearMonth);
     }
 
 }

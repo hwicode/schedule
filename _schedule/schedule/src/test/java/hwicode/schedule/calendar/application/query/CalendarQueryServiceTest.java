@@ -67,7 +67,7 @@ class CalendarQueryServiceTest {
         );
 
         // when
-        CalendarQueryResponse result = calendarQueryService.getCalendarQueryResponse(now);
+        CalendarQueryResponse result = calendarQueryService.getCalendarQueryResponse(userId, now);
 
         // then
         CalendarQueryResponse expectedResponse = createExpectedResponse(now, calendar.getId(), goalId, subGoalId, subGoalId2);
@@ -107,10 +107,11 @@ class CalendarQueryServiceTest {
     @Test
     void 캘린더를_조회할_때_캘린더가_존재하지_않으면_에러가_발생한다() {
         // given
+        Long userId = 1L;
         YearMonth noneExistYearMonth = YearMonth.now();
 
         // when then
-        assertThatThrownBy(() -> calendarQueryService.getCalendarQueryResponse(noneExistYearMonth))
+        assertThatThrownBy(() -> calendarQueryService.getCalendarQueryResponse(userId, noneExistYearMonth))
                 .isInstanceOf(CalendarNotFoundException.class);
     }
 
