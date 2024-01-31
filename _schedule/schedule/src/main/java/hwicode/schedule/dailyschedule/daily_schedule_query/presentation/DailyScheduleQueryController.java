@@ -24,13 +24,13 @@ public class DailyScheduleQueryController {
     @GetMapping("/dailyschedule/calendar/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
     public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(@RequestParam YearMonth yearMonth) {
-        return dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(yearMonth);
+        return dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(1L, yearMonth);
     }
 
     @GetMapping("/dailyschedule/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
     public DailyScheduleQueryResponse getDailyScheduleQueryResponse(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return dailyScheduleQueryService.getDailyScheduleQueryResponse(date);
+        return dailyScheduleQueryService.getDailyScheduleQueryResponse(1L, date);
     }
 
 }

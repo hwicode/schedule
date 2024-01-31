@@ -34,7 +34,7 @@ class DailyScheduleQueryControllerTest {
         // given
         YearMonth yearMonth = YearMonth.of(2023, 8);
 
-        given(dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(any()))
+        given(dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -44,14 +44,14 @@ class DailyScheduleQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(dailyScheduleQueryService).getMonthlyDailyScheduleQueryResponses(any());
+        verify(dailyScheduleQueryService).getMonthlyDailyScheduleQueryResponses(any(), any());
     }
 
     @Test
     void daily_schedule_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         LocalDate date = LocalDate.of(2023, 8, 1);
-        given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any()))
+        given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any(), any()))
                 .willReturn(null);
 
         // when
@@ -61,7 +61,7 @@ class DailyScheduleQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(dailyScheduleQueryService).getDailyScheduleQueryResponse(any());
+        verify(dailyScheduleQueryService).getDailyScheduleQueryResponse(any(), any());
     }
 
     @Test
@@ -70,7 +70,7 @@ class DailyScheduleQueryControllerTest {
         LocalDate date = LocalDate.of(2023, 8, 1);
         DailyScheduleNotExistException dailyScheduleNotExistException = new DailyScheduleNotExistException();
 
-        given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any()))
+        given(dailyScheduleQueryService.getDailyScheduleQueryResponse(any(), any()))
                 .willThrow(dailyScheduleNotExistException);
 
         // when
@@ -81,7 +81,7 @@ class DailyScheduleQueryControllerTest {
         perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(dailyScheduleNotExistException.getMessage()));
 
-        verify(dailyScheduleQueryService).getDailyScheduleQueryResponse(any());
+        verify(dailyScheduleQueryService).getDailyScheduleQueryResponse(any(), any());
     }
 
 }

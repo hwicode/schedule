@@ -60,11 +60,12 @@ class DailyScheduleQueryServiceTest {
     @ParameterizedTest
     void daily_schedule_테이블에서_daily_schedule의_한_달_치_간략한_정보를_조회할_수_있다(List<Integer> plusDays) {
         // given
+        Long userId = 1L;
         LocalDate date = LocalDate.of(2023, 8, 1);
 
         List<DailyScheduleSummaryQueryResponse> expectedResponses = new ArrayList<>();
         for (int plusDay : plusDays) {
-            DailyScheduleSummaryQueryResponse dailyScheduleSummaryQueryResponse = saveDailyScheduleSummary(date.plusDays(plusDay));
+            DailyScheduleSummaryQueryResponse dailyScheduleSummaryQueryResponse = saveDailyScheduleSummary(userId, date.plusDays(plusDay));
 
             if (plusDay <= 30) {
                 expectedResponses.add(dailyScheduleSummaryQueryResponse);
@@ -72,13 +73,13 @@ class DailyScheduleQueryServiceTest {
         }
 
         // when
-        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(YearMonth.from(date));
+        List<DailyScheduleSummaryQueryResponse> result = dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(userId, YearMonth.from(date));
 
         // then
         assertThat(result).isEqualTo(expectedResponses);
     }
 
-    private DailyScheduleSummaryQueryResponse saveDailyScheduleSummary(LocalDate date) {
+    private DailyScheduleSummaryQueryResponse saveDailyScheduleSummary(Long userId, LocalDate date) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("daily_schedule").usingGeneratedKeyColumns("id");
 
@@ -89,7 +90,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("total_learning_time", 180);
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
-        parameters.put("user_id", 1);
+        parameters.put("user_id", userId);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return DailyScheduleSummaryQueryResponse.builder()
@@ -113,8 +114,9 @@ class DailyScheduleQueryServiceTest {
     @ParameterizedTest
     void daily_schedule과_task_그리고_sub_task_테이블에서_직접_조회할_수_있다(int numberOfTask, int numberOfSubTask) {
         // given
+        Long userId = 1L;
         LocalDate date = LocalDate.of(2023, 8, 1);
-        DailyScheduleQueryResponse dailyScheduleQueryResponse = saveDailySchedule(date);
+        DailyScheduleQueryResponse dailyScheduleQueryResponse = saveDailySchedule(userId, date);
 
         List<TaskQueryResponse> taskQueryResponses = new ArrayList<>();
         for (int i = 0; i < numberOfTask; i++) {
@@ -126,7 +128,7 @@ class DailyScheduleQueryServiceTest {
         dailyScheduleQueryResponse.setTaskQueryResponses(taskQueryResponses);
 
         // when
-        DailyScheduleQueryResponse result = dailyScheduleQueryService.getDailyScheduleQueryResponse(date);
+        DailyScheduleQueryResponse result = dailyScheduleQueryService.getDailyScheduleQueryResponse(userId, date);
 
         // then
         assertThat(dailyScheduleQueryResponse).isEqualTo(result);
@@ -140,7 +142,7 @@ class DailyScheduleQueryServiceTest {
         taskQueryResponse.setSubTaskQueryResponses(subTaskQueryResponses);
     }
 
-    private DailyScheduleQueryResponse saveDailySchedule(LocalDate date) {
+    private DailyScheduleQueryResponse saveDailySchedule(Long userId, LocalDate date) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate);
         jdbcInsert.withTableName("daily_schedule").usingGeneratedKeyColumns("id");
 
@@ -152,7 +154,7 @@ class DailyScheduleQueryServiceTest {
         parameters.put("emoji", Emoji.NOT_BAD.name());
         parameters.put("main_tag_name", "rr");
         parameters.put("review", "review");
-        parameters.put("user_id", 1);
+        parameters.put("user_id", userId);
 
         Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
         return DailyScheduleQueryResponse.builder()
@@ -213,10 +215,11 @@ class DailyScheduleQueryServiceTest {
     @Test
     void daily_schedule_테이블에서_daily_schedule을_조회할_때_존재하지_않으면_에러가_발생한다() {
         // given
+        Long userId = 1L;
         LocalDate noneExistDate = LocalDate.of(2023, 8, 1);
 
         // when then
-        assertThatThrownBy(() -> dailyScheduleQueryService.getDailyScheduleQueryResponse(noneExistDate))
+        assertThatThrownBy(() -> dailyScheduleQueryService.getDailyScheduleQueryResponse(userId, noneExistDate))
                 .isInstanceOf(DailyScheduleNotExistException.class);
     }
 

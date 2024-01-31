@@ -29,14 +29,14 @@ public class DailyScheduleQueryService {
     private final SubTaskQueryRepository subTaskQueryRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(YearMonth yearMonth) {
+    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(Long userId, YearMonth yearMonth) {
         YearMonth nextMonth = yearMonth.plusMonths(1);
-        return dailyScheduleQueryRepository.findMonthlyDailyScheduleQueryResponseBy(yearMonth, nextMonth);
+        return dailyScheduleQueryRepository.findMonthlyDailyScheduleQueryResponseBy(userId, yearMonth, nextMonth);
     }
 
     @Transactional(readOnly = true)
-    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(LocalDate date) {
-        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(date)
+    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(Long userId, LocalDate date) {
+        DailyScheduleQueryResponse dailyScheduleQueryResponse = dailyScheduleQueryRepository.findDailyScheduleQueryResponseBy(userId, date)
                 .orElseThrow(DailyScheduleNotExistException::new);
         List<TaskQueryResponse> taskQueryResponses = taskQueryRepository.findTaskQueryResponsesBy(dailyScheduleQueryResponse.getId());
 

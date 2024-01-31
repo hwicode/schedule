@@ -20,13 +20,13 @@ public class DailyScheduleQueryRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public List<DailyScheduleSummaryQueryResponse> findMonthlyDailyScheduleQueryResponseBy(YearMonth start, YearMonth end) {
+    public List<DailyScheduleSummaryQueryResponse> findMonthlyDailyScheduleQueryResponseBy(Long userId, YearMonth start, YearMonth end) {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, emoji, main_tag_name "
                 + "FROM daily_schedule d "
-                + "WHERE d.today >= ? AND d.today < ? "
+                + "WHERE d.user_id = ? AND d.today >= ? AND d.today < ? "
                 + "ORDER BY d.today ASC";
-        return jdbcTemplate.query(sql, getMonthlyDailyScheduleQueryResponseRowMapper(), start.atDay(1), end.atDay(1));
+        return jdbcTemplate.query(sql, getMonthlyDailyScheduleQueryResponseRowMapper(), userId, start.atDay(1), end.atDay(1));
     }
 
     private RowMapper<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponseRowMapper() {
@@ -40,13 +40,13 @@ public class DailyScheduleQueryRepository {
                 .build();
     }
 
-    public Optional<DailyScheduleQueryResponse> findDailyScheduleQueryResponseBy(LocalDate date) {
+    public Optional<DailyScheduleQueryResponse> findDailyScheduleQueryResponseBy(Long userId, LocalDate date) {
         String sql = "SELECT "
                 + "id, today, total_difficulty_score, today_done_percent, total_learning_time, emoji, main_tag_name, review "
                 + "FROM daily_schedule d "
-                + "WHERE d.today = ?";
+                + "WHERE d.user_id = ? AND d.today = ?";
         try {
-            DailyScheduleQueryResponse dailyScheduleQueryResponse = jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), date);
+            DailyScheduleQueryResponse dailyScheduleQueryResponse = jdbcTemplate.queryForObject(sql, getDailyScheduleQueryResponseRowMapper(), userId, date);
             return Optional.ofNullable(dailyScheduleQueryResponse);
         } catch (EmptyResultDataAccessException e) {
             return Optional.empty();
