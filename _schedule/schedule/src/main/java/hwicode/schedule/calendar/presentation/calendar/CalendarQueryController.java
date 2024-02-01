@@ -2,6 +2,8 @@ package hwicode.schedule.calendar.presentation.calendar;
 
 import hwicode.schedule.calendar.application.query.CalendarQueryService;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,9 @@ public class CalendarQueryController {
 
     @GetMapping("/calendars")
     @ResponseStatus(value = HttpStatus.OK)
-    public CalendarQueryResponse getCalendarQueryResponse(@RequestParam YearMonth yearMonth) {
-        return calendarQueryService.getCalendarQueryResponse(1L, yearMonth);
+    public CalendarQueryResponse getCalendarQueryResponse(@LoginUser LoginInfo loginInfo,
+                                                          @RequestParam YearMonth yearMonth) {
+        return calendarQueryService.getCalendarQueryResponse(loginInfo.getUserId(), yearMonth);
     }
 
 }

@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.calendar.CalendarService;
 import hwicode.schedule.calendar.application.calendar.dto.GoalAddToCalendersCommand;
 import hwicode.schedule.calendar.application.calendar.dto.GoalSaveCommand;
@@ -30,9 +31,11 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Set;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static io.restassured.RestAssured.given;
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -56,6 +59,9 @@ class CalendarEndToEndTest {
     @Autowired
     GoalRepository goalRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -64,10 +70,13 @@ class CalendarEndToEndTest {
     @Test
     void 캘린더_생성_요청() {
         //given
+        Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
         CalendarSaveRequest calendarSaveRequest = new CalendarSaveRequest(YEAR_MONTH);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(calendarSaveRequest);
 
@@ -84,6 +93,8 @@ class CalendarEndToEndTest {
     @Test
     void 목표_생성_요청() {
         //given
+        Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
         Set<YearMonth> yearMonths = Set.of(
                 YEAR_MONTH, YEAR_MONTH.plusMonths(1), YEAR_MONTH.plusMonths(2)
         );
@@ -92,6 +103,7 @@ class CalendarEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(goalSaveRequest);
 
@@ -112,6 +124,8 @@ class CalendarEndToEndTest {
     void 캘린더에_목표_추가_요청() {
         //given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
@@ -122,6 +136,7 @@ class CalendarEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(goalAddToCalendarsRequest);
 
@@ -142,6 +157,8 @@ class CalendarEndToEndTest {
     void 목표_이름_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Calendar calendar = new Calendar(YEAR_MONTH, userId);
         Goal goal = new Goal(GOAL_NAME, userId);
 
@@ -156,6 +173,7 @@ class CalendarEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(goalNameModifyRequest);
 
@@ -176,6 +194,8 @@ class CalendarEndToEndTest {
     void 일주일간_공부일_수정_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Calendar calendar = new Calendar(YEAR_MONTH, userId);
         calendarRepository.save(calendar);
 
@@ -183,6 +203,7 @@ class CalendarEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(weeklyStudyDateModifyRequest);
 

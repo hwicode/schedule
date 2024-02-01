@@ -1,6 +1,7 @@
 package hwicode.schedule.calendar.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.goal.GoalAggregateService;
 import hwicode.schedule.calendar.application.goal.dto.SubGoalSaveCommand;
 import hwicode.schedule.calendar.domain.Goal;
@@ -26,6 +27,7 @@ import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -50,6 +52,9 @@ class GoalEndToEndTest {
     @Autowired
     SubGoalRepository subGoalRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -59,12 +64,15 @@ class GoalEndToEndTest {
     void 서브_목표_생성_요청() {
         //given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
         SubGoalSaveRequest subGoalSaveRequest = new SubGoalSaveRequest(SUB_GOAL_NAME);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(subGoalSaveRequest);
 
@@ -83,6 +91,8 @@ class GoalEndToEndTest {
     void 서브_목표_이름_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goalRepository.save(goal);
@@ -91,6 +101,7 @@ class GoalEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(subGoalNameModifyRequest);
 
@@ -111,13 +122,16 @@ class GoalEndToEndTest {
     void 서브_목표_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goalRepository.save(goal);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("subGoalName", SUB_GOAL_NAME);
+                .queryParam("subGoalName", SUB_GOAL_NAME)
+                .header("Authorization", BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
@@ -135,6 +149,8 @@ class GoalEndToEndTest {
     void 서브_목표_진행_상태_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         SubGoal subGoal = goal.createSubGoal(SUB_GOAL_NAME);
         goal.changeSubGoalStatus(SUB_GOAL_NAME, SubGoalStatus.DONE);
@@ -144,6 +160,7 @@ class GoalEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(subGoalStatusModifyRequest);
         // when
@@ -163,6 +180,8 @@ class GoalEndToEndTest {
     void 목표_진행_상태_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
@@ -170,6 +189,7 @@ class GoalEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header("Authorization", BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(goalStatusModifyRequest);
 
@@ -189,11 +209,14 @@ class GoalEndToEndTest {
     void 목표_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         Goal goal = new Goal(GOAL_NAME, userId);
         goalRepository.save(goal);
 
         RequestSpecification requestSpecification = given()
-                .pathParam("goalId", goal.getId());
+                .pathParam("goalId", goal.getId())
+                .header("Authorization", BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()

@@ -1,6 +1,8 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.goal.GoalAggregateService;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
@@ -15,6 +17,7 @@ import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveR
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_save.SubGoalSaveResponse;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyRequest;
 import hwicode.schedule.calendar.presentation.goal.dto.subgoal_status_modify.SubGoalStatusModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -24,6 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -38,11 +42,20 @@ class GoalControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     GoalAggregateService goalAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 서브_목표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -55,6 +68,7 @@ class GoalControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/goals/{goalId}/sub-goals", GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subGoalSaveRequest)));
 
@@ -78,6 +92,7 @@ class GoalControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/goals/{goalId}/sub-goals/{subGoalId}/name", GOAL_ID, SUB_GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subGoalNameModifyRequest)));
 
@@ -93,8 +108,11 @@ class GoalControllerTest {
     @Test
     void 서브_목표_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
-        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals", GOAL_ID)
-                .param("subGoalName",SUB_GOAL_NAME));
+        ResultActions perform = mockMvc.perform(
+                delete("/goals/{goalId}/sub-goals", GOAL_ID)
+                        .param("subGoalName", SUB_GOAL_NAME)
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isNoContent());
@@ -113,6 +131,7 @@ class GoalControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/goals/{goalId}/sub-goals/{subGoalId}/status", GOAL_ID, SUB_GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(subGoalStatusModifyRequest)));
 
@@ -136,6 +155,7 @@ class GoalControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/goals/{goalId}/status", GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalStatusModifyRequest)));
 
@@ -151,7 +171,10 @@ class GoalControllerTest {
     @Test
     void 목표의_삭제를_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
-        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}", GOAL_ID));
+        ResultActions perform = mockMvc.perform(
+                delete("/goals/{goalId}", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isNoContent());
@@ -168,7 +191,9 @@ class GoalControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                delete("/goals/{goalId}", GOAL_ID));
+                delete("/goals/{goalId}", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isNotFound())
@@ -185,6 +210,7 @@ class GoalControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/goals/{goalId}/status", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 // 존재하지 않는 진행상태로 가정
@@ -206,6 +232,7 @@ class GoalControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/goals/{goalId}/sub-goals", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new SubGoalSaveRequest(SUB_GOAL_NAME)
@@ -226,6 +253,7 @@ class GoalControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/goals/{goalId}/status", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new GoalStatusModifyRequest(GoalStatus.DONE)
@@ -246,6 +274,7 @@ class GoalControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/goals/{goalId}/status", GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new GoalStatusModifyRequest(GoalStatus.TODO)
@@ -264,8 +293,11 @@ class GoalControllerTest {
                 .willThrow(subGoalNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/goals/{goalId}/sub-goals", GOAL_ID)
-                .param("subGoalName",SUB_GOAL_NAME));
+        ResultActions perform = mockMvc.perform(
+                delete("/goals/{goalId}/sub-goals", GOAL_ID)
+                        .param("subGoalName", SUB_GOAL_NAME)
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isNotFound())

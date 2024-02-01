@@ -1,9 +1,12 @@
 package hwicode.schedule.calendar.presentation;
 
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.query.CalendarQueryService;
 import hwicode.schedule.calendar.application.query.dto.CalendarQueryResponse;
 import hwicode.schedule.calendar.exception.application.CalendarNotFoundException;
 import hwicode.schedule.calendar.presentation.calendar.CalendarQueryController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.time.YearMonth;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -29,6 +33,15 @@ class CalendarQueryControllerTest {
     @MockBean
     CalendarQueryService calendarQueryService;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
+
     @Test
     void 캘린더의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
@@ -38,8 +51,11 @@ class CalendarQueryControllerTest {
                 .willReturn(CalendarQueryResponse.builder().build());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/calendars")
-                .queryParam("yearMonth", String.valueOf(yearMonth)));
+        ResultActions perform = mockMvc.perform(
+                get("/calendars")
+                        .queryParam("yearMonth", String.valueOf(yearMonth))
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isOk());
@@ -58,8 +74,11 @@ class CalendarQueryControllerTest {
                 .willThrow(calendarNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/calendars")
-                .queryParam("yearMonth", String.valueOf(yearMonth)));
+        ResultActions perform = mockMvc.perform(
+                get("/calendars")
+                        .queryParam("yearMonth", String.valueOf(yearMonth))
+                        .header("Authorization", BEARER + "accessToken")
+        );
 
         // then
         perform.andExpect(status().isBadRequest())

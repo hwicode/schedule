@@ -1,11 +1,14 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleService;
 import hwicode.schedule.calendar.exception.application.DailyScheduleDateException;
 import hwicode.schedule.calendar.presentation.daily_schedule.DailyScheduleController;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -30,11 +34,20 @@ class DailyScheduleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     DailyScheduleService dailyScheduleService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 계획표_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -50,6 +63,7 @@ class DailyScheduleControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/daily-todo-lists")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dailyScheduleSaveRequest)));
 
@@ -74,6 +88,7 @@ class DailyScheduleControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/daily-todo-lists")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(dailyScheduleSaveRequest)));
 

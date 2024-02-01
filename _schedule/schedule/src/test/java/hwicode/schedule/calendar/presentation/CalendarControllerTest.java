@@ -1,6 +1,8 @@
 package hwicode.schedule.calendar.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.calendar.CalendarService;
 import hwicode.schedule.calendar.exception.application.YearMonthNullException;
 import hwicode.schedule.calendar.exception.application.YearMonthsSizeNotValidException;
@@ -18,6 +20,7 @@ import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveResponse;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +34,7 @@ import java.time.YearMonth;
 import java.util.HashSet;
 import java.util.Set;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
@@ -46,11 +50,20 @@ class CalendarControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     CalendarService calendarService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 캘린더_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -63,6 +76,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(calendarSaveRequest)));
 
@@ -87,6 +101,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 
@@ -111,6 +126,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals/{goalId}", GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalAddToCalendarsRequest)));
 
@@ -134,6 +150,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/goals/{goalId}/name", CALENDAR_ID, GOAL_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalNameModifyRequest)));
 
@@ -158,6 +175,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(weeklyStudyDateModifyRequest)));
 
@@ -181,6 +199,7 @@ class CalendarControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/calendars/{calendarId}/goals/{goalId}/name",
                         CALENDAR_ID, GOAL_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new GoalNameModifyRequest(YEAR_MONTH, GOAL_NAME, NEW_GOAL_NAME)
@@ -203,6 +222,7 @@ class CalendarControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/calendars/goals")
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new GoalSaveRequest(GOAL_NAME, Set.of(YEAR_MONTH))
@@ -224,6 +244,7 @@ class CalendarControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/calendars/{calendarId}/weeklyStudyDate",
                         CALENDAR_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new WeeklyStudyDateModifyRequest(YEAR_MONTH, 5)
@@ -247,6 +268,7 @@ class CalendarControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 
@@ -264,11 +286,13 @@ class CalendarControllerTest {
         yearMonths.add(null);
 
         GoalSaveRequest goalSaveRequest = new GoalSaveRequest(GOAL_NAME, yearMonths);
+
         given(calendarService.saveGoal(any()))
                 .willThrow(yearMonthNullException);
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 

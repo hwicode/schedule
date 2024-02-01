@@ -4,6 +4,8 @@ import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleService
 import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleSaveCommand;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveResponse;
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,8 +23,9 @@ public class DailyScheduleController {
 
     @PostMapping("/daily-todo-lists")
     @ResponseStatus(HttpStatus.CREATED)
-    public DailyScheduleSaveResponse saveDailySchedule(@RequestBody @Valid DailyScheduleSaveRequest request) {
-        DailyScheduleSaveCommand command = new DailyScheduleSaveCommand(1L, request.getDate());
+    public DailyScheduleSaveResponse saveDailySchedule(@LoginUser LoginInfo loginInfo,
+                                                       @RequestBody @Valid DailyScheduleSaveRequest request) {
+        DailyScheduleSaveCommand command = new DailyScheduleSaveCommand(loginInfo.getUserId(), request.getDate());
         Long dailyScheduleId = dailyScheduleService.saveDailySchedule(command);
         return new DailyScheduleSaveResponse(dailyScheduleId, command.getDate());
     }

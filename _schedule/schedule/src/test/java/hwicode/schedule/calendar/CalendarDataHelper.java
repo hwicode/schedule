@@ -1,5 +1,8 @@
 package hwicode.schedule.calendar;
 
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+
 import java.time.YearMonth;
 
 public class CalendarDataHelper {
@@ -17,4 +20,9 @@ public class CalendarDataHelper {
     public static final Long CALENDAR_ID = 1L;
     public static final Long GOAL_ID = 1L;
     public static final Long SUB_GOAL_ID = 1L;
+
+    public static String createAccessToken(TokenProvider tokenProvider, Long userId) {
+        OauthUser oauthUser = new OauthUser(userId, null, null, null);
+        return tokenProvider.createAccessToken(oauthUser);
+    }
 }
