@@ -95,7 +95,7 @@ class TokenProviderTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = {"iefnda", "dsin.ddw.dfsf", "funeewqsada.fdsfccc", ""})
+    @ValueSource(strings = {"iefnda", "dsin.ddw.dfsf", "funeewqsada.fdsfccc", "", "Bearer dvdsaimismfaksmfesfmaiefm"})
     void 토큰_디코드시에_jwt가_아니라면_에러가_발생한다(String token) {
         // given
         TokenProvider tokenProvider = createTokenProvider();
