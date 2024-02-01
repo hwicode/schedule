@@ -41,6 +41,7 @@ class OauthClientTest {
                 .queryParam("redirect_uri", REDIRECT_URL)
                 .queryParam("response_type", RESPONSE_TYPE)
                 .queryParam("scope", String.join(" ", SCOPES))
+                .encode()
                 .build().toString();
         assertThat(authUrl).isEqualTo(expectedUrl);
     }

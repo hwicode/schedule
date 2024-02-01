@@ -45,6 +45,7 @@ public class GoogleOauthClient implements OauthClient {
                 .queryParam("redirect_uri", googleProperties.getRedirectUri())
                 .queryParam("response_type", googleProperties.getResponseType())
                 .queryParam("scope", String.join(" ", googleProperties.getScopes()))
+                .encode()
                 .build().toString();
     }
 
