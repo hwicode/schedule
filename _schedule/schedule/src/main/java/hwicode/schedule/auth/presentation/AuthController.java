@@ -4,6 +4,8 @@ import hwicode.schedule.auth.application.dto.AuthTokenResponse;
 import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.AuthService;
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.server.Cookie;
 import org.springframework.http.HttpHeaders;
@@ -51,7 +53,7 @@ public class AuthController {
 
     @PostMapping("/auth/logout")
     @ResponseStatus(value = HttpStatus.OK)
-    public void logout(@RequestHeader(HttpHeaders.AUTHORIZATION) String accessToken,
+    public void logout(@LoginUser LoginInfo loginInfo,
                        @CookieValue(value = "refreshToken") String refreshToken,
                        HttpServletResponse response) {
         authService.logout(refreshToken);

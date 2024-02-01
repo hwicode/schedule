@@ -4,6 +4,9 @@ import hwicode.schedule.auth.application.AuthService;
 import hwicode.schedule.auth.application.dto.AuthTokenResponse;
 import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
 import hwicode.schedule.auth.domain.OauthProvider;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +16,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static hwicode.schedule.auth.AuthDataHelper.AUTH_URL;
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -28,6 +32,15 @@ class AuthControllerTest {
 
     @MockBean
     AuthService authService;
+
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void Oauth_Provider의_로그인_페이지를_요청하면_302코드가_리턴된다() throws Exception {
@@ -75,7 +88,7 @@ class AuthControllerTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + authTokenResponse.getAccessToken()))
+                .andExpect(header().string(HttpHeaders.AUTHORIZATION, BEARER + authTokenResponse.getAccessToken()))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, cookie));
 
         verify(authService).loginWithOauth(any(), any());
@@ -121,7 +134,7 @@ class AuthControllerTest {
 
         // then
         perform.andExpect(status().isOk())
-                .andExpect(header().string(HttpHeaders.AUTHORIZATION, "Bearer " + reissuedAuthTokenResponse.getAccessToken()))
+                .andExpect(header().string(HttpHeaders.AUTHORIZATION, BEARER + reissuedAuthTokenResponse.getAccessToken()))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE, cookie));
 
         verify(authService).reissueAuthToken(any());
@@ -132,7 +145,7 @@ class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/auth/token")
-                        .header("Authorization", "Bearer " + "accessToken")
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -150,7 +163,7 @@ class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/auth/logout")
-                        .header("Authorization", "Bearer " + "accessToken")
+                        .header("Authorization", BEARER + "accessToken")
                         .cookie(new javax.servlet.http.Cookie("refreshToken", "refreshToken"))
         );
 
@@ -171,7 +184,7 @@ class AuthControllerTest {
         );
 
         // then
-        perform.andExpect(status().isBadRequest());
+        perform.andExpect(status().isUnauthorized());
     }
 
     @Test
@@ -179,7 +192,7 @@ class AuthControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/auth/logout")
-                        .header("Authorization", "Bearer " + "accessToken")
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
