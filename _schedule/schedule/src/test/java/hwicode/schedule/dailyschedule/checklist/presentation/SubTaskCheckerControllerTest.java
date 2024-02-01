@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerAggregateService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
@@ -16,6 +18,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.name_modify.SubTaskCheckerNameModifyResponse;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker.dto.status_modify.SubTaskStatusModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -39,14 +43,23 @@ class SubTaskCheckerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     SubTaskCheckerSubService subTaskCheckerSubService;
 
     @MockBean
     TaskCheckerAggregateService taskCheckerAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -61,6 +74,7 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(subTaskSaveRequest)));
         // then
@@ -78,6 +92,7 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .param("taskName", TASK_CHECKER_NAME)
                         .param("subTaskName", SUB_TASK_CHECKER_NAME)
         );
@@ -100,6 +115,7 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
@@ -124,6 +140,7 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .param("taskName", TASK_CHECKER_NAME)
                         .param("subTaskName", SUB_TASK_CHECKER_NAME)
         );
@@ -148,8 +165,9 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskStatusModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -173,8 +191,9 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
                         TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(subTaskCheckerNameModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(subTaskCheckerNameModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -196,10 +215,11 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())
@@ -219,10 +239,11 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/subtasks/{subTaskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())
@@ -242,10 +263,11 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
                         TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())
@@ -265,6 +287,7 @@ class SubTaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/tasks/{taskId}/subtasks/{subTaskId}/name",
                         TASK_CHECKER_ID, SUB_TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)

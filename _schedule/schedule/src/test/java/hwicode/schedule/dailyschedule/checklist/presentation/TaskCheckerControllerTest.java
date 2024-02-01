@@ -2,6 +2,8 @@ package hwicode.schedule.dailyschedule.checklist.presentation;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.application.DailyChecklistNotFoundException;
@@ -22,6 +24,7 @@ import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -31,6 +34,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -45,11 +49,20 @@ class TaskCheckerControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TaskCheckerSubService taskCheckerSubService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -62,6 +75,7 @@ class TaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -84,6 +98,7 @@ class TaskCheckerControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
@@ -99,8 +114,10 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .param("taskName", TASK_CHECKER_NAME)
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .param("taskName", TASK_CHECKER_NAME)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -118,8 +135,10 @@ class TaskCheckerControllerTest {
                 .willThrow(dailyChecklistNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .param("taskName", TASK_CHECKER_NAME)
+        ResultActions perform = mockMvc.perform(
+                delete("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}", DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .param("taskName", TASK_CHECKER_NAME)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -142,8 +161,9 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskStatusModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskStatusModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -167,8 +187,9 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskDifficultyModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskDifficultyModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -192,8 +213,9 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskCheckerNameModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskCheckerNameModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -215,10 +237,11 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isBadRequest())
@@ -238,10 +261,11 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())
@@ -261,10 +285,11 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isBadRequest())
@@ -284,10 +309,11 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                        )));
 
         // then
         perform.andExpect(status().isBadRequest())
@@ -307,6 +333,7 @@ class TaskCheckerControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name",
                         DAILY_CHECKLIST_ID, TASK_CHECKER_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new TaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME)

@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.taskchecker;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.*;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.difficulty_modify.TaskDifficultyModifyRequest;
@@ -30,11 +32,12 @@ public class TaskCheckerController {
 
     @PostMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskSaveResponse saveTask(@PathVariable @Positive Long dailyToDoListId,
+    public TaskSaveResponse saveTask(@LoginUser LoginInfo loginInfo,
+                                     @PathVariable @Positive Long dailyToDoListId,
                                      @RequestBody @Valid TaskSaveRequest request) {
 
         TaskSaveCommand command = new TaskSaveCommand(
-                1L, request.getDailyChecklistId(), request.getTaskName(),
+                loginInfo.getUserId(), request.getDailyChecklistId(), request.getTaskName(),
                 request.getDifficulty(), request.getPriority(), request.getImportance()
         );
         Long taskId = taskCheckerSubService.saveTaskChecker(command);
@@ -43,20 +46,22 @@ public class TaskCheckerController {
 
     @DeleteMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteTask(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
+    public void deleteTask(@LoginUser LoginInfo loginInfo,
+                           @PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
                            @PathVariable @Positive Long taskId,
                            @RequestParam("taskName") @NotBlank String taskCheckerName) {
-        TaskDeleteCommand command = new TaskDeleteCommand(1L, dailyChecklistId, taskId, taskCheckerName);
+        TaskDeleteCommand command = new TaskDeleteCommand(loginInfo.getUserId(), dailyChecklistId, taskId, taskCheckerName);
         taskCheckerSubService.deleteTaskChecker(command);
     }
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/status")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskStatusModifyResponse changeTaskStatus(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
+    public TaskStatusModifyResponse changeTaskStatus(@LoginUser LoginInfo loginInfo,
+                                                     @PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
                                                      @PathVariable("taskId") @Positive Long taskCheckerId,
                                                      @RequestBody @Valid TaskStatusModifyRequest request) {
         TaskStatusModifyCommand command = new TaskStatusModifyCommand(
-                1L, dailyChecklistId, request.getTaskCheckerName(), request.getTaskStatus()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getTaskStatus()
         );
         TaskStatus modifiedTaskStatus = taskCheckerSubService.changeTaskStatus(command);
         return new TaskStatusModifyResponse(command.getTaskCheckerName(), modifiedTaskStatus);
@@ -64,11 +69,12 @@ public class TaskCheckerController {
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/difficulty")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskDifficultyModifyResponse changeTaskDifficulty(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
+    public TaskDifficultyModifyResponse changeTaskDifficulty(@LoginUser LoginInfo loginInfo,
+                                                             @PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
                                                              @PathVariable("taskId") @Positive Long taskCheckerId,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest request) {
         TaskDifficultyModifyCommand command = new TaskDifficultyModifyCommand(
-                1L, dailyChecklistId, request.getTaskCheckerName(), request.getDifficulty()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getDifficulty()
         );
         Difficulty modifiedDifficulty = taskCheckerSubService.changeTaskDifficulty(command);
         return new TaskDifficultyModifyResponse(command.getTaskCheckerName(), modifiedDifficulty);
@@ -76,11 +82,12 @@ public class TaskCheckerController {
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks/{taskId}/name")
     @ResponseStatus(value = HttpStatus.OK)
-    public TaskCheckerNameModifyResponse changeTaskCheckerName(@PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
+    public TaskCheckerNameModifyResponse changeTaskCheckerName(@LoginUser LoginInfo loginInfo,
+                                                               @PathVariable("dailyToDoListId") @Positive Long dailyChecklistId,
                                                                @PathVariable("taskId") @Positive Long taskCheckerId,
                                                                @RequestBody @Valid TaskCheckerNameModifyRequest request) {
         TaskCheckerNameModifyCommand command = new TaskCheckerNameModifyCommand(
-                1L, dailyChecklistId, request.getTaskCheckerName(), request.getNewTaskCheckerName()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getNewTaskCheckerName()
         );
         String newTaskCheckerName = taskCheckerSubService.changeTaskCheckerName(command);
         return new TaskCheckerNameModifyResponse(command.getDailyChecklistId(), newTaskCheckerName);

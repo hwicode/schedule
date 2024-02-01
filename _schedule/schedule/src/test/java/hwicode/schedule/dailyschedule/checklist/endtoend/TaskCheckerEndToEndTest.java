@@ -1,6 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.TaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
@@ -12,7 +13,10 @@ import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.dif
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.name_modify.TaskCheckerNameModifyRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.save.TaskSaveRequest;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.status_modify.TaskStatusModifyRequest;
-import hwicode.schedule.dailyschedule.shared_domain.*;
+import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
+import hwicode.schedule.dailyschedule.shared_domain.Importance;
+import hwicode.schedule.dailyschedule.shared_domain.Priority;
+import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
@@ -23,10 +27,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -51,6 +57,9 @@ class TaskCheckerEndToEndTest {
     @Autowired
     TaskCheckerRepository taskCheckerRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -59,13 +68,17 @@ class TaskCheckerEndToEndTest {
     @Test
     void 과제_생성_요청() {
         //given
-        DailyChecklist dailyChecklist = new DailyChecklist(1L);
+        Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
+        DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
         TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(taskSaveRequest);
 
@@ -85,6 +98,8 @@ class TaskCheckerEndToEndTest {
     void 과제_삭제_요청() {
         //given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -94,7 +109,8 @@ class TaskCheckerEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("taskName", TASK_CHECKER_NAME);
+                .queryParam("taskName", TASK_CHECKER_NAME)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         //when
         Response response = requestSpecification.when()
@@ -111,6 +127,8 @@ class TaskCheckerEndToEndTest {
     void 과제체커_진행_상태_변경_요청() {
         //given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -122,6 +140,7 @@ class TaskCheckerEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(taskStatusModifyRequest);
 
@@ -141,6 +160,8 @@ class TaskCheckerEndToEndTest {
     void 과제체커_어려움_점수_변경_요청() {
         //given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -152,6 +173,7 @@ class TaskCheckerEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(taskDifficultyModifyRequest);
 
@@ -171,6 +193,8 @@ class TaskCheckerEndToEndTest {
     void 과제체커_이름_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = createAccessToken(tokenProvider, userId);
+
         DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
@@ -182,6 +206,7 @@ class TaskCheckerEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(taskCheckerNameModifyRequest);
 

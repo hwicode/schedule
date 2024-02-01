@@ -1,5 +1,8 @@
 package hwicode.schedule.dailyschedule.checklist;
 
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+
 public class ChecklistDataHelper {
 
     // 단순히 id값으로 숫자가 필요할 때만 사용
@@ -20,4 +23,9 @@ public class ChecklistDataHelper {
     // 생성 메서드를 제외하고, TaskChecker나 SubTaskChecker를 생성해야 할 때만 사용
     public static final String NEW_TASK_CHECKER_NAME = "newTaskCheckerName";
     public static final String NEW_SUB_TASK_CHECKER_NAME = "newSubTaskCheckerName";
+
+    public static String createAccessToken(TokenProvider tokenProvider, Long userId) {
+        OauthUser oauthUser = new OauthUser(userId, null, null, null);
+        return tokenProvider.createAccessToken(oauthUser);
+    }
 }
