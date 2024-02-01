@@ -49,7 +49,7 @@ class DailyTagListQueryControllerTest {
     @Test
     void 계획표에_존재하는_메모들의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(dailyTagListQueryService.getDailyTagListMemoQueryResponses(any()))
+        given(dailyTagListQueryService.getDailyTagListMemoQueryResponses(any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -60,7 +60,7 @@ class DailyTagListQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(dailyTagListQueryService).getDailyTagListMemoQueryResponses(any());
+        verify(dailyTagListQueryService).getDailyTagListMemoQueryResponses(any(), any());
     }
 
 }

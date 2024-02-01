@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.tag.domain.Tag;
+import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,6 +25,9 @@ class TagQueryEndToEndTest {
     @Autowired
     DatabaseCleanUp databaseCleanUp;
 
+    @Autowired
+    TagRepository tagRepository;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -31,8 +36,12 @@ class TagQueryEndToEndTest {
     @Test
     void 특정_태그를_가지고_있는_계획표들_조회_요청() {
         // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
+        tagRepository.save(tag);
+
         RequestSpecification requestSpecification = given().port(port)
-                .queryParam("tagId", TAG_ID)
+                .queryParam("tagId", tag.getId())
                 .queryParam("lastDailyTagListId", DAILY_TAG_LIST_ID);
 
         // when
@@ -47,8 +56,12 @@ class TagQueryEndToEndTest {
     @Test
     void 특정_태그를_가지고_있는_메모들_조회_요청() {
         // given
+        Long userId = 1L;
+        Tag tag = new Tag(TAG_NAME, userId);
+        tagRepository.save(tag);
+
         RequestSpecification requestSpecification = given().port(port)
-                .queryParam("tagId", TAG_ID)
+                .queryParam("tagId", tag.getId())
                 .queryParam("lastMemoId", MEMO_ID);
 
         // when

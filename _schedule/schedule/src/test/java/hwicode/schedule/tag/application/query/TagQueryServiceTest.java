@@ -65,7 +65,7 @@ class TagQueryServiceTest {
         }
 
         //when
-        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(tag.getId(), null);
+        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(userId, tag.getId(), null);
 
         //then
         assertThat(dailyTagListSearchQueryResponsePage).hasSize(10);
@@ -91,7 +91,7 @@ class TagQueryServiceTest {
         }
 
         // when
-        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(tag.getId(), 11L);
+        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponsePage = tagQueryService.getDailyTagListSearchQueryResponsePage(userId, tag.getId(), 11L);
 
         // then
         assertThat(dailyTagListSearchQueryResponsePage).hasSize(10);
@@ -118,7 +118,7 @@ class TagQueryServiceTest {
         }
 
         //when
-        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(tag.getId(), null);
+        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(userId, tag.getId(), null);
 
         //then
         assertThat(memoSearchQueryResponsePage).hasSize(10);
@@ -145,7 +145,7 @@ class TagQueryServiceTest {
         }
 
         // when
-        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(tag.getId(), 11L);
+        List<MemoSearchQueryResponse> memoSearchQueryResponsePage = tagQueryService.getMemoSearchQueryResponsePage(userId, tag.getId(), 11L);
 
         // then
         assertThat(memoSearchQueryResponsePage).hasSize(10);

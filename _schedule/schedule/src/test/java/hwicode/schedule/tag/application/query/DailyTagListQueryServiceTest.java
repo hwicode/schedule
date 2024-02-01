@@ -94,7 +94,7 @@ class DailyTagListQueryServiceTest {
         }
 
         // when
-        List<DailyTagListMemoQueryResponse> dailyTagListMemoQueryResponses = dailyTagListQueryService.getDailyTagListMemoQueryResponses(dailyTagList.getId());
+        List<DailyTagListMemoQueryResponse> dailyTagListMemoQueryResponses = dailyTagListQueryService.getDailyTagListMemoQueryResponses(userId, dailyTagList.getId());
 
         // then
         assertThat(dailyTagListMemoQueryResponses).hasSize(3);

@@ -1,8 +1,10 @@
 package hwicode.schedule.tag.application.query;
 
+import hwicode.schedule.tag.application.find_service.DailyTagListFindService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse;
 import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoTagQueryResponse;
+import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
@@ -31,7 +33,8 @@ public class DailyTagListQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(Long dailyTagListId) {
+    public List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(Long userId, Long dailyTagListId) {
+        validateOwnership(userId, dailyTagListId);
         List<DailyTagListMemoQueryResponse> dailyTagListMemoQueryResponses = memoRepository.getDailyTagListMemoQueryResponses(dailyTagListId);
         List<Long> memoIds = getMemoIds(dailyTagListMemoQueryResponses);
 
@@ -45,6 +48,11 @@ public class DailyTagListQueryService {
                 )
         );
         return dailyTagListMemoQueryResponses;
+    }
+
+    private void validateOwnership(Long userId, Long dailyTagListId) {
+        DailyTagList dailyTagList = DailyTagListFindService.findById(dailyTagListRepository, dailyTagListId);
+        dailyTagList.checkOwnership(userId);
     }
 
     private List<Long> getMemoIds(List<DailyTagListMemoQueryResponse> dailyTagListMemoQueryResponses) {

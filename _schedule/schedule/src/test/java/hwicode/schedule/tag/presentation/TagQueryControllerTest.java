@@ -30,7 +30,7 @@ class TagQueryControllerTest {
     @Test
     void lastDailyTagListId_없이_태그를_통해_계획표의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any()))
+        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -40,13 +40,13 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any());
+        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any(), any());
     }
 
     @Test
     void 태그를_통해_계획표의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any()))
+        given(tagQueryService.getDailyTagListSearchQueryResponsePage(any(), any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -57,13 +57,13 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any());
+        verify(tagQueryService).getDailyTagListSearchQueryResponsePage(any(), any(), any());
     }
 
     @Test
     void lastMemoId_없이_태그를_통해_메모의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getMemoSearchQueryResponsePage(any(), any()))
+        given(tagQueryService.getMemoSearchQueryResponsePage(any(), any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -73,13 +73,13 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getMemoSearchQueryResponsePage(any(), any());
+        verify(tagQueryService).getMemoSearchQueryResponsePage(any(), any(), any());
     }
 
     @Test
     void 태그를_통해_메모의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        given(tagQueryService.getMemoSearchQueryResponsePage(any(), any()))
+        given(tagQueryService.getMemoSearchQueryResponsePage(any(), any(), any()))
                 .willReturn(List.of());
 
         // when
@@ -90,7 +90,7 @@ class TagQueryControllerTest {
         // then
         perform.andExpect(status().isOk());
 
-        verify(tagQueryService).getMemoSearchQueryResponsePage(any(), any());
+        verify(tagQueryService).getMemoSearchQueryResponsePage(any(), any(), any());
     }
 
     @Test

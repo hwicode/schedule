@@ -29,7 +29,7 @@ public class DailyTagListQueryController {
     @GetMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos")
     @ResponseStatus(HttpStatus.OK)
     public List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(@PathVariable @Positive Long dailyTagListId) {
-        return dailyTagListQueryService.getDailyTagListMemoQueryResponses(dailyTagListId);
+        return dailyTagListQueryService.getDailyTagListMemoQueryResponses(1L, dailyTagListId);
     }
 
 }

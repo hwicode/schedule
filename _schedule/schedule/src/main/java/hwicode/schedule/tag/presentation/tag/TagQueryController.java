@@ -27,14 +27,14 @@ public class TagQueryController {
     @ResponseStatus(HttpStatus.OK)
     public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(@RequestParam @Positive Long tagId,
                                                                                         @RequestParam(required = false) Long lastDailyTagListId) {
-        return tagQueryService.getDailyTagListSearchQueryResponsePage(tagId, lastDailyTagListId);
+        return tagQueryService.getDailyTagListSearchQueryResponsePage(1L, tagId, lastDailyTagListId);
     }
 
     @GetMapping("/search/memos")
     @ResponseStatus(HttpStatus.OK)
     public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(@RequestParam @Positive Long tagId,
                                                                         @RequestParam(required = false) Long lastMemoId) {
-        return tagQueryService.getMemoSearchQueryResponsePage(tagId, lastMemoId);
+        return tagQueryService.getMemoSearchQueryResponsePage(1L, tagId, lastMemoId);
     }
 
     @GetMapping("/tags")

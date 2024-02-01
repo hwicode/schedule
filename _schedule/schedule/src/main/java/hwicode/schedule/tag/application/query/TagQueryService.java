@@ -1,9 +1,11 @@
 package hwicode.schedule.tag.application.query;
 
+import hwicode.schedule.tag.application.find_service.TagFindService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse;
+import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
@@ -27,7 +29,8 @@ public class TagQueryService {
     private final TagRepository tagRepository;
 
     @Transactional(readOnly = true)
-    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(Long tagId, Long lastDailyTagListId) {
+    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(Long userId, Long tagId, Long lastDailyTagListId) {
+        validateOwnership(userId, tagId);
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
         if (lastDailyTagListId == null) {
@@ -37,13 +40,19 @@ public class TagQueryService {
     }
 
     @Transactional(readOnly = true)
-    public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(Long tagId, Long lastMemoId) {
+    public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(Long userId, Long tagId, Long lastMemoId) {
+        validateOwnership(userId, tagId);
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
         if (lastMemoId == null) {
             return memoTagRepository.getMemoSearchQueryResponseFirstPage(tagId, pageable);
         }
         return memoTagRepository.getMemoSearchQueryResponseNextPage(tagId, lastMemoId, pageable);
+    }
+
+    private void validateOwnership(Long userId, Long tagId) {
+        Tag tag = TagFindService.findById(tagRepository, tagId);
+        tag.checkOwnership(userId);
     }
 
     @Transactional(readOnly = true)
