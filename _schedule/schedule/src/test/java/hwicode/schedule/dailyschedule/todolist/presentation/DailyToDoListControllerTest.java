@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
@@ -20,6 +22,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.DAILY_TO_DO_LIST_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -43,11 +46,17 @@ class DailyToDoListControllerTest {
     @Autowired
     WebApplicationContext webApplicationContext;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
     @BeforeEach
     public void setup() {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext)
                 .addFilters(new CharacterEncodingFilter("UTF-8", true))  // 필터 추가
                 .build();
+
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
     }
 
     @Test
@@ -60,8 +69,9 @@ class DailyToDoListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", DAILY_TO_DO_LIST_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(dailyToDoListInformationChangeRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(dailyToDoListInformationChangeRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -82,10 +92,11 @@ class DailyToDoListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information", DAILY_TO_DO_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new DailyToDoListInformationChangeRequest("좋은데!", Emoji.GOOD)
-                )));
+                        .content(objectMapper.writeValueAsString(
+                                new DailyToDoListInformationChangeRequest("좋은데!", Emoji.GOOD)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())

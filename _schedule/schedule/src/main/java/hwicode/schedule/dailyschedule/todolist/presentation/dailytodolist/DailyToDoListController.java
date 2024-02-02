@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.todolist.application.DailyToDoListAggregateService;
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.presentation.dailytodolist.dto.DailyToDoListInformationChangeRequest;
@@ -21,10 +23,11 @@ public class DailyToDoListController {
 
     @PatchMapping("/dailyschedule/daily-todo-lists/{dailyToDoListId}/information")
     @ResponseStatus(value = HttpStatus.OK)
-    public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@PathVariable @Positive Long dailyToDoListId,
+    public DailyToDoListInformationChangeResponse changeDailyToDoListInformation(@LoginUser LoginInfo loginInfo,
+                                                                                 @PathVariable @Positive Long dailyToDoListId,
                                                                                  @RequestBody @Valid DailyToDoListInformationChangeRequest request) {
         DailyToDoListInformationCommand command = new DailyToDoListInformationCommand(
-                1L, dailyToDoListId, request.getReview(), request.getEmoji()
+                loginInfo.getUserId(), dailyToDoListId, request.getReview(), request.getEmoji()
         );
 
         dailyToDoListAggregateService.changeDailyToDoListInformation(command);

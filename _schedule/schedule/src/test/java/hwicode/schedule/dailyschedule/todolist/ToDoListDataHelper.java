@@ -1,5 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist;
 
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+
 public class ToDoListDataHelper {
 
     // 단순히 id값으로 숫자가 필요할 때만 사용
@@ -11,4 +14,8 @@ public class ToDoListDataHelper {
     public static final String TASK_NAME = "taskName";
     public static final String SUB_TASK_NAME = "subTaskName";
 
+    public static String createAccessToken(TokenProvider tokenProvider, Long userId) {
+        OauthUser oauthUser = new OauthUser(userId, null, null, null);
+        return tokenProvider.createAccessToken(oauthUser);
+    }
 }

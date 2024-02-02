@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
@@ -14,8 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -32,6 +36,9 @@ class DailyToDoListEndToEndTest {
     @Autowired
     DailyToDoListRepository dailyToDoListRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -40,7 +47,10 @@ class DailyToDoListEndToEndTest {
     @Test
     void 투두리스트_정보_변경_요청() {
         //given
-        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD, 1L);
+        Long userId = 1L;
+        String accessToken = ToDoListDataHelper.createAccessToken(tokenProvider, userId);
+
+        DailyToDoList dailyToDoList = new DailyToDoList(Emoji.NOT_BAD, userId);
         dailyToDoListRepository.save(dailyToDoList);
 
         String review = "좋은데!";
@@ -48,6 +58,7 @@ class DailyToDoListEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(dailyToDoListInformationChangeRequest);
 

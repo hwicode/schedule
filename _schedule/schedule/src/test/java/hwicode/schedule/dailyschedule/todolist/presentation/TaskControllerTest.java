@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.todolist.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
 import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
@@ -8,6 +10,7 @@ import hwicode.schedule.dailyschedule.todolist.exception.application.TaskNotExis
 import hwicode.schedule.dailyschedule.todolist.presentation.task.TaskController;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper.TASK_ID;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -31,11 +35,20 @@ class TaskControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TaskAggregateService taskAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 과제의_정보_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
@@ -46,6 +59,7 @@ class TaskControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/tasks/{taskId}/information", TASK_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(taskInformationModifyRequest)));
 
@@ -68,6 +82,7 @@ class TaskControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/tasks/{taskId}/information", TASK_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new TaskInformationModifyRequest(Priority.SECOND, Importance.SECOND)
