@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.review.presentation.reviewcycle;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleDeleteCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyCycleCommand;
@@ -28,9 +30,10 @@ public class ReviewCycleController {
 
     @PostMapping("/dailyschedule/review-cycles")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ReviewCycleSaveResponse saveReviewCycle(@RequestBody @Valid ReviewCycleSaveRequest request) {
+    public ReviewCycleSaveResponse saveReviewCycle(@LoginUser LoginInfo loginInfo,
+                                                   @RequestBody @Valid ReviewCycleSaveRequest request) {
         ReviewCycleSaveCommand command = new ReviewCycleSaveCommand(
-                1L, request.getReviewCycleName(), request.getCycle()
+                loginInfo.getUserId(), request.getReviewCycleName(), request.getCycle()
         );
         Long reviewCycleId = reviewCycleAggregateService.saveReviewCycle(command);
         return new ReviewCycleSaveResponse(reviewCycleId, command.getName(), command.getCycle());
@@ -38,10 +41,11 @@ public class ReviewCycleController {
 
     @PatchMapping("/dailyschedule/review-cycles/{reviewCycleId}/name")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewCycleNameModifyResponse changeReviewCycleName(@PathVariable @Positive Long reviewCycleId,
+    public ReviewCycleNameModifyResponse changeReviewCycleName(@LoginUser LoginInfo loginInfo,
+                                                               @PathVariable @Positive Long reviewCycleId,
                                                                @RequestBody @Valid ReviewCycleNameModifyRequest request) {
         ReviewCycleModifyNameCommand command = new ReviewCycleModifyNameCommand(
-                1L, reviewCycleId, request.getNewReviewCycleName()
+                loginInfo.getUserId(), reviewCycleId, request.getNewReviewCycleName()
         );
         reviewCycleAggregateService.changeReviewCycleName(command);
         return new ReviewCycleNameModifyResponse(reviewCycleId, command.getNewName());
@@ -49,10 +53,11 @@ public class ReviewCycleController {
 
     @PatchMapping("/dailyschedule/review-cycles/{reviewCycleId}/cycle")
     @ResponseStatus(HttpStatus.OK)
-    public ReviewCycleCycleModifyResponse changeCycle(@PathVariable @Positive Long reviewCycleId,
+    public ReviewCycleCycleModifyResponse changeCycle(@LoginUser LoginInfo loginInfo,
+                                                      @PathVariable @Positive Long reviewCycleId,
                                                       @RequestBody @Valid ReviewCycleCycleModifyRequest request) {
         ReviewCycleModifyCycleCommand command = new ReviewCycleModifyCycleCommand(
-                1L, reviewCycleId, request.getCycle()
+                loginInfo.getUserId(), reviewCycleId, request.getCycle()
         );
         reviewCycleAggregateService.changeCycle(command);
         return new ReviewCycleCycleModifyResponse(reviewCycleId, command.getCycle());
@@ -60,8 +65,9 @@ public class ReviewCycleController {
 
     @DeleteMapping("/dailyschedule/review-cycles/{reviewCycleId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteReviewCycle(@PathVariable @Positive Long reviewCycleId) {
-        ReviewCycleDeleteCommand command = new ReviewCycleDeleteCommand(1L, reviewCycleId);
+    public void deleteReviewCycle(@LoginUser LoginInfo loginInfo,
+                                  @PathVariable @Positive Long reviewCycleId) {
+        ReviewCycleDeleteCommand command = new ReviewCycleDeleteCommand(loginInfo.getUserId(), reviewCycleId);
         reviewCycleAggregateService.deleteReviewCycle(command);
     }
 

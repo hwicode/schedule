@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.review.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.InvalidReviewCycleDateException;
@@ -12,6 +14,7 @@ import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_m
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.name_modify.ReviewCycleNameModifyResponse;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewcycle.dto.save.ReviewCycleSaveResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,6 +28,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -39,11 +43,20 @@ class ReviewCycleControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     ReviewCycleAggregateService reviewCycleAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 복습_주기를_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -58,8 +71,9 @@ class ReviewCycleControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/review-cycles")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reviewCycleSaveRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reviewCycleSaveRequest)));
 
         // then
         perform.andExpect(status().isCreated())
@@ -83,6 +97,7 @@ class ReviewCycleControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/review-cycles")
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, set)
@@ -107,6 +122,7 @@ class ReviewCycleControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/review-cycles")
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new ReviewCycleSaveRequest(REVIEW_CYCLE_NAME, overSizeReviewCycle)
@@ -120,7 +136,7 @@ class ReviewCycleControllerTest {
     }
 
     @Test
-    void 복습_주기의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception{
+    void 복습_주기의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
         ReviewCycleNameModifyRequest reviewCycleNameModifyRequest = new ReviewCycleNameModifyRequest(NEW_REVIEW_CYCLE_NAME);
         ReviewCycleNameModifyResponse reviewCycleNameModifyResponse = new ReviewCycleNameModifyResponse(REVIEW_CYCLE_ID, NEW_REVIEW_CYCLE_NAME);
@@ -132,8 +148,9 @@ class ReviewCycleControllerTest {
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/review-cycles/{reviewCycleId}/name",
                         REVIEW_CYCLE_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(reviewCycleNameModifyRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(reviewCycleNameModifyRequest)));
 
         // then
         perform.andExpect(status().isOk())
@@ -156,6 +173,7 @@ class ReviewCycleControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/review-cycles/{reviewCycleId}/cycle", REVIEW_CYCLE_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(reviewCycleCycleModifyRequest)));
 
@@ -176,7 +194,8 @@ class ReviewCycleControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(delete("/dailyschedule/review-cycles/{reviewCycleId}",
-                REVIEW_CYCLE_ID));
+                REVIEW_CYCLE_ID)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNoContent());
@@ -194,7 +213,8 @@ class ReviewCycleControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(delete("/dailyschedule/review-cycles/{reviewCycleId}",
-                REVIEW_CYCLE_ID));
+                REVIEW_CYCLE_ID)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNotFound())

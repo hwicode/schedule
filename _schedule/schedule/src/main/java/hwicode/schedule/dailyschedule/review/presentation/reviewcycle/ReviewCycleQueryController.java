@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.review.presentation.reviewcycle;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.review.application.query.ReviewCycleQueryService;
 import hwicode.schedule.dailyschedule.review.application.query.dto.ReviewCycleQueryResponse;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,8 @@ public class ReviewCycleQueryController {
 
     @GetMapping("/dailyschedule/review-cycles")
     @ResponseStatus(HttpStatus.OK)
-    public List<ReviewCycleQueryResponse> getReviewCycleQueryResponses() {
-        return reviewCycleQueryService.getReviewCycleQueryResponses(1L);
+    public List<ReviewCycleQueryResponse> getReviewCycleQueryResponses(@LoginUser LoginInfo loginInfo) {
+        return reviewCycleQueryService.getReviewCycleQueryResponses(loginInfo.getUserId());
     }
 
 }

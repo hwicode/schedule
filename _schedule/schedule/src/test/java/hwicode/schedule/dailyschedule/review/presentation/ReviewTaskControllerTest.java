@@ -1,12 +1,15 @@
 package hwicode.schedule.dailyschedule.review.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewTaskNotFoundException;
 import hwicode.schedule.dailyschedule.review.presentation.reviewtask.ReviewTaskController;
 import hwicode.schedule.dailyschedule.review.presentation.reviewtask.dto.TaskReviewRequest;
 import hwicode.schedule.dailyschedule.review.presentation.reviewtask.dto.TaskReviewResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -16,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -31,11 +35,20 @@ class ReviewTaskControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     ReviewTaskService reviewTaskService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 과제의_복습을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -50,8 +63,9 @@ class ReviewTaskControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/tasks/{taskId}/review",
                         REVIEW_TASK_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(taskReviewRequest)));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(taskReviewRequest)));
 
         // then
         perform.andExpect(status().isCreated())
@@ -70,7 +84,8 @@ class ReviewTaskControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(delete("/dailyschedule/tasks/{taskId}/review",
-                REVIEW_TASK_ID));
+                REVIEW_TASK_ID)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNoContent());
@@ -89,10 +104,11 @@ class ReviewTaskControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/tasks/{taskId}/review",
                         REVIEW_TASK_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                        new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())
@@ -112,10 +128,11 @@ class ReviewTaskControllerTest {
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/tasks/{taskId}/review",
                         REVIEW_TASK_ID)
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(
-                         new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
-                )));
+                        .header("Authorization", BEARER + "accessToken")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(
+                                new TaskReviewRequest(REVIEW_CYCLE_ID, START_DATE)
+                        )));
 
         // then
         perform.andExpect(status().isNotFound())

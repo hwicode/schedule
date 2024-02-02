@@ -1,6 +1,8 @@
 package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.dailyschedule.daily_schedule_query.DailyScheduleQueryDataHelper;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
@@ -17,10 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.review.ReviewDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +50,9 @@ class ReviewTaskEndToEndTest {
     @Autowired
     ReviewDateTaskRepository reviewDateTaskRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -55,6 +62,8 @@ class ReviewTaskEndToEndTest {
     void 과제_복습_요청() {
         // given
         Long userId = 1L;
+        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+
         ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);
         List<Integer> cycle = List.of(1, 2, 4);
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
@@ -66,6 +75,7 @@ class ReviewTaskEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(taskReviewRequest);
 
@@ -83,6 +93,8 @@ class ReviewTaskEndToEndTest {
     void 과제_복습_취소_요청() {
         // given
         Long userId = 1L;
+        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+
         List<Integer> cycle = List.of(1, 2, 4);
         ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);
         ReviewCycle reviewCycle = new ReviewCycle(REVIEW_CYCLE_NAME, cycle, userId);
@@ -95,7 +107,8 @@ class ReviewTaskEndToEndTest {
         reviewTaskService.reviewTask(command);
 
         RequestSpecification requestSpecification = given()
-                .port(port);
+                .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()

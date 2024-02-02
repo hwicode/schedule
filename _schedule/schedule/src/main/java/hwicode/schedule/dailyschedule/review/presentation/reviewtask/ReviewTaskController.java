@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.review.presentation.reviewtask;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCancellationCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
@@ -22,10 +24,11 @@ public class ReviewTaskController {
 
     @PostMapping("/dailyschedule/tasks/{taskId}/review")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public TaskReviewResponse reviewTask(@PathVariable("taskId") @Positive Long reviewTaskId,
+    public TaskReviewResponse reviewTask(@LoginUser LoginInfo loginInfo,
+                                         @PathVariable("taskId") @Positive Long reviewTaskId,
                                          @RequestBody @Valid TaskReviewRequest request) {
         TaskReviewCommand command = new TaskReviewCommand(
-                1L, reviewTaskId, request.getReviewCycleId(), request.getStartDate()
+                loginInfo.getUserId(), reviewTaskId, request.getReviewCycleId(), request.getStartDate()
         );
         Long id = reviewTaskService.reviewTask(command);
         return new TaskReviewResponse(id);
@@ -33,8 +36,9 @@ public class ReviewTaskController {
 
     @DeleteMapping("/dailyschedule/tasks/{taskId}/review")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void cancelReviewedTask(@PathVariable("taskId") @Positive Long reviewTaskId) {
-        TaskReviewCancellationCommand command = new TaskReviewCancellationCommand(1L, reviewTaskId);
+    public void cancelReviewedTask(@LoginUser LoginInfo loginInfo,
+                                   @PathVariable("taskId") @Positive Long reviewTaskId) {
+        TaskReviewCancellationCommand command = new TaskReviewCancellationCommand(loginInfo.getUserId(), reviewTaskId);
         reviewTaskService.cancelReviewedTask(command);
     }
 
