@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.checklist.presentation.subtaskchecker;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.dailyschedule.checklist.application.TaskCheckerAggregateService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.SubTaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;

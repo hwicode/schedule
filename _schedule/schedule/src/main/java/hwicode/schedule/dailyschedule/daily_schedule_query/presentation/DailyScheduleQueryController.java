@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.presentation;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.DailyScheduleQueryService;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;

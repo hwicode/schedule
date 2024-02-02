@@ -1,7 +1,7 @@
 package hwicode.schedule.dailyschedule.todolist.presentation.task;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.dailyschedule.todolist.application.TaskAggregateService;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.presentation.task.dto.information_modify.TaskInformationModifyRequest;

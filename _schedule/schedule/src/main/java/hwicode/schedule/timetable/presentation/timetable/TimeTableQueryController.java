@@ -1,7 +1,7 @@
 package hwicode.schedule.timetable.presentation.timetable;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.timetable.application.query.TimeTableQueryService;
 import hwicode.schedule.timetable.application.query.dto.LearningTimeQueryResponse;
 import lombok.RequiredArgsConstructor;

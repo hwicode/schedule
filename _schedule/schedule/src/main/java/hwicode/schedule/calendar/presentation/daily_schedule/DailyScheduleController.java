@@ -4,8 +4,8 @@ import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleService
 import hwicode.schedule.calendar.application.daily_schedule.DailyScheduleSaveCommand;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveRequest;
 import hwicode.schedule.calendar.presentation.daily_schedule.dto.DailyScheduleSaveResponse;
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,7 +1,7 @@
 package hwicode.schedule.tag.presentation.tag;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.tag.application.query.TagQueryService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;

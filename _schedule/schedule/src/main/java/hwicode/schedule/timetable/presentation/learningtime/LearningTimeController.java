@@ -1,7 +1,7 @@
 package hwicode.schedule.timetable.presentation.learningtime;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeDeleteSubjectCommand;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectCommand;

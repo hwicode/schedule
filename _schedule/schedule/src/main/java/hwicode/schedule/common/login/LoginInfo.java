@@ -1,4 +1,4 @@
-package hwicode.schedule.common.config.auth;
+package hwicode.schedule.common.login;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

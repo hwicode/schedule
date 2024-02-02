@@ -1,4 +1,4 @@
-package hwicode.schedule.common.config.auth;
+package hwicode.schedule.common.login;
 
 import hwicode.schedule.auth.infra.token.DecodedToken;
 import hwicode.schedule.auth.infra.token.TokenProvider;

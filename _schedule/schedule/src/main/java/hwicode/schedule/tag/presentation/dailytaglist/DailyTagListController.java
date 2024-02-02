@@ -1,7 +1,7 @@
 package hwicode.schedule.tag.presentation.dailytaglist;
 
-import hwicode.schedule.common.config.auth.LoginInfo;
-import hwicode.schedule.common.config.auth.LoginUser;
+import hwicode.schedule.common.login.LoginInfo;
+import hwicode.schedule.common.login.LoginUser;
 import hwicode.schedule.tag.application.DailyTagListService;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListModifyMainTagCommand;
