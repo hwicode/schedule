@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.review.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleDeleteCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyCycleCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyNameCommand;
@@ -29,7 +30,7 @@ public class ReviewCycleAggregateService {
     @Transactional
     public String changeReviewCycleName(ReviewCycleModifyNameCommand command) {
         ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
-        reviewCycle.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewCycle.getUserId());
 
         reviewCycle.changeName(command.getNewName());
         return command.getNewName();
@@ -38,7 +39,7 @@ public class ReviewCycleAggregateService {
     @Transactional
     public List<Integer> changeCycle(ReviewCycleModifyCycleCommand command) {
         ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
-        reviewCycle.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewCycle.getUserId());
 
         return reviewCycle.changeCycle(command.getCycle());
     }
@@ -46,7 +47,7 @@ public class ReviewCycleAggregateService {
     @Transactional
     public Long deleteReviewCycle(ReviewCycleDeleteCommand command) {
         ReviewCycle reviewCycle = findReviewCycle(command.getReviewCycleId());
-        reviewCycle.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewCycle.getUserId());
 
         reviewCycleRepository.delete(reviewCycle);
         return command.getReviewCycleId();

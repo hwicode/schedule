@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
-import hwicode.schedule.dailyschedule.review.exception.domain.review_task.ReviewTaskForbiddenException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
@@ -67,12 +66,6 @@ public class ReviewTask {
         this.userId = userId;
     }
 
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new ReviewTaskForbiddenException();
-        }
-    }
-
     public ReviewTask cloneTask(ReviewList reviewList) {
         ReviewTask clonedTask = new ReviewTask(reviewList, this.name, this.priority, this.importance, this.difficulty, this.userId);
         List<ReviewSubTask> clonedReviewSubTasks = this.reviewSubTasks.stream()
@@ -106,4 +99,7 @@ public class ReviewTask {
         return this.id;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 }

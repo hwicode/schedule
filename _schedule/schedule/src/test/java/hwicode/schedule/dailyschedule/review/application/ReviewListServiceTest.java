@@ -1,12 +1,12 @@
 package hwicode.schedule.dailyschedule.review.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewListNotFoundException;
-import hwicode.schedule.dailyschedule.review.exception.domain.review_list.ReviewListForbiddenException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewListRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
@@ -108,7 +108,7 @@ class ReviewListServiceTest {
         // when then
         Long reviewListId = reviewList.getId();
         assertThatThrownBy(() -> reviewListService.addReviewTasks(2L, reviewListId))
-                .isInstanceOf(ReviewListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }

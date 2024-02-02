@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.review.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCancellationCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
@@ -31,11 +32,11 @@ public class ReviewTaskService {
     public Long reviewTask(TaskReviewCommand command) {
         ReviewTask reviewTask = reviewTaskRepository.findReviewTaskWithReviewDateTasks(command.getReviewTaskId())
                 .orElseThrow(ReviewTaskNotFoundException::new);
-        reviewTask.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewTask.getUserId());
 
         ReviewCycle reviewCycle = reviewCycleRepository.findById(command.getReviewCycleId())
                 .orElseThrow(ReviewCycleNotFoundException::new);
-        reviewCycle.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewCycle.getUserId());
 
         List<ReviewDate> reviewDates = reviewDateProviderService.provideReviewDates(reviewCycle, command.getStartDate());
 
@@ -48,7 +49,7 @@ public class ReviewTaskService {
     public Long cancelReviewedTask(TaskReviewCancellationCommand command) {
         ReviewTask reviewTask = reviewTaskRepository.findById(command.getReviewTaskId())
                 .orElseThrow(ReviewTaskNotFoundException::new);
-        reviewTask.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), reviewTask.getUserId());
 
         reviewDateTaskSaveAllOrDeleteAllRepository.deleteAllReviewDateTasksBy(command.getReviewTaskId());
         return command.getReviewTaskId();

@@ -2,7 +2,6 @@ package hwicode.schedule.dailyschedule.review.domain;
 
 import hwicode.schedule.common.jpa_converter.ReviewCycleDatesAttributeConverter;
 import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.InvalidReviewCycleDateException;
-import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleForbiddenException;
 import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleNullException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -46,12 +45,6 @@ public class ReviewCycle {
             if (reviewCycleDate < 1 || reviewCycleDate > 60) {
                 throw new InvalidReviewCycleDateException();
             }
-        }
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new ReviewCycleForbiddenException();
         }
     }
 

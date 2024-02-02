@@ -1,14 +1,13 @@
 package hwicode.schedule.dailyschedule.review.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCancellationCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewCycleNotFoundException;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewTaskNotFoundException;
-import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleForbiddenException;
-import hwicode.schedule.dailyschedule.review.exception.domain.review_task.ReviewTaskForbiddenException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewDateTaskRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
@@ -85,7 +84,7 @@ class ReviewTaskServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewTaskService.reviewTask(command))
-                .isInstanceOf(ReviewTaskForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -103,7 +102,7 @@ class ReviewTaskServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewTaskService.reviewTask(command))
-                .isInstanceOf(ReviewTaskForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -121,7 +120,7 @@ class ReviewTaskServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewTaskService.reviewTask(command))
-                .isInstanceOf(ReviewCycleForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     private static Stream<List<Integer>> createCycle() {
@@ -176,7 +175,7 @@ class ReviewTaskServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewTaskService.cancelReviewedTask(command))
-                .isInstanceOf(ReviewTaskForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test

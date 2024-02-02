@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.review.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.review.domain.ReviewDateTask;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
@@ -27,7 +28,7 @@ public class ReviewListService {
     public void addReviewTasks(Long userId, Long reviewListId) {
         ReviewList reviewList = reviewListRepository.findById(reviewListId)
                 .orElseThrow(ReviewListNotFoundException::new);
-        reviewList.checkOwnership(userId);
+        PermissionValidator.validateOwnership(userId, reviewList.getUserId());
 
         LocalDate date = reviewList.getToday();
         List<ReviewDateTask> reviewDateTasks = reviewDateTaskRepository.findAllByDateWithReviewTask(userId, date);

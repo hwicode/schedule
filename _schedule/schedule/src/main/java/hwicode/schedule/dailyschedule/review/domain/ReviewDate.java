@@ -1,6 +1,5 @@
 package hwicode.schedule.dailyschedule.review.domain;
 
-import hwicode.schedule.dailyschedule.review.exception.domain.review_date.ReviewDateForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -24,12 +23,6 @@ public class ReviewDate {
     public ReviewDate(LocalDate date, Long userId) {
         this.date = date;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new ReviewDateForbiddenException();
-        }
     }
 
     LocalDate getDate() {

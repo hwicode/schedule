@@ -1,12 +1,12 @@
 package hwicode.schedule.dailyschedule.review.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleDeleteCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyCycleCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleModifyNameCommand;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleSaveCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
-import hwicode.schedule.dailyschedule.review.exception.domain.review_cycle.ReviewCycleForbiddenException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -78,7 +78,7 @@ class ReviewCycleAggregateServiceTest {
         ReviewCycleModifyNameCommand command = new ReviewCycleModifyNameCommand(2L, reviewCycle.getId(), NEW_REVIEW_CYCLE_NAME);
         // when
         assertThatThrownBy(() -> reviewCycleAggregateService.changeReviewCycleName(command))
-                .isInstanceOf(ReviewCycleForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -115,7 +115,7 @@ class ReviewCycleAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewCycleAggregateService.changeCycle(command))
-                .isInstanceOf(ReviewCycleForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -147,7 +147,7 @@ class ReviewCycleAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> reviewCycleAggregateService.deleteReviewCycle(command))
-                .isInstanceOf(ReviewCycleForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }
