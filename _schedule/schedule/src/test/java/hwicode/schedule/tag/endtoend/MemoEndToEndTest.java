@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.tag.TagDataHelper;
 import hwicode.schedule.tag.application.MemoService;
 import hwicode.schedule.tag.application.dto.memo.MemoSaveWithTagsCommand;
 import hwicode.schedule.tag.domain.DailyTagList;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
@@ -29,6 +32,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,6 +61,9 @@ class MemoEndToEndTest {
     @Autowired
     MemoTagRepository memoTagRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -66,12 +73,15 @@ class MemoEndToEndTest {
     void 메모_생성_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
         MemoSaveRequest memoSaveRequest = new MemoSaveRequest(dailyTagList.getId(), MEMO_TEXT);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(memoSaveRequest);
 
@@ -90,6 +100,8 @@ class MemoEndToEndTest {
     void 메모의_내용_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         Memo memo = dailyTagList.createMemo(MEMO_TEXT);
 
@@ -99,6 +111,7 @@ class MemoEndToEndTest {
         MemoTextModifyRequest memoTextModifyRequest = new MemoTextModifyRequest(NEW_MEMO_TEXT);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(memoTextModifyRequest);
 
@@ -118,6 +131,8 @@ class MemoEndToEndTest {
     void 메모에_여러_개의_태그_추가_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         Memo memo = dailyTagList.createMemo(MEMO_TEXT);
 
@@ -137,6 +152,7 @@ class MemoEndToEndTest {
         MemoTagsAddRequest memoTagsAddRequest = new MemoTagsAddRequest(tagIds);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(memoTagsAddRequest);
 
@@ -155,6 +171,8 @@ class MemoEndToEndTest {
     void 메모를_생성하며_여러_개의_태그_추가_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
@@ -170,6 +188,7 @@ class MemoEndToEndTest {
         MemoSaveWithTagsRequest memoSaveWithTagsRequest = new MemoSaveWithTagsRequest(dailyTagList.getId(), MEMO_TEXT, tagIds);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(memoSaveWithTagsRequest);
 
@@ -189,6 +208,8 @@ class MemoEndToEndTest {
     void 메모에_태그_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
@@ -204,7 +225,8 @@ class MemoEndToEndTest {
                 new MemoSaveWithTagsCommand(userId, dailyTagList.getId(), tagIds, MEMO_TEXT)
         );
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Long deletedTargetTagId = tags.get(0).getId();
@@ -224,6 +246,8 @@ class MemoEndToEndTest {
     void 메모_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         dailyTagListRepository.save(dailyTagList);
 
@@ -239,7 +263,8 @@ class MemoEndToEndTest {
                 new MemoSaveWithTagsCommand(userId, dailyTagList.getId(), tagIds, MEMO_TEXT)
         );
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()

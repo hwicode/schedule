@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.tag.TagDataHelper;
 import hwicode.schedule.tag.application.TagService;
 import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
 import hwicode.schedule.tag.domain.Tag;
@@ -15,8 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.NEW_TAG_NAME;
 import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
 import static io.restassured.RestAssured.given;
@@ -35,6 +39,9 @@ class TagEndToEndTest {
     TagRepository tagRepository;
 
     @Autowired
+    TokenProvider tokenProvider;
+
+    @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @BeforeEach
@@ -45,9 +52,13 @@ class TagEndToEndTest {
     @Test
     void 태그_생성_요청() {
         // given
+        Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         TagSaveRequest tagSaveRequest = new TagSaveRequest(TAG_NAME);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(tagSaveRequest);
 
@@ -66,12 +77,15 @@ class TagEndToEndTest {
     void 태그_이름_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         TagSaveCommand command = new TagSaveCommand(userId, TAG_NAME);
         Long tagId = tagService.saveTag(command);
 
         TagNameModifyRequest tagNameModifyRequest = new TagNameModifyRequest(NEW_TAG_NAME);
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(tagNameModifyRequest);
 
@@ -91,10 +105,13 @@ class TagEndToEndTest {
     void 태그_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         TagSaveCommand command = new TagSaveCommand(userId, TAG_NAME);
         Long tagId = tagService.saveTag(command);
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()

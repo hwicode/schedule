@@ -1,5 +1,7 @@
 package hwicode.schedule.tag.presentation.tag;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.tag.application.TagService;
 import hwicode.schedule.tag.application.dto.tag.TagDeleteCommand;
 import hwicode.schedule.tag.application.dto.tag.TagModifyNameCommand;
@@ -25,18 +27,20 @@ public class TagController {
 
     @PostMapping("/dailyschedule/tags")
     @ResponseStatus(HttpStatus.CREATED)
-    public TagSaveResponse saveTag(@RequestBody @Valid TagSaveRequest request) {
-        TagSaveCommand command = new TagSaveCommand(1L, request.getTagName());
+    public TagSaveResponse saveTag(@LoginUser LoginInfo loginInfo,
+                                   @RequestBody @Valid TagSaveRequest request) {
+        TagSaveCommand command = new TagSaveCommand(loginInfo.getUserId(), request.getTagName());
         Long tagId = tagService.saveTag(command);
         return new TagSaveResponse(tagId, command.getName());
     }
 
     @PatchMapping("/dailyschedule/tags/{tagId}")
     @ResponseStatus(HttpStatus.OK)
-    public TagNameModifyResponse changeTagName(@PathVariable @Positive Long tagId,
+    public TagNameModifyResponse changeTagName(@LoginUser LoginInfo loginInfo,
+                                               @PathVariable @Positive Long tagId,
                                                @RequestBody @Valid TagNameModifyRequest request) {
         TagModifyNameCommand command = new TagModifyNameCommand(
-                1L, tagId, request.getNewTagName()
+                loginInfo.getUserId(), tagId, request.getNewTagName()
         );
         tagService.changeTagName(command);
         return new TagNameModifyResponse(tagId, command.getNewName());
@@ -44,8 +48,9 @@ public class TagController {
 
     @DeleteMapping("/dailyschedule/tags/{tagId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTag(@PathVariable @Positive Long tagId) {
-        TagDeleteCommand command = new TagDeleteCommand(1L, tagId);
+    public void deleteTag(@LoginUser LoginInfo loginInfo,
+                          @PathVariable @Positive Long tagId) {
+        TagDeleteCommand command = new TagDeleteCommand(loginInfo.getUserId(), tagId);
         tagService.deleteTag(command);
     }
 

@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.tag.application.MemoService;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
 import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
@@ -15,6 +17,7 @@ import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddRequest;
 import hwicode.schedule.tag.presentation.memo.dto.tags_add.MemoTagsAddResponse;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyRequest;
 import hwicode.schedule.tag.presentation.memo.dto.text_modify.MemoTextModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,6 +30,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.List;
 import java.util.Set;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -41,11 +45,20 @@ class MemoControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     MemoService memoService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 메모의_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -59,6 +72,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/memos", DAILY_TAG_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoSaveRequest)));
 
@@ -83,6 +97,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/memos/{memoId}", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoTextModifyRequest)));
 
@@ -105,6 +120,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/memos/{memoId}", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new MemoTextModifyRequest(NEW_MEMO_TEXT)
@@ -129,6 +145,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoTagsAddRequest)));
 
@@ -151,6 +168,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new MemoTagsAddRequest(Set.of(TAG_ID))
@@ -173,6 +191,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/memos/{memoId}/tags", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new MemoTagsAddRequest(Set.of(TAG_ID))
@@ -197,6 +216,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/memos/tags", DAILY_TAG_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(memoSaveWithTagsRequest)));
 
@@ -218,6 +238,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/memos/{memoId}/tags/{tagId}", MEMO_ID, TAG_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -236,6 +257,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/memos/{memoId}/tags/{tagId}", MEMO_ID, TAG_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -254,6 +276,7 @@ class MemoControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/memos/{memoId}", MEMO_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then

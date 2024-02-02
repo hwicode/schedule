@@ -1,7 +1,11 @@
 package hwicode.schedule.tag.presentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.tag.application.query.TagQueryService;
 import hwicode.schedule.tag.presentation.tag.TagQueryController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,6 +15,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -27,6 +32,15 @@ class TagQueryControllerTest {
     @MockBean
     TagQueryService tagQueryService;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
+
     @Test
     void lastDailyTagListId_없이_태그를_통해_계획표의_검색을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
@@ -35,7 +49,8 @@ class TagQueryControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(get("/search/daily-tag-lists")
-                .queryParam("tagId", String.valueOf(TAG_ID)));
+                .queryParam("tagId", String.valueOf(TAG_ID))
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -52,7 +67,8 @@ class TagQueryControllerTest {
         // when
         ResultActions perform = mockMvc.perform(get("/search/daily-tag-lists")
                 .queryParam("tagId", String.valueOf(TAG_ID))
-                .queryParam("lastDailyTagListId", String.valueOf(DAILY_TAG_LIST_ID)));
+                .queryParam("lastDailyTagListId", String.valueOf(DAILY_TAG_LIST_ID))
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -68,7 +84,8 @@ class TagQueryControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(get("/search/memos")
-                .queryParam("tagId", String.valueOf(TAG_ID)));
+                .queryParam("tagId", String.valueOf(TAG_ID))
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -85,7 +102,8 @@ class TagQueryControllerTest {
         // when
         ResultActions perform = mockMvc.perform(get("/search/memos")
                 .queryParam("tagId", String.valueOf(TAG_ID))
-                .queryParam("lastMemoId", String.valueOf(MEMO_ID)));
+                .queryParam("lastMemoId", String.valueOf(MEMO_ID))
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -100,7 +118,8 @@ class TagQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/tags"));
+        ResultActions perform = mockMvc.perform(get("/tags")
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -118,7 +137,8 @@ class TagQueryControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(get("/search/tags")
-                .queryParam("nameKeyword", nameKeyword));
+                .queryParam("nameKeyword", nameKeyword)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());

@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.tag.application.DailyTagListService;
 import hwicode.schedule.tag.exception.application.DailyTagListNotFoundException;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
@@ -9,6 +11,7 @@ import hwicode.schedule.tag.presentation.dailytaglist.DailyTagListController;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.main_tag_modify.DailyTagListMainTagModifyResponse;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddRequest;
 import hwicode.schedule.tag.presentation.dailytaglist.dto.tag_add.DailyTagListTagAddResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -32,11 +36,20 @@ class DailyTagListControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     DailyTagListService dailyTagListService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 오늘의_태그_리스트에_태그를_추가를_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -50,6 +63,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags", DAILY_TAG_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dailyTagListTagAddRequest)));
 
@@ -72,6 +86,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags", DAILY_TAG_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new DailyTagListTagAddRequest(TAG_ID)
@@ -94,6 +109,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags", DAILY_TAG_LIST_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
                                 new DailyTagListTagAddRequest(TAG_ID)
@@ -115,6 +131,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", DAILY_TAG_LIST_ID, TAG_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -133,6 +150,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", DAILY_TAG_LIST_ID, TAG_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -153,6 +171,7 @@ class DailyTagListControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/daily-tag-lists/{dailyTagListId}/tags/{tagId}", DAILY_TAG_LIST_ID, TAG_ID)
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then

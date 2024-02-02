@@ -1,5 +1,8 @@
 package hwicode.schedule.tag;
 
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+
 public class TagDataHelper {
 
     public static final String TAG_NAME = "tagName";
@@ -24,4 +27,9 @@ public class TagDataHelper {
     public static final Long TAG_ID = 1L;
     public static final Long DAILY_TAG_LIST_ID = 2L;
     public static final Long MEMO_ID = 3L;
+
+    public static String createAccessToken(TokenProvider tokenProvider, Long userId) {
+        OauthUser oauthUser = new OauthUser(userId, null, null, null);
+        return tokenProvider.createAccessToken(oauthUser);
+    }
 }

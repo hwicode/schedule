@@ -1,5 +1,7 @@
 package hwicode.schedule.tag.presentation.dailytaglist;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.tag.application.query.DailyTagListQueryService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse;
 import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
@@ -22,14 +24,16 @@ public class DailyTagListQueryController {
 
     @GetMapping("/dailyschedule/daily-tag-lists")
     @ResponseStatus(HttpStatus.OK)
-    public List<DailyTagQueryResponse> getDailyTagQueryResponses(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return dailyTagListQueryService.getDailyTagQueryResponses(1L, date);
+    public List<DailyTagQueryResponse> getDailyTagQueryResponses(@LoginUser LoginInfo loginInfo,
+                                                                 @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return dailyTagListQueryService.getDailyTagQueryResponses(loginInfo.getUserId(), date);
     }
 
     @GetMapping("/dailyschedule/daily-tag-lists/{dailyTagListId}/memos")
     @ResponseStatus(HttpStatus.OK)
-    public List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(@PathVariable @Positive Long dailyTagListId) {
-        return dailyTagListQueryService.getDailyTagListMemoQueryResponses(1L, dailyTagListId);
+    public List<DailyTagListMemoQueryResponse> getDailyTagListMemoQueryResponses(@LoginUser LoginInfo loginInfo,
+                                                                                 @PathVariable @Positive Long dailyTagListId) {
+        return dailyTagListQueryService.getDailyTagListMemoQueryResponses(loginInfo.getUserId(), dailyTagListId);
     }
 
 }

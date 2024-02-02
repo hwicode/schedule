@@ -1,5 +1,7 @@
 package hwicode.schedule.tag.presentation.tag;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.tag.application.query.TagQueryService;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
@@ -25,28 +27,31 @@ public class TagQueryController {
 
     @GetMapping("/search/daily-tag-lists")
     @ResponseStatus(HttpStatus.OK)
-    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(@RequestParam @Positive Long tagId,
+    public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(@LoginUser LoginInfo loginInfo,
+                                                                                        @RequestParam @Positive Long tagId,
                                                                                         @RequestParam(required = false) Long lastDailyTagListId) {
-        return tagQueryService.getDailyTagListSearchQueryResponsePage(1L, tagId, lastDailyTagListId);
+        return tagQueryService.getDailyTagListSearchQueryResponsePage(loginInfo.getUserId(), tagId, lastDailyTagListId);
     }
 
     @GetMapping("/search/memos")
     @ResponseStatus(HttpStatus.OK)
-    public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(@RequestParam @Positive Long tagId,
+    public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(@LoginUser LoginInfo loginInfo,
+                                                                        @RequestParam @Positive Long tagId,
                                                                         @RequestParam(required = false) Long lastMemoId) {
-        return tagQueryService.getMemoSearchQueryResponsePage(1L, tagId, lastMemoId);
+        return tagQueryService.getMemoSearchQueryResponsePage(loginInfo.getUserId(), tagId, lastMemoId);
     }
 
     @GetMapping("/tags")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagQueryResponse> getTagQueryResponses() {
-        return tagQueryService.getTagQueryResponses(1L);
+    public List<TagQueryResponse> getTagQueryResponses(@LoginUser LoginInfo loginInfo) {
+        return tagQueryService.getTagQueryResponses(loginInfo.getUserId());
     }
 
     @GetMapping("/search/tags")
     @ResponseStatus(HttpStatus.OK)
-    public List<TagSearchQueryResponse> getTagSearchQueryResponses(@RequestParam String nameKeyword) {
-        return tagQueryService.getTagSearchQueryResponses(1L, nameKeyword);
+    public List<TagSearchQueryResponse> getTagSearchQueryResponses(@LoginUser LoginInfo loginInfo,
+                                                                   @RequestParam String nameKeyword) {
+        return tagQueryService.getTagSearchQueryResponses(loginInfo.getUserId(), nameKeyword);
     }
 
 }

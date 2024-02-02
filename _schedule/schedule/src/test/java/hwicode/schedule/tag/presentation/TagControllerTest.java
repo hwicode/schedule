@@ -1,6 +1,8 @@
 package hwicode.schedule.tag.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.tag.application.TagService;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
@@ -9,6 +11,7 @@ import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyReques
 import hwicode.schedule.tag.presentation.tag.dto.name_modify.TagNameModifyResponse;
 import hwicode.schedule.tag.presentation.tag.dto.save.TagSaveRequest;
 import hwicode.schedule.tag.presentation.tag.dto.save.TagSaveResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -32,11 +36,20 @@ class TagControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TagService tagService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 태그_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -49,6 +62,7 @@ class TagControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/tags")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tagSaveRequest)));
 
@@ -72,6 +86,7 @@ class TagControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/dailyschedule/tags/{tagId}", TAG_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(tagNameModifyRequest)));
 
@@ -93,6 +108,7 @@ class TagControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/tags")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
                         new TagSaveRequest(TAG_NAME)
@@ -112,7 +128,8 @@ class TagControllerTest {
                 .willReturn(TAG_ID);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID));
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNoContent());
@@ -128,7 +145,8 @@ class TagControllerTest {
                 .willThrow(tagNotFoundException);
 
         // when
-        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID));
+        ResultActions perform = mockMvc.perform(delete("/dailyschedule/tags/{tagId}", TAG_ID)
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNotFound())

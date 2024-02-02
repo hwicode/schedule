@@ -1,6 +1,9 @@
 package hwicode.schedule.tag.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.dailyschedule.todolist.ToDoListDataHelper;
+import hwicode.schedule.tag.TagDataHelper;
 import hwicode.schedule.tag.application.DailyTagListService;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
@@ -19,10 +22,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDate;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.tag.TagDataHelper.TAG_NAME;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +52,9 @@ class DailyTagListEndToEndTest {
     DailyTagRepository dailyTagRepository;
 
     @Autowired
+    TokenProvider tokenProvider;
+
+    @Autowired
     DatabaseCleanUp databaseCleanUp;
 
     @BeforeEach
@@ -58,6 +66,8 @@ class DailyTagListEndToEndTest {
     void 오늘의_태그_리스트에_태그_추가_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         Tag tag = new Tag(TAG_NAME, userId);
 
@@ -67,6 +77,7 @@ class DailyTagListEndToEndTest {
         DailyTagListTagAddRequest dailyTagListTagAddRequest = new DailyTagListTagAddRequest(tag.getId());
 
         RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(dailyTagListTagAddRequest);
 
@@ -87,6 +98,8 @@ class DailyTagListEndToEndTest {
     void 오늘의_태그_리스트에_태그_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         Tag tag = new Tag(TAG_NAME, userId);
 
@@ -99,7 +112,8 @@ class DailyTagListEndToEndTest {
                 new DailyTagListSaveTagCommand(userId, dailyTagListId, tagId)
         );
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
@@ -119,6 +133,8 @@ class DailyTagListEndToEndTest {
     void 오늘의_태그_리스트에_메인_태그_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TagDataHelper.createAccessToken(tokenProvider, userId);
+
         DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
         Tag tag = new Tag(TAG_NAME, userId);
 
@@ -131,7 +147,8 @@ class DailyTagListEndToEndTest {
                 new DailyTagListSaveTagCommand(userId, dailyTagListId, tagId)
         );
 
-        RequestSpecification requestSpecification = given().port(port);
+        RequestSpecification requestSpecification = given().port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
