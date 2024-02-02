@@ -1,8 +1,11 @@
 package hwicode.schedule.validation_annotation_test.timetable;
 
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.common.exception.GlobalErrorCode;
 import hwicode.schedule.timetable.application.query.TimeTableQueryService;
 import hwicode.schedule.timetable.presentation.timetable.TimeTableQueryController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -15,9 +18,12 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -31,12 +37,22 @@ class TimeTableQueryValidatedTest {
     @MockBean
     TimeTableQueryService timeTableQueryService;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
+
     @Test
     void 특정_학습_주제가_제대로_들어오면_통과된다() throws Exception {
         // given when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", SUBJECT));
+                        .queryParam("subject", SUBJECT)
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -50,7 +66,8 @@ class TimeTableQueryValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", subject));
+                        .queryParam("subject", subject)
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         String message = "Required request parameter 'subject' for method parameter type String is not present";
@@ -71,7 +88,8 @@ class TimeTableQueryValidatedTest {
         // given when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TIME_TABLE_ID)
-                        .queryParam("subject", subject));
+                        .queryParam("subject", subject)
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         String field = "getSubjectTotalLearningTime.subject";
@@ -86,7 +104,8 @@ class TimeTableQueryValidatedTest {
         // given when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(SUBJECT_OF_TASK_ID)));
+                        .queryParam("subject_of_task_id", String.valueOf(SUBJECT_OF_TASK_ID))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -100,7 +119,8 @@ class TimeTableQueryValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", subjectOfTaskId));
+                        .queryParam("subject_of_task_id", subjectOfTaskId)
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         String message = getNumberFormatExceptionMessage(subjectOfTaskId);
@@ -116,7 +136,8 @@ class TimeTableQueryValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId)));
+                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         String message = getNumberFormatExceptionMessage(String.valueOf(subjectOfTaskId));
@@ -137,7 +158,8 @@ class TimeTableQueryValidatedTest {
         // given when
         ResultActions perform = mockMvc.perform(
                 get("/dailyschedule/timetables/{timeTableId}/task-total-time", TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId)));
+                        .queryParam("subject_of_task_id", String.valueOf(subjectOfTaskId))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         String field = "getSubjectOfTaskTotalLearningTime.subjectOfTaskId";

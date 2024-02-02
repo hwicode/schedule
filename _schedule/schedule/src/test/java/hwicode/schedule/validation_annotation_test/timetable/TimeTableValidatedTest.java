@@ -1,10 +1,13 @@
 package hwicode.schedule.validation_annotation_test.timetable;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.common.exception.GlobalErrorCode;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.timetable.presentation.timetable.TimeTableController;
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,11 +21,14 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.timetable.TimeTableDataHelper.START_TIME;
 import static hwicode.schedule.timetable.TimeTableDataHelper.TIME_TABLE_ID;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.POSITIVE_ERROR_MESSAGE;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.getNumberFormatExceptionMessage;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -33,11 +39,20 @@ class TimeTableValidatedTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TimeTableAggregateService timeTableAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 타입_테이블의_id값이_0보다_큰_정수값이면_통과된다() throws Exception {
@@ -47,6 +62,7 @@ class TimeTableValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/timetables/{timeTableId}/learning-times", TIME_TABLE_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -66,6 +82,7 @@ class TimeTableValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/timetables/{timeTableId}/learning-times", wrongTimeTableId)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -87,6 +104,7 @@ class TimeTableValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/timetables/{timeTableId}/learning-times", wrongTimeTableId)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -113,6 +131,7 @@ class TimeTableValidatedTest {
         // when
         ResultActions perform = mockMvc.perform(
                 post("/dailyschedule/timetables/{timeTableId}/learning-times", wrongTimeTableId)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)

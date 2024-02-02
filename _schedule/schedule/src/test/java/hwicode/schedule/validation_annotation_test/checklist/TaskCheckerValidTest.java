@@ -1,6 +1,8 @@
 package hwicode.schedule.validation_annotation_test.checklist;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.common.exception.GlobalErrorCode;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.TaskCheckerSubService;
 import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.TaskCheckerController;
@@ -8,6 +10,7 @@ import hwicode.schedule.dailyschedule.checklist.presentation.taskchecker.dto.sav
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.Importance;
 import hwicode.schedule.dailyschedule.shared_domain.Priority;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,10 +25,13 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.stream.Stream;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.DAILY_CHECKLIST_ID;
 import static hwicode.schedule.dailyschedule.checklist.ChecklistDataHelper.TASK_CHECKER_NAME;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -36,11 +42,20 @@ class TaskCheckerValidTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TaskCheckerSubService taskCheckerSubService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 모든_필드가_있으면_통과된다() throws Exception {
@@ -49,6 +64,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -69,6 +85,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongTimeTableIdBody));
 
@@ -93,6 +110,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -120,6 +138,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -138,6 +157,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
@@ -162,6 +182,7 @@ class TaskCheckerValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongDifficultyBody));
 

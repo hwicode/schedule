@@ -1,11 +1,14 @@
 package hwicode.schedule.validation_annotation_test.calendar;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.calendar.application.calendar.CalendarService;
 import hwicode.schedule.calendar.presentation.calendar.CalendarController;
 import hwicode.schedule.calendar.presentation.calendar.dto.save.GoalSaveRequest;
 import hwicode.schedule.calendar.presentation.calendar.dto.weekly_study_date_modify.WeeklyStudyDateModifyRequest;
 import hwicode.schedule.common.exception.GlobalErrorCode;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -24,9 +27,12 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.calendar.CalendarDataHelper.*;
 import static hwicode.schedule.validation_annotation_test.ValidationDataHelper.*;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -38,11 +44,20 @@ class CalendarValidTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     CalendarService calendarService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 목표_기간이_24개월_이하면_통과된다() throws Exception {
@@ -52,6 +67,7 @@ class CalendarValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 
@@ -67,6 +83,7 @@ class CalendarValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 
@@ -85,11 +102,11 @@ class CalendarValidTest {
                 YEAR_MONTH, YEAR_MONTH.plusMonths(1), YEAR_MONTH.plusMonths(2),
                 YEAR_MONTH.plusMonths(3), YEAR_MONTH.plusMonths(4), YEAR_MONTH.plusMonths(5),
                 YEAR_MONTH.plusMonths(6), YEAR_MONTH.plusMonths(7), YEAR_MONTH.plusMonths(8),
-                YEAR_MONTH.plusMonths(9),YEAR_MONTH.plusMonths(10),YEAR_MONTH.plusMonths(11),
-                YEAR_MONTH.plusMonths(12),YEAR_MONTH.plusMonths(13),YEAR_MONTH.plusMonths(14),
-                YEAR_MONTH.plusMonths(15),YEAR_MONTH.plusMonths(16),YEAR_MONTH.plusMonths(17),
-                YEAR_MONTH.plusMonths(18),YEAR_MONTH.plusMonths(19),YEAR_MONTH.plusMonths(20),
-                YEAR_MONTH.plusMonths(21),YEAR_MONTH.plusMonths(22),YEAR_MONTH.plusMonths(23),
+                YEAR_MONTH.plusMonths(9), YEAR_MONTH.plusMonths(10), YEAR_MONTH.plusMonths(11),
+                YEAR_MONTH.plusMonths(12), YEAR_MONTH.plusMonths(13), YEAR_MONTH.plusMonths(14),
+                YEAR_MONTH.plusMonths(15), YEAR_MONTH.plusMonths(16), YEAR_MONTH.plusMonths(17),
+                YEAR_MONTH.plusMonths(18), YEAR_MONTH.plusMonths(19), YEAR_MONTH.plusMonths(20),
+                YEAR_MONTH.plusMonths(21), YEAR_MONTH.plusMonths(22), YEAR_MONTH.plusMonths(23),
                 YEAR_MONTH.plusMonths(24)
         );
 
@@ -97,6 +114,7 @@ class CalendarValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(post("/calendars/goals")
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(goalSaveRequest)));
 
@@ -117,6 +135,7 @@ class CalendarValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(weeklyStudyDateModifyRequest)));
 
@@ -130,10 +149,11 @@ class CalendarValidTest {
         String wrongWeeklyStudyDate = "ww";
         String wrongWeeklyStudyDateBody = String.format(
                 "{\"yearMonth\":\"2023-05\"," +
-                "\"weeklyStudyDate\":%s}", wrongWeeklyStudyDate);
+                        "\"weeklyStudyDate\":%s}", wrongWeeklyStudyDate);
 
         // when
         ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(wrongWeeklyStudyDateBody));
 
@@ -158,6 +178,7 @@ class CalendarValidTest {
 
         // when
         ResultActions perform = mockMvc.perform(patch("/calendars/{calendarId}/weeklyStudyDate", CALENDAR_ID)
+                .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(weeklyStudyDateModifyRequest)));
 
