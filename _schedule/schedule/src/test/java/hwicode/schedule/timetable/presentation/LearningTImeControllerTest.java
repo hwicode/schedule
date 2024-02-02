@@ -1,6 +1,8 @@
 package hwicode.schedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.timetable.exception.application.SubjectOfSubTaskNotFoundException;
 import hwicode.schedule.timetable.exception.application.SubjectOfTaskNotFoundException;
@@ -12,6 +14,7 @@ import hwicode.schedule.timetable.presentation.learningtime.dto.subjectofsubtask
 import hwicode.schedule.timetable.presentation.learningtime.dto.subjectofsubtask_modify.LearningTimeSubjectOfSubTaskModifyResponse;
 import hwicode.schedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyRequest;
 import hwicode.schedule.timetable.presentation.learningtime.dto.subjectoftask_modify.LearningTimeSubjectOfTaskModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -21,6 +24,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -37,17 +41,27 @@ class LearningTImeControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     LearningTimeAggregateService learningTimeAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 학습_시간의_학습_주제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
         ResultActions perform = mockMvc.perform(
                 delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -68,6 +82,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch(String.format("/dailyschedule/learning-times/%s/subject", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectModifyRequest)
@@ -95,6 +110,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch(String.format("/dailyschedule/learning-times/%s/subject-of-task", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
@@ -122,6 +138,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch(String.format("/dailyschedule/learning-times/%s/subject-of-subtask", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)
@@ -148,6 +165,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
         );
 
         // then
@@ -170,6 +188,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch(String.format("/dailyschedule/learning-times/%s/subject-of-task", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfTaskModifyRequest)
@@ -196,6 +215,7 @@ class LearningTImeControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch(String.format("/dailyschedule/learning-times/%s/subject-of-subtask", LEARNING_TIME_ID))
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSubjectOfSubTaskModifyRequest)

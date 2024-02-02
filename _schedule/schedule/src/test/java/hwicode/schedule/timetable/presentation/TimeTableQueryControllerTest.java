@@ -1,11 +1,14 @@
 package hwicode.schedule.timetable.presentation;
 
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.timetable.TimeTableDataHelper;
 import hwicode.schedule.timetable.application.query.TimeTableQueryService;
 import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
 import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
 import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import hwicode.schedule.timetable.presentation.timetable.TimeTableQueryController;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -17,6 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 import java.util.List;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -32,6 +36,16 @@ class TimeTableQueryControllerTest {
     @MockBean
     TimeTableQueryService timeTableQueryService;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
+
+
     @Test
     void 날짜로_계획표의_학습_시간_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
@@ -42,7 +56,8 @@ class TimeTableQueryControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(get("/dailyschedule/timetables")
-                .queryParam("date", String.valueOf(date)));
+                .queryParam("date", String.valueOf(date))
+                .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -61,7 +76,8 @@ class TimeTableQueryControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/subject-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject", TimeTableDataHelper.SUBJECT));
+                        .queryParam("subject", TimeTableDataHelper.SUBJECT)
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -80,7 +96,8 @@ class TimeTableQueryControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/task-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject_of_task_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_TASK_ID)));
+                        .queryParam("subject_of_task_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_TASK_ID))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -99,7 +116,8 @@ class TimeTableQueryControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.get("/dailyschedule/timetables/{timeTableId}/subtask-total-time", TimeTableDataHelper.TIME_TABLE_ID)
-                        .queryParam("subject_of_subtask_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_SUBTASK_ID)));
+                        .queryParam("subject_of_subtask_id", String.valueOf(TimeTableDataHelper.SUBJECT_OF_SUBTASK_ID))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());

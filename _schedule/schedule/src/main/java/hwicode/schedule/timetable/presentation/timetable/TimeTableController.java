@@ -1,5 +1,7 @@
 package hwicode.schedule.timetable.presentation.timetable;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeDeleteCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyEndTimeCommand;
@@ -31,10 +33,11 @@ public class TimeTableController {
 
     @PostMapping("/dailyschedule/timetables/{timeTableId}/learning-times")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public LearningTimeSaveResponse saveLearningTime(@PathVariable @Positive Long timeTableId,
+    public LearningTimeSaveResponse saveLearningTime(@LoginUser LoginInfo loginInfo,
+                                                     @PathVariable @Positive Long timeTableId,
                                                      @RequestBody @Valid LearningTimeSaveRequest request) {
         LearningTimeSaveCommand command = new LearningTimeSaveCommand(
-                1L, timeTableId, request.getStartTime()
+                loginInfo.getUserId(), timeTableId, request.getStartTime()
         );
         Long learningTimeId = timeTableAggregateService.saveLearningTime(command);
         return new LearningTimeSaveResponse(learningTimeId, command.getStartTime());
@@ -42,11 +45,12 @@ public class TimeTableController {
 
     @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public StartTimeModifyResponse changeLearningTimeStartTime(@PathVariable @Positive Long timeTableId,
+    public StartTimeModifyResponse changeLearningTimeStartTime(@LoginUser LoginInfo loginInfo,
+                                                               @PathVariable @Positive Long timeTableId,
                                                                @PathVariable @Positive Long learningTimeId,
                                                                @RequestBody @Valid StartTimeModifyRequest request) {
         LearningTimeModifyStartTimeCommand command = new LearningTimeModifyStartTimeCommand(
-                1L, timeTableId, request.getStartTime(), request.getNewStartTime()
+                loginInfo.getUserId(), timeTableId, request.getStartTime(), request.getNewStartTime()
         );
         LocalDateTime newStartTime = timeTableAggregateService.changeLearningTimeStartTime(command);
         return new StartTimeModifyResponse(newStartTime);
@@ -54,11 +58,12 @@ public class TimeTableController {
 
     @PatchMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/end-time")
     @ResponseStatus(value = HttpStatus.OK)
-    public EndTimeModifyResponse changeLearningTimeEndTime(@PathVariable @Positive Long timeTableId,
+    public EndTimeModifyResponse changeLearningTimeEndTime(@LoginUser LoginInfo loginInfo,
+                                                           @PathVariable @Positive Long timeTableId,
                                                            @PathVariable @Positive Long learningTimeId,
                                                            @RequestBody @Valid EndTimeModifyRequest request) {
         LearningTimeModifyEndTimeCommand command = new LearningTimeModifyEndTimeCommand(
-                1L, timeTableId, request.getStartTime(), request.getEndTime()
+                loginInfo.getUserId(), timeTableId, request.getStartTime(), request.getEndTime()
         );
         LocalDateTime endTime = timeTableAggregateService.changeLearningTimeEndTime(command);
         return new EndTimeModifyResponse(endTime);
@@ -66,10 +71,11 @@ public class TimeTableController {
 
     @DeleteMapping("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteLearningTime(@PathVariable @Positive Long timeTableId,
+    public void deleteLearningTime(@LoginUser LoginInfo loginInfo,
+                                   @PathVariable @Positive Long timeTableId,
                                    @PathVariable @Positive Long learningTimeId,
                                    @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @NotNull LocalDateTime startTime) {
-        LearningTimeDeleteCommand command = new LearningTimeDeleteCommand(1L, timeTableId, startTime);
+        LearningTimeDeleteCommand command = new LearningTimeDeleteCommand(loginInfo.getUserId(), timeTableId, startTime);
         timeTableAggregateService.deleteLearningTime(command);
     }
 

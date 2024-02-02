@@ -1,5 +1,8 @@
 package hwicode.schedule.timetable;
 
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+
 import java.time.LocalDateTime;
 
 public class TimeTableDataHelper {
@@ -17,4 +20,9 @@ public class TimeTableDataHelper {
 
     public static final String SUBJECT = "subject";
     public static final String NEW_SUBJECT = "newSubject";
+
+    public static String createAccessToken(TokenProvider tokenProvider, Long userId) {
+        OauthUser oauthUser = new OauthUser(userId, null, null, null);
+        return tokenProvider.createAccessToken(oauthUser);
+    }
 }

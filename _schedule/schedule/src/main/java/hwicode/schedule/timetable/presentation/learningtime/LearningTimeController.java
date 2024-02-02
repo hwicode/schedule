@@ -1,5 +1,7 @@
 package hwicode.schedule.timetable.presentation.learningtime;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.timetable.application.LearningTimeAggregateService;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeDeleteSubjectCommand;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectCommand;
@@ -28,17 +30,19 @@ public class LearningTimeController {
 
     @DeleteMapping("/dailyschedule/learning-times/{learningTimeId}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void deleteSubject(@PathVariable @Positive Long learningTimeId) {
-        LearningTimeDeleteSubjectCommand command = new LearningTimeDeleteSubjectCommand(1L, learningTimeId);
+    public void deleteSubject(@LoginUser LoginInfo loginInfo,
+                              @PathVariable @Positive Long learningTimeId) {
+        LearningTimeDeleteSubjectCommand command = new LearningTimeDeleteSubjectCommand(loginInfo.getUserId(), learningTimeId);
         learningTimeAggregateService.deleteSubject(command);
     }
 
     @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject")
     @ResponseStatus(value = HttpStatus.OK)
-    public LearningTimeSubjectModifyResponse changeSubject(@PathVariable @Positive Long learningTimeId,
+    public LearningTimeSubjectModifyResponse changeSubject(@LoginUser LoginInfo loginInfo,
+                                                           @PathVariable @Positive Long learningTimeId,
                                                            @RequestBody @Valid LearningTimeSubjectModifyRequest request) {
         LearningTimeModifySubjectCommand command = new LearningTimeModifySubjectCommand(
-                1L, learningTimeId, request.getNewSubject()
+                loginInfo.getUserId(), learningTimeId, request.getNewSubject()
         );
         String newSubject = learningTimeAggregateService.changeSubject(command);
         return new LearningTimeSubjectModifyResponse(learningTimeId, newSubject);
@@ -46,10 +50,11 @@ public class LearningTimeController {
 
     @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject-of-task")
     @ResponseStatus(value = HttpStatus.OK)
-    public LearningTimeSubjectOfTaskModifyResponse changeTaskOfSubject(@PathVariable @Positive Long learningTimeId,
+    public LearningTimeSubjectOfTaskModifyResponse changeTaskOfSubject(@LoginUser LoginInfo loginInfo,
+                                                                       @PathVariable @Positive Long learningTimeId,
                                                                        @RequestBody @Valid LearningTimeSubjectOfTaskModifyRequest request) {
         LearningTimeModifySubjectOfTaskCommand command = new LearningTimeModifySubjectOfTaskCommand(
-                1L, learningTimeId, request.getSubjectOfTaskId()
+                loginInfo.getUserId(), learningTimeId, request.getSubjectOfTaskId()
         );
         String newSubject = learningTimeAggregateService.changeSubjectOfTask(command);
         return new LearningTimeSubjectOfTaskModifyResponse(learningTimeId, newSubject);
@@ -57,10 +62,11 @@ public class LearningTimeController {
 
     @PatchMapping("/dailyschedule/learning-times/{learningTimeId}/subject-of-subtask")
     @ResponseStatus(value = HttpStatus.OK)
-    public LearningTimeSubjectOfSubTaskModifyResponse changeSubTaskOfSubject(@PathVariable @Positive Long learningTimeId,
+    public LearningTimeSubjectOfSubTaskModifyResponse changeSubTaskOfSubject(@LoginUser LoginInfo loginInfo,
+                                                                             @PathVariable @Positive Long learningTimeId,
                                                                              @RequestBody @Valid LearningTimeSubjectOfSubTaskModifyRequest request) {
         LearningTimeModifySubjectOfSubTaskCommand command = new LearningTimeModifySubjectOfSubTaskCommand(
-                1L, learningTimeId, request.getSubjectOfSubTaskId()
+                loginInfo.getUserId(), learningTimeId, request.getSubjectOfSubTaskId()
         );
         String newSubject = learningTimeAggregateService.changeSubjectOfSubTask(command);
         return new LearningTimeSubjectOfSubTaskModifyResponse(learningTimeId, newSubject);

@@ -1,6 +1,8 @@
 package hwicode.schedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
+import hwicode.schedule.timetable.TimeTableDataHelper;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.domain.LearningTime;
@@ -22,10 +24,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -52,6 +56,9 @@ class TimeTableEndToEndTest {
     @Autowired
     SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -61,6 +68,8 @@ class TimeTableEndToEndTest {
     void 학습_시간_생성_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         timeTableRepository.save(timeTable);
 
@@ -68,6 +77,7 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSaveRequest);
 
@@ -88,6 +98,8 @@ class TimeTableEndToEndTest {
     void 학습_시간_시작_시간_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
@@ -96,6 +108,7 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(startTimeModifyRequest);
 
@@ -117,6 +130,8 @@ class TimeTableEndToEndTest {
     void 학습_시간_끝나는_시간_변경_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTableRepository.save(timeTable);
@@ -126,6 +141,7 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(endTimeModifyRequest);
 
@@ -145,6 +161,8 @@ class TimeTableEndToEndTest {
     void 학습_시간_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
         timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
@@ -152,7 +170,8 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("startTime", String.valueOf(START_TIME));
+                .queryParam("startTime", String.valueOf(START_TIME))
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
@@ -170,6 +189,8 @@ class TimeTableEndToEndTest {
     void 특정_학습_주제_총_학습_시간_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
 
         LearningTime learningTime = timeTable.createLearningTime(START_TIME);
@@ -180,7 +201,8 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("subject", SUBJECT);
+                .queryParam("subject", SUBJECT)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
@@ -195,6 +217,8 @@ class TimeTableEndToEndTest {
     void Task_학습_주제_총_학습_시간_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT, userId));
 
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
@@ -207,7 +231,8 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("subject_of_task_id", subjectOfTask.getId());
+                .queryParam("subject_of_task_id", subjectOfTask.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()
@@ -222,6 +247,8 @@ class TimeTableEndToEndTest {
     void SubTask_학습_주제_총_학습_시간_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT, userId));
 
         TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
@@ -234,7 +261,8 @@ class TimeTableEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
-                .queryParam("subject_of_subtask_id", subjectOfSubTask.getId());
+                .queryParam("subject_of_subtask_id", subjectOfSubTask.getId())
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
 
         // when
         Response response = requestSpecification.when()

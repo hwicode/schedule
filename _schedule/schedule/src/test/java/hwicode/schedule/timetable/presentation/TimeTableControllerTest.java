@@ -1,6 +1,8 @@
 package hwicode.schedule.timetable.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
 import hwicode.schedule.timetable.exception.application.TimeTableNotFoundException;
@@ -15,6 +17,7 @@ import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSa
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveResponse;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.starttime_modify.StartTimeModifyResponse;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -25,6 +28,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static hwicode.schedule.timetable.TimeTableDataHelper.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -40,11 +44,20 @@ class TimeTableControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     TimeTableAggregateService timeTableAggregateService;
 
-    @Autowired
-    ObjectMapper objectMapper;
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
 
     @Test
     void 학습_시간_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
@@ -58,6 +71,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.post("/dailyschedule/timetables/{timeTableId}/learning-times", TIME_TABLE_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -85,6 +99,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -112,6 +127,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/end-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -132,6 +148,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 delete("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .param("startTime", String.valueOf(START_TIME))
         );
 
@@ -153,6 +170,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 MockMvcRequestBuilders.post("/dailyschedule/timetables/{timeTableId}/learning-times", TIME_TABLE_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(learningTimeSaveRequest)
@@ -178,6 +196,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/end-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -203,6 +222,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{startTime}/end-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(endTimeModifyRequest)
@@ -228,6 +248,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -253,6 +274,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)
@@ -278,6 +300,7 @@ class TimeTableControllerTest {
         // when
         ResultActions perform = mockMvc.perform(
                 patch("/dailyschedule/timetables/{timeTableId}/learning-times/{learningTimeId}/start-time", TIME_TABLE_ID, LEARNING_TIME_ID)
+                        .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 objectMapper.writeValueAsString(startTimeModifyRequest)

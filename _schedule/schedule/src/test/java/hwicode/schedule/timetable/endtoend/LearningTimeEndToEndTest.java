@@ -1,6 +1,7 @@
 package hwicode.schedule.timetable.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.timetable.TimeTableDataHelper;
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
@@ -21,8 +22,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -47,6 +50,9 @@ class LearningTimeEndToEndTest {
     @Autowired
     SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
+    @Autowired
+    TokenProvider tokenProvider;
+
     @BeforeEach
     void clearDatabase() {
         databaseCleanUp.execute();
@@ -56,6 +62,8 @@ class LearningTimeEndToEndTest {
     void 학습_주제_삭제_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         learningTime.changeSubject(TimeTableDataHelper.SUBJECT);
@@ -63,6 +71,7 @@ class LearningTimeEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON);
 
         // when
@@ -82,6 +91,8 @@ class LearningTimeEndToEndTest {
     void 학습_주제_수정_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
@@ -90,6 +101,7 @@ class LearningTimeEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectModifyRequest);
 
@@ -110,6 +122,8 @@ class LearningTimeEndToEndTest {
     void Task_학습_주제_수정_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
@@ -121,6 +135,7 @@ class LearningTimeEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectOfTaskModifyRequest);
 
@@ -141,6 +156,8 @@ class LearningTimeEndToEndTest {
     void SubTask_학습_주제_수정_요청() {
         // given
         Long userId = 1L;
+        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
+
         TimeTable timeTable = new TimeTable(TimeTableDataHelper.START_TIME.toLocalDate(), userId);
         LearningTime learningTime = timeTable.createLearningTime(TimeTableDataHelper.START_TIME);
         timeTableRepository.save(timeTable);
@@ -152,6 +169,7 @@ class LearningTimeEndToEndTest {
 
         RequestSpecification requestSpecification = given()
                 .port(port)
+                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken)
                 .contentType(ContentType.JSON)
                 .body(learningTimeSubjectOfSubTaskModifyRequest);
 
