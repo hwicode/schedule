@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
 import hwicode.schedule.tag.application.dto.memo.MemoAddTagsCommand;
 import hwicode.schedule.tag.application.dto.tag.TagDeleteCommand;
@@ -11,7 +12,6 @@ import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.TagDuplicateException;
 import hwicode.schedule.tag.exception.application.TagNotFoundException;
-import hwicode.schedule.tag.exception.domain.tag.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -119,7 +119,7 @@ class TagServiceTest {
 
         // when then
         assertThatThrownBy(() -> tagService.changeTagName(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -152,7 +152,7 @@ class TagServiceTest {
 
         // when then
         assertThatThrownBy(() -> tagService.deleteTag(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     private static Stream<List<DailyTagList>> provideDailyTagLists() {

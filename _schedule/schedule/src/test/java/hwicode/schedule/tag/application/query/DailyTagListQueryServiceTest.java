@@ -1,6 +1,7 @@
 package hwicode.schedule.tag.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse;
 import hwicode.schedule.tag.application.query.dto.DailyTagQueryResponse;
 import hwicode.schedule.tag.domain.DailyTag;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static hwicode.schedule.tag.TagDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @SpringBootTest
 class DailyTagListQueryServiceTest {
@@ -101,6 +103,25 @@ class DailyTagListQueryServiceTest {
         for (int i = 0; i < 3; i++) {
             assertThat(dailyTagListMemoQueryResponses.get(i).getText()).isEqualTo(MEMO_TEXT + i);
         }
+    }
+
+    @Test
+    void 계획표에_존재하는_메모들을_조회할_때_소유자가_아니면_에러가_발생한다() {
+        // given
+        Long userId = 1L;
+        DailyTagList dailyTagList = new DailyTagList(LocalDate.now(), userId);
+
+        dailyTagListRepository.save(dailyTagList);
+
+        for (int i = 0; i < 3; i++) {
+            Memo memo = dailyTagList.createMemo(MEMO_TEXT + i);
+            memoRepository.save(memo);
+        }
+
+        // when then
+        Long id = dailyTagList.getId();
+        assertThatThrownBy(() -> dailyTagListQueryService.getDailyTagListMemoQueryResponses(2L, id))
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }

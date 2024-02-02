@@ -1,7 +1,6 @@
 package hwicode.schedule.tag.domain;
 
 import hwicode.schedule.tag.exception.domain.memo.InvalidNumberOfTagsException;
-import hwicode.schedule.tag.exception.domain.memo.MemoForbiddenException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagDuplicateException;
 import hwicode.schedule.tag.exception.domain.memo.MemoTagNotFoundException;
 import lombok.AccessLevel;
@@ -37,12 +36,6 @@ public class Memo {
         this.text = text;
         this.dailyTagList = dailyTagList;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new MemoForbiddenException();
-        }
     }
 
     public boolean changeText(String text) {
@@ -94,4 +87,7 @@ public class Memo {
         return id;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 }

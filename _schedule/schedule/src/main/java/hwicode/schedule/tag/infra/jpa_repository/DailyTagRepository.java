@@ -18,13 +18,13 @@ public interface DailyTagRepository extends JpaRepository<DailyTag, Long> {
     void deleteAllDailyTagsBy(@Param("id") Long tagId);
 
     // 여기부터 쿼리 조회 기능
-    @Query("SELECT new hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse(d.id, d.today, d.mainTagName) "
+    @Query("SELECT new hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse(d.id, d.today, d.mainTagName, d.userId) "
             + "FROM DailyTag dt "
             + "INNER JOIN dt.dailyTagList d "
             + "WHERE dt.tag.id = :tagId")
     List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponseFirstPage(@Param("tagId") Long tagId, Pageable pageable);
 
-    @Query("SELECT new hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse(d.id, d.today, d.mainTagName) "
+    @Query("SELECT new hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse(d.id, d.today, d.mainTagName, d.userId) "
             + "FROM DailyTag dt "
             + "INNER JOIN dt.dailyTagList d "
             + "WHERE dt.tag.id = :tagId "

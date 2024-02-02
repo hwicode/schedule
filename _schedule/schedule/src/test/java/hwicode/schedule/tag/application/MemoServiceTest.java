@@ -1,14 +1,12 @@
 package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.tag.application.dto.memo.*;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Memo;
 import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.exception.application.MemoNotFoundException;
-import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagListForbiddenException;
-import hwicode.schedule.tag.exception.domain.memo.MemoForbiddenException;
-import hwicode.schedule.tag.exception.domain.tag.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
@@ -83,7 +81,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.saveMemo(command))
-                .isInstanceOf(DailyTagListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -120,7 +118,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.changeMemoText(command))
-                .isInstanceOf(MemoForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -185,7 +183,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.addTagsToMemo(command))
-                .isInstanceOf(MemoForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -210,7 +208,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.addTagsToMemo(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -266,7 +264,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.deleteTagToMemo(command))
-                .isInstanceOf(MemoForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -286,7 +284,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.deleteTagToMemo(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -322,7 +320,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.deleteMemo(command))
-                .isInstanceOf(MemoForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     private static Stream<List<Tag>> provideTags() {
@@ -419,7 +417,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.saveMemoWithTags(command))
-                .isInstanceOf(DailyTagListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -442,7 +440,7 @@ class MemoServiceTest {
 
         // when then
         assertThatThrownBy(() -> memoService.saveMemoWithTags(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test

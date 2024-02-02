@@ -1,11 +1,10 @@
 package hwicode.schedule.tag.application.query;
 
-import hwicode.schedule.tag.application.find_service.TagFindService;
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.tag.application.query.dto.DailyTagListSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagQueryResponse;
 import hwicode.schedule.tag.application.query.dto.TagSearchQueryResponse;
-import hwicode.schedule.tag.domain.Tag;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.MemoTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
@@ -30,29 +29,42 @@ public class TagQueryService {
 
     @Transactional(readOnly = true)
     public List<DailyTagListSearchQueryResponse> getDailyTagListSearchQueryResponsePage(Long userId, Long tagId, Long lastDailyTagListId) {
-        validateOwnership(userId, tagId);
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
         if (lastDailyTagListId == null) {
-            return dailyTagRepository.getDailyTagListSearchQueryResponseFirstPage(tagId, pageable);
+            List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponseFirstPage = dailyTagRepository.getDailyTagListSearchQueryResponseFirstPage(tagId, pageable);
+            validateTagOwnership(userId, dailyTagListSearchQueryResponseFirstPage);
+            return dailyTagListSearchQueryResponseFirstPage;
         }
-        return dailyTagRepository.getDailyTagListSearchQueryResponseNextPage(tagId, lastDailyTagListId, pageable);
+        List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponseNextPage = dailyTagRepository.getDailyTagListSearchQueryResponseNextPage(tagId, lastDailyTagListId, pageable);
+        validateTagOwnership(userId, dailyTagListSearchQueryResponseNextPage);
+        return dailyTagListSearchQueryResponseNextPage;
+    }
+
+    private void validateTagOwnership(Long userId, List<DailyTagListSearchQueryResponse> dailyTagListSearchQueryResponses) {
+        dailyTagListSearchQueryResponses.forEach(
+                tag -> PermissionValidator.validateOwnership(userId, tag.getUserId())
+        );
     }
 
     @Transactional(readOnly = true)
     public List<MemoSearchQueryResponse> getMemoSearchQueryResponsePage(Long userId, Long tagId, Long lastMemoId) {
-        validateOwnership(userId, tagId);
         PageRequest pageable = PageRequest.of(PAGE, PAGE_SIZE, Sort.by("id").descending());
 
         if (lastMemoId == null) {
-            return memoTagRepository.getMemoSearchQueryResponseFirstPage(tagId, pageable);
+            List<MemoSearchQueryResponse> memoSearchQueryResponseFirstPage = memoTagRepository.getMemoSearchQueryResponseFirstPage(tagId, pageable);
+            validateMemoOwnership(userId, memoSearchQueryResponseFirstPage);
+            return memoSearchQueryResponseFirstPage;
         }
-        return memoTagRepository.getMemoSearchQueryResponseNextPage(tagId, lastMemoId, pageable);
+        List<MemoSearchQueryResponse> memoSearchQueryResponseNextPage = memoTagRepository.getMemoSearchQueryResponseNextPage(tagId, lastMemoId, pageable);
+        validateMemoOwnership(userId, memoSearchQueryResponseNextPage);
+        return memoSearchQueryResponseNextPage;
     }
 
-    private void validateOwnership(Long userId, Long tagId) {
-        Tag tag = TagFindService.findById(tagRepository, tagId);
-        tag.checkOwnership(userId);
+    private void validateMemoOwnership(Long userId, List<MemoSearchQueryResponse> memoSearchQueryResponses) {
+        memoSearchQueryResponses.forEach(
+                memo -> PermissionValidator.validateOwnership(userId, memo.getUserId())
+        );
     }
 
     @Transactional(readOnly = true)

@@ -19,13 +19,13 @@ public interface MemoTagRepository extends JpaRepository<MemoTag, Long> {
     void deleteAllMemoTagsBy(@Param("id") Long tagId);
 
     // 여기부터 쿼리 조회 기능
-    @Query("SELECT new hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse(m.id, m.text) "
+    @Query("SELECT new hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse(m.id, m.text, m.userId) "
             + "FROM MemoTag mt "
             + "INNER JOIN mt.memo m "
             + "WHERE mt.tag.id = :tagId")
     List<MemoSearchQueryResponse> getMemoSearchQueryResponseFirstPage(@Param("tagId") Long tagId, Pageable pageable);
 
-    @Query("SELECT new hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse(m.id, m.text) "
+    @Query("SELECT new hwicode.schedule.tag.application.query.dto.MemoSearchQueryResponse(m.id, m.text, m.userId) "
             + "FROM MemoTag mt "
             + "INNER JOIN mt.memo m "
             + "WHERE mt.tag.id = :tagId "

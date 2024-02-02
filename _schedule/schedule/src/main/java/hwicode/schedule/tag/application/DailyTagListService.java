@@ -1,5 +1,6 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListModifyMainTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
@@ -26,10 +27,10 @@ public class DailyTagListService {
     @Transactional
     public Long addTagToDailyTagList(DailyTagListSaveTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        tag.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), tag.getUserId());
 
         DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
-        dailyTagList.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyTagList.getUserId());
 
         DailyTag dailyTag = dailyTagList.addTag(tag);
         dailyTagRepository.save(dailyTag);
@@ -39,10 +40,10 @@ public class DailyTagListService {
     @Transactional
     public Long deleteTagToDailyTagList(DailyTagListDeleteTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        tag.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), tag.getUserId());
 
         DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
-        dailyTagList.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyTagList.getUserId());
 
         dailyTagList.deleteTag(tag);
         return dailyTagList.getId();
@@ -51,10 +52,10 @@ public class DailyTagListService {
     @Transactional
     public String changeMainTag(DailyTagListModifyMainTagCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        tag.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), tag.getUserId());
 
         DailyTagList dailyTagList = DailyTagListFindService.findDailyTagListWithDailyTags(dailyTagListRepository, command.getDailyTagListId());
-        dailyTagList.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyTagList.getUserId());
 
         return dailyTagList.changeMainTag(tag);
     }

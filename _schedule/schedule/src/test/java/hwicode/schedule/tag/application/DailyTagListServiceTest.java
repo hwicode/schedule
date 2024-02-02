@@ -1,14 +1,13 @@
 package hwicode.schedule.tag.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListDeleteTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListModifyMainTagCommand;
 import hwicode.schedule.tag.application.dto.daily_tag_list.DailyTagListSaveTagCommand;
 import hwicode.schedule.tag.domain.DailyTagList;
 import hwicode.schedule.tag.domain.Tag;
-import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagListForbiddenException;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
-import hwicode.schedule.tag.exception.domain.tag.TagForbiddenException;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagListRepository;
 import hwicode.schedule.tag.infra.jpa_repository.DailyTagRepository;
 import hwicode.schedule.tag.infra.jpa_repository.TagRepository;
@@ -79,7 +78,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.addTagToDailyTagList(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -96,7 +95,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.addTagToDailyTagList(command))
-                .isInstanceOf(DailyTagListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -113,7 +112,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.addTagToDailyTagList(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -159,7 +158,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -176,7 +175,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
-                .isInstanceOf(DailyTagListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -193,7 +192,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.deleteTagToDailyTagList(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -237,7 +236,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -254,7 +253,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
-                .isInstanceOf(DailyTagListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -271,7 +270,7 @@ class DailyTagListServiceTest {
 
         // when then
         assertThatThrownBy(() -> dailyTagListService.changeMainTag(command))
-                .isInstanceOf(TagForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }

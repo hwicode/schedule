@@ -18,7 +18,7 @@ public interface MemoRepository extends JpaRepository<Memo, Long> {
 
     // 여기부터 조회 기능
     @Query("SELECT "
-            + "new hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse(m.id, m.text) "
+            + "new hwicode.schedule.tag.application.query.dto.DailyTagListMemoQueryResponse(m.id, m.text, m.userId) "
             + "FROM Memo m "
             + "WHERE m.dailyTagList.id = :dailyTagListId "
             + "ORDER BY m.id ASC")

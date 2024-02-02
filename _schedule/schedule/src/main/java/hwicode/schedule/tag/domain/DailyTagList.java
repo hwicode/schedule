@@ -1,7 +1,6 @@
 package hwicode.schedule.tag.domain;
 
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagDuplicateException;
-import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagListForbiddenException;
 import hwicode.schedule.tag.exception.domain.dailytaglist.DailyTagNotFoundException;
 import lombok.NoArgsConstructor;
 
@@ -34,12 +33,6 @@ public class DailyTagList {
     public DailyTagList(LocalDate today, Long userId) {
         this.today = today;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new DailyTagListForbiddenException();
-        }
     }
 
     public Memo createMemo(String text) {
@@ -91,4 +84,7 @@ public class DailyTagList {
         return mainTagName;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 }

@@ -1,5 +1,6 @@
 package hwicode.schedule.tag.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.tag.application.dto.tag.TagDeleteCommand;
 import hwicode.schedule.tag.application.dto.tag.TagModifyNameCommand;
 import hwicode.schedule.tag.application.dto.tag.TagSaveCommand;
@@ -35,7 +36,7 @@ public class TagService {
         validateTagName(command.getNewName());
 
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        tag.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), tag.getUserId());
 
         tag.changeName(command.getNewName());
         return command.getNewName();
@@ -51,7 +52,7 @@ public class TagService {
     @Transactional
     public Long deleteTag(TagDeleteCommand command) {
         Tag tag = TagFindService.findById(tagRepository, command.getTagId());
-        tag.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), tag.getUserId());
 
         deleteForeignKeyConstraint(command.getTagId());
         tagRepository.delete(tag);

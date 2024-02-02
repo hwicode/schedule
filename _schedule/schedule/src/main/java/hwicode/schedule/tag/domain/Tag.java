@@ -1,6 +1,5 @@
 package hwicode.schedule.tag.domain;
 
-import hwicode.schedule.tag.exception.domain.tag.TagForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -25,12 +24,6 @@ public class Tag {
         this.userId = userId;
     }
 
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new TagForbiddenException();
-        }
-    }
-
     public boolean changeName(String name) {
         if (this.name.equals(name)) {
             return false;
@@ -51,4 +44,7 @@ public class Tag {
         return id;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 }
