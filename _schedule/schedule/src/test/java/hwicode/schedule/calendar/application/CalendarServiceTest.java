@@ -6,10 +6,10 @@ import hwicode.schedule.calendar.application.calendar.dto.*;
 import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.domain.calendar.CalendarGoalDuplicateException;
-import hwicode.schedule.calendar.exception.domain.goal.GoalForbiddenException;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +119,7 @@ class CalendarServiceTest {
 
         // when
         assertThatThrownBy(() -> calendarService.addGoalToCalendars(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test

@@ -9,7 +9,6 @@ import hwicode.schedule.calendar.domain.Calendar;
 import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoalStatus;
-import hwicode.schedule.calendar.exception.domain.goal.GoalForbiddenException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalDuplicateException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotAllDoneException;
 import hwicode.schedule.calendar.exception.domain.goal.SubGoalNotFoundException;
@@ -17,6 +16,7 @@ import hwicode.schedule.calendar.infra.jpa_repository.CalendarGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.CalendarRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.SubGoalRepository;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +90,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.saveSubGoal(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -122,7 +122,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.changeSubGoalName(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -154,7 +154,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.deleteSubGoal(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -188,7 +188,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.changeSubGoalStatus(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -219,7 +219,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.changeGoalStatus(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -260,7 +260,7 @@ class GoalAggregateServiceTest {
 
         // when then
         assertThatThrownBy(() -> goalAggregateService.deleteGoal(command))
-                .isInstanceOf(GoalForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }

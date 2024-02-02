@@ -7,6 +7,7 @@ import hwicode.schedule.calendar.domain.Goal;
 import hwicode.schedule.calendar.exception.infra.GoalNotFoundException;
 import hwicode.schedule.calendar.infra.jpa_repository.goal.GoalRepository;
 import hwicode.schedule.calendar.infra.limited_repository.CalendarGoalSaveAllRepository;
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class CalendarService {
     public Long addGoalToCalendars(GoalAddToCalendersCommand command) {
         Goal goal = goalRepository.findById(command.getGoalId())
                 .orElseThrow(GoalNotFoundException::new);
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         List<Calendar> calendars = calendarProviderService.provideCalendars(command.getUserId(), command.getYearMonths());
         List<CalendarGoal> calendarGoals = addGoal(calendars, goal);

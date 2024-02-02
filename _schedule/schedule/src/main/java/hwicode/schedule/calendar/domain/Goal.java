@@ -39,12 +39,6 @@ public class Goal {
         this.userId = userId;
     }
 
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new GoalForbiddenException();
-        }
-    }
-
     public String changeSubGoalName(String subGoalName, String newSubGoalName) {
         validateSubGoal(newSubGoalName);
         return findSubGoalBy(subGoalName).changeName(newSubGoalName);
@@ -166,4 +160,7 @@ public class Goal {
         return this.goalStatus;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
 }

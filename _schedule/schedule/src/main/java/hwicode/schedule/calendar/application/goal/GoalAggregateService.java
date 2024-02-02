@@ -6,6 +6,7 @@ import hwicode.schedule.calendar.domain.GoalStatus;
 import hwicode.schedule.calendar.domain.SubGoal;
 import hwicode.schedule.calendar.infra.limited_repository.GoalFindAndDeleteRepository;
 import hwicode.schedule.calendar.infra.limited_repository.SubGoalSaveRepository;
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,7 +21,7 @@ public class GoalAggregateService {
     @Transactional
     public Long saveSubGoal(SubGoalSaveCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         SubGoal subGoal = goal.createSubGoal(command.getName());
         return subGoalSaveRepository.save(subGoal)
@@ -30,7 +31,7 @@ public class GoalAggregateService {
     @Transactional
     public String changeSubGoalName(SubGoalModifyNameCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         return goal.changeSubGoalName(command.getName(), command.getNewName());
     }
@@ -38,7 +39,7 @@ public class GoalAggregateService {
     @Transactional
     public String deleteSubGoal(SubGoalDeleteCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         goal.deleteSubGoal(command.getName());
         return command.getName();
@@ -47,7 +48,7 @@ public class GoalAggregateService {
     @Transactional
     public GoalStatus changeSubGoalStatus(SubGoalModifyStatusCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         return goal.changeSubGoalStatus(command.getName(), command.getSubGoalStatus());
     }
@@ -55,7 +56,7 @@ public class GoalAggregateService {
     @Transactional
     public GoalStatus changeGoalStatus(GoalModifyStatusCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         return goal.changeGoalStatus(command.getGoalStatus());
     }
@@ -63,7 +64,7 @@ public class GoalAggregateService {
     @Transactional
     public Long deleteGoal(GoalDeleteCommand command) {
         Goal goal = goalFindAndDeleteRepository.findGoalWithSubGoals(command.getGoalId());
-        goal.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), goal.getUserId());
 
         goalFindAndDeleteRepository.delete(goal);
         return command.getGoalId();
