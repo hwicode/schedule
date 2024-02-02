@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.todolist.application.dto.TaskInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.domain.Task;
 import hwicode.schedule.dailyschedule.todolist.infra.limited_repository.TaskFindRepository;
@@ -16,7 +17,7 @@ public class TaskAggregateService {
     @Transactional
     public Long changeTaskInformation(TaskInformationCommand command) {
         Task task = taskFindRepository.findById(command.getTaskId());
-        task.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), task.getUserId());
 
         task.changePriority(command.getPriority());
         task.changeImportance(command.getImportance());

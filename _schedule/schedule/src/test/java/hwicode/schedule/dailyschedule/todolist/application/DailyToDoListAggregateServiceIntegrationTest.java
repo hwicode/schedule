@@ -1,11 +1,11 @@
 package hwicode.schedule.dailyschedule.todolist.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
 import hwicode.schedule.dailyschedule.todolist.application.dto.DailyToDoListInformationCommand;
 import hwicode.schedule.dailyschedule.todolist.domain.DailyToDoList;
 import hwicode.schedule.dailyschedule.todolist.exception.application.DailyToDoListNotExistException;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.DailyToDoListForbiddenException;
 import hwicode.schedule.dailyschedule.todolist.infra.jpa_repository.DailyToDoListRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,7 +63,7 @@ class DailyToDoListAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> dailyToDoListAggregateService.changeDailyToDoListInformation(command))
-                .isInstanceOf(DailyToDoListForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test

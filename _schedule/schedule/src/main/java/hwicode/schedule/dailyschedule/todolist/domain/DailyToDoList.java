@@ -1,7 +1,6 @@
 package hwicode.schedule.dailyschedule.todolist.domain;
 
 import hwicode.schedule.dailyschedule.shared_domain.Emoji;
-import hwicode.schedule.dailyschedule.todolist.exception.domain.DailyToDoListForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -33,12 +32,6 @@ public class DailyToDoList {
         this.userId = userId;
     }
 
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new DailyToDoListForbiddenException();
-        }
-    }
-
     public boolean writeReview(String review) {
         if (review.equals(this.review)) {
             return false;
@@ -57,5 +50,9 @@ public class DailyToDoList {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }
