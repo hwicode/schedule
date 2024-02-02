@@ -1,6 +1,9 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
-import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.*;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNameDuplicationException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllDoneException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotAllTodoException;
+import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
 import hwicode.schedule.dailyschedule.shared_domain.SubTaskStatus;
 import hwicode.schedule.dailyschedule.shared_domain.TaskStatus;
@@ -47,12 +50,6 @@ public class TaskChecker {
         this.taskStatus = TaskStatus.TODO;
         this.difficulty = difficulty;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new TaskCheckerForbiddenException();
-        }
     }
 
     public String changeSubTaskCheckerName(String subTaskCheckerName, String newSubTaskCheckerName) {
@@ -167,6 +164,10 @@ public class TaskChecker {
 
     public Long getId() {
         return this.id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 
     public boolean isDone() {

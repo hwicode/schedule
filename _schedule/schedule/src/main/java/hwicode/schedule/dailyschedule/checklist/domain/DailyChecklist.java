@@ -1,7 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.domain;
 
 import hwicode.schedule.dailyschedule.checklist.exception.TaskCheckerNotFoundException;
-import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.DailyChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.StatusNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.TaskCheckerNameDuplicationException;
 import hwicode.schedule.dailyschedule.shared_domain.Difficulty;
@@ -41,12 +40,6 @@ public class DailyChecklist {
         this.totalDifficultyScore = 0;
         this.todayDonePercent = 0;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new DailyChecklistForbiddenException();
-        }
     }
 
     public String changeTaskCheckerName(String taskCheckerName, String newTaskCheckerName) {
@@ -158,5 +151,9 @@ public class DailyChecklist {
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }

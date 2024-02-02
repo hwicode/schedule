@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.task_checker.*;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
@@ -25,7 +26,7 @@ public class TaskCheckerSubService {
     public Long saveTaskChecker(TaskSaveCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(command.getTaskCheckerName(), command.getDifficulty());
         taskCheckerSaveRepository.save(taskChecker);
@@ -44,7 +45,7 @@ public class TaskCheckerSubService {
 
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         dailyChecklist.deleteTaskChecker(command.getTaskCheckName());
         return command.getTaskId();
@@ -54,7 +55,7 @@ public class TaskCheckerSubService {
     public TaskStatus changeTaskStatus(TaskStatusModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         return dailyChecklist.changeTaskStatus(command.getTaskCheckerName(), command.getTaskStatus());
     }
@@ -63,7 +64,7 @@ public class TaskCheckerSubService {
     public Difficulty changeTaskDifficulty(TaskDifficultyModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         return dailyChecklist.changeDifficulty(command.getTaskCheckerName(), command.getDifficulty());
     }
@@ -72,7 +73,7 @@ public class TaskCheckerSubService {
     public String changeTaskCheckerName(TaskCheckerNameModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         return dailyChecklist.changeTaskCheckerName(command.getTaskCheckerName(), command.getNewTaskCheckerName());
     }

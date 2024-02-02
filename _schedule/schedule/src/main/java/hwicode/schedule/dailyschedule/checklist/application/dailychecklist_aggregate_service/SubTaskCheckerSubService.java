@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
@@ -24,7 +25,7 @@ public class SubTaskCheckerSubService {
     @Transactional
     public Long saveSubTaskChecker(SubTaskSaveCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         SubTaskChecker subTaskChecker = dailyChecklist.createSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
         return subTaskCheckerSaveRepository.save(subTaskChecker)
@@ -37,7 +38,7 @@ public class SubTaskCheckerSubService {
 
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         dailyChecklist.deleteSubTaskChecker(command.getTaskCheckerName(), command.getSubTaskCheckerName());
         return command.getSubTaskCheckerId();
@@ -47,7 +48,7 @@ public class SubTaskCheckerSubService {
     public TaskStatus changeSubTaskStatus(SubTaskStatusModifyCommand command) {
         DailyChecklist dailyChecklist = dailyChecklistFindRepository.findDailyChecklistWithTaskCheckers(
                 command.getDailyChecklistId());
-        dailyChecklist.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), dailyChecklist.getUserId());
 
         return dailyChecklist.changeSubTaskStatus(
                 command.getTaskCheckerName(),

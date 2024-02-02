@@ -1,5 +1,6 @@
 package hwicode.schedule.dailyschedule.checklist.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskNameModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.TaskChecker;
 import hwicode.schedule.dailyschedule.checklist.infra.limited_repository.TaskCheckerFindRepository;
@@ -16,7 +17,7 @@ public class TaskCheckerAggregateService {
     @Transactional
     public String changeSubTaskCheckerName(SubTaskNameModifyCommand command) {
         TaskChecker taskChecker = taskCheckerFindRepository.findTaskCheckerWithSubTaskCheckers(command.getTaskCheckerId());
-        taskChecker.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), taskChecker.getUserId());
 
         return taskChecker.changeSubTaskCheckerName(command.getSubTaskCheckerName(), command.getNewSubTaskCheckerName());
     }

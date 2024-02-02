@@ -1,12 +1,12 @@
 package hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskDeleteCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskSaveCommand;
 import hwicode.schedule.dailyschedule.checklist.application.dailychecklist_aggregate_service.dto.sub_task_checker.SubTaskStatusModifyCommand;
 import hwicode.schedule.dailyschedule.checklist.domain.DailyChecklist;
 import hwicode.schedule.dailyschedule.checklist.domain.SubTaskChecker;
-import hwicode.schedule.dailyschedule.checklist.exception.domain.dailychecklist.DailyChecklistForbiddenException;
 import hwicode.schedule.dailyschedule.checklist.exception.domain.taskchecker.SubTaskCheckerNotFoundException;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.DailyChecklistRepository;
 import hwicode.schedule.dailyschedule.checklist.infra.jpa_repository.SubTaskCheckerRepository;
@@ -80,7 +80,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.saveSubTaskChecker(command))
-                .isInstanceOf(DailyChecklistForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -123,7 +123,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.deleteSubTaskChecker(command))
-                .isInstanceOf(DailyChecklistForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -158,7 +158,7 @@ class SubTaskCheckerSubServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> subTaskCheckerSubService.changeSubTaskStatus(command))
-                .isInstanceOf(DailyChecklistForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
 }
