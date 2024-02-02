@@ -1,5 +1,6 @@
 package hwicode.schedule.timetable.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeDeleteSubjectCommand;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectCommand;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectOfSubTaskCommand;
@@ -25,7 +26,7 @@ public class LearningTimeAggregateService {
     @Transactional
     public boolean deleteSubject(LearningTimeDeleteSubjectCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
-        learningTime.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), learningTime.getUserId());
 
         return learningTime.deleteSubject();
     }
@@ -33,7 +34,7 @@ public class LearningTimeAggregateService {
     @Transactional
     public String changeSubject(LearningTimeModifySubjectCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
-        learningTime.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), learningTime.getUserId());
 
         return learningTime.changeSubject(command.getSubject());
     }
@@ -41,20 +42,20 @@ public class LearningTimeAggregateService {
     @Transactional
     public String changeSubjectOfTask(LearningTimeModifySubjectOfTaskCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
-        learningTime.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), learningTime.getUserId());
 
         SubjectOfTask subjectOfTask = subjectOfTaskFindRepository.findById(command.getSubjectOfTaskId());
-        subjectOfTask.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), subjectOfTask.getUserId());
         return learningTime.changeSubjectOfTask(subjectOfTask);
     }
 
     @Transactional
     public String changeSubjectOfSubTask(LearningTimeModifySubjectOfSubTaskCommand command) {
         LearningTime learningTime = learningTimeFindRepository.findById(command.getLearningTimeId());
-        learningTime.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), learningTime.getUserId());
 
         SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskFindRepository.findById(command.getSubjectOfSubTaskId());
-        subjectOfSubTask.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), subjectOfSubTask.getUserId());
         return learningTime.changeSubjectOfSubTask(subjectOfSubTask);
     }
 }

@@ -1,7 +1,6 @@
 package hwicode.schedule.timetable.domain;
 
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
-import hwicode.schedule.timetable.exception.domain.timetable.TimeTableForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
@@ -39,12 +38,6 @@ public class TimeTable {
         validator = new TimeTableValidator(today);
         totalLearningTime = 0;
         this.userId = userId;
-    }
-
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new TimeTableForbiddenException();
-        }
     }
 
     public LearningTime createLearningTime(LocalDateTime startTime) {
@@ -93,31 +86,11 @@ public class TimeTable {
         return this.totalLearningTime;
     }
 
-    public int getSubjectTotalLearningTime(String subject) {
-        return learningTimes.stream()
-                .filter(learningTime -> learningTime.isSameSubject(subject))
-                .filter(LearningTime::isEndTimeNotNull)
-                .mapToInt(LearningTime::getTime)
-                .sum();
-    }
-
-    public int getSubjectOfTaskTotalLearningTime(SubjectOfTask subjectOfTask) {
-        return learningTimes.stream()
-                .filter(learningTime -> learningTime.isSameSubjectOfTask(subjectOfTask))
-                .filter(LearningTime::isEndTimeNotNull)
-                .mapToInt(LearningTime::getTime)
-                .sum();
-    }
-
-    public int getSubjectOfSubTaskTotalLearningTime(SubjectOfSubTask subjectOfSubTask) {
-        return learningTimes.stream()
-                .filter(learningTime -> learningTime.isSameSubjectOfSubTask(subjectOfSubTask))
-                .filter(LearningTime::isEndTimeNotNull)
-                .mapToInt(LearningTime::getTime)
-                .sum();
-    }
-
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }

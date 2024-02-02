@@ -1,5 +1,6 @@
 package hwicode.schedule.timetable.application;
 
+import hwicode.schedule.common.login.validator.PermissionValidator;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeDeleteCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyEndTimeCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyStartTimeCommand;
@@ -24,7 +25,7 @@ public class TimeTableAggregateService {
     @Transactional
     public Long saveLearningTime(LearningTimeSaveCommand command) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(command.getTimeTableId());
-        timeTable.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), timeTable.getUserId());
 
         LearningTime learningTime = timeTable.createLearningTime(command.getStartTime());
         return learningTimeSaveRepository.save(learningTime)
@@ -34,7 +35,7 @@ public class TimeTableAggregateService {
     @Transactional
     public LocalDateTime changeLearningTimeStartTime(LearningTimeModifyStartTimeCommand command) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(command.getTimeTableId());
-        timeTable.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), timeTable.getUserId());
 
         return timeTable.changeLearningTimeStartTime(command.getStartTime(), command.getNewStartTime());
     }
@@ -42,7 +43,7 @@ public class TimeTableAggregateService {
     @Transactional
     public LocalDateTime changeLearningTimeEndTime(LearningTimeModifyEndTimeCommand command) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(command.getTimeTableId());
-        timeTable.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), timeTable.getUserId());
 
         return timeTable.changeLearningTimeEndTime(command.getStartTime(), command.getEndTime());
     }
@@ -50,7 +51,7 @@ public class TimeTableAggregateService {
     @Transactional
     public void deleteLearningTime(LearningTimeDeleteCommand command) {
         TimeTable timeTable = timeTableFindRepository.findTimeTableWithLearningTimes(command.getTimeTableId());
-        timeTable.checkOwnership(command.getUserId());
+        PermissionValidator.validateOwnership(command.getUserId(), timeTable.getUserId());
 
         timeTable.deleteLearningTime(command.getStartTime());
     }

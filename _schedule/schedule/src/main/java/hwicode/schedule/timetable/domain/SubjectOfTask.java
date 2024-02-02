@@ -1,6 +1,5 @@
 package hwicode.schedule.timetable.domain;
 
-import hwicode.schedule.timetable.exception.domain.subject_of_task.SubjectOfTaskForbiddenException;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
@@ -27,17 +26,15 @@ public class SubjectOfTask {
         this.userId = userId;
     }
 
-    public void checkOwnership(Long userId) {
-        if (!this.userId.equals(userId)) {
-            throw new SubjectOfTaskForbiddenException();
-        }
-    }
-
     String getName() {
         return name;
     }
 
     public Long getId() {
         return id;
+    }
+
+    public Long getUserId() {
+        return userId;
     }
 }

@@ -1,6 +1,7 @@
 package hwicode.schedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.timetable.TimeTableDataHelper;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeDeleteSubjectCommand;
 import hwicode.schedule.timetable.application.dto.learning_time.LearningTimeModifySubjectCommand;
@@ -11,9 +12,6 @@ import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.exception.LearningTimeNotFoundException;
-import hwicode.schedule.timetable.exception.domain.learningtime.LearningTimeForbiddenException;
-import hwicode.schedule.timetable.exception.domain.subject_of_subtask.SubjectOfSubTaskForbiddenException;
-import hwicode.schedule.timetable.exception.domain.subject_of_task.SubjectOfTaskForbiddenException;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
@@ -85,7 +83,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.deleteSubject(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -119,7 +117,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubject(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -157,7 +155,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -174,7 +172,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -191,7 +189,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfTask(command))
-                .isInstanceOf(SubjectOfTaskForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -229,7 +227,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -246,7 +244,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
-                .isInstanceOf(LearningTimeForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -263,7 +261,7 @@ class LearningTimeAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> learningTimeAggregateService.changeSubjectOfSubTask(command))
-                .isInstanceOf(SubjectOfSubTaskForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test

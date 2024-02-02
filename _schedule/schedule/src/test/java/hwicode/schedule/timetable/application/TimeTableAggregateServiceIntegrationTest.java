@@ -1,13 +1,13 @@
 package hwicode.schedule.timetable.application;
 
 import hwicode.schedule.DatabaseCleanUp;
+import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeDeleteCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyEndTimeCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeModifyStartTimeCommand;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.exception.application.TimeTableNotFoundException;
-import hwicode.schedule.timetable.exception.domain.timetable.TimeTableForbiddenException;
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
 import hwicode.schedule.timetable.infra.jpa_repository.LearningTimeRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
@@ -70,7 +70,7 @@ class TimeTableAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> timeTableAggregateService.saveLearningTime(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -106,7 +106,7 @@ class TimeTableAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> timeTableAggregateService.changeLearningTimeStartTime(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -143,7 +143,7 @@ class TimeTableAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> timeTableAggregateService.changeLearningTimeEndTime(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
@@ -182,7 +182,7 @@ class TimeTableAggregateServiceIntegrationTest {
 
         // when then
         assertThatThrownBy(() -> timeTableAggregateService.deleteLearningTime(command))
-                .isInstanceOf(TimeTableForbiddenException.class);
+                .isInstanceOf(OwnerForbiddenException.class);
     }
 
     @Test
