@@ -6,12 +6,8 @@ import hwicode.schedule.timetable.TimeTableDataHelper;
 import hwicode.schedule.timetable.application.TimeTableAggregateService;
 import hwicode.schedule.timetable.application.dto.time_table.LearningTimeSaveCommand;
 import hwicode.schedule.timetable.domain.LearningTime;
-import hwicode.schedule.timetable.domain.SubjectOfSubTask;
-import hwicode.schedule.timetable.domain.SubjectOfTask;
 import hwicode.schedule.timetable.domain.TimeTable;
 import hwicode.schedule.timetable.exception.domain.timetablevalidator.StartTimeDuplicateException;
-import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfSubTaskRepository;
-import hwicode.schedule.timetable.infra.jpa_repository.SubjectOfTaskRepository;
 import hwicode.schedule.timetable.infra.jpa_repository.TimeTableRepository;
 import hwicode.schedule.timetable.presentation.timetable.dto.endtime_modify.EndTimeModifyRequest;
 import hwicode.schedule.timetable.presentation.timetable.dto.save.LearningTimeSaveRequest;
@@ -30,7 +26,8 @@ import org.springframework.http.HttpStatus;
 import java.time.LocalDateTime;
 
 import static hwicode.schedule.auth.AuthDataHelper.BEARER;
-import static hwicode.schedule.timetable.TimeTableDataHelper.*;
+import static hwicode.schedule.timetable.TimeTableDataHelper.NEW_START_TIME;
+import static hwicode.schedule.timetable.TimeTableDataHelper.START_TIME;
 import static io.restassured.RestAssured.given;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -49,12 +46,6 @@ class TimeTableEndToEndTest {
 
     @Autowired
     TimeTableRepository timeTableRepository;
-
-    @Autowired
-    SubjectOfTaskRepository subjectOfTaskRepository;
-
-    @Autowired
-    SubjectOfSubTaskRepository subjectOfSubTaskRepository;
 
     @Autowired
     TokenProvider tokenProvider;
@@ -185,91 +176,4 @@ class TimeTableEndToEndTest {
         assertThat(savedTimeTable.getTotalLearningTime()).isZero();
     }
 
-    @Test
-    void 특정_학습_주제_총_학습_시간_요청() {
-        // given
-        Long userId = 1L;
-        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubject(SUBJECT);
-
-        timeTableRepository.save(timeTable);
-
-        RequestSpecification requestSpecification = given()
-                .port(port)
-                .queryParam("subject", SUBJECT)
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
-
-        // when
-        Response response = requestSpecification.when()
-                .get("/dailyschedule/timetables/{timeTableId}/subject-total-time", timeTable.getId());
-
-        // then
-        response.then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    void Task_학습_주제_총_학습_시간_요청() {
-        // given
-        Long userId = 1L;
-        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
-
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT, userId));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubjectOfTask(subjectOfTask);
-
-        timeTableRepository.save(timeTable);
-
-        RequestSpecification requestSpecification = given()
-                .port(port)
-                .queryParam("subject_of_task_id", subjectOfTask.getId())
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
-
-        // when
-        Response response = requestSpecification.when()
-                .get("/dailyschedule/timetables/{timeTableId}/task-total-time", timeTable.getId());
-
-        // then
-        response.then()
-                .statusCode(HttpStatus.OK.value());
-    }
-
-    @Test
-    void SubTask_학습_주제_총_학습_시간_요청() {
-        // given
-        Long userId = 1L;
-        String accessToken = TimeTableDataHelper.createAccessToken(tokenProvider, userId);
-
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT, userId));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
-
-        timeTableRepository.save(timeTable);
-
-        RequestSpecification requestSpecification = given()
-                .port(port)
-                .queryParam("subject_of_subtask_id", subjectOfSubTask.getId())
-                .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);
-
-        // when
-        Response response = requestSpecification.when()
-                .get("/dailyschedule/timetables/{timeTableId}/subtask-total-time", timeTable.getId());
-
-        // then
-        response.then()
-                .statusCode(HttpStatus.OK.value());
-    }
 }

@@ -2,9 +2,6 @@ package hwicode.schedule.timetable.application.query;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.timetable.application.query.dto.LearningTimeQueryResponse;
-import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfSubTaskTotalLearningTimeResponse;
-import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectOfTaskTotalLearningTimeResponse;
-import hwicode.schedule.timetable.application.query.dto.subject_totaltime_response.SubjectTotalLearningTimeResponse;
 import hwicode.schedule.timetable.domain.LearningTime;
 import hwicode.schedule.timetable.domain.SubjectOfSubTask;
 import hwicode.schedule.timetable.domain.SubjectOfTask;
@@ -22,7 +19,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static hwicode.schedule.timetable.TimeTableDataHelper.*;
+import static hwicode.schedule.timetable.TimeTableDataHelper.NEW_SUBJECT;
+import static hwicode.schedule.timetable.TimeTableDataHelper.SUBJECT;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -119,67 +117,6 @@ class TimeTableQueryServiceTest {
                 .endTime(null)
                 .subject(SUBJECT)
                 .build();
-    }
-
-    @Test
-    void 타임_테이블에_존재하는_특정_학습_주제의_총_학습_시간을_계산할_수_있다() {
-        // given
-        Long userId = 1L;
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubject(SUBJECT);
-
-        timeTableRepository.save(timeTable);
-
-        // when
-        SubjectTotalLearningTimeResponse subjectTotalLearningTimeResponse = timeTableQueryService.calculateSubjectTotalLearningTime(timeTable.getId(), SUBJECT);
-
-        // then
-        assertThat(subjectTotalLearningTimeResponse.getSubjectTotalLearningTime()).isEqualTo(30);
-    }
-
-    @Test
-    void 타임_테이블에_존재하는_특정_Task_학습_주제의_총_학습_시간을_계산할_수_있다() {
-        // given
-        Long userId = 1L;
-        SubjectOfTask subjectOfTask = subjectOfTaskRepository.save(new SubjectOfTask(SUBJECT, userId));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubjectOfTask(subjectOfTask);
-
-        timeTableRepository.save(timeTable);
-
-        // when
-        SubjectOfTaskTotalLearningTimeResponse subjectOfTaskTotalLearningTimeResponse = timeTableQueryService.calculateSubjectOfTaskTotalLearningTime(timeTable.getId(), subjectOfTask.getId());
-
-        // then
-        assertThat(subjectOfTaskTotalLearningTimeResponse.getSubjectOfTaskTotalLearningTime()).isEqualTo(30);
-    }
-
-    @Test
-    void 타임_테이블에_존재하는_특정_SubTask_학습_주제의_총_학습_시간을_계산할_수_있다() {
-        // given
-        Long userId = 1L;
-        SubjectOfSubTask subjectOfSubTask = subjectOfSubTaskRepository.save(new SubjectOfSubTask(SUBJECT, userId));
-
-        TimeTable timeTable = new TimeTable(START_TIME.toLocalDate(), userId);
-
-        LearningTime learningTime = timeTable.createLearningTime(START_TIME);
-        timeTable.changeLearningTimeEndTime(START_TIME, START_TIME.plusMinutes(30));
-        learningTime.changeSubjectOfSubTask(subjectOfSubTask);
-
-        timeTableRepository.save(timeTable);
-
-        // when
-        SubjectOfSubTaskTotalLearningTimeResponse subjectOfSubTaskTotalLearningTimeResponse = timeTableQueryService.calculateSubjectOfSubTaskTotalLearningTime(timeTable.getId(), subjectOfSubTask.getId());
-
-        // then
-        assertThat(subjectOfSubTaskTotalLearningTimeResponse.getSubjectOfSubTaskTotalLearningTime()).isEqualTo(30);
     }
 
 }
