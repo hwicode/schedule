@@ -1,5 +1,7 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.presentation;
 
+import hwicode.schedule.common.config.auth.LoginInfo;
+import hwicode.schedule.common.config.auth.LoginUser;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.DailyScheduleQueryService;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleQueryResponse;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.dto.DailyScheduleSummaryQueryResponse;
@@ -23,14 +25,16 @@ public class DailyScheduleQueryController {
 
     @GetMapping("/dailyschedule/calendar/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
-    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(@RequestParam YearMonth yearMonth) {
-        return dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(1L, yearMonth);
+    public List<DailyScheduleSummaryQueryResponse> getMonthlyDailyScheduleQueryResponses(@LoginUser LoginInfo loginInfo,
+                                                                                         @RequestParam YearMonth yearMonth) {
+        return dailyScheduleQueryService.getMonthlyDailyScheduleQueryResponses(loginInfo.getUserId(), yearMonth);
     }
 
     @GetMapping("/dailyschedule/daily-todo-lists")
     @ResponseStatus(value = HttpStatus.OK)
-    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(@RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        return dailyScheduleQueryService.getDailyScheduleQueryResponse(1L, date);
+    public DailyScheduleQueryResponse getDailyScheduleQueryResponse(@LoginUser LoginInfo loginInfo,
+                                                                    @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
+        return dailyScheduleQueryService.getDailyScheduleQueryResponse(loginInfo.getUserId(), date);
     }
 
 }

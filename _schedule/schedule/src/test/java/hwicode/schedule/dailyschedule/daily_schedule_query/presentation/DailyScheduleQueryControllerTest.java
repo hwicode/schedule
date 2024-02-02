@@ -1,7 +1,10 @@
 package hwicode.schedule.dailyschedule.daily_schedule_query.presentation;
 
+import hwicode.schedule.auth.infra.token.DecodedToken;
+import hwicode.schedule.auth.infra.token.TokenProvider;
 import hwicode.schedule.dailyschedule.daily_schedule_query.application.DailyScheduleQueryService;
 import hwicode.schedule.dailyschedule.daily_schedule_query.exception.DailyScheduleNotExistException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -13,6 +16,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
 
+import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
@@ -29,6 +33,15 @@ class DailyScheduleQueryControllerTest {
     @MockBean
     DailyScheduleQueryService dailyScheduleQueryService;
 
+    @MockBean
+    TokenProvider tokenProvider;
+
+    @BeforeEach
+    void decodeToken() {
+        given(tokenProvider.decodeToken(any()))
+                .willReturn(new DecodedToken(1L));
+    }
+
     @Test
     void daily_schedule_한_달_치_요약본의_조회를_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
@@ -38,8 +51,10 @@ class DailyScheduleQueryControllerTest {
                 .willReturn(List.of());
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/calendar/daily-todo-lists")
-                .queryParam("yearMonth", String.valueOf(yearMonth)));
+        ResultActions perform = mockMvc.perform(
+                get("/dailyschedule/calendar/daily-todo-lists")
+                        .queryParam("yearMonth", String.valueOf(yearMonth))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -55,8 +70,10 @@ class DailyScheduleQueryControllerTest {
                 .willReturn(null);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
-                .queryParam("date", String.valueOf(date)));
+        ResultActions perform = mockMvc.perform(
+                get("/dailyschedule/daily-todo-lists")
+                        .queryParam("date", String.valueOf(date))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isOk());
@@ -74,8 +91,10 @@ class DailyScheduleQueryControllerTest {
                 .willThrow(dailyScheduleNotExistException);
 
         // when
-        ResultActions perform = mockMvc.perform(get("/dailyschedule/daily-todo-lists")
-                .queryParam("date", String.valueOf(date)));
+        ResultActions perform = mockMvc.perform(
+                get("/dailyschedule/daily-todo-lists")
+                        .queryParam("date", String.valueOf(date))
+                        .header("Authorization", BEARER + "accessToken"));
 
         // then
         perform.andExpect(status().isNotFound())
