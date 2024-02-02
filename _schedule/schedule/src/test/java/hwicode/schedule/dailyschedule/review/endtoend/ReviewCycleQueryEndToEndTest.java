@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.auth.infra.token.TokenProvider;
-import hwicode.schedule.dailyschedule.daily_schedule_query.DailyScheduleQueryDataHelper;
+import hwicode.schedule.dailyschedule.review.ReviewDataHelper;
 import io.restassured.response.Response;
 import io.restassured.specification.RequestSpecification;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,7 +37,7 @@ class ReviewCycleQueryEndToEndTest {
     void 모든_복습_주기_조회_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         RequestSpecification requestSpecification = given().port(port)
                 .header(HttpHeaders.AUTHORIZATION, BEARER + accessToken);

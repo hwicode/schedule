@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.auth.infra.token.TokenProvider;
-import hwicode.schedule.dailyschedule.daily_schedule_query.DailyScheduleQueryDataHelper;
+import hwicode.schedule.dailyschedule.review.ReviewDataHelper;
 import hwicode.schedule.dailyschedule.review.application.ReviewTaskService;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
@@ -62,7 +62,7 @@ class ReviewTaskEndToEndTest {
     void 과제_복습_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);
         List<Integer> cycle = List.of(1, 2, 4);
@@ -93,7 +93,7 @@ class ReviewTaskEndToEndTest {
     void 과제_복습_취소_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         List<Integer> cycle = List.of(1, 2, 4);
         ReviewTask reviewTask = new ReviewTask(null, REVIEW_TASK_NAME, null, null, null, userId);

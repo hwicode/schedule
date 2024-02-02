@@ -2,7 +2,7 @@ package hwicode.schedule.dailyschedule.review.endtoend;
 
 import hwicode.schedule.DatabaseCleanUp;
 import hwicode.schedule.auth.infra.token.TokenProvider;
-import hwicode.schedule.dailyschedule.daily_schedule_query.DailyScheduleQueryDataHelper;
+import hwicode.schedule.dailyschedule.review.ReviewDataHelper;
 import hwicode.schedule.dailyschedule.review.application.ReviewCycleAggregateService;
 import hwicode.schedule.dailyschedule.review.application.dto.review_cycle.ReviewCycleSaveCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
@@ -57,7 +57,7 @@ class ReviewCycleEndToEndTest {
     void 복습_주기_생성_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         Set<Integer> cycle = Set.of(1, 2, 3, 4, 5);
 
@@ -83,7 +83,7 @@ class ReviewCycleEndToEndTest {
     void 복습_주기_이름_변경_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
         ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
@@ -111,7 +111,7 @@ class ReviewCycleEndToEndTest {
     void 복습_주기_주기_변경_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
         ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
@@ -143,7 +143,7 @@ class ReviewCycleEndToEndTest {
     void 복습_주기_삭제_요청() {
         // given
         Long userId = 1L;
-        String accessToken = DailyScheduleQueryDataHelper.createAccessToken(tokenProvider, userId);
+        String accessToken = ReviewDataHelper.createAccessToken(tokenProvider, userId);
 
         List<Integer> cycle = List.of(1, 2, 3, 4, 5);
         ReviewCycleSaveCommand saveCommand = new ReviewCycleSaveCommand(userId, REVIEW_CYCLE_NAME, cycle);
