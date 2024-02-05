@@ -1,6 +1,7 @@
 package hwicode.schedule.auth.infra.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.exception.infra.client.InvalidIdTokenException;
 import hwicode.schedule.auth.exception.infra.client.OauthIdTokenException;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
@@ -34,7 +35,7 @@ class OauthIdTokenDecoderTest {
     }
 
     @Test
-    void 잘못된_id토큰을_디코드하면_에러가_발생한다() {
+    void 잘못된_형식의_id토큰을_디코드하면_에러가_발생한다() {
         // given
         String jwt = "dfim.idf";
         OauthIdTokenDecoder oauthIdTokenDecoder = new OauthIdTokenDecoder(new ObjectMapper());
@@ -42,6 +43,16 @@ class OauthIdTokenDecoderTest {
         // when then
         assertThatThrownBy(() -> oauthIdTokenDecoder.decode(jwt))
                 .isInstanceOf(OauthIdTokenException.class);
+    }
+
+    @Test
+    void null값을_디코드하면_에러가_발생한다() {
+        // given
+        OauthIdTokenDecoder oauthIdTokenDecoder = new OauthIdTokenDecoder(new ObjectMapper());
+
+        // when then
+        assertThatThrownBy(() -> oauthIdTokenDecoder.decode(null))
+                .isInstanceOf(InvalidIdTokenException.class);
     }
 
 }
