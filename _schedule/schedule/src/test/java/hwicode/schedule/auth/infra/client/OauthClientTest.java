@@ -2,17 +2,21 @@ package hwicode.schedule.auth.infra.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.application.OauthClient;
-import hwicode.schedule.auth.domain.OauthProvider;
+import hwicode.schedule.auth.domain.OauthUser;
+import hwicode.schedule.auth.exception.infra.client.GoogleIdTokenException;
+import hwicode.schedule.auth.infra.client.google.GoogleFetcher;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
+import hwicode.schedule.auth.infra.client.google.dto.GoogleTokenResponse;
+import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.util.List;
-
 import static hwicode.schedule.auth.AuthDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -21,19 +25,14 @@ class OauthClientTest {
     @Test
     void 구글의_로그인_페이지_url을_가져올_수_있다() {
         // given
-        GoogleProperties googleProperties = mock(GoogleProperties.class);
-        when(googleProperties.getAuthenticationUrl()).thenReturn(AUTH_URL);
-        when(googleProperties.getClientId()).thenReturn(CLIENT_ID);
-        when(googleProperties.getRedirectUri()).thenReturn(REDIRECT_URL);
-        when(googleProperties.getResponseType()).thenReturn(RESPONSE_TYPE);
-        when(googleProperties.getScopes()).thenReturn(SCOPES);
+        GoogleProperties googleProperties = new GoogleProperties(
+                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
+                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
 
-        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, new RestTemplate(), new OauthIdTokenDecoder(new ObjectMapper()));
-
-        OauthClientMapper oauthClientMapper = new OauthClientMapper(List.of(googleOauthClient));
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, new GoogleFetcher(new RestTemplate()), new OauthIdTokenDecoder(new ObjectMapper()));
 
         // when
-        String authUrl = oauthClientMapper.getAuthUrl(OauthProvider.GOOGLE);
+        String authUrl = googleOauthClient.getAuthUrl();
 
         // then
         String expectedUrl = UriComponentsBuilder.fromHttpUrl(AUTH_URL)
@@ -45,4 +44,75 @@ class OauthClientTest {
                 .build().toString();
         assertThat(authUrl).isEqualTo(expectedUrl);
     }
+
+    @Test
+    void 구글로부터_유저의_정보를_가져올_수_있다() {
+        // given
+        GoogleProperties googleProperties = new GoogleProperties(
+                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
+                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
+
+        String token = Jwts.builder()
+                .claim("name", "name")
+                .claim("email", "email")
+                .compact();
+
+        GoogleFetcher googleFetcher = mock(GoogleFetcher.class);
+        when(googleFetcher.fetchGoogleToken(any(), any()))
+                .thenReturn(new GoogleTokenResponse(token));
+
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, googleFetcher, new OauthIdTokenDecoder(new ObjectMapper()));
+
+        // when
+        OauthUser oauthUser = googleOauthClient.getUserInfo("code");
+
+        // then
+        assertThat(oauthUser.getName()).isEqualTo("name");
+        assertThat(oauthUser.getEmail()).isEqualTo("email");
+    }
+
+    @Test
+    void 구글로부터_가져온_유저_정보에_이름이_존재하지_않으면_에러가_발생한다() {
+        // given
+        GoogleProperties googleProperties = new GoogleProperties(
+                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
+                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
+
+        String token = Jwts.builder()
+                .claim("email", "email")
+                .compact();
+
+        GoogleFetcher googleFetcher = mock(GoogleFetcher.class);
+        when(googleFetcher.fetchGoogleToken(any(), any()))
+                .thenReturn(new GoogleTokenResponse(token));
+
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, googleFetcher, new OauthIdTokenDecoder(new ObjectMapper()));
+
+        // when then
+        assertThatThrownBy(() -> googleOauthClient.getUserInfo("code"))
+                .isInstanceOf(GoogleIdTokenException.class);
+    }
+
+    @Test
+    void 구글로부터_가져온_유저_정보에_이메일이_존재하지_않으면_에러가_발생한다() {
+        // given
+        GoogleProperties googleProperties = new GoogleProperties(
+                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
+                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
+
+        String token = Jwts.builder()
+                .claim("name", "name")
+                .compact();
+
+        GoogleFetcher googleFetcher = mock(GoogleFetcher.class);
+        when(googleFetcher.fetchGoogleToken(any(), any()))
+                .thenReturn(new GoogleTokenResponse(token));
+
+        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, googleFetcher, new OauthIdTokenDecoder(new ObjectMapper()));
+
+        // when then
+        assertThatThrownBy(() -> googleOauthClient.getUserInfo("code"))
+                .isInstanceOf(GoogleIdTokenException.class);
+    }
+
 }

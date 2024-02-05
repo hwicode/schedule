@@ -1,9 +1,9 @@
 package hwicode.schedule.auth.infra.client.google;
 
-import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.application.OauthClient;
+import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.domain.OauthUser;
-import hwicode.schedule.auth.exception.infra.client.OauthServerException;
+import hwicode.schedule.auth.exception.infra.client.GoogleIdTokenException;
 import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.dto.GoogleTokenResponse;
 import org.springframework.http.HttpEntity;
@@ -12,8 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Map;
@@ -21,16 +19,16 @@ import java.util.Map;
 @Component
 public class GoogleOauthClient implements OauthClient {
 
-    private final GoogleProperties googleProperties;
-    private final RestTemplate restTemplate;
-    private final OauthIdTokenDecoder oauthIdTokenDecoder;
     private final OauthProvider oauthProvider;
+    private final GoogleProperties googleProperties;
+    private final GoogleFetcher googleFetcher;
+    private final OauthIdTokenDecoder oauthIdTokenDecoder;
 
-    public GoogleOauthClient(GoogleProperties googleProperties, RestTemplate restTemplate, OauthIdTokenDecoder oauthIdTokenDecoder) {
-        this.googleProperties = googleProperties;
-        this.restTemplate = restTemplate;
-        this.oauthIdTokenDecoder = oauthIdTokenDecoder;
+    public GoogleOauthClient(GoogleProperties googleProperties, GoogleFetcher googleFetcher, OauthIdTokenDecoder oauthIdTokenDecoder) {
         this.oauthProvider = OauthProvider.GOOGLE;
+        this.googleProperties = googleProperties;
+        this.googleFetcher = googleFetcher;
+        this.oauthIdTokenDecoder = oauthIdTokenDecoder;
     }
 
     @Override
@@ -51,18 +49,19 @@ public class GoogleOauthClient implements OauthClient {
 
     @Override
     public OauthUser getUserInfo(String code) {
-        GoogleTokenResponse googleTokenResponse = requestGoogleToken(code);
+        HttpEntity<MultiValueMap<String, String>> httpEntity = makeHttpEntity(code);
+        GoogleTokenResponse googleTokenResponse = googleFetcher.fetchGoogleToken(googleProperties.getTokenUrl(), httpEntity);
+
         Map<String, String> oauthUserInfo = oauthIdTokenDecoder.decode(googleTokenResponse.getIdToken());
         return makeOauthUser(oauthUserInfo);
     }
 
-    private GoogleTokenResponse requestGoogleToken(String code) {
+    private HttpEntity<MultiValueMap<String, String>> makeHttpEntity(String code) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         MultiValueMap<String, String> body = generateBody(code);
 
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(body, headers);
-        return fetchGoogleToken(request);
+        return new HttpEntity<>(body, headers);
     }
 
     private MultiValueMap<String, String> generateBody(final String code) {
@@ -75,15 +74,17 @@ public class GoogleOauthClient implements OauthClient {
         return params;
     }
 
-    private GoogleTokenResponse fetchGoogleToken(HttpEntity<MultiValueMap<String, String>> request) {
-        try {
-            return restTemplate.postForObject(googleProperties.getTokenUrl(), request, GoogleTokenResponse.class);
-        } catch (RestClientException e) {
-            throw new OauthServerException();
-        }
+    private OauthUser makeOauthUser(Map<String, String> oauthUserInfo) {
+        String name = validateClaim(oauthUserInfo, "name");
+        String email = validateClaim(oauthUserInfo, "email");
+        return new OauthUser(name, email, this.oauthProvider);
     }
 
-    private OauthUser makeOauthUser(Map<String, String> oauthUserInfo) {
-        return new OauthUser(oauthUserInfo.get("name"), oauthUserInfo.get("email"), this.oauthProvider);
+    private String validateClaim(Map<String, String> oauthUserInfo, String key) {
+        String value = oauthUserInfo.get(key);
+        if (value == null) {
+            throw new GoogleIdTokenException();
+        }
+        return value;
     }
 }
