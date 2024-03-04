@@ -1,5 +1,6 @@
 package hwicode.schedule.auth.presentation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.application.AuthService;
 import hwicode.schedule.auth.application.dto.AuthTokenResponse;
 import hwicode.schedule.auth.application.dto.ReissuedAuthTokenResponse;
@@ -14,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static hwicode.schedule.auth.AuthDataHelper.AUTH_URL;
 import static hwicode.schedule.auth.AuthDataHelper.BEARER;
@@ -30,6 +32,9 @@ class AuthControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
     @MockBean
     AuthService authService;
 
@@ -45,6 +50,8 @@ class AuthControllerTest {
     @Test
     void Oauth_Provider의_로그인_페이지를_요청하면_302코드가_리턴된다() throws Exception {
         // given
+        OauthLoginUrlResponse oauthLoginUrlResponse = new OauthLoginUrlResponse(AUTH_URL);
+
         given(authService.getOauthLoginUrl(any()))
                 .willReturn(AUTH_URL);
 
@@ -54,8 +61,10 @@ class AuthControllerTest {
         );
 
         // then
-        perform.andExpect(status().isFound())
-                .andExpect(redirectedUrl((AUTH_URL)));
+        perform.andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(
+                        objectMapper.writeValueAsString(oauthLoginUrlResponse)
+                ));
 
         verify(authService).getOauthLoginUrl(any());
     }

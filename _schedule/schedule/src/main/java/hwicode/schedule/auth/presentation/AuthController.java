@@ -23,10 +23,10 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping("/oauth2/{oauthProvider}/login")
-    @ResponseStatus(value = HttpStatus.FOUND)
-    public void logInOauthUrl(@PathVariable OauthProvider oauthProvider, HttpServletResponse response) {
+    @ResponseStatus(value = HttpStatus.OK)
+    public OauthLoginUrlResponse getOauthLoginUrl(@PathVariable OauthProvider oauthProvider) {
         String loginUrl = authService.getOauthLoginUrl(oauthProvider);
-        response.setHeader(HttpHeaders.LOCATION, loginUrl);
+        return new OauthLoginUrlResponse(loginUrl);
     }
 
     @GetMapping("/oauth2/{oauthProvider}/callback")

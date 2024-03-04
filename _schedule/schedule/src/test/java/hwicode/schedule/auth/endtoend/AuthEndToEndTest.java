@@ -72,7 +72,7 @@ class AuthEndToEndTest {
 
         // then
         response.then()
-                .statusCode(HttpStatus.FOUND.value());
+                .statusCode(HttpStatus.OK.value());
     }
 
     @Test
