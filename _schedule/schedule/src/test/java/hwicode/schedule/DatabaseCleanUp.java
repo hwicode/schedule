@@ -30,9 +30,7 @@ public class DatabaseCleanUp {
 
         Set<String> tableAnnotationNames = entityManager.getMetamodel().getEntities().stream()
                 .filter(e -> e.getJavaType().getAnnotation(Table.class) != null)
-                .map(e -> CaseFormat.UPPER_CAMEL.to(
-                        CaseFormat.LOWER_UNDERSCORE, e.getJavaType().getAnnotation(Table.class).name()
-                ))
+                .map(e -> e.getJavaType().getAnnotation(Table.class).name())
                 .collect(Collectors.toSet());
 
         tableNames.addAll(entityNames);
