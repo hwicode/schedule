@@ -6,6 +6,6 @@ import org.springframework.http.HttpStatus;
 public class CalendarNotFoundException extends BusinessException {
 
     public CalendarNotFoundException() {
-        super("캘린더를 찾을 수 없습니다.", HttpStatus.BAD_REQUEST);
+        super("캘린더를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
     }
 }

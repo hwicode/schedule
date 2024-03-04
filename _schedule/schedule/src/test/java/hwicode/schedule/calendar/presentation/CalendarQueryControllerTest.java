@@ -81,7 +81,7 @@ class CalendarQueryControllerTest {
         );
 
         // then
-        perform.andExpect(status().isBadRequest())
+        perform.andExpect(status().isNotFound())
                 .andExpect(jsonPath("$.message").value(calendarNotFoundException.getMessage()));
 
         verify(calendarQueryService).getCalendarQueryResponse(any(), any());
