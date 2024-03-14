@@ -36,8 +36,5 @@ out/
 ### VS Code ###
 .vscode/
 
-### DB 더미 데이터 ###
-data.sql
-
 ### OAuth 인증 설정 파일 ###
 oauth.yml
