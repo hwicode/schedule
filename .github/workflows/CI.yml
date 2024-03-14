@@ -53,4 +53,7 @@ jobs:
           docker tag ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
           
       - name: Push Docker
-        run: docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA
+        run: |
+          docker rmi ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA
+          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
