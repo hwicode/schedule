@@ -50,6 +50,7 @@ jobs:
       - name: Build Docker
         run: |
           docker build -t ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA .
-
+          docker tag ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
+          
       - name: Push Docker
         run: docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA
