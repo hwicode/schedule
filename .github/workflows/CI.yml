@@ -27,7 +27,6 @@ jobs:
         run: chmod +x gradlew
 
       - name: Set up MySql and Redis
-        working-directory: docker
         run: |
           cd docker
           docker-compose -f docker-compose-local.yml up -d
