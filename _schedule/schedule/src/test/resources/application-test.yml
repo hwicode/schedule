@@ -1,0 +1,52 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/schedule?&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: hwi-schedule
+
+# NoHandlerFoundException을 위해 추가한 설정
+  web:
+    resources:
+      add-mappings: false
+  mvc:
+    throw-exception-if-no-handler-found: true
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 100
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:schema.sql
+
+  redis:
+    host: localhost
+    port: 6379
+
+jwt:
+  secret-key: test:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww
+  access-token-expiry: 10000
+  refresh-token-expiry: 10000000
+  issuer: me
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+
+oauth2:
+  google:
+    client-id: test
+    client-secret: test
+    authentication-url: test
+    response-type: test
+    token-url: test
+    grant-type: test
+    redirect-uri: test
+    scopes: test
