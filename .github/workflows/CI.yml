@@ -24,13 +24,13 @@ jobs:
           distribution: 'temurin'
 
       - name: Grant execute permission for gradlew
-        run: |
-          ls
-          chmod +x gradlew
+        run: chmod +x gradlew
 
       - name: Set up MySql and Redis
         working-directory: docker
-        run: docker-compose -f docker-compose-local.yml up -d
+        run: |
+          cd docker
+          docker-compose -f docker-compose-local.yml up -d
 
       - name: Build with Gradle
         run: ./gradlew clean build
