@@ -43,6 +43,11 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 }
 
-tasks.named('test') {
+test {
+	systemProperty 'spring.profiles.active', 'test'
 	useJUnitPlatform()
+}
+
+jar {
+	enabled = false
 }
