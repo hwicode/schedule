@@ -32,7 +32,7 @@ jobs:
       run: docker tag khc3796/schedule:latest gcr.io/scheduleoauth2/schedule:latest
 
     - name: Push Docker image to GCR
-      run: docker push projects/scheduleoauth2/locations/asia-northeast3/repositories/gcr.io/scheduleoauth2/schedule:latest
+      run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule:latest
       
     - name: 'Create Schedule Instance'
       run: |
