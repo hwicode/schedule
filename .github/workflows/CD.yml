@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: 'actions/checkout@v4'
+    
     - name: 'Login to gcloud'
       uses: 'google-github-actions/auth@v2'
       with:
@@ -18,8 +20,6 @@ jobs:
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
-
-    - run: gcloud auth configure-docker
     
     - name: Login to DockerHub
       uses: docker/login-action@v1
@@ -33,8 +33,8 @@ jobs:
     - name: Tag Docker image
       run: docker tag khc3796/schedule:latest asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
 
-    # - name: Push Docker image to GCR
-    #   run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
+    - name: Push Docker image to GCR
+      run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
       
     - name: 'Create Schedule Instance'
       run: |
