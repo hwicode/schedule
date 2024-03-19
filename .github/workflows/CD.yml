@@ -21,11 +21,10 @@ jobs:
 
     - name: 'Create Schedule Instance'
       run: |
-        gcloud compute instance create schedule \
-        --zone=asia-northeast3 \
-        --availability-zone=asia-northeast3-a \
-        --machine-type=e2-micro \
-        --container-image= docker.io/khc3796/schedule:latest \
-        --image=Debian GNU/Linux 12 \
-        --tags=http-server,https-server \
-        --network-interface=network=schedule-vpc,subnet=schedule-subnet
+        gcloud compute instances create schedule \
+          --zone=asia-northeast3 \
+          --machine-type=e2-micro \
+          --container-image=docker.io/khc3796/schedule:latest \
+          --image=debian-12 \
+          --tags=http-server,https-server \
+          --network-interface=network=schedule-vpc,subnet=schedule-subnet
