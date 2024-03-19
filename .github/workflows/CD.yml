@@ -29,17 +29,17 @@ jobs:
       run: docker pull khc3796/schedule:latest
 
     - name: Tag Docker image
-      run: docker tag khc3796/schedule:latest asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule
+      run: docker tag khc3796/schedule:latest asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
 
     - name: Push Docker image to GCR
-      run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule:latest
+      run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
       
     - name: 'Create Schedule Instance'
       run: |
         gcloud compute instances create schedule \
           --zone=asia-northeast3 \
           --machine-type=e2-micro \
-          --container-image=gcr.io/scheduleoauth2/schedule:latest \
+          --container-image=asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest \
           --image=debian-12 \
           --tags=http-server,https-server \
           --network-interface=network=schedule-vpc,subnet=schedule-subnet
