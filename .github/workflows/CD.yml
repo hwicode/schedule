@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: 'actions/checkout@v4'
-    
     - name: 'Login to gcloud'
       uses: 'google-github-actions/auth@v2'
       with:
@@ -21,6 +19,8 @@ jobs:
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
 
+    - run: gcloud auth configure-docker
+    
     - name: Login to DockerHub
       uses: docker/login-action@v1
       with:
@@ -39,7 +39,7 @@ jobs:
     - name: 'Create Schedule Instance'
       run: |
         gcloud compute instances create schedule \
-          --zone=asia-northeast3 \
+          --zone=asia-northeast3-a \
           --machine-type=e2-micro \
           # --container-image=asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest \
           --image=debian-12 \
