@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
+    - uses: 'actions/checkout@v4'
+    
     - name: 'Login to gcloud'
       uses: 'google-github-actions/auth@v2'
       with:
