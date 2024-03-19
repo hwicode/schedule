@@ -19,12 +19,27 @@ jobs:
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
 
+    - name: Login to DockerHub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Pull Docker image
+      run: docker pull khc3796/schedule:latest
+
+    - name: Tag Docker image
+      run: docker tag khc3796/schedule:latest gcr.io/scheduleoauth2/schedule:latest
+
+    - name: Push Docker image to GCR
+      run: docker push gcr.io/scheduleoauth2/schedule:latest
+      
     - name: 'Create Schedule Instance'
       run: |
         gcloud compute instances create schedule \
           --zone=asia-northeast3 \
           --machine-type=e2-micro \
-          --container-image=docker.io/khc3796/schedule:latest \
+          --container-image=gcr.io/scheduleoauth2/schedule:latest \
           --image=debian-12 \
           --tags=http-server,https-server \
           --network-interface=network=schedule-vpc,subnet=schedule-subnet
