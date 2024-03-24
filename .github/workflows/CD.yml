@@ -38,9 +38,9 @@ jobs:
         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-northeast3-docker.pkg.dev
         docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
       
-    - name: 'Create Schedule Instance'
+    - name: 'Create Schedule Instance-templates'
       run: |
-        gcloud compute instances create schedule \
+        gcloud compute instance-templates create schedule \
           --zone=asia-northeast3-a \
           --machine-type=e2-micro \
           --container-image=asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest \
