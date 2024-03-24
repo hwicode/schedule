@@ -20,9 +20,6 @@ jobs:
 
     - name: 'Set up Cloud SDK'
       uses: 'google-github-actions/setup-gcloud@v2'
-
-    - name: Add Auth
-      run: gcloud auth configure-docker
       
     - name: Login to DockerHub
       uses: docker/login-action@v1
@@ -37,7 +34,9 @@ jobs:
       run: docker tag khc3796/schedule:latest asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
 
     - name: Push Docker image to GCR
-      run: docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
+      run: |
+        gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-northeast3-docker.pkg.dev
+        docker push asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest
       
     - name: 'Create Schedule Instance'
       run: |
