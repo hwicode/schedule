@@ -1,8 +1,5 @@
 # application-develop.yml
 spring:
-  config:
-    import: classpath:oauth.yml
-
   datasource:
     url: jdbc:mysql://localhost:3306/schedule?&characterEncoding=UTF-8&serverTimeZone=Asia/Seoul
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -32,6 +29,16 @@ spring:
   redis:
     host: localhost
     port: 6379
+
+oauth2:
+  google:
+    client-id: 1029084464788-djecku9p399gj4jnk1ie9iolm55cq1kk.apps.googleusercontent.com
+    authentication-url: https://accounts.google.com/o/oauth2/auth
+    response-type: code
+    token-url: https://oauth2.googleapis.com/token
+    grant-type: authorization_code
+    redirect-uri: http://localhost:3000/oauth2/GOOGLE/callback
+    scopes: openid, email, profile
 
 jwt:
   secret-key: dev:wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww

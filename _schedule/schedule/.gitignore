@@ -36,5 +36,6 @@ out/
 ### VS Code ###
 .vscode/
 
-### OAuth 인증 설정 파일 ###
-oauth.yml
+### yml 파일 ###
+application-secret.yml
+application-prod.yml
