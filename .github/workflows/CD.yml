@@ -44,8 +44,8 @@ jobs:
           --zone=asia-northeast3-a \
           --machine-type=e2-micro \
           --container-image=asia-northeast3-docker.pkg.dev/scheduleoauth2/schedule/app:latest \
-          --container-env=[profile=prod] \
-          --tags=http-server,https-server \
+          --container-env=profile=prod \
+          --tags=http-server,https-server,schedule-firewall \
           --network=schedule-vpc \
           --subnet=schedule-subnet \
           --boot-disk-size=10GB
