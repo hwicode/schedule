@@ -32,7 +32,10 @@ jobs:
           docker-compose -f docker-compose-local.yml up -d
 
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: |
+          echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
+          echo ${{ secrets.APPLICATION_PROD }} | base64 --decode > ./src/main/resources/application-prod.yml
+          ./gradlew clean build
 
       - name: Temporarily save build artifact
         uses: actions/upload-artifact@v2
