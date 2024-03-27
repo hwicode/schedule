@@ -60,7 +60,6 @@ jobs:
     - name: Push Docker image to GCR
       run: |
         gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://asia-northeast3-docker.pkg.dev
-        docker push ${{ secrets.ARTIFACT_REGISTRY_NAME }}:$GITHUB_SHA
         docker push ${{ secrets.ARTIFACT_REGISTRY_NAME }}:latest
       
     - name: 'Create Schedule Instance'
