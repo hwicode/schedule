@@ -33,8 +33,6 @@ jobs:
 
       - name: Build with Gradle
         run: |
-          echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
-          echo ${{ secrets.APPLICATION_PROD }} | base64 --decode > ./src/main/resources/application-prod.yml
           ./gradlew clean build
 
       - name: Temporarily save build artifact
@@ -43,19 +41,3 @@ jobs:
           name: build-artifact
           path: build/*
           retention-days: 1
-
-      - name: Login to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-          
-      - name: Build Docker
-        run: |
-          docker build -t ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA .
-          docker tag ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
-          
-      - name: Push Docker
-        run: |
-          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:$GITHUB_SHA
-          docker push ${{ secrets.DOCKER_REGISTRY_NAME }}:latest
