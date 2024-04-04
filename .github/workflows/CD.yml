@@ -3,7 +3,7 @@ name: Java CD with GCP
 on:
   push:
     branches:
-      - develop
+      - main
   workflow_dispatch:
   
 defaults:
