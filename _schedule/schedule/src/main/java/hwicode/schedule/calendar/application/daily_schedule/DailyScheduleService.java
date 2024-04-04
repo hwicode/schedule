@@ -9,6 +9,7 @@ import hwicode.schedule.calendar.infra.jpa_repository.DailyScheduleRepository;
 import hwicode.schedule.calendar.infra.other_boundedcontext.DailySchedulePostSaveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.YearMonth;
@@ -22,6 +23,7 @@ public class DailyScheduleService {
     private final DailyScheduleRepository dailyScheduleRepository;
     private final Time time;
 
+    @Transactional
     public Long saveDailySchedule(DailyScheduleSaveCommand command) {
         LocalDate date = command.getDate();
         validateDate(time.now(), date);
