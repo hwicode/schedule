@@ -23,7 +23,7 @@ class ReviewTaskTest {
         ReviewTask reviewTask = new ReviewTask();
         List<ReviewSubTask> reviewSubTasks = new ArrayList<>();
         for (int i = 0; i < number; i++) {
-            ReviewSubTask reviewSubTask = new ReviewSubTask(reviewTask, REVIEW_SUB_TASK_NAME + i);
+            ReviewSubTask reviewSubTask = new ReviewSubTask(reviewTask, REVIEW_SUB_TASK_NAME + i, 1L);
             reviewSubTasks.add(reviewSubTask);
         }
         reviewTask.addAllToReviewSubTasks(reviewSubTasks);

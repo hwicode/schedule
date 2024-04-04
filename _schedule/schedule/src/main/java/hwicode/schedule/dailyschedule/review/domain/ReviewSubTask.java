@@ -29,14 +29,18 @@ public class ReviewSubTask {
     @Enumerated(value = EnumType.STRING)
     private SubTaskStatus subTaskStatus;
 
-    public ReviewSubTask(ReviewTask reviewTask, String name) {
+    @Column(nullable = false)
+    private Long userId;
+
+    public ReviewSubTask(ReviewTask reviewTask, String name, Long userId) {
         this.reviewTask = reviewTask;
         this.name = name;
         this.subTaskStatus = SubTaskStatus.TODO;
+        this.userId = userId;
     }
 
     ReviewSubTask cloneSubTask(ReviewTask reviewTask) {
-        return new ReviewSubTask(reviewTask, this.name);
+        return new ReviewSubTask(reviewTask, this.name, this.userId);
     }
 
     public Long getId() {
