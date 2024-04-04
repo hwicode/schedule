@@ -5,10 +5,12 @@ import hwicode.schedule.common.login.validator.OwnerForbiddenException;
 import hwicode.schedule.dailyschedule.review.application.dto.review_task.TaskReviewCommand;
 import hwicode.schedule.dailyschedule.review.domain.ReviewCycle;
 import hwicode.schedule.dailyschedule.review.domain.ReviewList;
+import hwicode.schedule.dailyschedule.review.domain.ReviewSubTask;
 import hwicode.schedule.dailyschedule.review.domain.ReviewTask;
 import hwicode.schedule.dailyschedule.review.exception.application.review_task_service.ReviewListNotFoundException;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewCycleRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewListRepository;
+import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewSubTaskRepository;
 import hwicode.schedule.dailyschedule.review.infra.jpa_repository.ReviewTaskRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +45,9 @@ class ReviewListServiceTest {
     ReviewTaskRepository reviewTaskRepository;
 
     @Autowired
+    ReviewSubTaskRepository reviewSubTaskRepository;
+
+    @Autowired
     ReviewCycleRepository reviewCycleRepository;
 
     @BeforeEach
@@ -69,6 +74,7 @@ class ReviewListServiceTest {
 
         // then
         assertThat(reviewTaskRepository.findAll()).hasSize(numberOfTasks + numberOfReviewedTasks);
+        assertThat(reviewSubTaskRepository.findAll()).hasSize(numberOfTasks * 2 + numberOfReviewedTasks * 2);
     }
 
     private int createReviewedTasks(ReviewCycle reviewCycle, int numberOfTasks, Long userId) {
@@ -84,6 +90,8 @@ class ReviewListServiceTest {
     private ReviewTask createTask(String reviewTaskName, Long userId) {
         ReviewTask reviewTask = new ReviewTask(null, reviewTaskName, null, null, null, userId);
         reviewTaskRepository.save(reviewTask);
+        reviewSubTaskRepository.save(new ReviewSubTask(reviewTask, REVIEW_SUB_TASK_NAME, userId));
+        reviewSubTaskRepository.save(new ReviewSubTask(reviewTask, REVIEW_SUB_TASK_NAME + 2, userId));
         return reviewTask;
     }
 
