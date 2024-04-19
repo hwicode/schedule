@@ -4,4 +4,5 @@ spring:
     group:
       prod: prod, secret
       dev: dev, secret
+      stage: stage
       test: test

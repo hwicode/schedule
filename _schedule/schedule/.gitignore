@@ -39,3 +39,4 @@ out/
 ### yml 파일 ###
 application-secret.yml
 application-prod.yml
+application-stage.yml
