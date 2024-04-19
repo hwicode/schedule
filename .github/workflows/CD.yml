@@ -1,4 +1,4 @@
-name: Java CD with GCP
+name: Java staging CD with GCP
 
 on:
   push:
@@ -33,8 +33,7 @@ jobs:
 
     - name: Build with Gradle
       run: |
-        echo ${{ secrets.APPLICATION_SECRET }} | base64 --decode > ./src/main/resources/application-secret.yml
-        echo ${{ secrets.APPLICATION_PROD }} | base64 --decode > ./src/main/resources/application-prod.yml
+        echo ${{ secrets.APPLICATION_STAGE }} | base64 --decode > ./src/main/resources/application-stage.yml
         ./gradlew clean build
 
     - name: Temporarily save build artifact
@@ -66,9 +65,9 @@ jobs:
       run: |
         gcloud compute instances create-with-container schedule \
           --zone=asia-northeast3-a \
-          --machine-type=e2-micro \
+          --machine-type=e2-medium \
           --container-image=${{ secrets.ARTIFACT_REGISTRY_NAME }}:latest \
-          --container-env=profile=prod \
+          --container-env=profile=stage \
           --tags=http-server,https-server,schedule-firewall \
           --network=schedule-vpc \
           --subnet=schedule-subnet \
