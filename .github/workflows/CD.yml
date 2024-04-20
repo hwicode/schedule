@@ -72,6 +72,7 @@ jobs:
         gcloud compute instances create schedule \
           --zone=asia-northeast3-a \
           --machine-type=e2-medium \
+          --image-family=ubuntu-2204-lts \
           --image-project=ubuntu-os-cloud \
           --metadata=profile=stage,startup-script= ${{ secrets.STARTUP_SCRIPT }} \
           --tags=http-server,https-server,schedule-firewall \
