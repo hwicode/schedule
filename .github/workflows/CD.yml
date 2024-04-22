@@ -69,6 +69,7 @@ jobs:
       
     - name: 'Create Schedule Instance'
       run: |
+        echo ${{ secrets.APPLICATION_STAGE }} | base64 --decode > ./startup-script
         gcloud compute instances create schedule \
           --zone=asia-northeast3-a \
           --machine-type=e2-medium \
@@ -78,4 +79,5 @@ jobs:
           --network=schedule-vpc \
           --subnet=schedule-subnet \
           --boot-disk-size=10GB \
-          --metadata=profile=stage,startup-script=${{ secrets.STARTUP_SCRIPT }}
+          --metadata=profile=stage \
+          --metadata-from-file=startup-script=./startup-script
