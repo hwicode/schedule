@@ -78,4 +78,4 @@ jobs:
           --network=schedule-vpc \
           --subnet=schedule-subnet \
           --boot-disk-size=10GB \
-          --metadata=profile=stage,startup-script='${{ secrets.STARTUP_SCRIPT }}'
+          --metadata=profile=stage,startup-script=${{ secrets.STARTUP_SCRIPT }}
