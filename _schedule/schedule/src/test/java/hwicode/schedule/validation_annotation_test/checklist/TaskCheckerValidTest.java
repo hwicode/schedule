@@ -115,7 +115,7 @@ class TaskCheckerValidTest {
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
         // then
-        String field = "dailyChecklistId";
+        String field = "dailyToDoListId";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
