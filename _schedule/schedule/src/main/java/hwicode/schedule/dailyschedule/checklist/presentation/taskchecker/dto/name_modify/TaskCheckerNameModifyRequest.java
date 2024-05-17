@@ -15,11 +15,11 @@ import javax.validation.constraints.Positive;
 public class TaskCheckerNameModifyRequest {
 
     @NotNull @Positive
-    private Long dailyChecklistId;
+    private Long dailyToDoListId;
 
     @NotBlank
-    private String taskCheckerName;
+    private String taskName;
 
     @NotBlank
-    private String newTaskCheckerName;
+    private String newTaskName;
 }

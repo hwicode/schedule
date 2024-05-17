@@ -19,7 +19,7 @@ public class TaskSaveRequest {
 
     @NotNull
     @Positive
-    private Long dailyChecklistId;
+    private Long dailyToDoListId;
 
     @NotBlank
     private String taskName;

@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskCheckerNameModifyResponse {
 
-    private Long dailyChecklistId;
-    private String newTaskCheckerName;
+    private Long dailyToDoListId;
+    private String newTaskName;
 }

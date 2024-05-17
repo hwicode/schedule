@@ -16,10 +16,10 @@ import javax.validation.constraints.Positive;
 public class TaskDifficultyModifyRequest {
 
     @NotNull @Positive
-    private Long dailyChecklistId;
+    private Long dailyToDoListId;
 
     @NotBlank
-    private String taskCheckerName;
+    private String taskName;
 
     @NotNull
     private Difficulty difficulty;
