@@ -67,7 +67,7 @@ public class SubTaskCheckerController {
                                                            @PathVariable("subTaskId") @Positive Long subTaskCheckerId,
                                                            @RequestBody @Valid SubTaskStatusModifyRequest request) {
         SubTaskStatusModifyCommand command = new SubTaskStatusModifyCommand(
-                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getSubTaskCheckerName(), request.getSubTaskStatus()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskName(), request.getSubTaskName(), request.getSubTaskStatus()
         );
         TaskStatus modifiedTaskStatus = subTaskCheckerSubService.changeSubTaskStatus(command);
         return new SubTaskStatusModifyResponse(command.getSubTaskCheckerName(), modifiedTaskStatus, command.getSubTaskStatus());
@@ -80,7 +80,7 @@ public class SubTaskCheckerController {
                                                                      @PathVariable("subTaskId") @Positive Long subTaskCheckerId,
                                                                      @RequestBody @Valid SubTaskCheckerNameModifyRequest request) {
         SubTaskNameModifyCommand command = new SubTaskNameModifyCommand(
-                loginInfo.getUserId(), taskCheckerId, request.getSubTaskCheckerName(), request.getNewSubTaskCheckerName()
+                loginInfo.getUserId(), taskCheckerId, request.getSubTaskName(), request.getNewSubTaskName()
         );
         String newSubTaskCheckerName = taskCheckerAggregateService.changeSubTaskCheckerName(command);
         return new SubTaskCheckerNameModifyResponse(command.getTaskCheckerId(), newSubTaskCheckerName);

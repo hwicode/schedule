@@ -6,20 +6,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class SubTaskCheckerNameModifyRequest {
 
-    @NotNull @Positive
-    private Long taskCheckerId;
+    @NotBlank
+    private String subTaskName;
 
     @NotBlank
-    private String subTaskCheckerName;
-
-    @NotBlank
-    private String newSubTaskCheckerName;
+    private String newSubTaskName;
 }

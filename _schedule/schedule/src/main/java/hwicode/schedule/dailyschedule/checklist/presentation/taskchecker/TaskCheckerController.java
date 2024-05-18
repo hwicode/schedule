@@ -37,7 +37,7 @@ public class TaskCheckerController {
                                      @RequestBody @Valid TaskSaveRequest request) {
 
         TaskSaveCommand command = new TaskSaveCommand(
-                loginInfo.getUserId(), request.getDailyToDoListId(), request.getTaskName(),
+                loginInfo.getUserId(), dailyToDoListId, request.getTaskName(),
                 request.getDifficulty(), request.getPriority(), request.getImportance()
         );
         Long taskId = taskCheckerSubService.saveTaskChecker(command);

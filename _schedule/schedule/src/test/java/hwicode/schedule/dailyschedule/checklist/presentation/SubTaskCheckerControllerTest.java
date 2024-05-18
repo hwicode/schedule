@@ -64,7 +64,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
         SubTaskSaveResponse subTaskSaveResponse = new SubTaskSaveResponse(SUB_TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME);
 
         given(subTaskCheckerSubService.saveSubTaskChecker(any()))
@@ -118,7 +118,7 @@ class SubTaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new SubTaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
+                                new SubTaskSaveRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
                         )));
 
         // then
@@ -155,7 +155,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
         SubTaskStatusModifyResponse subTaskStatusModifyResponse = new SubTaskStatusModifyResponse(SUB_TASK_CHECKER_NAME, TaskStatus.PROGRESS, SubTaskStatus.DONE);
 
         given(subTaskCheckerSubService.changeSubTaskStatus(any()))
@@ -181,7 +181,7 @@ class SubTaskCheckerControllerTest {
     @Test
     void 서브_과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
         SubTaskCheckerNameModifyResponse subTaskCheckerNameModifyResponse = new SubTaskCheckerNameModifyResponse(TASK_CHECKER_ID, NEW_SUB_TASK_CHECKER_NAME);
 
         given(taskCheckerAggregateService.changeSubTaskCheckerName(any()))
@@ -218,7 +218,7 @@ class SubTaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                                new SubTaskStatusModifyRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                         )));
 
         // then
@@ -242,7 +242,7 @@ class SubTaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new SubTaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
+                                new SubTaskStatusModifyRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE)
                         )));
 
         // then
@@ -266,7 +266,7 @@ class SubTaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                                new SubTaskCheckerNameModifyRequest(SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
                         )));
 
         // then
@@ -290,7 +290,7 @@ class SubTaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new SubTaskCheckerNameModifyRequest(TASK_CHECKER_ID, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
+                                new SubTaskCheckerNameModifyRequest(SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
                         )));
 
         // then

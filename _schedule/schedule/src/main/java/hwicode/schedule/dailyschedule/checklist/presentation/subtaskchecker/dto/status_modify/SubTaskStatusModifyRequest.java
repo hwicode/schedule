@@ -8,21 +8,17 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
 public class SubTaskStatusModifyRequest {
 
-    @NotNull @Positive
-    private Long dailyChecklistId;
+    @NotBlank
+    private String taskName;
 
     @NotBlank
-    private String taskCheckerName;
-
-    @NotBlank
-    private String subTaskCheckerName;
+    private String subTaskName;
 
     @NotNull
     private SubTaskStatus subTaskStatus;

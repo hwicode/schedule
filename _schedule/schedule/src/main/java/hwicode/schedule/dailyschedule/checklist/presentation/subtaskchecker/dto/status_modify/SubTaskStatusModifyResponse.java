@@ -9,7 +9,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SubTaskStatusModifyResponse {
 
-    private String subTaskCheckerName;
+    private String subTaskName;
     private TaskStatus modifiedTaskStatus;
     private SubTaskStatus modifiedSubTaskStatus;
 }

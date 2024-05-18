@@ -74,7 +74,7 @@ class TaskCheckerEndToEndTest {
         DailyChecklist dailyChecklist = new DailyChecklist(userId);
         dailyChecklistRepository.save(dailyChecklist);
 
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.FIRST);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
@@ -136,7 +136,7 @@ class TaskCheckerEndToEndTest {
                 new TaskSaveCommand(userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, TaskStatus.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(NEW_TASK_CHECKER_NAME, TaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
@@ -169,7 +169,7 @@ class TaskCheckerEndToEndTest {
                 new TaskSaveCommand(userId, dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(dailyChecklist.getId(), NEW_TASK_CHECKER_NAME, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(NEW_TASK_CHECKER_NAME, Difficulty.HARD);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
@@ -202,7 +202,7 @@ class TaskCheckerEndToEndTest {
                 new TaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
         );
 
-        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
