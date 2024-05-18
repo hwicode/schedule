@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -44,7 +45,9 @@ public class DailyTagListQueryService {
 
         dailyTagListMemoQueryResponses.forEach(
                 dailyTagListMemoQueryResponse -> dailyTagListMemoQueryResponse.setMemoTagQueryResponses(
-                        tagsQueryResponseMap.get(dailyTagListMemoQueryResponse.getId())
+                        tagsQueryResponseMap.get(dailyTagListMemoQueryResponse.getId()) == null
+                                ? new ArrayList<>()
+                                : tagsQueryResponseMap.get(dailyTagListMemoQueryResponse.getId())
                 )
         );
         return dailyTagListMemoQueryResponses;

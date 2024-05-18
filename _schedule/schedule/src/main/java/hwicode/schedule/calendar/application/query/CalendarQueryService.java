@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,7 +41,9 @@ public class CalendarQueryService {
 
         goalQueryResponses.forEach(
                 goalQueryResponse -> goalQueryResponse.setSubGoalResponses(
-                        subGoalQueryResponseMap.get(goalQueryResponse.getId())
+                        subGoalQueryResponseMap.get(goalQueryResponse.getId()) == null
+                                ? new ArrayList<>()
+                                : subGoalQueryResponseMap.get(goalQueryResponse.getId())
                 )
         );
         calendarQueryResponse.setGoalResponses(goalQueryResponses);
