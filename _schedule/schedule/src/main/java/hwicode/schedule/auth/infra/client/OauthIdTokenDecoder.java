@@ -3,6 +3,7 @@ package hwicode.schedule.auth.infra.client;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import hwicode.schedule.auth.exception.infra.client.IdTokenClaimException;
 import hwicode.schedule.auth.exception.infra.client.InvalidIdTokenException;
 import hwicode.schedule.auth.exception.infra.client.OauthIdTokenException;
 import lombok.RequiredArgsConstructor;
@@ -33,5 +34,13 @@ public class OauthIdTokenDecoder {
         if (idToken == null) {
             throw new InvalidIdTokenException();
         }
+    }
+
+    public String validateClaim(Map<String, String> oauthUserInfo, String key) {
+        String value = oauthUserInfo.get(key);
+        if (value == null) {
+            throw new IdTokenClaimException();
+        }
+        return value;
     }
 }
