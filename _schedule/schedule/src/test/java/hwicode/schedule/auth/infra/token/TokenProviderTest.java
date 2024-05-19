@@ -54,6 +54,23 @@ class TokenProviderTest {
     }
 
     @Test
+    void Refresh_토큰을_재발급할_수_있고_이전의_Refresh_token과_유효_기간이_같아야_한다() {
+        // given
+        TokenProvider tokenProvider = createTokenProvider();
+        Long oauthUserId = 1L;
+        OauthUser oauthUser = new OauthUser(oauthUserId, null, null, null);
+        RefreshToken refreshToken = tokenProvider.createRefreshToken(oauthUser);
+
+        // when
+        RefreshToken reissuedRefreshToken = tokenProvider.reissueRefreshToken(oauthUser, refreshToken.getToken());
+
+        // then
+        DecodedToken decodedToken = tokenProvider.decodeToken(reissuedRefreshToken.getToken());
+        assertThat(decodedToken.getUserId()).isEqualTo(oauthUserId);
+        assertThat(reissuedRefreshToken.getExpiryMs()).isLessThan(refreshToken.getExpiryMs());
+    }
+
+    @Test
     void 토큰을_생성_시_유효한_유저가_아닌_경우_에러가_발생한다() {
         // given
         TokenProvider tokenProvider = createTokenProvider();

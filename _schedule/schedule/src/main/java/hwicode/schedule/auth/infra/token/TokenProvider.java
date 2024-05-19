@@ -70,6 +70,24 @@ public class TokenProvider {
         return new RefreshToken(token, refreshTokenExpiryMs);
     }
 
+    public RefreshToken reissueRefreshToken(OauthUser oauthUser, String refreshToken) {
+        validateOauthUserId(oauthUser.getId());
+        Date now = new Date();
+        Date validity = getClaims(refreshToken).getExpiration();
+
+        String token = Jwts.builder()
+                .setIssuer(issuer)
+                .setSubject("refreshToken")
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .claim(USER_ID, oauthUser.getId())
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+
+        long reissuedRefreshTokenExpiryMs = validity.getTime() - now.getTime();
+        return new RefreshToken(token, reissuedRefreshTokenExpiryMs);
+    }
+
     public DecodedToken decodeToken(String token) {
         Claims claims = getClaims(token);
         Long userId = claims.get(USER_ID, Long.class);

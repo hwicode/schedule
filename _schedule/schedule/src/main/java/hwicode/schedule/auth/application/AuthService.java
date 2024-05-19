@@ -53,7 +53,7 @@ public class AuthService {
 
         OauthUser oauthUser = userConnector.findById(userId);
         String reissuedAccessToken = tokenProvider.createAccessToken(oauthUser);
-        RefreshToken reissuedRefreshToken = tokenProvider.createRefreshToken(oauthUser);
+        RefreshToken reissuedRefreshToken = tokenProvider.reissueRefreshToken(oauthUser, refreshToken);
         refreshTokenRepository.save(oauthUser.getId(), reissuedRefreshToken);
 
         return new ReissuedAuthTokenResponse(reissuedAccessToken, reissuedRefreshToken.getToken(), reissuedRefreshToken.getExpiryMs());
