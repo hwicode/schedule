@@ -22,11 +22,6 @@ public class OauthClientMapper {
         );
     }
 
-    public String getAuthUrl(OauthProvider oauthProvider) {
-        OauthClient oauthClient = getOauthClient(oauthProvider);
-        return oauthClient.getAuthUrl();
-    }
-
     public OauthClient getOauthClient(OauthProvider oauthProvider) {
         return Optional.ofNullable(clientMap.get(oauthProvider))
                 .orElseThrow(OauthClientNotFoundException::new);

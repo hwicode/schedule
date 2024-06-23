@@ -24,7 +24,8 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public String getOauthLoginUrl(OauthProvider oauthProvider) {
-        return oauthClientMapper.getAuthUrl(oauthProvider);
+        OauthClient oauthClient = oauthClientMapper.getOauthClient(oauthProvider);
+        return oauthClient.getAuthUrl();
     }
 
     public AuthTokenResponse loginWithOauth(OauthProvider oauthProvider, String code) {
