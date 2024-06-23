@@ -84,7 +84,7 @@ class AuthControllerTest {
     void Oauth_Provider을_통해_로그인을_요청하면_200코드가_리턴된다() throws Exception {
         // given
         AuthTokenResponse authTokenResponse = new AuthTokenResponse("accessToken", "refreshToken", 0);
-        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict";
 
         given(authService.loginWithOauth(any(), any()))
                 .willReturn(authTokenResponse);
@@ -130,7 +130,7 @@ class AuthControllerTest {
     void Auth_토큰의_재발급을_요청하면_200코드가_리턴된다() throws Exception {
         // given
         ReissuedAuthTokenResponse reissuedAuthTokenResponse = new ReissuedAuthTokenResponse("accessToken", "refreshToken", 0);
-        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict";
 
         given(authService.reissueAuthToken(any()))
                 .willReturn(reissuedAuthTokenResponse);
@@ -164,7 +164,7 @@ class AuthControllerTest {
     @Test
     void 로그아웃을_요청하면_200코드가_리턴된다() throws Exception {
         // given
-        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict";
+        String cookie = "refreshToken=refreshToken; Path=/auth; Max-Age=0; Expires=Thu, 1 Jan 1970 00:00:00 GMT; Secure; HttpOnly; SameSite=Strict";
 
         given(authService.logout(any()))
                 .willReturn(true);
