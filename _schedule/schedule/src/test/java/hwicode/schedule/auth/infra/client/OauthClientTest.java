@@ -3,7 +3,6 @@ package hwicode.schedule.auth.infra.client;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import hwicode.schedule.auth.application.OauthClient;
 import hwicode.schedule.auth.domain.OauthUser;
-import hwicode.schedule.auth.exception.infra.client.GoogleIdTokenException;
 import hwicode.schedule.auth.infra.client.google.GoogleFetcher;
 import hwicode.schedule.auth.infra.client.google.GoogleOauthClient;
 import hwicode.schedule.auth.infra.client.google.GoogleProperties;
@@ -15,7 +14,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import static hwicode.schedule.auth.AuthDataHelper.*;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -69,50 +67,6 @@ class OauthClientTest {
         // then
         assertThat(oauthUser.getName()).isEqualTo("name");
         assertThat(oauthUser.getEmail()).isEqualTo("email");
-    }
-
-    @Test
-    void 구글로부터_가져온_유저_정보에_이름이_존재하지_않으면_에러가_발생한다() {
-        // given
-        GoogleProperties googleProperties = new GoogleProperties(
-                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
-                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
-
-        String token = Jwts.builder()
-                .claim("email", "email")
-                .compact();
-
-        GoogleFetcher googleFetcher = mock(GoogleFetcher.class);
-        when(googleFetcher.fetchGoogleToken(any(), any()))
-                .thenReturn(new GoogleTokenResponse(token));
-
-        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, googleFetcher, new OauthIdTokenDecoder(new ObjectMapper()));
-
-        // when then
-        assertThatThrownBy(() -> googleOauthClient.getUserInfo("code"))
-                .isInstanceOf(GoogleIdTokenException.class);
-    }
-
-    @Test
-    void 구글로부터_가져온_유저_정보에_이메일이_존재하지_않으면_에러가_발생한다() {
-        // given
-        GoogleProperties googleProperties = new GoogleProperties(
-                CLIENT_ID, CLIENT_SECRET, AUTH_URL, RESPONSE_TYPE,
-                TOKEN_URL, GRANT_TYPE, REDIRECT_URL, SCOPES);
-
-        String token = Jwts.builder()
-                .claim("name", "name")
-                .compact();
-
-        GoogleFetcher googleFetcher = mock(GoogleFetcher.class);
-        when(googleFetcher.fetchGoogleToken(any(), any()))
-                .thenReturn(new GoogleTokenResponse(token));
-
-        OauthClient googleOauthClient = new GoogleOauthClient(googleProperties, googleFetcher, new OauthIdTokenDecoder(new ObjectMapper()));
-
-        // when then
-        assertThatThrownBy(() -> googleOauthClient.getUserInfo("code"))
-                .isInstanceOf(GoogleIdTokenException.class);
     }
 
 }

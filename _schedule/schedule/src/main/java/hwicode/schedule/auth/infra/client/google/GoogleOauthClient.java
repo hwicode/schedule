@@ -3,7 +3,6 @@ package hwicode.schedule.auth.infra.client.google;
 import hwicode.schedule.auth.application.OauthClient;
 import hwicode.schedule.auth.domain.OauthProvider;
 import hwicode.schedule.auth.domain.OauthUser;
-import hwicode.schedule.auth.exception.infra.client.GoogleIdTokenException;
 import hwicode.schedule.auth.infra.client.OauthIdTokenDecoder;
 import hwicode.schedule.auth.infra.client.google.dto.GoogleTokenResponse;
 import org.springframework.http.HttpEntity;
@@ -75,16 +74,8 @@ public class GoogleOauthClient implements OauthClient {
     }
 
     private OauthUser makeOauthUser(Map<String, String> oauthUserInfo) {
-        String name = validateClaim(oauthUserInfo, "name");
-        String email = validateClaim(oauthUserInfo, "email");
+        String name = oauthIdTokenDecoder.validateClaim(oauthUserInfo, "name");
+        String email = oauthIdTokenDecoder.validateClaim(oauthUserInfo, "email");
         return new OauthUser(name, email, this.oauthProvider);
-    }
-
-    private String validateClaim(Map<String, String> oauthUserInfo, String key) {
-        String value = oauthUserInfo.get(key);
-        if (value == null) {
-            throw new GoogleIdTokenException();
-        }
-        return value;
     }
 }

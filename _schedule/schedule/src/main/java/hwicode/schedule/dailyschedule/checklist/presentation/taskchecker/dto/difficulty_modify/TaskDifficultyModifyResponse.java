@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskDifficultyModifyResponse {
 
-    private String taskCheckerName;
+    private String taskName;
     private Difficulty modifiedDifficulty;
 }

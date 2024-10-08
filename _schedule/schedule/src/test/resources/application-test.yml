@@ -50,3 +50,6 @@ oauth2:
     grant-type: test
     redirect-uri: test
     scopes: test
+
+server:
+  domain: http://localhost:3000

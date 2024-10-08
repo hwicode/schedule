@@ -19,7 +19,7 @@ public class GoogleFetcher {
         try {
             return restTemplate.postForObject(tokenUrl, request, GoogleTokenResponse.class);
         } catch (RestClientException e) {
-            throw new OauthServerException();
+            throw new OauthServerException(e);
         }
     }
 

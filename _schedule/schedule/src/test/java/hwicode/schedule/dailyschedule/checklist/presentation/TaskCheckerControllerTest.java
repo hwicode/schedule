@@ -67,7 +67,7 @@ class TaskCheckerControllerTest {
     @Test
     void 과제_생성을_요청하면_201_상태코드가_리턴된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
         TaskSaveResponse taskSaveResponse = new TaskSaveResponse(TASK_CHECKER_ID, TASK_CHECKER_NAME);
 
         given(taskCheckerSubService.saveTaskChecker(any()))
@@ -101,7 +101,7 @@ class TaskCheckerControllerTest {
                 .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(
-                        new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
+                        new TaskSaveRequest(TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND)
                 )));
 
         // then
@@ -151,7 +151,7 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_진행_상태_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE);
+        TaskStatusModifyRequest taskStatusModifyRequest = new TaskStatusModifyRequest(TASK_CHECKER_NAME, TaskStatus.DONE);
         TaskStatusModifyResponse taskStatusModifyResponse = new TaskStatusModifyResponse(TASK_CHECKER_NAME, TaskStatus.DONE);
 
         given(taskCheckerSubService.changeTaskStatus(any()))
@@ -177,7 +177,7 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_어려움_점수의_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.HARD);
+        TaskDifficultyModifyRequest taskDifficultyModifyRequest = new TaskDifficultyModifyRequest(TASK_CHECKER_NAME, Difficulty.HARD);
         TaskDifficultyModifyResponse taskDifficultyModifyResponse = new TaskDifficultyModifyResponse(TASK_CHECKER_NAME, Difficulty.HARD);
 
         given(taskCheckerSubService.changeTaskDifficulty(any()))
@@ -203,7 +203,7 @@ class TaskCheckerControllerTest {
     @Test
     void 과제체커의_이름_변경을_요청하면_200_상태코드가_리턴된다() throws Exception {
         // given
-        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
+        TaskCheckerNameModifyRequest taskCheckerNameModifyRequest = new TaskCheckerNameModifyRequest(TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME);
         TaskCheckerNameModifyResponse taskCheckerNameModifyResponse = new TaskCheckerNameModifyResponse(DAILY_CHECKLIST_ID, NEW_TASK_CHECKER_NAME);
 
         given(taskCheckerSubService.changeTaskCheckerName(any()))
@@ -240,7 +240,7 @@ class TaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                                new TaskStatusModifyRequest(TASK_CHECKER_NAME, TaskStatus.DONE)
                         )));
 
         // then
@@ -264,7 +264,7 @@ class TaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                                new TaskStatusModifyRequest(TASK_CHECKER_NAME, TaskStatus.DONE)
                         )));
 
         // then
@@ -288,7 +288,7 @@ class TaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                                new TaskStatusModifyRequest(TASK_CHECKER_NAME, TaskStatus.DONE)
                         )));
 
         // then
@@ -312,7 +312,7 @@ class TaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new TaskStatusModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, TaskStatus.DONE)
+                                new TaskStatusModifyRequest(TASK_CHECKER_NAME, TaskStatus.DONE)
                         )));
 
         // then
@@ -336,7 +336,7 @@ class TaskCheckerControllerTest {
                         .header("Authorization", BEARER + "accessToken")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(
-                                new TaskCheckerNameModifyRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME)
+                                new TaskCheckerNameModifyRequest(TASK_CHECKER_NAME, NEW_TASK_CHECKER_NAME)
                         )));
 
         // then

@@ -77,7 +77,7 @@ class SubTaskCheckerEndToEndTest {
         TaskChecker taskChecker = dailyChecklist.createTaskChecker(TASK_CHECKER_NAME, Difficulty.NORMAL);
         dailyChecklistRepository.save(dailyChecklist);
 
-        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
+        SubTaskSaveRequest subTaskSaveRequest = new SubTaskSaveRequest(TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
@@ -142,7 +142,7 @@ class SubTaskCheckerEndToEndTest {
                 new SubTaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME)
         );
 
-        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(dailyChecklist.getId(), TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
+        SubTaskStatusModifyRequest subTaskStatusModifyRequest = new SubTaskStatusModifyRequest(TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME, SubTaskStatus.DONE);
 
         RequestSpecification requestSpecification = given()
                 .port(port)
@@ -180,7 +180,7 @@ class SubTaskCheckerEndToEndTest {
                 new SubTaskSaveCommand(userId, dailyChecklist.getId(), TASK_CHECKER_NAME, SUB_TASK_CHECKER_NAME)
         );
 
-        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(taskCheckerId, SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
+        SubTaskCheckerNameModifyRequest subTaskCheckerNameModifyRequest = new SubTaskCheckerNameModifyRequest(SUB_TASK_CHECKER_NAME, NEW_SUB_TASK_CHECKER_NAME);
 
         RequestSpecification requestSpecification = given()
                 .port(port)

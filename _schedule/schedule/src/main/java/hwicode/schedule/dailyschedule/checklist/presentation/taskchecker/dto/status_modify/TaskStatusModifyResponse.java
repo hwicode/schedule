@@ -8,6 +8,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class TaskStatusModifyResponse {
 
-    private String taskCheckerName;
+    private String taskName;
     private TaskStatus modifiedTaskStatus;
 }

@@ -20,7 +20,7 @@ public interface GoalRepository extends JpaRepository<Goal, Long>, GoalFindRepos
     @Query("SELECT "
             + "new hwicode.schedule.calendar.application.query.dto.SubGoalQueryResponse(s.id, s.name, s.subGoalStatus, g.id) "
             + "FROM Goal g "
-            + "LEFT JOIN g.subGoals s "
+            + "INNER JOIN g.subGoals s "
             + "WHERE g.id in :goalIds "
             + "ORDER BY s.id ASC")
     List<SubGoalQueryResponse> findSubGoalQueryResponsesBy(@Param("goalIds") List<Long> goalIds);

@@ -65,6 +65,7 @@ public class AuthController {
     private ResponseCookie makeRefreshTokenCookie(String refreshToken, long refreshTokenExpiryMs) {
         return ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
+                .secure(true)
                 .sameSite(Cookie.SameSite.STRICT.attributeValue())
                 .maxAge(refreshTokenExpiryMs / 1000)
                 .path("/auth")

@@ -76,7 +76,7 @@ class LearningTimeEndToEndTest {
 
         // when
         Response response = requestSpecification.when()
-                .delete("/dailyschedule/learning-times/{learningTimeId}", learningTime.getId());
+                .delete("/dailyschedule/learning-times/{learningTimeId}/subject", learningTime.getId());
 
         // then
         response.then()

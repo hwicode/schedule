@@ -24,7 +24,8 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
 
     public String getOauthLoginUrl(OauthProvider oauthProvider) {
-        return oauthClientMapper.getAuthUrl(oauthProvider);
+        OauthClient oauthClient = oauthClientMapper.getOauthClient(oauthProvider);
+        return oauthClient.getAuthUrl();
     }
 
     public AuthTokenResponse loginWithOauth(OauthProvider oauthProvider, String code) {
@@ -53,7 +54,7 @@ public class AuthService {
 
         OauthUser oauthUser = userConnector.findById(userId);
         String reissuedAccessToken = tokenProvider.createAccessToken(oauthUser);
-        RefreshToken reissuedRefreshToken = tokenProvider.createRefreshToken(oauthUser);
+        RefreshToken reissuedRefreshToken = tokenProvider.reissueRefreshToken(oauthUser, refreshToken);
         refreshTokenRepository.save(oauthUser.getId(), reissuedRefreshToken);
 
         return new ReissuedAuthTokenResponse(reissuedAccessToken, reissuedRefreshToken.getToken(), reissuedRefreshToken.getExpiryMs());

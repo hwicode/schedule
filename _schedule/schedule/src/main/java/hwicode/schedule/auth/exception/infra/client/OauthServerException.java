@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public class OauthServerException extends BusinessException {
 
-    public OauthServerException() {
-        super("Oauth 서버와의 통신이 실패했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
+    public OauthServerException(Throwable cause) {
+        super("Oauth 서버와의 통신이 실패했습니다.", cause, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

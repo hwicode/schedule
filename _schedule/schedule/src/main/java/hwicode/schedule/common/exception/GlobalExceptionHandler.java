@@ -28,9 +28,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     protected ResponseEntity<Object> handleBusinessException(BusinessException ex) {
+        String causeMessage = ex.getCause() == null ? null : ex.getCause().getMessage();
+
         log.info(CUSTOM_LOG_FORMAT,
                 ex.getClass().getSimpleName(),
-                null,
+                causeMessage,
                 ex.getMessage());
 
         return ResponseEntity.status(ex.getHttpStatus())

@@ -7,6 +7,6 @@ import lombok.Getter;
 @AllArgsConstructor
 public class SubTaskCheckerNameModifyResponse {
 
-    private Long taskCheckerId;
-    private String newSubTaskCheckerName;
+    private Long taskId;
+    private String newSubTaskName;
 }

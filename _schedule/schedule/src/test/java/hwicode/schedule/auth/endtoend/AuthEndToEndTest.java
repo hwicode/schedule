@@ -24,6 +24,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 
+import static hwicode.schedule.auth.AuthDataHelper.AUTH_URL;
 import static hwicode.schedule.auth.AuthDataHelper.BEARER;
 import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,6 +64,10 @@ class AuthEndToEndTest {
     @Test
     void Google_로그인_페이지_요청() {
         // given
+        OauthClient client = mock(OauthClient.class);
+        BDDMockito.when(client.getAuthUrl()).thenReturn(AUTH_URL);
+        BDDMockito.when(oauthClientMapper.getOauthClient(any())).thenReturn(client);
+
         RequestSpecification requestSpecification = given().port(port)
                 .redirects().follow(false);
 

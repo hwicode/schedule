@@ -37,7 +37,7 @@ public class TaskCheckerController {
                                      @RequestBody @Valid TaskSaveRequest request) {
 
         TaskSaveCommand command = new TaskSaveCommand(
-                loginInfo.getUserId(), request.getDailyChecklistId(), request.getTaskName(),
+                loginInfo.getUserId(), dailyToDoListId, request.getTaskName(),
                 request.getDifficulty(), request.getPriority(), request.getImportance()
         );
         Long taskId = taskCheckerSubService.saveTaskChecker(command);
@@ -61,7 +61,7 @@ public class TaskCheckerController {
                                                      @PathVariable("taskId") @Positive Long taskCheckerId,
                                                      @RequestBody @Valid TaskStatusModifyRequest request) {
         TaskStatusModifyCommand command = new TaskStatusModifyCommand(
-                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getTaskStatus()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskName(), request.getTaskStatus()
         );
         TaskStatus modifiedTaskStatus = taskCheckerSubService.changeTaskStatus(command);
         return new TaskStatusModifyResponse(command.getTaskCheckerName(), modifiedTaskStatus);
@@ -74,7 +74,7 @@ public class TaskCheckerController {
                                                              @PathVariable("taskId") @Positive Long taskCheckerId,
                                                              @RequestBody @Valid TaskDifficultyModifyRequest request) {
         TaskDifficultyModifyCommand command = new TaskDifficultyModifyCommand(
-                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getDifficulty()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskName(), request.getDifficulty()
         );
         Difficulty modifiedDifficulty = taskCheckerSubService.changeTaskDifficulty(command);
         return new TaskDifficultyModifyResponse(command.getTaskCheckerName(), modifiedDifficulty);
@@ -87,7 +87,7 @@ public class TaskCheckerController {
                                                                @PathVariable("taskId") @Positive Long taskCheckerId,
                                                                @RequestBody @Valid TaskCheckerNameModifyRequest request) {
         TaskCheckerNameModifyCommand command = new TaskCheckerNameModifyCommand(
-                loginInfo.getUserId(), dailyChecklistId, request.getTaskCheckerName(), request.getNewTaskCheckerName()
+                loginInfo.getUserId(), dailyChecklistId, request.getTaskName(), request.getNewTaskName()
         );
         String newTaskCheckerName = taskCheckerSubService.changeTaskCheckerName(command);
         return new TaskCheckerNameModifyResponse(command.getDailyChecklistId(), newTaskCheckerName);

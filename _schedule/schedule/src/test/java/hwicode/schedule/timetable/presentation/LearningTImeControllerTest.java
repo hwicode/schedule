@@ -60,7 +60,7 @@ class LearningTImeControllerTest {
     void 학습_시간의_학습_주제_삭제을_요청하면_204_상태코드가_리턴된다() throws Exception {
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
+                delete(String.format("/dailyschedule/learning-times/%s/subject", LEARNING_TIME_ID))
                         .header("Authorization", BEARER + "accessToken")
         );
 
@@ -164,7 +164,7 @@ class LearningTImeControllerTest {
 
         // when
         ResultActions perform = mockMvc.perform(
-                delete(String.format("/dailyschedule/learning-times/%s", LEARNING_TIME_ID))
+                delete(String.format("/dailyschedule/learning-times/%s/subject", LEARNING_TIME_ID))
                         .header("Authorization", BEARER + "accessToken")
         );
 

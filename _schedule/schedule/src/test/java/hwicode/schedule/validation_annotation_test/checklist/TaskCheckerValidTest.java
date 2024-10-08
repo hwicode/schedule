@@ -60,7 +60,7 @@ class TaskCheckerValidTest {
     @Test
     void 모든_필드가_있으면_통과된다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
@@ -96,7 +96,6 @@ class TaskCheckerValidTest {
 
     private static Stream<Arguments> provideWrongDailyChecklistId() {
         return Stream.of(
-                arguments(null, NOT_NULL_ERROR_MESSAGE),
                 arguments(-1L, POSITIVE_ERROR_MESSAGE),
                 arguments(0L, POSITIVE_ERROR_MESSAGE)
         );
@@ -106,16 +105,16 @@ class TaskCheckerValidTest {
     @MethodSource("provideWrongDailyChecklistId")
     void 투두리스트의_id에_잘못된_값이_들어오면_400에러가_발생한다(Long dailyChecklistId, String errorMessage) throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(dailyChecklistId, TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(TASK_CHECKER_NAME, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
-        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
+        ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", dailyChecklistId)
                 .header("Authorization", BEARER + "accessToken")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(taskSaveRequest)));
 
         // then
-        String field = "dailyChecklistId";
+        String field = "saveTask.dailyToDoListId";
         perform.andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.message").value(GlobalErrorCode.INVALID_PARAMETER.getMessage()))
                 .andExpect(jsonPath("$.errors[0].field").value(field))
@@ -134,7 +133,7 @@ class TaskCheckerValidTest {
     @MethodSource("provideWrongTaskName")
     void 과제의_이름에_잘못된_값이_들어오면_400에러가_발생한다(String taskName, String errorMessage) throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(taskName, Difficulty.NORMAL, Priority.SECOND, Importance.SECOND);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)
@@ -153,7 +152,7 @@ class TaskCheckerValidTest {
     @Test
     void 과제의_어려움에_null이_들어오면_400에러가_발생한다() throws Exception {
         // given
-        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(DAILY_CHECKLIST_ID, TASK_CHECKER_NAME, null, Priority.SECOND, Importance.SECOND);
+        TaskSaveRequest taskSaveRequest = new TaskSaveRequest(TASK_CHECKER_NAME, null, Priority.SECOND, Importance.SECOND);
 
         // when
         ResultActions perform = mockMvc.perform(post("/dailyschedule/daily-todo-lists/{dailyToDoListId}/tasks", DAILY_CHECKLIST_ID)

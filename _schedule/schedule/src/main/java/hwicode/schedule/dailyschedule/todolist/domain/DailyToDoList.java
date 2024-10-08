@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "daily_schedule")
@@ -33,7 +34,7 @@ public class DailyToDoList {
     }
 
     public boolean writeReview(String review) {
-        if (review.equals(this.review)) {
+        if (Objects.equals(review, this.review)) {
             return false;
         }
         this.review = review;

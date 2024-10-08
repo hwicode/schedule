@@ -28,7 +28,7 @@ public class LearningTimeController {
 
     private final LearningTimeAggregateService learningTimeAggregateService;
 
-    @DeleteMapping("/dailyschedule/learning-times/{learningTimeId}")
+    @DeleteMapping("/dailyschedule/learning-times/{learningTimeId}/subject")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteSubject(@LoginUser LoginInfo loginInfo,
                               @PathVariable @Positive Long learningTimeId) {

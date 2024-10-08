@@ -13,7 +13,6 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DailyToDoListInformationChangeRequest {
 
-    @NotNull
     private String review;
 
     @NotNull
