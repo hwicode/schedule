@@ -141,10 +141,10 @@
 <br><br>
 
 ## 📒 프로젝트 문서
-+ 프로젝트 아쉬운 점
-+ API 문서
-+ 브랜치 전략
-+ ERD
-+ 패키지
-+ 유저 스토리
-+ 프로젝트 설계 과정
++ [프로젝트 아쉬운 점](https://github.com/hwicode/schedule/issues/150)
++ [패키지](https://github.com/hwicode/schedule/wiki/%ED%8C%A8%ED%82%A4%EC%A7%80)
++ [프로젝트 설계 과정](https://github.com/hwicode/schedule/wiki/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8-%EC%84%A4%EA%B3%84-%EA%B3%BC%EC%A0%95)
++ [API 문서](https://github.com/hwicode/schedule/wiki/API-%EB%AC%B8%EC%84%9C)
++ [브랜치 전략](https://github.com/hwicode/schedule/wiki/%EB%B8%8C%EB%9E%9C%EC%B9%98-%EC%A0%84%EB%9E%B5)
++ [ERD](https://github.com/hwicode/schedule/wiki/ERD)
++ [유저 스토리](https://github.com/hwicode/schedule/issues/5)
